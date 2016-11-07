@@ -22,7 +22,7 @@ namespace EditorConfig
                 _map = new List<Tuple<Regex, IClassificationType>>
                 {
                     {Tuple.Create(_rxComment, registry.GetClassificationType(PredefinedClassificationTypeNames.Comment))},
-                    {Tuple.Create(_rxHeader, registry.GetClassificationType(PredefinedClassificationTypeNames.Literal))},
+                    {Tuple.Create(_rxHeader, registry.GetClassificationType(PredefinedClassificationTypeNames.String))},
                     {Tuple.Create(_rxKeyword, registry.GetClassificationType(PredefinedClassificationTypeNames.Keyword))},
                     {Tuple.Create(_rxValue, registry.GetClassificationType(PredefinedClassificationTypeNames.SymbolDefinition))},
                 };

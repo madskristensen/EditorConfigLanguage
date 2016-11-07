@@ -15,18 +15,19 @@ See the [change log](CHANGELOG.md) for changes and road map.
 
 ## Features
 
-- Feature 1
-- Feature 2
-  - Sub feature
+- Syntax highlighting
+- Intellisense
+- Validation
 
-### Feature 1
-Describe feature 1. Add screenshots/code samples etc.
+### Syntax highlighting
 
-### Feature 2
-Describe feature 2. Add screenshots/code samples etc.
+![Classification](art/classification.png)
 
-#### Sub feature
-Describe sub feature. Add screenshots/code samples etc.
+### Intellisense
+coming soon...
+
+### Validation
+coming soon...
 
 ## Contribute
 Check out the [contribution guidelines](.github/CONTRIBUTING.md)

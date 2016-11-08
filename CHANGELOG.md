@@ -1,6 +1,10 @@
 # Road map
 
+- [ ] Comment/uncomment
+- [ ] Brace matching
 - [ ] Implement custom parser
+- [ ] Formatting command
+- [ ] Formatting command
 
 Features that have a checkmark are complete and available for
 download in the

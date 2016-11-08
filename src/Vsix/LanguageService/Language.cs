@@ -38,7 +38,7 @@ namespace EditorConfig
                     preferences.EnableMatchBraces = true;
                     preferences.EnableMatchBracesAtCaret = true;
                     preferences.EnableShowMatchingBrace = true;
-                    preferences.EnableCommenting = true; ;
+                    preferences.EnableCommenting = true;
                     preferences.HighlightMatchingBraceFlags = _HighlightMatchingBraceFlags.HMB_USERECTANGLEBRACES;
                     preferences.LineNumbers = true;
                     preferences.MaxErrorMessages = 100;

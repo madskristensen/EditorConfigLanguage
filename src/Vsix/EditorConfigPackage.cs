@@ -39,6 +39,7 @@ namespace EditorConfig
             return base.InitializeAsync(cancellationToken, progress);
         }
 
+        // Borrowed from https://github.com/github/VisualStudio/blob/master/src/GitHub.VisualStudio/GitHubPackage.cs
         private async Task<object> CreateServiceAsync(IAsyncServiceContainer container, CancellationToken cancellationToken, Type serviceType)
         {
             if (serviceType == null)

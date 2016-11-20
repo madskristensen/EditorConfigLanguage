@@ -21,19 +21,16 @@ namespace EditorConfig
         IClassifierAggregatorService _classifierAggregatorService = null;
 
         [Import]
-        public ITextDocumentFactoryService TextDocumentFactoryService { get; set; }
+        ITextDocumentFactoryService TextDocumentFactoryService { get; set; }
 
         public ITagger<T> CreateTagger<T>(ITextBuffer buffer) where T : ITag
         {
             if (buffer == null)
                 throw new ArgumentException("Buffer is null");
 
-            IWpfTextView view;
-            ErrorListProvider errorlist;
-            ITextDocument document;
-            if (!buffer.Properties.TryGetProperty(typeof(ErrorListProvider), out errorlist) ||
-                !buffer.Properties.TryGetProperty(typeof(IWpfTextView), out view) ||
-                !TextDocumentFactoryService.TryGetTextDocument(buffer, out document))
+            if (!buffer.Properties.TryGetProperty(typeof(ErrorListProvider), out ErrorListProvider errorlist) ||
+                !buffer.Properties.TryGetProperty(typeof(IWpfTextView), out IWpfTextView view) ||
+                !TextDocumentFactoryService.TryGetTextDocument(buffer, out var document))
             {
                 return null;
             }
@@ -59,6 +56,9 @@ namespace EditorConfig
 
         public IEnumerable<ITagSpan<IErrorTag>> GetTags(NormalizedSnapshotSpanCollection spans)
         {
+            if (!spans.Any() || spans[0].IsEmpty)
+                yield break;
+
             var span = spans[0];
             var line = span.Start.GetContainingLine();
             var classificationSpans = _classifier.GetClassificationSpans(line.Extent);
@@ -82,9 +82,8 @@ namespace EditorConfig
                         continue;
 
                     string value = cspan.Span.GetText();
-                    int intValue;
 
-                    if (!item.Values.Contains(value) && !int.TryParse(value, out intValue))
+                    if (!item.Values.Contains(value) && !int.TryParse(value, out int intValue))
                         yield return CreateError(line, cspan, "\"" + value + "\" is not a valid value for the '" + property + "' property");
                 }
             }

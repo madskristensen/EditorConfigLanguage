@@ -55,6 +55,7 @@
     <Compile Include="Completion\CompletionItem.cs" />
     <Compile Include="Completion\CompletionController.cs" />
     <Compile Include="Completion\CompletionSource.cs" />
+    <Compile Include="ProvideAutoBraceCompletionAttribute.cs" />
     <Compile Include="TextViewCreationListener.cs" />
     <Compile Include="LanguageService\ContentTypes.cs" />
     <Compile Include="EditorConfigPackage.cs" />
@@ -66,6 +67,9 @@
     <Compile Include="source.extension.cs">
       <DependentUpon>source.extension.vsixmanifest</DependentUpon>
     </Compile>
+    <Compile Include="TypeThrough\ProvisionalText.cs" />
+    <Compile Include="TypeThrough\TypeThroughController.cs" />
+    <Compile Include="TypeThrough\TypeThroughControllerProvider.cs" />
     <Compile Include="Validation\EditorConfigErrorTag.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -34,6 +34,9 @@ namespace EditorConfig
             ITextSnapshotLine line = span.Start.GetContainingLine();
             string text = line.GetText();
 
+            if (string.IsNullOrWhiteSpace(text))
+                return list;
+
             foreach (var tuple in _map)
                 foreach (Match match in tuple.Item1.Matches(text))
                 {

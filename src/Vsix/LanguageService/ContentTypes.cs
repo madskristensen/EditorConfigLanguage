@@ -11,10 +11,5 @@ namespace EditorConfig
         [Name(EditorConfig)]
         [BaseDefinition("code")]
         public ContentTypes IEditorConfigContentType { get; set; }
-
-        [Export(typeof(FileExtensionToContentTypeDefinition))]
-        [ContentType(EditorConfig)]
-        [FileExtension(".editorconfig")]
-        public FileExtensionToContentTypeDefinition EditorConfigFileExtension { get; set; }
     }
 }

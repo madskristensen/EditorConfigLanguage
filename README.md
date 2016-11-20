@@ -18,16 +18,24 @@ See the [change log](CHANGELOG.md) for changes and road map.
 - Syntax highlighting
 - Intellisense
 - Validation
+- Brace completion
+- Comment/uncomment
 
 ### Syntax highlighting
 
 ![Classification](art/classification.png)
 
 ### Intellisense
-coming soon...
+The extension provides Intellisense for both keywords and values.
+
+![Classification](art/keyword-intellisense.png)  
+
+![Classification](art/value-intellisense.png)
 
 ### Validation
-coming soon...
+Red squiggles are shown for invalid values.
+
+![Classification](art/validation.png)
 
 ## Contribute
 Check out the [contribution guidelines](.github/CONTRIBUTING.md)

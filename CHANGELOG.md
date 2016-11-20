@@ -1,7 +1,5 @@
 # Road map
 
-- [x] Comment/uncomment
-- [x] Brace matching
 - [ ] Implement custom parser
 - [ ] Formatting command
 
@@ -17,3 +15,8 @@ on the official Visual Studio extension gallery.
 ## 1.0
 
 - [x] Initial release
+- [x] Syntax highlighting
+- [x] Intellisense
+- [x] Validation
+- [x] Comment/uncomment
+- [x] Brace matching

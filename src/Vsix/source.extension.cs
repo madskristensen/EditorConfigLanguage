@@ -11,7 +11,7 @@ namespace EditorConfig
         public const string Name = "EditorConfig Language Service";
         public const string Description = @"Language service for .editorconfig files";
         public const string Language = "en-US";
-        public const string Version = "1.0";
+        public const string Version = "1.0.3";
         public const string Author = "Mads Kristensen";
         public const string Tags = "";
     }

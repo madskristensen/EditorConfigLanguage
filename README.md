@@ -19,7 +19,9 @@ See the [change log](CHANGELOG.md) for changes and road map.
 - Intellisense
 - Validation
 - Brace completion
+- Brace matching
 - Comment/uncomment
+- Outlining (code folding)
 
 ### Syntax highlighting
 

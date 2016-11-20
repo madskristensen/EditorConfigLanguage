@@ -1,5 +1,7 @@
 # Road map
 
+- [x] Outlining
+- [x] Brace matching
 - [ ] Implement custom parser
 - [ ] Formatting command
 
@@ -19,4 +21,4 @@ on the official Visual Studio extension gallery.
 - [x] Intellisense
 - [x] Validation
 - [x] Comment/uncomment
-- [x] Brace matching
+- [x] Brace completion

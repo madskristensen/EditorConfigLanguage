@@ -50,11 +50,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="BraceMatching\BraceMatchingTagger.cs" />
+    <Compile Include="BraceMatching\BraceMatchingTaggerProvider.cs" />
     <Compile Include="Classifier\EditorConfigClassifier.cs" />
     <Compile Include="Classifier\EditorConfigProvider.cs" />
     <Compile Include="Completion\CompletionItem.cs" />
     <Compile Include="Completion\CompletionController.cs" />
     <Compile Include="Completion\CompletionSource.cs" />
+    <Compile Include="Outlining\OutliningTagger.cs" />
+    <Compile Include="Outlining\OutliningTaggerProvider.cs" />
     <Compile Include="ProvideAutoBraceCompletionAttribute.cs" />
     <Compile Include="TextViewCreationListener.cs" />
     <Compile Include="LanguageService\ContentTypes.cs" />
@@ -67,9 +71,9 @@
     <Compile Include="source.extension.cs">
       <DependentUpon>source.extension.vsixmanifest</DependentUpon>
     </Compile>
-    <Compile Include="TypeThrough\ProvisionalText.cs" />
-    <Compile Include="TypeThrough\TypeThroughController.cs" />
-    <Compile Include="TypeThrough\TypeThroughControllerProvider.cs" />
+    <Compile Include="BraceMatching\ProvisionalText.cs" />
+    <Compile Include="BraceMatching\TypeThroughController.cs" />
+    <Compile Include="BraceMatching\TypeThroughControllerProvider.cs" />
     <Compile Include="Validation\EditorConfigErrorTag.cs" />
   </ItemGroup>
   <ItemGroup>

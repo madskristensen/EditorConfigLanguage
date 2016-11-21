@@ -33,7 +33,7 @@ namespace EditorConfig
 
         protected override bool CanComplete(ITextBuffer textBuffer, int position)
         {
-            return EditorConfigLanguage.preferences != null ? EditorConfigLanguage.preferences.EnableMatchBraces : false;
+            return EditorConfigPackage.Language.Preferences.EnableMatchBraces;
 
             //if (result)
             //{

@@ -57,6 +57,8 @@
     <Compile Include="Completion\CompletionItem.cs" />
     <Compile Include="Completion\CompletionController.cs" />
     <Compile Include="Completion\CompletionSource.cs" />
+    <Compile Include="DragDrop\EditorConfigDropHandler.cs" />
+    <Compile Include="DragDrop\EditorConfigDropHandlerProvider.cs" />
     <Compile Include="Outlining\OutliningTagger.cs" />
     <Compile Include="Outlining\OutliningTaggerProvider.cs" />
     <Compile Include="ProvideAutoBraceCompletionAttribute.cs" />

@@ -37,11 +37,18 @@ namespace EditorConfig
     {
         public const string PackageGuidString = "6736c72d-7a27-49f0-9153-413ff47963ef";
 
+        public static EditorConfigLanguage Language
+        {
+            get;
+            private set;
+        }
+
         protected override void Initialize()
         {
+            Language = new EditorConfigLanguage(this);
+
             var serviceContainer = this as IServiceContainer;
-            var langService = new EditorConfigLanguage(this);
-            serviceContainer.AddService(typeof(EditorConfigLanguage), langService, true);
+            serviceContainer.AddService(typeof(EditorConfigLanguage), Language, true);
 
             var editorFactory = new EditorFactory(this, typeof(EditorConfigLanguage).GUID);
             RegisterEditorFactory(editorFactory);

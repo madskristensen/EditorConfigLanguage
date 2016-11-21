@@ -7,7 +7,7 @@ namespace EditorConfig
     [Guid("f99a05b5-311b-4772-92fc-6441a78ca26f")]
     public class EditorConfigLanguage : LanguageService
     {
-        public static LanguagePreferences preferences = null;
+        private LanguagePreferences preferences = null;
 
         public EditorConfigLanguage(object site)
         {

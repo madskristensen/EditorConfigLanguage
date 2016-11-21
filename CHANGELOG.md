@@ -2,8 +2,11 @@
 
 - [x] Outlining
 - [x] Brace matching
+- [x] Drag 'n drop
+- [ ] File icon for .editorconfig files
 - [ ] Implement custom parser
 - [ ] Formatting command
+- [ ] Validate numeric values
 
 Features that have a checkmark are complete and available for
 download in the

@@ -125,7 +125,7 @@ namespace EditorConfig
             // current caret position may be beyond projection boundary like when
             // typing at the end of onclick="return foo(".
 
-            if (EditorConfigLanguage.preferences == null || !EditorConfigLanguage.preferences.EnableMatchBraces)
+            if (!EditorConfigPackage.Language.Preferences.EnableMatchBraces)
                 return;
 
             char completionCharacter = GetCompletionCharacter(typedCharacter);

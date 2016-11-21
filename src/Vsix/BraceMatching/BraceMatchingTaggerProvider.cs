@@ -13,7 +13,7 @@ namespace EditorConfig
     {
         public ITagger<T> CreateTagger<T>(ITextView textView, ITextBuffer buffer) where T : ITag
         {
-            if (EditorConfigLanguage.preferences == null || !EditorConfigLanguage.preferences.EnableShowMatchingBrace)
+            if (!EditorConfigPackage.Language.Preferences.EnableShowMatchingBrace)
                 return null;
 
             //provide highlighting only on the top-level buffer

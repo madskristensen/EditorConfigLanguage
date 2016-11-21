@@ -79,6 +79,9 @@
     <Compile Include="Validation\EditorConfigErrorTag.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="FileIcons\icons.pkgdef">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <None Include="packages.config" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
@@ -233,11 +236,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Icon.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="Resources\Preview.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="source.extension.ico">

@@ -3,7 +3,7 @@
 - [x] Outlining
 - [x] Brace matching
 - [x] Drag 'n drop
-- [ ] File icon for .editorconfig files
+- [x] File icon for .editorconfig files
 - [ ] Implement custom parser
 - [ ] Formatting command
 - [ ] Validate numeric values

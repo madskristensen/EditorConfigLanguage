@@ -8,11 +8,11 @@ using Microsoft.VisualStudio.Text.Editor;
 
 namespace EditorConfig
 {
-    internal sealed class CommandFilter : IOleCommandTarget
+    internal sealed class CompletionController : IOleCommandTarget
     {
         private ICompletionSession _currentSession;
 
-        public CommandFilter(IWpfTextView textView, ICompletionBroker broker)
+        public CompletionController(IWpfTextView textView, ICompletionBroker broker)
         {
             _currentSession = null;
 

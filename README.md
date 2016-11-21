@@ -22,6 +22,8 @@ See the [change log](CHANGELOG.md) for changes and road map.
 - Brace matching
 - Comment/uncomment
 - Outlining (code folding)
+- Drag 'n drop file onto .editorconfig file
+- Code formatting
 
 ### Syntax highlighting
 

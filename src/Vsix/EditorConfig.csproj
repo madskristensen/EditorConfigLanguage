@@ -54,6 +54,7 @@
     <Compile Include="BraceMatching\BraceMatchingTaggerProvider.cs" />
     <Compile Include="Classifier\EditorConfigClassifier.cs" />
     <Compile Include="Classifier\EditorConfigProvider.cs" />
+    <Compile Include="Commands\EditorConfigFormatter.cs" />
     <Compile Include="Completion\CompletionItem.cs" />
     <Compile Include="Completion\CompletionController.cs" />
     <Compile Include="Completion\CompletionSource.cs" />

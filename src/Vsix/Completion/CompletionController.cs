@@ -39,20 +39,20 @@ namespace EditorConfig
             {
                 switch ((VSConstants.VSStd2KCmdID)nCmdID)
                 {
-                case VSConstants.VSStd2KCmdID.AUTOCOMPLETE:
-                case VSConstants.VSStd2KCmdID.COMPLETEWORD:
-                case VSConstants.VSStd2KCmdID.SHOWMEMBERLIST:
-                    handled = StartSession();
-                    break;
-                case VSConstants.VSStd2KCmdID.RETURN:
-                    handled = Complete(false);
-                    break;
-                case VSConstants.VSStd2KCmdID.TAB:
-                    handled = Complete(true);
-                    break;
-                case VSConstants.VSStd2KCmdID.CANCEL:
-                    handled = Cancel();
-                    break;
+                    case VSConstants.VSStd2KCmdID.AUTOCOMPLETE:
+                    case VSConstants.VSStd2KCmdID.COMPLETEWORD:
+                    case VSConstants.VSStd2KCmdID.SHOWMEMBERLIST:
+                        handled = StartSession();
+                        break;
+                    case VSConstants.VSStd2KCmdID.RETURN:
+                        handled = Complete(false);
+                        break;
+                    case VSConstants.VSStd2KCmdID.TAB:
+                        handled = Complete(true);
+                        break;
+                    case VSConstants.VSStd2KCmdID.CANCEL:
+                        handled = Cancel();
+                        break;
                 }
             }
 
@@ -65,21 +65,20 @@ namespace EditorConfig
                 {
                     switch ((VSConstants.VSStd2KCmdID)nCmdID)
                     {
-                    case VSConstants.VSStd2KCmdID.TYPECHAR:
-                        char ch = GetTypeChar(pvaIn);
-                        if (ch == '=' || ch == ' ')
-                            Cancel();
-                        else if (!char.IsPunctuation(ch) && !char.IsControl(ch))
-                            StartSession();
-                        else if (_currentSession != null)
-                            Filter();
-                        break;
-                    case VSConstants.VSStd2KCmdID.BACKSPACE:
-                        if (_currentSession == null)
-                            StartSession();
+                        case VSConstants.VSStd2KCmdID.TYPECHAR:
+                            char ch = GetTypeChar(pvaIn);
 
-                        Filter();
-                        break;
+                            if (ch == '=' || ch == ' ')
+                                Cancel();
+                            else if (!char.IsPunctuation(ch) && !char.IsControl(ch))
+                                StartSession();
+                            else if (_currentSession != null)
+                                Filter();
+                            break;
+                        case VSConstants.VSStd2KCmdID.BACKSPACE:
+                            if (_currentSession != null)
+                                Filter();
+                            break;
                     }
                 }
             }
@@ -92,7 +91,7 @@ namespace EditorConfig
             if (_currentSession == null)
                 return;
 
-            _currentSession.SelectedCompletionSet.SelectBestMatch();
+            _currentSession.SelectedCompletionSet.Filter();
         }
 
         bool Cancel()
@@ -143,8 +142,6 @@ namespace EditorConfig
             if (!_currentSession.IsStarted)
                 _currentSession.Start();
 
-            Filter();
-
             return true;
         }
 
@@ -154,11 +151,11 @@ namespace EditorConfig
             {
                 switch ((VSConstants.VSStd2KCmdID)prgCmds[0].cmdID)
                 {
-                case VSConstants.VSStd2KCmdID.AUTOCOMPLETE:
-                case VSConstants.VSStd2KCmdID.COMPLETEWORD:
-                case VSConstants.VSStd2KCmdID.SHOWMEMBERLIST:
-                    prgCmds[0].cmdf = (uint)OLECMDF.OLECMDF_ENABLED | (uint)OLECMDF.OLECMDF_SUPPORTED;
-                    return VSConstants.S_OK;
+                    case VSConstants.VSStd2KCmdID.AUTOCOMPLETE:
+                    case VSConstants.VSStd2KCmdID.COMPLETEWORD:
+                    case VSConstants.VSStd2KCmdID.SHOWMEMBERLIST:
+                        prgCmds[0].cmdf = (uint)OLECMDF.OLECMDF_ENABLED | (uint)OLECMDF.OLECMDF_SUPPORTED;
+                        return VSConstants.S_OK;
                 }
             }
             return Next.QueryStatus(pguidCmdGroup, cCmds, prgCmds, pCmdText);

@@ -53,19 +53,19 @@ namespace EditorConfig
             if (triggerPoint == null)
                 return;
 
-            SnapshotSpan extent = FindTokenSpanAtPosition(session).GetSpan(snapshot);
+            var line = triggerPoint.Value.GetContainingLine().Extent;
             var list = new List<Completion3>();
             var applicableTo = snapshot.CreateTrackingSpan(triggerPoint.Value.Position, 0, SpanTrackingMode.EdgeInclusive);
 
-            if (string.IsNullOrWhiteSpace(extent.GetText()))
+            if (string.IsNullOrWhiteSpace(line.GetText()))
             {
                 foreach (var key in CompletionItem.Items)
-                    list.Add(CreateCompletion(key.Name, key.Description));                
+                    list.Add(CreateCompletion(key.Name, key.Description));
             }
             else
             {
-                var line = triggerPoint.Value.GetContainingLine().Extent;
                 var spans = _classifier.GetClassificationSpans(line);
+                SnapshotSpan extent = FindTokenSpanAtPosition(session).GetSpan(snapshot);
                 string current = string.Empty;
 
                 foreach (var span in spans)
@@ -94,14 +94,38 @@ namespace EditorConfig
                     }
                 }
 
-                applicableTo = snapshot.CreateTrackingSpan(extent, SpanTrackingMode.EdgeInclusive);
+                if (!list.Any())
+                {
+                    var item = CompletionItem.GetCompletionItem(current);
+
+                    if (item != null)
+                    {
+                        var eq = line.GetText().IndexOf("=");
+
+                        if (eq != -1)
+                        {
+                            var eqPos = eq + line.Start.Position;
+
+                            if (triggerPoint.Value.Position > eqPos)
+                                foreach (var value in item.Values)
+                                    list.Add(CreateCompletion(value));
+                        }
+                    }
+                }
+                else
+                {
+                    applicableTo = snapshot.CreateTrackingSpan(extent, SpanTrackingMode.EdgeInclusive);
+                }
             }
 
-            completionSets.Add(new CompletionSet("All", "All", applicableTo, list, Enumerable.Empty<Completion3>()));
+            if (list.Any())
+            {
+                completionSets.Add(new CompletionSet("All", "All", applicableTo, list, Enumerable.Empty<Completion3>()));
+            }
         }
 
         private Completion3 CreateCompletion(string name, string description = null)
-        {            
+        {
             return new Completion3(name, name, description, KnownMonikers.Property, null);
         }
 

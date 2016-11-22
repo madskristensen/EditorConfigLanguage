@@ -42,6 +42,11 @@ Red squiggles are shown for invalid values.
 
 ![Classification](art/validation.png)
 
+### Hover tooltips
+Hover the mouse over any keyword to see a full description.
+
+![Classification](art/quick-info.png)
+
 ## Contribute
 Check out the [contribution guidelines](.github/CONTRIBUTING.md)
 if you want to contribute to this project.

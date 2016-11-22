@@ -18,30 +18,22 @@ namespace EditorConfig
         {
             if (subjectBuffers.Count > 0)
             {
-                return view.Properties.GetOrCreateSingletonProperty(() => new MarkdownTypeThroughController(view, subjectBuffers));
+                return view.Properties.GetOrCreateSingletonProperty(() => new EditorConfigTypeThroughController(view, subjectBuffers));
             }
 
             return null;
         }
     }
 
-    internal class MarkdownTypeThroughController : TypeThroughController
+    internal class EditorConfigTypeThroughController : TypeThroughController
     {
-        public MarkdownTypeThroughController(ITextView textView, IList<ITextBuffer> subjectBuffers)
+        public EditorConfigTypeThroughController(ITextView textView, IList<ITextBuffer> subjectBuffers)
             : base(textView, subjectBuffers)
         { }
 
         protected override bool CanComplete(ITextBuffer textBuffer, int position)
         {
             return EditorConfigPackage.Language.Preferences.EnableMatchBraces;
-
-            //if (result)
-            //{
-            //    var line = textBuffer.CurrentSnapshot.GetLineFromPosition(position);
-            //    result = line.Start.Position + line.GetText().TrimEnd('\r', '\n', ' ', ';', ',').Length == position + 1;
-            //}
-
-            //return result;
         }
 
         protected override char GetCompletionCharacter(char typedCharacter)

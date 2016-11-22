@@ -2,6 +2,7 @@
 
 - [ ] Implement custom parser
 - [x] Better Intellisense triggers
+- [ ] Navigation bar support
 
 Features that have a checkmark are complete and available for
 download in the

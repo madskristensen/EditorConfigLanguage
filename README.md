@@ -24,6 +24,7 @@ See the [change log](CHANGELOG.md) for changes and road map.
 - Outlining (code folding)
 - Drag 'n drop file onto .editorconfig file
 - Code formatting
+- Hover tooltips
 
 ### Syntax highlighting
 

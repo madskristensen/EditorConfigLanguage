@@ -2,7 +2,8 @@
 
 - [ ] Implement custom parser
 - [x] Better Intellisense triggers
-- [ ] Navigation bar support
+- [x] Gesture to create .editorconfig file
+- [ ] Description of what .editorconfig is in readme.md
 
 Features that have a checkmark are complete and available for
 download in the

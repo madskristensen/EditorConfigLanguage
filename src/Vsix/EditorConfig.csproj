@@ -58,8 +58,10 @@
     <Compile Include="Completion\CompletionItem.cs" />
     <Compile Include="Completion\CompletionController.cs" />
     <Compile Include="Completion\CompletionSource.cs" />
+    <Compile Include="Commands\CreateEditorConfigFile.cs" />
     <Compile Include="DragDrop\EditorConfigDropHandler.cs" />
     <Compile Include="DragDrop\EditorConfigDropHandlerProvider.cs" />
+    <Compile Include="Helpers\ProjectHelpers.cs" />
     <Compile Include="Outlining\OutliningTagger.cs" />
     <Compile Include="Outlining\OutliningTaggerProvider.cs" />
     <Compile Include="ProvideAutoBraceCompletionAttribute.cs" />
@@ -84,6 +86,9 @@
     <Compile Include="Validation\EditorConfigErrorTag.cs" />
   </ItemGroup>
   <ItemGroup>
+    <VSCTCompile Include="EditorConfigPackage.vsct">
+      <ResourceName>Menus.ctmenu</ResourceName>
+    </VSCTCompile>
     <Content Include="FileIcons\icons.pkgdef">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>

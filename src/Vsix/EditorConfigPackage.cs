@@ -25,6 +25,7 @@ namespace EditorConfig
 
     [ProvideEditorExtension(typeof(EditorFactory), ".editorconfig", 1000)]
     [ProvideAutoBraceCompletion(ContentTypes.EditorConfig)]
+    [ProvideMenuResource("Menus.ctmenu", 1)]
 
     //[ProvideAutoLoad(PackageGuidString)]
     //[ProvideUIContextRule(PackageGuidString,
@@ -52,6 +53,7 @@ namespace EditorConfig
 
             var editorFactory = new EditorFactory(this, typeof(EditorConfigLanguage).GUID);
             RegisterEditorFactory(editorFactory);
+            CreateEditorConfigFile.Initialize(this);
         }
 
         //protected override task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)

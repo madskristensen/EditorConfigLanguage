@@ -1,6 +1,7 @@
 # Road map
 
 - [ ] Implement custom parser
+- [x] Better Intellisense triggers
 
 Features that have a checkmark are complete and available for
 download in the

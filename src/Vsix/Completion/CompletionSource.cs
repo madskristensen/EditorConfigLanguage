@@ -54,40 +54,48 @@ namespace EditorConfig
                 return;
 
             SnapshotSpan extent = FindTokenSpanAtPosition(session).GetSpan(snapshot);
-            var line = triggerPoint.Value.GetContainingLine().Extent;
-
-            var spans = _classifier.GetClassificationSpans(line);
-
             var list = new List<Completion3>();
-            string current = string.Empty;
+            var applicableTo = snapshot.CreateTrackingSpan(triggerPoint.Value.Position, 0, SpanTrackingMode.EdgeInclusive);
 
-            foreach (var span in spans)
+            if (string.IsNullOrWhiteSpace(extent.GetText()))
             {
-                if (span.ClassificationType.IsOfType(PredefinedClassificationTypeNames.Keyword))
+                foreach (var key in CompletionItem.Items)
+                    list.Add(CreateCompletion(key.Name, key.Description));                
+            }
+            else
+            {
+                var line = triggerPoint.Value.GetContainingLine().Extent;
+                var spans = _classifier.GetClassificationSpans(line);
+                string current = string.Empty;
+
+                foreach (var span in spans)
                 {
-                    current = span.Span.GetText();
-
-                    if (!span.Span.Contains(extent))
-                        continue;
-
-                    foreach (var key in CompletionItem.Items)
-                        list.Add(CreateCompletion(key.Name, key.Description));
-                }
-                else if (span.ClassificationType.IsOfType(PredefinedClassificationTypeNames.SymbolDefinition))
-                {
-                    if (!span.Span.Contains(extent))
-                        continue;
-
-                    CompletionItem item = CompletionItem.GetCompletionItem(current);
-                    if (item != null)
+                    if (span.ClassificationType.IsOfType(PredefinedClassificationTypeNames.Keyword))
                     {
-                        foreach (var value in item.Values)
-                            list.Add(CreateCompletion(value));
+                        current = span.Span.GetText();
+
+                        if (!span.Span.Contains(extent))
+                            continue;
+
+                        foreach (var key in CompletionItem.Items)
+                            list.Add(CreateCompletion(key.Name, key.Description));
+                    }
+                    else if (span.ClassificationType.IsOfType(PredefinedClassificationTypeNames.SymbolDefinition))
+                    {
+                        if (!span.Span.Contains(extent))
+                            continue;
+
+                        CompletionItem item = CompletionItem.GetCompletionItem(current);
+                        if (item != null)
+                        {
+                            foreach (var value in item.Values)
+                                list.Add(CreateCompletion(value));
+                        }
                     }
                 }
-            }
 
-            var applicableTo = snapshot.CreateTrackingSpan(extent, SpanTrackingMode.EdgeInclusive);
+                applicableTo = snapshot.CreateTrackingSpan(extent, SpanTrackingMode.EdgeInclusive);
+            }
 
             completionSets.Add(new CompletionSet("All", "All", applicableTo, list, Enumerable.Empty<Completion3>()));
         }

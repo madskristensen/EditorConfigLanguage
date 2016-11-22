@@ -15,7 +15,7 @@ namespace EditorConfig
             {new CompletionItem("charset", "File character encoding, NOTE: if visual studio thinks your file is ascii it will always save it as us-ascii", "latin1", "utf-8", "utf-8-bom", "utf-16be", "utf-16le", "utf-8-bom")},
             {new CompletionItem("trim_trailing_whitespace", "Denotes whether whitespace is allowed at the end of lines", "true", "false")},
             {new CompletionItem("insert_final_newline", "Denotes whether file should end with a newline", "true", "false")},
-            {new CompletionItem("max_line_length", "Forces hard line wrapping after the amount of characters specified (NOT YET SUPPORTED IN VISUAL STUDIO)")},
+            {new CompletionItem("max_line_length", "Forces hard line wrapping after the amount of characters specified")},
         };
 
         private CompletionItem(string name, string description, params string[] values)

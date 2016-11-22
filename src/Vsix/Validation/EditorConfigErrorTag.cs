@@ -83,7 +83,7 @@ namespace EditorConfig
 
                     string value = cspan.Span.GetText();
 
-                    if (!item.Values.Contains(value) && !int.TryParse(value, out int intValue))
+                    if (!item.Values.Contains(value) && !(int.TryParse(value, out int intValue) && intValue > 0))
                         yield return CreateError(line, cspan, "\"" + value + "\" is not a valid value for the '" + property + "' property");
                 }
             }

@@ -45,6 +45,7 @@ namespace EditorConfig
         private ErrorListProvider _errorlist;
         private ITextDocument _document;
         private IWpfTextView _view;
+        private bool _hasLoaded;
 
         public CheckTextErrorTagger(IWpfTextView view, IClassifierAggregatorService classifier, ErrorListProvider errorlist, ITextDocument document)
         {
@@ -52,11 +53,17 @@ namespace EditorConfig
             _classifier = classifier.GetClassifier(view.TextBuffer);
             _errorlist = errorlist;
             _document = document;
+
+            ThreadHelper.Generic.BeginInvoke(System.Windows.Threading.DispatcherPriority.ApplicationIdle, () =>
+            {
+                var span = new SnapshotSpan(view.TextBuffer.CurrentSnapshot, 0, view.TextBuffer.CurrentSnapshot.Length);
+                TagsChanged?.Invoke(this, new SnapshotSpanEventArgs(span));
+            });
         }
 
         public IEnumerable<ITagSpan<IErrorTag>> GetTags(NormalizedSnapshotSpanCollection spans)
         {
-            if (!spans.Any() || spans[0].IsEmpty)
+            if (!_hasLoaded || !spans.Any() || spans[0].IsEmpty)
                 yield break;
 
             var span = spans[0];
@@ -142,10 +149,6 @@ namespace EditorConfig
         }
 
 
-        public event EventHandler<SnapshotSpanEventArgs> TagsChanged
-        {
-            add { }
-            remove { }
-        }
+        public event EventHandler<SnapshotSpanEventArgs> TagsChanged;
     }
 }

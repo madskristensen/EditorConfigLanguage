@@ -57,20 +57,18 @@ namespace EditorConfig
             else
             {
                 ProjectItem newItem = null;
+                File.WriteAllText(fileName, "[*]\r\nend_of_line = crlf\r\n\r\n[*.xml]\r\nindent_style = spaces");
 
                 if (item is Project proj)
-                {
-                    File.WriteAllText(fileName, "root = true");
+                {                    
                     newItem = proj.AddFileToProject(fileName, "None");
                 }
                 else if (item is ProjectItem projItem && projItem.ContainingProject != null)
                 {
-                    File.WriteAllText(fileName, "[*.cs]\r\nend_of_line = crlf");
                     newItem = projItem.ContainingProject.AddFileToProject(fileName, "None");
                 }
                 else if (item is Solution2 solution)
                 {
-                    File.WriteAllText(fileName, "root = true");
                     newItem = AddFileToSolution(fileName, solution);
                 }
 

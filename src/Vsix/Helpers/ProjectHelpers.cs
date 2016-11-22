@@ -75,9 +75,7 @@ namespace EditorConfig
                 if (item == null || item.ContainingProject == null)
                     return;
 
-                if (string.IsNullOrEmpty(itemType)
-                    || item.ContainingProject.IsKind(ProjectTypes.WEBSITE_PROJECT)
-                    || item.ContainingProject.IsKind(ProjectTypes.UNIVERSAL_APP))
+                if (string.IsNullOrEmpty(itemType) || item.ContainingProject.IsKind(ProjectTypes.WEBSITE_PROJECT, ProjectTypes.UNIVERSAL_APP))
                     return;
 
                 item.Properties.Item("ItemType").Value = itemType;
@@ -116,13 +114,9 @@ namespace EditorConfig
                 {
                     return proj.GetRootFolder();
                 }
-                else if (selItem.Object is Solution sol && !string.IsNullOrEmpty(sol.FullName))
-                {
-                    return Path.GetDirectoryName(sol.FullName);
-                }
             }
 
-            return null;
+            return Path.GetDirectoryName(_dte.Solution.FullName);
         }
     }
 

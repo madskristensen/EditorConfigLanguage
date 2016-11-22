@@ -9,6 +9,7 @@ using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Tagging;
 using Microsoft.VisualStudio.Utilities;
+using System.Windows.Threading;
 
 namespace EditorConfig
 {
@@ -54,8 +55,9 @@ namespace EditorConfig
             _errorlist = errorlist;
             _document = document;
 
-            ThreadHelper.Generic.BeginInvoke(System.Windows.Threading.DispatcherPriority.ApplicationIdle, () =>
+            ThreadHelper.Generic.BeginInvoke(DispatcherPriority.ApplicationIdle, () =>
             {
+                _hasLoaded = true;
                 var span = new SnapshotSpan(view.TextBuffer.CurrentSnapshot, 0, view.TextBuffer.CurrentSnapshot.Length);
                 TagsChanged?.Invoke(this, new SnapshotSpanEventArgs(span));
             });

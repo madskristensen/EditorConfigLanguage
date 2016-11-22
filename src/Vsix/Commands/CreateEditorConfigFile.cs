@@ -57,7 +57,7 @@ namespace EditorConfig
             else
             {
                 ProjectItem newItem = null;
-                File.WriteAllText(fileName, "[*]\r\nend_of_line = crlf\r\n\r\n[*.xml]\r\nindent_style = spaces");
+                File.WriteAllText(fileName, "[*]\r\nend_of_line = crlf\r\n\r\n[*.xml]\r\nindent_style = space");
 
                 if (item is Project proj)
                 {                    

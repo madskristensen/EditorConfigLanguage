@@ -38,6 +38,7 @@ any folder, project, solution folder and hit **Add -> .editorconfig File**
 ![Classification](art/context-menu.png)
 
 ### Syntax highlighting
+Full colorization of the full .editorconfig syntax.
 
 ![Classification](art/classification.png)
 

@@ -9,12 +9,17 @@ or get the [CI build](http://vsixgallery.com/extension/1209461d-57f8-46a4-814a-d
 
 ---------------------------------------
 
-Language service for .editorconfig files
+[The EditorConfig Project](http://editorconfig.org/) helps developers define and maintain
+consistent coding styles between different editors and IDEs.
+
+Visual Studio 2017 natively supports .editorconfig files, but it doesn't give
+language support for editing those files. This extension provides that.
 
 See the [change log](CHANGELOG.md) for changes and road map.
 
 ## Features
 
+- Makes it easy to create .editorconfig files
 - Syntax highlighting
 - Intellisense
 - Validation
@@ -25,6 +30,12 @@ See the [change log](CHANGELOG.md) for changes and road map.
 - Drag 'n drop file onto .editorconfig file
 - Code formatting
 - Hover tooltips
+
+### Create .editorconfig files
+To make it really easy to add a .editorconfig file, you can now right-click
+any folder, project, solution folder and hit **Add -> .editorconfig File**
+
+![Classification](art/context-menu.png)
 
 ### Syntax highlighting
 

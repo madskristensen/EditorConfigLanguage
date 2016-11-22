@@ -3,7 +3,9 @@
   <Metadata>
     <Identity Id="1209461d-57f8-46a4-814a-dbe5fecef941" Version="1.1" Language="en-US" Publisher="Mads Kristensen" />
     <DisplayName>EditorConfig Language Service</DisplayName>
-    <Description xml:space="preserve">Language service for .editorconfig files</Description>
+    <Description xml:space="preserve">Language service for .editorconfig files.
+
+EditorConfig helps developers define and maintain consistent coding styles between different editors and IDEs.</Description>
     <Icon>Resources\Icon.png</Icon>
     <PreviewImage>Resources\Preview.png</PreviewImage>
     <Tags>editorconfig</Tags>

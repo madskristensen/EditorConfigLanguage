@@ -3,7 +3,7 @@
 - [ ] Implement custom parser
 - [x] Better Intellisense triggers
 - [x] Gesture to create .editorconfig file
-- [ ] Description of what .editorconfig is in readme.md
+- [x] Description of what .editorconfig is in readme.md
 
 Features that have a checkmark are complete and available for
 download in the

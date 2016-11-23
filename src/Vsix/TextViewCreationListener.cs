@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Language.Intellisense;
+using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Operations;
@@ -39,17 +40,26 @@ namespace EditorConfig
             if (_errorList == null)
                 return;
 
-            var filter = new CompletionController(view, CompletionBroker);
-            textViewAdapter.AddCommandFilter(filter, out var completionNext);
-            filter.Next = completionNext;
+            //var filter = new CompletionController(view, CompletionBroker);
+            //textViewAdapter.AddCommandFilter(filter, out var completionNext);
+            //filter.Next = completionNext;
 
             var undoManager = UndoProvider.GetTextBufferUndoManager(view.TextBuffer);
 
-            var formatter = new EditorConfigFormatter(view, undoManager);
-            textViewAdapter.AddCommandFilter(formatter, out var formatterNext);
-            formatter.Next = formatterNext;
+            AddCommandFilter(textViewAdapter, new EditorConfigFormatter(view, undoManager));
+            AddCommandFilter(textViewAdapter, new CompletionController(view, CompletionBroker));
+            AddCommandFilter(textViewAdapter, new F1Help());
+            //var formatter = new EditorConfigFormatter(view, undoManager);
+            //textViewAdapter.AddCommandFilter(formatter, out var formatterNext);
+            //formatter.Next = formatterNext;
 
             view.Closed += OnViewClosed;
+        }
+
+        private void AddCommandFilter(IVsTextView textViewAdapter, BaseCommand command)
+        {
+            textViewAdapter.AddCommandFilter(command, out var next);
+            command.Next = next;
         }
 
         private void OnViewClosed(object sender, EventArgs e)

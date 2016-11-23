@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.Imaging;
+using Microsoft.VisualStudio.Imaging.Interop;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Language.StandardClassification;
 using Microsoft.VisualStudio.Text;
@@ -60,7 +61,7 @@ namespace EditorConfig
             if (string.IsNullOrWhiteSpace(line.GetText()))
             {
                 foreach (var key in CompletionItem.Items)
-                    list.Add(CreateCompletion(key.Name, key.Description));
+                    list.Add(CreateCompletion(key.Name, key.IsSupported, key.Description));
             }
             else
             {
@@ -78,7 +79,7 @@ namespace EditorConfig
                             continue;
 
                         foreach (var key in CompletionItem.Items)
-                            list.Add(CreateCompletion(key.Name, key.Description));
+                            list.Add(CreateCompletion(key.Name, key.IsSupported, key.Description));
                     }
                     else if (span.ClassificationType.IsOfType(PredefinedClassificationTypeNames.SymbolDefinition))
                     {
@@ -124,9 +125,18 @@ namespace EditorConfig
             }
         }
 
-        private Completion3 CreateCompletion(string name, string description = null)
+        private Completion3 CreateCompletion(string name, bool isSupported = true, string description = null)
         {
-            return new Completion3(name, name, description, KnownMonikers.Property, null);
+            ImageMoniker moniker = KnownMonikers.Property;
+            string tooltip = description;
+
+            if (!isSupported)
+            {
+                moniker = KnownMonikers.PropertyMissing;
+                tooltip = $"Not supported by Visual Studio\r\n\r\n{description}";
+            }
+
+            return new Completion3(name, name, tooltip, moniker, null);
         }
 
         private ITrackingSpan FindTokenSpanAtPosition(ICompletionSession session)

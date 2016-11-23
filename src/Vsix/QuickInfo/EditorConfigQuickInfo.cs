@@ -7,6 +7,12 @@ using Microsoft.VisualStudio.Language.StandardClassification;
 using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
+using Microsoft.VisualStudio.Imaging.Interop;
+using System.Windows.Media.Imaging;
+using System.Runtime.InteropServices;
+using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.Imaging;
+using Microsoft.VisualStudio.Shell;
 
 namespace EditorConfig
 {
@@ -20,13 +26,6 @@ namespace EditorConfig
         {
             _classifier = classifierAggregatorService.GetClassifier(buffer);
             _buffer = buffer;
-
-            if (_control == null)
-            {
-                var image = new Image();
-                image.Source = glyphService.GetGlyph(StandardGlyphGroup.GlyphGroupProperty, StandardGlyphItem.GlyphItemPublic);
-                _control = new QuickInfoControl(image);
-            }
         }
 
         public void AugmentQuickInfoSession(IQuickInfoSession session, IList<object> qiContent, out ITrackingSpan applicableToSpan)
@@ -53,8 +52,16 @@ namespace EditorConfig
 
             if (item != null)
             {
+
+                if (_control == null)
+                {
+                    var image = new Image();
+                    image.Source = GetImage(KnownMonikers.VisualStudioSettingsFile, 16);
+                    _control = new QuickInfoControl(image);
+                }
+
                 _control.Keyword.Text = keyword;
-                _control.Description.Text = item.Description;
+                _control.Description.Text = item.IsSupported ? item.Description : $"Not supported by Visual Studio\r\n\r\n{item.Description}"; ;
                 qiContent.Add(_control);
 
                 applicableToSpan = lineSpan.Snapshot.CreateTrackingSpan(span.Span, SpanTrackingMode.EdgeNegative);
@@ -85,6 +92,28 @@ namespace EditorConfig
         public void Dispose()
         {
             // Nothing to dispose
+        }
+
+        public static BitmapSource GetImage(ImageMoniker moniker, int size)
+        {
+            ImageAttributes imageAttributes = new ImageAttributes
+            {
+                Flags = (uint)_ImageAttributesFlags.IAF_RequiredFlags,
+                ImageType = (uint)_UIImageType.IT_Bitmap,
+                Format = (uint)_UIDataFormat.DF_WPF,
+                LogicalHeight = size,
+                LogicalWidth = size,
+                StructSize = Marshal.SizeOf(typeof(ImageAttributes))
+            };
+
+            var service = (IVsImageService2)Package.GetGlobalService(typeof(SVsImageService));
+            IVsUIObject result = service.GetImage(moniker, imageAttributes);
+            result.get_Data(out object data);
+
+            if (data == null)
+                return null;
+
+            return data as BitmapSource;
         }
     }
 }

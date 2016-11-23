@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.Text.Editor;
 
 namespace EditorConfig
 {
-    internal sealed class CompletionController : IOleCommandTarget
+    internal sealed class CompletionController : BaseCommand
     {
         private ICompletionSession _currentSession;
 
@@ -22,14 +22,13 @@ namespace EditorConfig
 
         public IWpfTextView TextView { get; private set; }
         public ICompletionBroker Broker { get; private set; }
-        public IOleCommandTarget Next { get; set; }
 
         private static char GetTypeChar(IntPtr pvaIn)
         {
             return (char)(ushort)Marshal.GetObjectForNativeVariant(pvaIn);
         }
 
-        public int Exec(ref Guid pguidCmdGroup, uint nCmdID, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
+        public override int Exec(ref Guid pguidCmdGroup, uint nCmdID, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
         {
             bool handled = false;
             int hresult = VSConstants.S_OK;
@@ -145,7 +144,7 @@ namespace EditorConfig
             return true;
         }
 
-        public int QueryStatus(ref Guid pguidCmdGroup, uint cCmds, OLECMD[] prgCmds, IntPtr pCmdText)
+        public override int QueryStatus(ref Guid pguidCmdGroup, uint cCmds, OLECMD[] prgCmds, IntPtr pCmdText)
         {
             if (pguidCmdGroup == VSConstants.VSStd2K)
             {

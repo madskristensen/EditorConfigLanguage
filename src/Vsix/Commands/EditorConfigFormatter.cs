@@ -7,7 +7,7 @@ using System.Text;
 
 namespace EditorConfig
 {
-    internal sealed class EditorConfigFormatter : IOleCommandTarget
+    internal sealed class EditorConfigFormatter : BaseCommand
     {
         private ITextBufferUndoManager _undoManager;
         private IWpfTextView _view;
@@ -17,10 +17,8 @@ namespace EditorConfig
             _view = textView;
             _undoManager = undoManager;
         }
-
-        public IOleCommandTarget Next { get; set; }
-
-        public int Exec(ref Guid pguidCmdGroup, uint nCmdID, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
+        
+        public override int Exec(ref Guid pguidCmdGroup, uint nCmdID, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
         {
             if (pguidCmdGroup == VSConstants.VSStd2K)
             {
@@ -81,7 +79,7 @@ namespace EditorConfig
             }
         }
 
-        public int QueryStatus(ref Guid pguidCmdGroup, uint cCmds, OLECMD[] prgCmds, IntPtr pCmdText)
+        public override int QueryStatus(ref Guid pguidCmdGroup, uint cCmds, OLECMD[] prgCmds, IntPtr pCmdText)
         {
             if (pguidCmdGroup == VSConstants.VSStd2K)
             {

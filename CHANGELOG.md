@@ -1,9 +1,13 @@
 # Road map
 
 - [ ] Implement custom parser
+- [ ] Move strings to .resx file
+- [ ] Alert the user that reopening files are required
 - [x] Better Intellisense triggers
 - [x] Gesture to create .editorconfig file
 - [x] Description of what .editorconfig is in readme.md
+- [x] F1 opens http://editorconfig.org
+- [x] Mark unsupported keywords
 
 Features that have a checkmark are complete and available for
 download in the

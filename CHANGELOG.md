@@ -2,12 +2,6 @@
 
 - [ ] Implement custom parser
 - [ ] Move strings to .resx file
-- [x] Status bar text saying that reopening files are required
-- [x] Better Intellisense triggers
-- [x] Gesture to create .editorconfig file
-- [x] Description of what .editorconfig is in readme.md
-- [x] F1 opens http://editorconfig.org
-- [x] Mark unsupported keywords
 
 Features that have a checkmark are complete and available for
 download in the
@@ -17,6 +11,15 @@ download in the
 
 These are the changes to each version that has been released
 on the official Visual Studio extension gallery.
+
+## 1.2
+
+- [x] Status bar text saying that reopening files are required
+- [x] Better Intellisense triggers
+- [x] Gesture to create .editorconfig file
+- [x] Description of what .editorconfig is in readme.md
+- [x] F1 opens http://editorconfig.org
+- [x] Mark unsupported keywords
 
 ## 1.1
 

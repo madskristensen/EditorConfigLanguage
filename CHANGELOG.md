@@ -2,7 +2,7 @@
 
 - [ ] Implement custom parser
 - [ ] Move strings to .resx file
-- [ ] Alert the user that reopening files are required
+- [x] Status bar text saying that reopening files are required
 - [x] Better Intellisense triggers
 - [x] Gesture to create .editorconfig file
 - [x] Description of what .editorconfig is in readme.md

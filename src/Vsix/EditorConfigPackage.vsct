@@ -9,7 +9,7 @@
     <Groups>
       <Group guid="guidEditorConfigPackageCmdSet" id="AddGroup" priority="0x0002" />
     </Groups>
-    
+
     <Buttons>
       <Button guid="guidEditorConfigPackageCmdSet" id="CreateEditorConfigFileId" priority="0x0500" type="Button">
         <Icon guid="ImageCatalogGuid" id="VisualStudioSettingsFile" />
@@ -38,7 +38,7 @@
       <Parent guid="guidSHLMainMenu" id="IDM_VS_CSCD_CV_ITEMADD" />
     </CommandPlacement>
   </CommandPlacements>
-  
+
   <Symbols>
     <!-- This is the package guid. -->
     <GuidSymbol name="guidEditorConfigPackage" value="{6736c72d-7a27-49f0-9153-413ff47963ef}" />

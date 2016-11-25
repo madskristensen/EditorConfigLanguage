@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 
 namespace EditorConfig
 {
-    [Guid(PackageGuidString)]
+    [Guid(PackageGuids.guidEditorConfigPackageString)]
     [PackageRegistration(UseManagedResourcesOnly = true)]
     [InstalledProductRegistration("#110", "#112", Vsix.Version, IconResourceID = 400)]
 
@@ -22,8 +22,6 @@ namespace EditorConfig
     [ProvideMenuResource("Menus.ctmenu", 1)]
     public sealed class EditorConfigPackage : Package
     {
-        public const string PackageGuidString = "6736c72d-7a27-49f0-9153-413ff47963ef";
-
         public static EditorConfigLanguage Language
         {
             get;

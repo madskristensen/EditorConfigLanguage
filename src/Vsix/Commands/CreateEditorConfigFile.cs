@@ -19,7 +19,7 @@ namespace EditorConfig
             var commandService = ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
             if (commandService != null)
             {
-                var cmdId = new CommandID(new Guid("a21ee3c5-45b9-4bd8-abd7-30ceb3d990c5"), 0x0100);
+                var cmdId = new CommandID(PackageGuids.guidEditorConfigPackageCmdSet, PackageIds.CreateEditorConfigFileId);
                 var menuItem = new MenuCommand(CreateFile, cmdId);
                 commandService.AddCommand(menuItem);
             }
@@ -60,7 +60,7 @@ namespace EditorConfig
                 File.WriteAllText(fileName, "[*]\r\nend_of_line = crlf\r\n\r\n[*.xml]\r\nindent_style = space");
 
                 if (item is Project proj)
-                {                    
+                {
                     newItem = proj.AddFileToProject(fileName, "None");
                 }
                 else if (item is ProjectItem projItem && projItem.ContainingProject != null)
@@ -106,7 +106,7 @@ namespace EditorConfig
                 return null;
 
             string folder = null;
-            
+
             if (item is ProjectItem projectItem)
             {
                 string fileName = projectItem.FileNames[1];

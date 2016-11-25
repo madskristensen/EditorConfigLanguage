@@ -63,6 +63,11 @@
     <Compile Include="Commands\CreateEditorConfigFile.cs" />
     <Compile Include="DragDrop\EditorConfigDropHandler.cs" />
     <Compile Include="DragDrop\EditorConfigDropHandlerProvider.cs" />
+    <Compile Include="EditorConfigPackage1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EditorConfigPackage.vsct</DependentUpon>
+    </Compile>
     <Compile Include="Helpers\ProjectHelpers.cs" />
     <Compile Include="Outlining\OutliningTagger.cs" />
     <Compile Include="Outlining\OutliningTaggerProvider.cs" />
@@ -90,6 +95,8 @@
   <ItemGroup>
     <VSCTCompile Include="EditorConfigPackage.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
+      <Generator>VsctGenerator</Generator>
+      <LastGenOutput>EditorConfigPackage1.cs</LastGenOutput>
     </VSCTCompile>
     <Content Include="FileIcons\icons.pkgdef">
       <IncludeInVSIX>true</IncludeInVSIX>

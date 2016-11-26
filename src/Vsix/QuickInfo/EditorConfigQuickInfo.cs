@@ -21,6 +21,7 @@ namespace EditorConfig
         private IClassifier _classifier;
         private ITextBuffer _buffer;
         private static QuickInfoControl _control;
+        private static BitmapSource _supported, _unsupported;
 
         public EditorConfigQuickInfo(ITextBuffer buffer, IClassifierAggregatorService classifierAggregatorService, IGlyphService glyphService)
         {
@@ -52,16 +53,16 @@ namespace EditorConfig
 
             if (item != null)
             {
-
                 if (_control == null)
                 {
-                    var image = new Image();
-                    image.Source = GetImage(KnownMonikers.VisualStudioSettingsFile, 16);
-                    _control = new QuickInfoControl(image);
+                    _supported = GetImage(KnownMonikers.Property, 16);
+                    _unsupported = GetImage(KnownMonikers.PropertyMissing, 16);
+                    _control = new QuickInfoControl();
                 }
 
                 _control.Keyword.Text = keyword;
                 _control.Description.Text = item.IsSupported ? item.Description : $"Not supported by Visual Studio\r\n\r\n{item.Description}"; ;
+                _control.Image.Source = item.IsSupported ? _supported : _unsupported;
                 qiContent.Add(_control);
 
                 applicableToSpan = lineSpan.Snapshot.CreateTrackingSpan(span.Span, SpanTrackingMode.EdgeNegative);
@@ -70,15 +71,13 @@ namespace EditorConfig
 
         private class QuickInfoControl : StackPanel
         {
-            public QuickInfoControl(Image image)
+            public QuickInfoControl()
             {
                 Keyword.SetResourceReference(TextBlock.ForegroundProperty, EnvironmentColors.BrandedUITitleBrushKey);
                 Description.SetResourceReference(TextBlock.ForegroundProperty, EnvironmentColors.BrandedUITitleBrushKey);
 
-                image.Margin = new Thickness(0, 0, 10, 0);
-
                 var header = new DockPanel();
-                header.Children.Add(image);
+                header.Children.Add(Image);
                 header.Children.Add(Keyword);
                 Children.Add(header);
 
@@ -87,6 +86,7 @@ namespace EditorConfig
 
             public TextBlock Keyword { get; } = new TextBlock { FontWeight = FontWeights.Bold };
             public TextBlock Description { get; } = new TextBlock { Margin = new Thickness(0, 5, 0, 0), MaxWidth = 500, TextWrapping = TextWrapping.Wrap };
+            public Image Image { get; } = new Image { Margin = new Thickness(0, 0, 10, 0) };
         }
 
         public void Dispose()

@@ -7,7 +7,7 @@
 
 EditorConfig helps developers define and maintain consistent coding styles between different editors and IDEs.</Description>
     <Icon>Resources\Icon.png</Icon>
-    <PreviewImage>Resources\Preview.png</PreviewImage>
+    <PreviewImage>Resources\Icon.png</PreviewImage>
     <Tags>editorconfig</Tags>
   </Metadata>
   <Installation>

@@ -2,6 +2,7 @@
 
 - [ ] Implement custom parser
 - [ ] Move strings to .resx file
+- [x] Updated logo
 
 Features that have a checkmark are complete and available for
 download in the

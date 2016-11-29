@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.Shell;
 using System;
 using System.ComponentModel.Design;
 using System.IO;
+using Task = System.Threading.Tasks.Task;
 using System.Windows;
 
 namespace EditorConfig
@@ -12,11 +13,10 @@ namespace EditorConfig
     {
         private readonly Package _package;
 
-        private CreateEditorConfigFile(Package package)
+        private CreateEditorConfigFile(Package package, OleMenuCommandService commandService)
         {
-            _package = package ?? throw new ArgumentNullException("package");
+            _package = package ?? throw new ArgumentNullException(nameof(package));
 
-            var commandService = ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
             if (commandService != null)
             {
                 var cmdId = new CommandID(PackageGuids.guidEditorConfigPackageCmdSet, PackageIds.CreateEditorConfigFileId);
@@ -35,9 +35,10 @@ namespace EditorConfig
             get { return _package; }
         }
 
-        public static void Initialize(Package package)
+        public static async Task InitializeAsync(AsyncPackage package)
         {
-            Instance = new CreateEditorConfigFile(package);
+            var commandService = await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
+            Instance = new CreateEditorConfigFile(package, commandService);
         }
 
         private void CreateFile(object sender, EventArgs e)
@@ -48,11 +49,11 @@ namespace EditorConfig
             if (string.IsNullOrEmpty(folder))
                 return;
 
-            string fileName = Path.Combine(folder, ".editorconfig");
+            string fileName = Path.Combine(folder, ContentTypes.FileName);
 
             if (File.Exists(fileName))
             {
-                MessageBox.Show("An .editorconfig file already exist in this location", "EditorConfig Language Service", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("An .editorconfig file already exist in this location", Vsix.Name, MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else
             {
@@ -120,7 +121,7 @@ namespace EditorConfig
                     folder = fileName;
                 }
             }
-            else if (item is Project project )
+            else if (item is Project project)
             {
                 folder = project.GetRootFolder();
             }

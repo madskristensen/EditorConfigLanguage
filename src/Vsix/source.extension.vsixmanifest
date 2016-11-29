@@ -6,6 +6,7 @@
     <Description xml:space="preserve">Language service for .editorconfig files.
 
 EditorConfig helps developers define and maintain consistent coding styles between different editors and IDEs.</Description>
+    <License>Resources/LICENSE</License>
     <Icon>Resources\Icon.png</Icon>
     <PreviewImage>Resources\Icon.png</PreviewImage>
     <Tags>editorconfig</Tags>

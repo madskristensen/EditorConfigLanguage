@@ -101,6 +101,9 @@
     <Content Include="FileIcons\icons.pkgdef">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Content Include="..\..\LICENSE">
+      <Link>Resources\LICENSE</Link>
+    </Content>
     <None Include="packages.config" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>

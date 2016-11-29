@@ -6,6 +6,8 @@ namespace EditorConfig
     public class ContentTypes
     {
         public const string EditorConfig = "EditorConfig";
+        public const string FileName = ".editorconfig";
+
 
         [Export(typeof(ContentTypes))]
         [Name(EditorConfig)]

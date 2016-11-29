@@ -4,8 +4,8 @@ using Microsoft.VisualStudio.Shell;
 using System;
 using System.ComponentModel.Design;
 using System.IO;
-using Task = System.Threading.Tasks.Task;
 using System.Windows;
+using Task = System.Threading.Tasks.Task;
 
 namespace EditorConfig
 {

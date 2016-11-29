@@ -7,16 +7,14 @@ namespace EditorConfig
     internal sealed class F1Help : BaseCommand
     {
         private Guid _commandGroup = typeof(VSConstants.VSStd97CmdID).GUID;
+        private const uint _commandId = (uint)VSConstants.VSStd97CmdID.F1Help;
 
         public override int Exec(ref Guid pguidCmdGroup, uint nCmdID, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
         {
-            if (pguidCmdGroup == _commandGroup)
+            if (pguidCmdGroup == _commandGroup && nCmdID == _commandId)
             {
-                if  ((VSConstants.VSStd97CmdID)nCmdID == VSConstants.VSStd97CmdID.F1Help)
-                {
-                    System.Diagnostics.Process.Start(Constants.Homepage);
-                    return VSConstants.S_OK;
-                }
+                System.Diagnostics.Process.Start(Constants.Homepage);
+                return VSConstants.S_OK;
             }
 
             return Next.Exec(pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
@@ -25,14 +23,10 @@ namespace EditorConfig
 
         public override int QueryStatus(ref Guid pguidCmdGroup, uint cCmds, OLECMD[] prgCmds, IntPtr pCmdText)
         {
-            if (pguidCmdGroup == _commandGroup)
+            if (pguidCmdGroup == _commandGroup && prgCmds[0].cmdID == _commandId)
             {
-                switch ((VSConstants.VSStd97CmdID)prgCmds[0].cmdID)
-                {
-                    case VSConstants.VSStd97CmdID.F1Help:
-                        prgCmds[0].cmdf = (uint)OLECMDF.OLECMDF_ENABLED | (uint)OLECMDF.OLECMDF_SUPPORTED;
-                        return VSConstants.S_OK;
-                }
+                prgCmds[0].cmdf = (uint)OLECMDF.OLECMDF_ENABLED | (uint)OLECMDF.OLECMDF_SUPPORTED;
+                return VSConstants.S_OK;
             }
 
             return Next.QueryStatus(pguidCmdGroup, cCmds, prgCmds, pCmdText);

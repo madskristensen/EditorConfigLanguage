@@ -14,7 +14,7 @@ using System.Windows.Threading;
 namespace EditorConfig
 {
     [Export(typeof(IVsTextViewCreationListener))]
-    [ContentType(ContentTypes.EditorConfig)]
+    [ContentType(Constants.LanguageName)]
     [TextViewRole(PredefinedTextViewRoles.PrimaryDocument)]
     internal sealed class VsTextViewCreationListener : IVsTextViewCreationListener
     {

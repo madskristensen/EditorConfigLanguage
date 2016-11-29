@@ -73,10 +73,10 @@ namespace EditorConfig
 
         public override string GetFormatFilterList()
         {
-            return "EditorConfig File (*.editorconfig)|*.editorconfig";
+            return $"EditorConfig File (*{Constants.FileName})|*{Constants.FileName}";
         }
 
-        public override string Name => ContentTypes.EditorConfig;
+        public override string Name => Constants.LanguageName;
 
         public override void Dispose()
         {

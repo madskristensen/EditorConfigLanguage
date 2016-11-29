@@ -10,7 +10,7 @@ namespace EditorConfig
     [DropFormat("CF_VSSTGPROJECTITEMS")]
     [DropFormat("FileDrop")]
     [Name("EditorConfigDropHandler")]
-    [ContentType(ContentTypes.EditorConfig)]
+    [ContentType(Constants.LanguageName)]
     [Order(Before = "DefaultFileDropHandler")]
     internal class EditorConfigDropHandlerProvider : IDropHandlerProvider
     {

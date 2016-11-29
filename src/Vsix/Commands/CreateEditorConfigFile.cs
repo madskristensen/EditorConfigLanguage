@@ -49,11 +49,11 @@ namespace EditorConfig
             if (string.IsNullOrEmpty(folder))
                 return;
 
-            string fileName = Path.Combine(folder, ContentTypes.FileName);
+            string fileName = Path.Combine(folder, Constants.FileName);
 
             if (File.Exists(fileName))
             {
-                MessageBox.Show("An .editorconfig file already exist in this location", Vsix.Name, MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show(Resources.Text.EditorConfigFileAlreadyExist, Vsix.Name, MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else
             {
@@ -88,7 +88,7 @@ namespace EditorConfig
 
             foreach (Project project in solution.Projects)
             {
-                if (project.Kind == Constants.vsProjectKindSolutionItems && project.Name == "Solution Items")
+                if (project.Kind == EnvDTE.Constants.vsProjectKindSolutionItems && project.Name == "Solution Items")
                 {
                     currentProject = project;
                     break;

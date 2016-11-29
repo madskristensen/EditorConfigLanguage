@@ -1,18 +1,18 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
+﻿using Microsoft.VisualStudio.Imaging;
+using Microsoft.VisualStudio.Imaging.Interop;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Language.StandardClassification;
 using Microsoft.VisualStudio.PlatformUI;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
-using Microsoft.VisualStudio.Imaging.Interop;
-using System.Windows.Media.Imaging;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
-using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio.Imaging;
-using Microsoft.VisualStudio.Shell;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 
 namespace EditorConfig
 {
@@ -61,7 +61,7 @@ namespace EditorConfig
                 }
 
                 _control.Keyword.Text = keyword;
-                _control.Description.Text = item.IsSupported ? item.Description : $"Not supported by Visual Studio\r\n\r\n{item.Description}"; ;
+                _control.Description.Text = item.IsSupported ? item.Description : $"{Resources.Text.NotSupportedByVS}\r\n\r\n{item.Description}"; ;
                 _control.Image.Source = item.IsSupported ? _supported : _unsupported;
                 qiContent.Add(_control);
 

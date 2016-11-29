@@ -13,14 +13,14 @@ namespace EditorConfig
     [PackageRegistration(UseManagedResourcesOnly = true)]
     [InstalledProductRegistration("#110", "#112", Vsix.Version, IconResourceID = 400)]
 
-    [ProvideLanguageService(typeof(EditorConfigLanguage), ContentTypes.EditorConfig, 101, EnableAdvancedMembersOption = true, DefaultToInsertSpaces = true, EnableCommenting = true, AutoOutlining = true, EnableLineNumbers = true, MatchBraces = true, MatchBracesAtCaret = true, ShowMatchingBrace = true)]
-    [ProvideLanguageExtension(typeof(EditorConfigLanguage), ContentTypes.FileName)]
+    [ProvideLanguageService(typeof(EditorConfigLanguage), Constants.LanguageName, 101, EnableAdvancedMembersOption = true, DefaultToInsertSpaces = true, EnableCommenting = true, AutoOutlining = true, EnableLineNumbers = true, MatchBraces = true, MatchBracesAtCaret = true, ShowMatchingBrace = true)]
+    [ProvideLanguageExtension(typeof(EditorConfigLanguage), Constants.FileName)]
 
     [ProvideEditorFactory(typeof(EditorFactory), 110, CommonPhysicalViewAttributes = (int)__VSPHYSICALVIEWATTRIBUTES.PVA_None, TrustLevel = __VSEDITORTRUSTLEVEL.ETL_AlwaysTrusted)]
     [ProvideEditorLogicalView(typeof(EditorFactory), VSConstants.LOGVIEWID.TextView_string, IsTrusted = true)]
 
-    [ProvideEditorExtension(typeof(EditorFactory), ContentTypes.FileName, 1000)]
-    [ProvideAutoBraceCompletion(ContentTypes.EditorConfig)]
+    [ProvideEditorExtension(typeof(EditorFactory), Constants.FileName, 1000)]
+    [ProvideAutoBraceCompletion(Constants.LanguageName)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     public sealed class EditorConfigPackage : AsyncPackage
     {

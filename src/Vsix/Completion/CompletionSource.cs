@@ -13,7 +13,7 @@ using System.Linq;
 namespace EditorConfig
 {
     [Export(typeof(ICompletionSourceProvider))]
-    [ContentType(ContentTypes.EditorConfig)]
+    [ContentType(Constants.LanguageName)]
     [Name("Editor Config")]
     public class EditorConfigCompletionSourceProvider : ICompletionSourceProvider
     {
@@ -133,7 +133,7 @@ namespace EditorConfig
             if (!isSupported)
             {
                 moniker = KnownMonikers.PropertyMissing;
-                tooltip = $"Not supported by Visual Studio\r\n\r\n{description}";
+                tooltip = $"{Resources.Text.NotSupportedByVS}\r\n\r\n{description}";
             }
 
             return new Completion3(name, name, tooltip, moniker, null);

@@ -13,7 +13,7 @@ using System.Windows.Threading;
 namespace EditorConfig
 {
     [Export(typeof(IWpfTextViewCreationListener))]
-    [ContentType(ContentTypes.EditorConfig)]
+    [ContentType(Constants.LanguageName)]
     [TextViewRole(PredefinedTextViewRoles.Document)]
     internal sealed class HtmlProvisionalTextHighlightFactory : IWpfTextViewCreationListener
     {

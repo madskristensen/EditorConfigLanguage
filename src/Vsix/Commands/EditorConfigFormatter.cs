@@ -17,7 +17,7 @@ namespace EditorConfig
             _view = textView;
             _undoManager = undoManager;
         }
-        
+
         public override int Exec(ref Guid pguidCmdGroup, uint nCmdID, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
         {
             if (pguidCmdGroup == VSConstants.VSStd2K)

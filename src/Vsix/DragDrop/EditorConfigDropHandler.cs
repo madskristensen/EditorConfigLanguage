@@ -25,7 +25,7 @@ namespace EditorConfig
         {
             try
             {
-                
+
                 var position = dragDropInfo.VirtualBufferPosition.Position;
                 string header = string.Format(_template, _ext);
 

@@ -14,7 +14,7 @@ namespace EditorConfig
             {
                 if  ((VSConstants.VSStd97CmdID)nCmdID == VSConstants.VSStd97CmdID.F1Help)
                 {
-                    System.Diagnostics.Process.Start("http://editorconfig.org/");
+                    System.Diagnostics.Process.Start(Constants.Homepage);
                     return VSConstants.S_OK;
                 }
             }

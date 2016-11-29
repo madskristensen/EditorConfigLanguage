@@ -9,7 +9,7 @@ namespace EditorConfig
 {
     [Export(typeof(IIntellisenseControllerProvider))]
     [Name("EditorConfig QuickInfo Controller")]
-    [ContentType(ContentTypes.EditorConfig)]
+    [ContentType(Constants.LanguageName)]
     public class EditorConfigQuickInfoControllerProvider : IIntellisenseControllerProvider
     {
         [Import]

@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.Utilities;
 namespace EditorConfig
 {
     [Export(typeof(IIntellisenseControllerProvider))]
-    [ContentType(ContentTypes.EditorConfig)]
+    [ContentType(Constants.LanguageName)]
     [Name("EditorConfig TypeThrough Completion Controller")]
     [Order(Before = "Default Completion Controller")]
     [TextViewRole(PredefinedTextViewRoles.Editable)]

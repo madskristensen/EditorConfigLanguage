@@ -61,6 +61,7 @@
     <Compile Include="Completion\CompletionController.cs" />
     <Compile Include="Completion\CompletionSource.cs" />
     <Compile Include="Commands\CreateEditorConfigFile.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="DragDrop\EditorConfigDropHandler.cs" />
     <Compile Include="DragDrop\EditorConfigDropHandlerProvider.cs" />
     <Compile Include="EditorConfigPackage1.cs">
@@ -76,6 +77,11 @@
     <Compile Include="QuickInfo\EditorConfigQuickInfoController.cs" />
     <Compile Include="QuickInfo\EditorConfigQuickInfoControllerProvider.cs" />
     <Compile Include="QuickInfo\EditorConfigQuickInfoSourceProvider.cs" />
+    <Compile Include="Resources\Text.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Text.resx</DependentUpon>
+    </Compile>
     <Compile Include="TextViewCreationListener.cs" />
     <Compile Include="LanguageService\ContentTypes.cs" />
     <Compile Include="EditorConfigPackage.cs" />
@@ -272,6 +278,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\Text.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Text.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="source.extension.resx">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

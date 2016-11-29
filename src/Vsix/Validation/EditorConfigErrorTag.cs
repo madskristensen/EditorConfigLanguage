@@ -14,7 +14,7 @@ using System.Windows.Threading;
 namespace EditorConfig
 {
     [Export(typeof(ITaggerProvider))]
-    [ContentType(ContentTypes.EditorConfig)]
+    [ContentType(Constants.LanguageName)]
     [TagType(typeof(ErrorTag))]
     class CheckTextErrorProvider : ITaggerProvider
     {
@@ -27,7 +27,7 @@ namespace EditorConfig
         public ITagger<T> CreateTagger<T>(ITextBuffer buffer) where T : ITag
         {
             if (buffer == null)
-                throw new ArgumentException("Buffer is null");
+                throw new ArgumentNullException(nameof(buffer));
 
             if (!buffer.Properties.TryGetProperty(typeof(ErrorListProvider), out ErrorListProvider errorlist) ||
                 !buffer.Properties.TryGetProperty(typeof(IWpfTextView), out IWpfTextView view) ||
@@ -93,7 +93,7 @@ namespace EditorConfig
                     string value = cspan.Span.GetText();
 
                     if (!item.Values.Contains(value) && !(int.TryParse(value, out int intValue) && intValue > 0))
-                        yield return CreateError(line, cspan, "\"" + value + "\" is not a valid value for the '" + property + "' property");
+                        yield return CreateError(line, cspan, string.Format(Resources.Text.InvalidValue, value, property));
                 }
             }
         }

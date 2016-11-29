@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.Utilities;
 namespace EditorConfig
 {
     [Export(typeof(IViewTaggerProvider))]
-    [ContentType(ContentTypes.EditorConfig)]
+    [ContentType(Constants.LanguageName)]
     [TagType(typeof(TextMarkerTag))]
     class BraceMatchingTaggerProvider : IViewTaggerProvider
     {

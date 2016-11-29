@@ -77,7 +77,7 @@ namespace EditorConfig
                     yield return new TagSpan<TextMarkerTag>(pairSpan, new TextMarkerTag("MarkerFormatDefinition/HighlightWordFormatDefinition"));
                 }
             }
-            else if (_braceList.ContainsValue(lastText))    //the value is the close brace, which is the *previous* character 
+            else if (_braceList.ContainsValue(lastText))    //the value is the close brace, which is the *previous* character
             {
                 var open = from n in _braceList
                            where n.Value.Equals(lastText)

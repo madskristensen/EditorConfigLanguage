@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.Text.Tagging;
 
 namespace EditorConfig
 {
-    internal sealed class OutliningTagger : ITagger<IOutliningRegionTag>
+    internal sealed class OutliningTagger : ITagger<IOutliningRegionTag>, IDisposable
     {
         readonly ITextBuffer buffer;
         ITextSnapshot snapshot;
@@ -138,6 +138,15 @@ namespace EditorConfig
 
             this.snapshot = newSnapshot;
             this.regions = newRegions.Where(line => line.StartLine != line.EndLine);
+        }
+
+        public void Dispose()
+        {
+            if (_timer != null)
+            {
+                _timer.Dispose();
+                _timer = null;
+            }
         }
     }
 

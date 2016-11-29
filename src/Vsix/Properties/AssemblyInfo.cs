@@ -1,4 +1,5 @@
 ﻿using EditorConfig;
+using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
@@ -12,6 +13,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCulture("")]
 
 [assembly: ComVisible(false)]
+[assembly: CLSCompliant(false)]
 
 [assembly: AssemblyVersion(Vsix.Version)]
 [assembly: AssemblyFileVersion(Vsix.Version)]

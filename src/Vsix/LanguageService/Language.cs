@@ -1,5 +1,6 @@
 using Microsoft.VisualStudio.Package;
 using Microsoft.VisualStudio.TextManager.Interop;
+using System;
 using System.Runtime.InteropServices;
 
 namespace EditorConfig
@@ -78,7 +79,13 @@ namespace EditorConfig
 
         public override string Name => Constants.LanguageName;
 
-        public override void Dispose()
+        public sealed override void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void Dispose(bool dispose)
         {
             try
             {

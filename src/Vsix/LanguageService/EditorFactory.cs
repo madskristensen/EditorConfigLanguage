@@ -43,7 +43,7 @@ namespace EditorConfig
     using VsTextBufferClass = Microsoft.VisualStudio.TextManager.Interop.VsTextBufferClass;
 
     [Guid("13cabf99-9eae-4ecc-a6f4-89f3ad54dc83")]
-    public class EditorFactory : IVsEditorFactory
+    public class EditorFactory : IVsEditorFactory, IDisposable
     {
         private readonly Package _package;
         private readonly Guid _languageServiceId;
@@ -322,6 +322,24 @@ namespace EditorConfig
             }
 
             return window;
+        }
+
+        private void Dispose(bool dispose)
+        {
+            if (dispose)
+            {
+                if (_serviceProvider != null)
+                {
+                    _serviceProvider.Dispose();
+                    _serviceProvider = null;
+                }
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         private sealed class TextBufferEventListener : IVsTextBufferDataEvents

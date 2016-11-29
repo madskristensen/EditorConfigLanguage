@@ -17,7 +17,7 @@ namespace EditorConfig
         int _caretPosition = 0;
         int _bufferVersionWaterline;
 
-        public TypeThroughController(ITextView textView, IList<ITextBuffer> subjectBuffers)
+        protected TypeThroughController(ITextView textView, IList<ITextBuffer> subjectBuffers)
         {
             _textBuffer = subjectBuffers[0];
             _textView = textView;

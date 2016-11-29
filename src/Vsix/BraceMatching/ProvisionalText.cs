@@ -18,7 +18,7 @@ namespace EditorConfig
     internal sealed class HtmlProvisionalTextHighlightFactory : IWpfTextViewCreationListener
     {
         [Export(typeof(AdornmentLayerDefinition))]
-        [Name("EditorConfigProvisionalTextHighlight")]
+        [Name(Name)]
         [Order(Before = PredefinedAdornmentLayers.Outlining)]
         [TextViewRole(PredefinedTextViewRoles.Document)]
         public AdornmentLayerDefinition EditorAdornmentLayer { get; set; }

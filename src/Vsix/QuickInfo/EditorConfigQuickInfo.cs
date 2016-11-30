@@ -21,7 +21,6 @@ namespace EditorConfig
         private IClassifier _classifier;
         private ITextBuffer _buffer;
         private static QuickInfoControl _control;
-        private static BitmapSource _supported, _unsupported;
 
         public EditorConfigQuickInfo(ITextBuffer buffer, IClassifierAggregatorService classifierAggregatorService, IGlyphService glyphService)
         {
@@ -55,14 +54,12 @@ namespace EditorConfig
             {
                 if (_control == null)
                 {
-                    _supported = GetImage(KnownMonikers.Property, 16);
-                    _unsupported = GetImage(KnownMonikers.PropertyMissing, 16);
                     _control = new QuickInfoControl();
                 }
 
                 _control.Keyword.Text = keyword;
                 _control.Description.Text = item.IsSupported ? item.Description : $"{Resources.Text.NotSupportedByVS}\r\n\r\n{item.Description}"; ;
-                _control.Image.Source = item.IsSupported ? _supported : _unsupported;
+                _control.Image.Source = GetImage(item.Moniker, 16);
                 qiContent.Add(_control);
 
                 applicableToSpan = lineSpan.Snapshot.CreateTrackingSpan(span.Span, SpanTrackingMode.EdgeNegative);

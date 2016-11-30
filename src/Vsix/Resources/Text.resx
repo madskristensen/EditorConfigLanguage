@@ -150,4 +150,13 @@
   <data name="NotSupportedByVS" xml:space="preserve">
     <value>Not supported by Visual Studio</value>
   </data>
+  <data name="ValidationInvalidEndChar" xml:space="preserve">
+    <value>Values must not end with a {0}</value>
+  </data>
+  <data name="ValidationInvalidSeverity" xml:space="preserve">
+    <value>Severity is invalid. Must be one of these values: {0}</value>
+  </data>
+  <data name="ValidationMissingSeverity" xml:space="preserve">
+    <value>A severity must be specified. Example: true:warning</value>
+  </data>
 </root>

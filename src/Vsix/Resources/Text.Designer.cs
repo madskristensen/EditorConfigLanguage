@@ -158,5 +158,32 @@ namespace EditorConfig.Resources {
                 return ResourceManager.GetString("NotSupportedByVS", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Values must not end with a {0}.
+        /// </summary>
+        internal static string ValidationInvalidEndChar {
+            get {
+                return ResourceManager.GetString("ValidationInvalidEndChar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Severity is invalid. Must be one of these values: {0}.
+        /// </summary>
+        internal static string ValidationInvalidSeverity {
+            get {
+                return ResourceManager.GetString("ValidationInvalidSeverity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A severity must be specified. Example: true:warning.
+        /// </summary>
+        internal static string ValidationMissingSeverity {
+            get {
+                return ResourceManager.GetString("ValidationMissingSeverity", resourceCulture);
+            }
+        }
     }
 }

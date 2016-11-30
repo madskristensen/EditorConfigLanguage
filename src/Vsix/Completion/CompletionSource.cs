@@ -149,7 +149,6 @@ namespace EditorConfig
 
             if (!isSupported)
             {
-                moniker = KnownMonikers.PropertyMissing;
                 tooltip = $"{Resources.Text.NotSupportedByVS}\r\n\r\n{description}";
             }
 

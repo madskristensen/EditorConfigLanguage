@@ -105,17 +105,17 @@ namespace EditorConfig
                         var lineText = line.Extent.GetText().Trim();
 
                         if (lineText.EndsWith(":"))
-                            yield return CreateError(line, cspan, "Values must not end with a :");
+                            yield return CreateError(line, cspan, string.Format(Resources.Text.ValidationInvalidEndChar, ":"));
 
                         if (lineText.EndsWith("true"))
-                            yield return CreateError(line, cspan, "A severity must be specified. Example: \"true:warning\"");
+                            yield return CreateError(line, cspan, Resources.Text.ValidationMissingSeverity);
                     }
                     else if (cspan.ClassificationType.IsOfType(PredefinedClassificationTypeNames.Identifier))
                     {
                         string severity = cspan.Span.GetText().Trim();
 
                         if (!Constants.Severity.Contains(severity))
-                            yield return CreateError(line, cspan, $"Severity is invalid. Must be one of these values: {string.Join(", ", Constants.Severity)}");
+                            yield return CreateError(line, cspan, string.Format(Resources.Text.ValidationInvalidSeverity, string.Join(", ", Constants.Severity)));
                     }
                 }
             }

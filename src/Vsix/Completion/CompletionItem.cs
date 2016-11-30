@@ -16,8 +16,8 @@ namespace EditorConfig
             {new CompletionItem("indent_style", true, Resources.Text.KeywordIndentStyle, KnownMonikers.Property, "tab", "space")},
             {new CompletionItem("indent_size", true, Resources.Text.KeywordIndentSize, KnownMonikers.Property, "tab") },
             {new CompletionItem("tab_width", true, Resources.Text.KeywordTabWidth, KnownMonikers.Property) },
-            {new CompletionItem("trim_trailing_whitespace", false, Resources.Text.KeywordTrimTrailingWhitespace, KnownMonikers.Property, "true", "false")},
-            {new CompletionItem("insert_final_newline", false, Resources.Text.KeywordInsertFinalNewline, KnownMonikers.Property, "true", "false")},
+            {new CompletionItem("trim_trailing_whitespace", false, Resources.Text.KeywordTrimTrailingWhitespace, KnownMonikers.PropertyMissing, "true", "false")},
+            {new CompletionItem("insert_final_newline", false, Resources.Text.KeywordInsertFinalNewline, KnownMonikers.PropertyMissing, "true", "false")},
             //{new CompletionItem("max_line_length", "Forces hard line wrapping after the amount of characters specified (Not supported by Visual Studio)")},
 
             // C# code analysis

@@ -10,7 +10,8 @@ namespace EditorConfig
 {
     internal class EditorConfigClassifier : IClassifier
     {
-        private static Regex _rxValue = new Regex(@"(?<=\=\s?)([^\s]+)", RegexOptions.Compiled);
+        private static Regex _rxValue = new Regex(@"(?<=\=\s?)([^\s:]+)", RegexOptions.Compiled);
+        private static Regex _rxSeverity = new Regex(@"(?<==[^:]+:)[^\s]+", RegexOptions.Compiled);
         private static Regex _rxKeyword = new Regex(@"^([^=]+)\b(?=\=?)", RegexOptions.Compiled);
         private static Regex _rxHeader = new Regex(@"\[([^\]]+)\]", RegexOptions.Compiled); // [lib/**.js]
         private static Regex _rxComment = new Regex(@"#.*", RegexOptions.Compiled); // # comment
@@ -25,6 +26,7 @@ namespace EditorConfig
                     {Tuple.Create(_rxHeader, registry.GetClassificationType(PredefinedClassificationTypeNames.String))},
                     {Tuple.Create(_rxKeyword, registry.GetClassificationType(PredefinedClassificationTypeNames.Keyword))},
                     {Tuple.Create(_rxValue, registry.GetClassificationType(PredefinedClassificationTypeNames.SymbolDefinition))},
+                    {Tuple.Create(_rxSeverity, registry.GetClassificationType(PredefinedClassificationTypeNames.SymbolReference))},
                 };
         }
 

@@ -68,11 +68,23 @@ namespace EditorConfig
                             char ch = GetTypeChar(pvaIn);
 
                             if (ch == '=' || ch == ' ')
+                            {
                                 Cancel();
-                            else if (!char.IsPunctuation(ch) && !char.IsControl(ch))
+                            }
+                            else if (ch == ':')
+                            {
+                                Cancel();
                                 StartSession();
+                            }
+                            else if (!char.IsPunctuation(ch) && !char.IsControl(ch))
+                            {
+                                StartSession();
+                            }
                             else if (_currentSession != null)
+                            {
                                 Filter();
+                            }
+
                             break;
                         case VSConstants.VSStd2KCmdID.BACKSPACE:
                             if (_currentSession != null)

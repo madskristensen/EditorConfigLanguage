@@ -1,8 +1,10 @@
 # Road map
 
 - [ ] Implement custom parser
-- [ ] Move strings to .resx file
+- [x] Move strings to .resx file
 - [x] Updated logo
+- [x] Added C# and .NET style rules
+- [ ] Validate severity values
 
 Features that have a checkmark are complete and available for
 download in the

@@ -51,17 +51,22 @@ namespace EditorConfig
             ITextSnapshot snapshot = _buffer.CurrentSnapshot;
             var triggerPoint = session.GetTriggerPoint(snapshot);
 
-            if (triggerPoint == null)
+            if (triggerPoint == null || !triggerPoint.HasValue)
                 return;
 
             var line = triggerPoint.Value.GetContainingLine().Extent;
             var list = new List<Completion3>();
             var applicableTo = snapshot.CreateTrackingSpan(triggerPoint.Value.Position, 0, SpanTrackingMode.EdgeInclusive);
+            var position = triggerPoint.Value.Position;
 
             if (string.IsNullOrWhiteSpace(line.GetText()))
             {
                 foreach (var key in CompletionItem.Items)
-                    list.Add(CreateCompletion(key.Name, key.IsSupported, key.Description));
+                    list.Add(CreateCompletion(key.Name, key.Moniker, key.IsSupported, key.Description));
+            }
+            else if (position > 0 && snapshot.Length > 1 && snapshot.GetText(position - 1, 1) == ":")
+            {
+                AddSeverity(list);
             }
             else
             {
@@ -79,7 +84,7 @@ namespace EditorConfig
                             continue;
 
                         foreach (var key in CompletionItem.Items)
-                            list.Add(CreateCompletion(key.Name, key.IsSupported, key.Description));
+                            list.Add(CreateCompletion(key.Name, key.Moniker, key.IsSupported, key.Description));
                     }
                     else if (span.ClassificationType.IsOfType(PredefinedClassificationTypeNames.SymbolDefinition))
                     {
@@ -90,8 +95,13 @@ namespace EditorConfig
                         if (item != null)
                         {
                             foreach (var value in item.Values)
-                                list.Add(CreateCompletion(value));
+                                list.Add(CreateCompletion(value, KnownMonikers.EnumerationItemPublic));
                         }
+                    }
+                    else if (span.ClassificationType.IsOfType(PredefinedClassificationTypeNames.SymbolReference))
+                    {
+                        if (span.Span.Contains(extent))
+                            AddSeverity(list);
                     }
                 }
 
@@ -109,7 +119,7 @@ namespace EditorConfig
 
                             if (triggerPoint.Value.Position > eqPos)
                                 foreach (var value in item.Values)
-                                    list.Add(CreateCompletion(value));
+                                    list.Add(CreateCompletion(value, KnownMonikers.Property));
                         }
                     }
                 }
@@ -125,9 +135,16 @@ namespace EditorConfig
             }
         }
 
-        private Completion3 CreateCompletion(string name, bool isSupported = true, string description = null)
+        private void AddSeverity(List<Completion3> list)
         {
-            ImageMoniker moniker = KnownMonikers.Property;
+            list.Add(CreateCompletion("none", KnownMonikers.StatusSuppressed));
+            list.Add(CreateCompletion("suggestion", KnownMonikers.StatusInformation));
+            list.Add(CreateCompletion("warning", KnownMonikers.StatusWarning));
+            list.Add(CreateCompletion("error", KnownMonikers.StatusError));
+        }
+
+        private Completion3 CreateCompletion(string name, ImageMoniker moniker, bool isSupported = true, string description = null)
+        {
             string tooltip = description;
 
             if (!isSupported)

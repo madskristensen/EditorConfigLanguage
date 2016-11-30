@@ -73,47 +73,56 @@ namespace EditorConfig
             var classificationSpans = _classifier.GetClassificationSpans(line.Extent);
             string property = null;
 
-            ClearError(line);
-
-            foreach (var cspan in classificationSpans)
+            try
             {
-                if (cspan.ClassificationType.IsOfType(PredefinedClassificationTypeNames.Keyword))
+                _errorlist.SuspendRefresh();
+                ClearError(line);
+
+                foreach (var cspan in classificationSpans)
                 {
-                    property = cspan.Span.GetText();
+                    if (cspan.ClassificationType.IsOfType(PredefinedClassificationTypeNames.Keyword))
+                    {
+                        property = cspan.Span.GetText();
+                    }
+                    else if (cspan.ClassificationType.IsOfType(PredefinedClassificationTypeNames.SymbolDefinition))
+                    {
+                        if (string.IsNullOrEmpty(property))
+                            continue;
+
+                        CompletionItem item = CompletionItem.GetCompletionItem(property);
+                        if (item == null)
+                            continue;
+
+                        string value = cspan.Span.GetText();
+
+                        if (!item.Values.Contains(value) && !(int.TryParse(value, out int intValue) && intValue > 0))
+                            yield return CreateError(line, cspan, string.Format(Resources.Text.InvalidValue, value, property));
+
+                        // C# style rules validation
+                        if (!property.StartsWith("csharp") && !property.StartsWith("dotnet"))
+                            continue;
+
+                        var lineText = line.Extent.GetText().Trim();
+
+                        if (lineText.EndsWith(":"))
+                            yield return CreateError(line, cspan, "Values must not end with a :");
+
+                        if (lineText.EndsWith("true"))
+                            yield return CreateError(line, cspan, "A severity must be specified. Example: \"true:warning\"");
+                    }
+                    else if (cspan.ClassificationType.IsOfType(PredefinedClassificationTypeNames.Identifier))
+                    {
+                        string severity = cspan.Span.GetText().Trim();
+
+                        if (!Constants.Severity.Contains(severity))
+                            yield return CreateError(line, cspan, $"Severity is invalid. Must be one of these values: {string.Join(", ", Constants.Severity)}");
+                    }
                 }
-                else if (cspan.ClassificationType.IsOfType(PredefinedClassificationTypeNames.SymbolDefinition))
-                {
-                    if (string.IsNullOrEmpty(property))
-                        continue;
-
-                    CompletionItem item = CompletionItem.GetCompletionItem(property);
-                    if (item == null)
-                        continue;
-
-                    string value = cspan.Span.GetText();
-
-                    if (!item.Values.Contains(value) && !(int.TryParse(value, out int intValue) && intValue > 0))
-                        yield return CreateError(line, cspan, string.Format(Resources.Text.InvalidValue, value, property));
-
-                    // C# style rules validation
-                    if (!property.StartsWith("csharp") && !property.StartsWith("dotnet"))
-                        continue;
-
-                    var lineText = line.Extent.GetText().Trim();
-
-                    if (lineText.EndsWith(":"))
-                        yield return CreateError(line, cspan, "Values must not end with a :");
-
-                    if (lineText.EndsWith("true"))
-                        yield return CreateError(line, cspan, "A severity must be specified. Example: \"true:warning\"");
-                }
-                else if (cspan.ClassificationType.IsOfType(PredefinedClassificationTypeNames.Identifier))
-                {
-                    string severity = cspan.Span.GetText().Trim();
-
-                    if (!Constants.Severity.Contains(severity))
-                        yield return CreateError(line, cspan, $"Severity is invalid. Must be one of these values: {string.Join(", ", Constants.Severity)}");
-                }
+            }
+            finally
+            {
+                _errorlist.ResumeRefresh();
+                _errorlist.Refresh();
             }
         }
 
@@ -121,9 +130,7 @@ namespace EditorConfig
         {
             ErrorTask task = CreateErrorTask(line, cspan, message);
 
-            _errorlist.SuspendRefresh();
             _errorlist.Tasks.Add(task);
-            _errorlist.ResumeRefresh();
 
             SnapshotSpan CheckTextSpan = new SnapshotSpan(cspan.Span.Snapshot, new Span(cspan.Span.Start, cspan.Span.Length));
             return new TagSpan<ErrorTag>(CheckTextSpan, new ErrorTag(message, message));
@@ -159,16 +166,14 @@ namespace EditorConfig
 
         private void ClearError(ITextSnapshotLine line)
         {
-            foreach (ErrorTask existing in _errorlist.Tasks)
+            for (int i = _errorlist.Tasks.Count - 1; i >= 0; i--)
             {
-                if (existing.Line == line.LineNumber)
-                {
-                    _errorlist.Tasks.Remove(existing);
-                    break;
-                }
+                var task = _errorlist.Tasks[i];
+
+                if (task.Line == line.LineNumber)
+                    _errorlist.Tasks.RemoveAt(i);
             }
         }
-
 
         public event EventHandler<SnapshotSpanEventArgs> TagsChanged;
     }

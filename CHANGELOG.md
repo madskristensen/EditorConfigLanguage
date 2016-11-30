@@ -4,7 +4,7 @@
 - [x] Move strings to .resx file
 - [x] Updated logo
 - [x] Added C# and .NET style rules
-- [ ] Validate severity values
+- [x] Validate severity values
 
 Features that have a checkmark are complete and available for
 download in the

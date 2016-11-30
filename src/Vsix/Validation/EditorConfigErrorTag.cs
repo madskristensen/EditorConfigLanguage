@@ -94,6 +94,25 @@ namespace EditorConfig
 
                     if (!item.Values.Contains(value) && !(int.TryParse(value, out int intValue) && intValue > 0))
                         yield return CreateError(line, cspan, string.Format(Resources.Text.InvalidValue, value, property));
+
+                    // C# style rules validation
+                    if (!property.StartsWith("csharp") && !property.StartsWith("dotnet"))
+                        continue;
+
+                    var lineText = line.Extent.GetText().Trim();
+
+                    if (lineText.EndsWith(":"))
+                        yield return CreateError(line, cspan, "Values must not end with a :");
+
+                    if (lineText.EndsWith("true"))
+                        yield return CreateError(line, cspan, "A severity must be specified. Example: \"true:warning\"");
+                }
+                else if (cspan.ClassificationType.IsOfType(PredefinedClassificationTypeNames.Identifier))
+                {
+                    string severity = cspan.Span.GetText().Trim();
+
+                    if (!Constants.Severity.Contains(severity))
+                        yield return CreateError(line, cspan, $"Severity is invalid. Must be one of these values: {string.Join(", ", Constants.Severity)}");
                 }
             }
         }

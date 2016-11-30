@@ -98,7 +98,7 @@ namespace EditorConfig
                                 list.Add(CreateCompletion(value, KnownMonikers.EnumerationItemPublic));
                         }
                     }
-                    else if (span.ClassificationType.IsOfType(PredefinedClassificationTypeNames.SymbolReference))
+                    else if (span.ClassificationType.IsOfType(PredefinedClassificationTypeNames.Identifier))
                     {
                         if (span.Span.Contains(extent))
                             AddSeverity(list);

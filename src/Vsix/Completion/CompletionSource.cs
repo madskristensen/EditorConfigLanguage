@@ -76,7 +76,7 @@ namespace EditorConfig
 
                 foreach (var span in spans)
                 {
-                    if (span.ClassificationType.IsOfType(PredefinedClassificationTypeNames.Keyword))
+                    if (span.ClassificationType.IsOfType(PredefinedClassificationTypeNames.Identifier))
                     {
                         current = span.Span.GetText();
 
@@ -86,7 +86,7 @@ namespace EditorConfig
                         foreach (var key in CompletionItem.Items)
                             list.Add(CreateCompletion(key.Name, key.Moniker, key.IsSupported, key.Description));
                     }
-                    else if (span.ClassificationType.IsOfType(PredefinedClassificationTypeNames.SymbolDefinition))
+                    else if (span.ClassificationType.IsOfType(PredefinedClassificationTypeNames.Keyword))
                     {
                         if (!span.Span.Contains(extent))
                             continue;
@@ -98,7 +98,7 @@ namespace EditorConfig
                                 list.Add(CreateCompletion(value, KnownMonikers.EnumerationItemPublic));
                         }
                     }
-                    else if (span.ClassificationType.IsOfType(PredefinedClassificationTypeNames.Identifier))
+                    else if (span.ClassificationType.IsOfType(PredefinedClassificationTypeNames.SymbolDefinition))
                     {
                         if (span.Span.Contains(extent))
                             AddSeverity(list);

@@ -150,6 +150,9 @@
   <data name="NotSupportedByVS" xml:space="preserve">
     <value>Not supported by Visual Studio</value>
   </data>
+  <data name="ValidateUnknownKeyword" xml:space="preserve">
+    <value>The keyword "{0}" is unknown</value>
+  </data>
   <data name="ValidationInvalidEndChar" xml:space="preserve">
     <value>Values must not end with a {0}</value>
   </data>

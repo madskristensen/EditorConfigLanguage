@@ -80,26 +80,32 @@ namespace EditorConfig
 
                 foreach (var cspan in classificationSpans)
                 {
-                    if (cspan.ClassificationType.IsOfType(PredefinedClassificationTypeNames.Keyword))
+                    if (cspan.ClassificationType.IsOfType(PredefinedClassificationTypeNames.Identifier))
                     {
                         property = cspan.Span.GetText();
+
+                        var item = CompletionItem.GetCompletionItem(property);
+
+                        if (item == null)
+                            yield return CreateError(line, cspan, string.Format(Resources.Text.ValidateUnknownKeyword, property));
                     }
-                    else if (cspan.ClassificationType.IsOfType(PredefinedClassificationTypeNames.SymbolDefinition))
+                    else if (cspan.ClassificationType.IsOfType(PredefinedClassificationTypeNames.Keyword))
                     {
                         if (string.IsNullOrEmpty(property))
                             continue;
 
-                        CompletionItem item = CompletionItem.GetCompletionItem(property);
+                        var item = CompletionItem.GetCompletionItem(property);
+
                         if (item == null)
                             continue;
 
                         string value = cspan.Span.GetText();
 
-                        if (!item.Values.Contains(value) && !(int.TryParse(value, out int intValue) && intValue > 0))
+                        if (!item.Values.Contains(value, StringComparer.OrdinalIgnoreCase) && !(int.TryParse(value, out int intValue) && intValue > 0))
                             yield return CreateError(line, cspan, string.Format(Resources.Text.InvalidValue, value, property));
 
                         // C# style rules validation
-                        if (!property.StartsWith("csharp") && !property.StartsWith("dotnet"))
+                        if (!property.StartsWith("csharp_") && !property.StartsWith("dotnet_"))
                             continue;
 
                         var lineText = line.Extent.GetText().Trim();
@@ -110,7 +116,7 @@ namespace EditorConfig
                         if (lineText.EndsWith("true"))
                             yield return CreateError(line, cspan, Resources.Text.ValidationMissingSeverity);
                     }
-                    else if (cspan.ClassificationType.IsOfType(PredefinedClassificationTypeNames.Identifier))
+                    else if (cspan.ClassificationType.IsOfType(PredefinedClassificationTypeNames.SymbolDefinition))
                     {
                         string severity = cspan.Span.GetText().Trim();
 

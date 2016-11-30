@@ -24,9 +24,9 @@ namespace EditorConfig
                 {
                     {Tuple.Create(_rxComment, registry.GetClassificationType(PredefinedClassificationTypeNames.Comment))},
                     {Tuple.Create(_rxHeader, registry.GetClassificationType(PredefinedClassificationTypeNames.String))},
-                    {Tuple.Create(_rxKeyword, registry.GetClassificationType(PredefinedClassificationTypeNames.Keyword))},
-                    {Tuple.Create(_rxValue, registry.GetClassificationType(PredefinedClassificationTypeNames.SymbolDefinition))},
-                    {Tuple.Create(_rxSeverity, registry.GetClassificationType(PredefinedClassificationTypeNames.Identifier))},
+                    {Tuple.Create(_rxKeyword, registry.GetClassificationType(PredefinedClassificationTypeNames.Identifier))},
+                    {Tuple.Create(_rxValue, registry.GetClassificationType(PredefinedClassificationTypeNames.Keyword))},
+                    {Tuple.Create(_rxSeverity, registry.GetClassificationType(PredefinedClassificationTypeNames.SymbolDefinition))},
                 };
         }
 

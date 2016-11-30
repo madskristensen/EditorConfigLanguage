@@ -21,33 +21,33 @@ namespace EditorConfig
             //{new CompletionItem("max_line_length", "Forces hard line wrapping after the amount of characters specified (Not supported by Visual Studio)")},
 
             // C# code analysis
-            {new CompletionItem("csharp_style_conditional_delegate_call", true, "C# code analysis rule", KnownMonikers.CSFileNode, "true", "false")},
-            {new CompletionItem("csharp_style_expression_bodied_accessors", true, "C# code analysis rule", KnownMonikers.CSFileNode, "true", "false")},
-            {new CompletionItem("csharp_style_expression_bodied_constructors", true, "C# code analysis rule", KnownMonikers.CSFileNode, "true", "false")},
-            {new CompletionItem("csharp_style_expression_bodied_indexers", true, "C# code analysis rule", KnownMonikers.CSFileNode, "true", "false")},
-            {new CompletionItem("csharp_style_expression_bodied_methods", true, "C# code analysis rule", KnownMonikers.CSFileNode, "true", "false")},
-            {new CompletionItem("csharp_style_expression_bodied_operators", true, "C# code analysis rule", KnownMonikers.CSFileNode, "true", "false")},
-            {new CompletionItem("csharp_style_expression_bodied_properties", true, "C# code analysis rule", KnownMonikers.CSFileNode, "true", "false")},
-            {new CompletionItem("csharp_style_inlined_variable_declaration", true, "C# code analysis rule", KnownMonikers.CSFileNode, "true", "false")},
-            {new CompletionItem("csharp_style_pattern_matching_over_as_with_null_check", true, "C# code analysis rule", KnownMonikers.CSFileNode, "true", "false")},
-            {new CompletionItem("csharp_style_pattern_matching_over_is_with_cast_check", true, "C# code analysis rule", KnownMonikers.CSFileNode, "true", "false")},
-            {new CompletionItem("csharp_style_throw_expression", true, "C# code analysis rule", KnownMonikers.CSFileNode, "true", "false")},
-            {new CompletionItem("csharp_style_var_elsewhere", true, "C# code analysis rule", KnownMonikers.CSFileNode, "true", "false")},
-            {new CompletionItem("csharp_style_var_for_built_in_types", true, "C# code analysis rule", KnownMonikers.CSFileNode, "true", "false")},
-            {new CompletionItem("csharp_style_var_for_locals", true, "C# code analysis rule", KnownMonikers.CSFileNode, "true", "false")},
-            {new CompletionItem("csharp_style_var_when_type_is_apparent", true, "C# code analysis rule", KnownMonikers.CSFileNode, "true", "false")},
+            {new CompletionItem("csharp_style_conditional_delegate_call", true, "Prefer conditional delegate calls.", KnownMonikers.CSFileNode, "true", "false")},
+            {new CompletionItem("csharp_style_expression_bodied_accessors", true, "Prefer expression-bodied members.", KnownMonikers.CSFileNode, "true", "false")},
+            {new CompletionItem("csharp_style_expression_bodied_constructors", true, "Prefer expression-bodied members", KnownMonikers.CSFileNode, "true", "false")},
+            {new CompletionItem("csharp_style_expression_bodied_indexers", true, "Prefer expression-bodied members", KnownMonikers.CSFileNode, "true", "false")},
+            {new CompletionItem("csharp_style_expression_bodied_methods", true, "Prefer expression-bodied members.", KnownMonikers.CSFileNode, "true", "false")},
+            {new CompletionItem("csharp_style_expression_bodied_operators", true, "Prefer expression-bodied members.", KnownMonikers.CSFileNode, "true", "false")},
+            {new CompletionItem("csharp_style_expression_bodied_properties", true, "Prefer expression-bodied members", KnownMonikers.CSFileNode, "true", "false")},
+            {new CompletionItem("csharp_style_inlined_variable_declaration", true, "Prefer to inline variable declaration.", KnownMonikers.CSFileNode, "true", "false")},
+            {new CompletionItem("csharp_style_pattern_matching_over_as_with_null_check", true, "Prefer pattern matching.", KnownMonikers.CSFileNode, "true", "false")},
+            {new CompletionItem("csharp_style_pattern_matching_over_is_with_cast_check", true, "Prefer pattern matching.", KnownMonikers.CSFileNode, "true", "false")},
+            {new CompletionItem("csharp_style_throw_expression", true, "Prefer throw expressions", KnownMonikers.CSFileNode, "true", "false")},
+            {new CompletionItem("csharp_style_var_elsewhere", true, "Prefer var elsewhere.", KnownMonikers.CSFileNode, "true", "false")},
+            {new CompletionItem("csharp_style_var_for_built_in_types", true, "Prefer var for built-in types.", KnownMonikers.CSFileNode, "true", "false")},
+            {new CompletionItem("csharp_style_var_for_locals", true, "Prefer var for locals.", KnownMonikers.CSFileNode, "true", "false")},
+            {new CompletionItem("csharp_style_var_when_type_is_apparent", true, "Prefer var when type is apparent.", KnownMonikers.CSFileNode, "true", "false")},
 
             // .NET style analysis
-            {new CompletionItem("dotnet_style_coalesce_expression", true, "C# code analysis rule", KnownMonikers.DotNET, "true", "false")},
-            {new CompletionItem("dotnet_style_collection_initializer ", true, "C# code analysis rule", KnownMonikers.DotNET, "true", "false")},
-            {new CompletionItem("dotnet_style_null_propagation ", true, "C# code analysis rule", KnownMonikers.DotNET, "true", "false")},
-            {new CompletionItem("dotnet_style_object_initializer", true, "C# code analysis rule", KnownMonikers.DotNET, "true", "false")},
-            {new CompletionItem("dotnet_style_predefined_type_for_locals_parameters_members", true, "C# code analysis rule", KnownMonikers.DotNET, "true", "false")},
-            {new CompletionItem("dotnet_style_predefined_type_for_member_access", true, "C# code analysis rule", KnownMonikers.DotNET, "true", "false")},
-            {new CompletionItem("dotnet_style_qualification_for_event", true, "C# code analysis rule", KnownMonikers.DotNET, "true", "false")},
-            {new CompletionItem("dotnet_style_qualification_for_field", true, "C# code analysis rule", KnownMonikers.DotNET, "true", "false")},
-            {new CompletionItem("dotnet_style_qualification_for_method", true, "C# code analysis rule", KnownMonikers.DotNET, "true", "false")},
-            {new CompletionItem("dotnet_style_qualification_for_property", true, "C# code analysis rule", KnownMonikers.DotNET, "true", "false")},
+            {new CompletionItem("dotnet_style_coalesce_expression", true, "Prefer null coalescing operator (??).", KnownMonikers.DotNET, "true", "false")},
+            {new CompletionItem("dotnet_style_collection_initializer ", true, "Prefer collection intiailizers.", KnownMonikers.DotNET, "true", "false")},
+            {new CompletionItem("dotnet_style_null_propagation ", true, "Prefer null propagation (?.).", KnownMonikers.DotNET, "true", "false")},
+            {new CompletionItem("dotnet_style_object_initializer", true, "Prefer object initializers.", KnownMonikers.DotNET, "true", "false")},
+            {new CompletionItem("dotnet_style_predefined_type_for_locals_parameters_members", true, "Prefer language types (e.g. int, string, float).", KnownMonikers.DotNET, "true", "false")},
+            {new CompletionItem("dotnet_style_predefined_type_for_member_access", true, "Prefer language types (e.g. int, string, float).", KnownMonikers.DotNET, "true", "false")},
+            {new CompletionItem("dotnet_style_qualification_for_event", true, "Prefer this for events.", KnownMonikers.DotNET, "true", "false")},
+            {new CompletionItem("dotnet_style_qualification_for_field", true, "Prefer this for fields.", KnownMonikers.DotNET, "true", "false")},
+            {new CompletionItem("dotnet_style_qualification_for_method", true, "Prefer this for methods.", KnownMonikers.DotNET, "true", "false")},
+            {new CompletionItem("dotnet_style_qualification_for_property", true, "Prefer this for properties.", KnownMonikers.DotNET, "true", "false")},
         };
 
         private CompletionItem(string name, bool isSupported, string description, ImageMoniker moniker, params string[] values)
@@ -66,7 +66,7 @@ namespace EditorConfig
 
         public static CompletionItem GetCompletionItem(string name)
         {
-            return _dic.SingleOrDefault(c => c.Name == name);
+            return _dic.SingleOrDefault(c => c.Name.Equals(name, System.StringComparison.OrdinalIgnoreCase));
         }
 
         public string Name { get; set; }

@@ -160,6 +160,15 @@ namespace EditorConfig.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The keyword &quot;{0}&quot; is unknown.
+        /// </summary>
+        internal static string ValidateUnknownKeyword {
+            get {
+                return ResourceManager.GetString("ValidateUnknownKeyword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Values must not end with a {0}.
         /// </summary>
         internal static string ValidationInvalidEndChar {

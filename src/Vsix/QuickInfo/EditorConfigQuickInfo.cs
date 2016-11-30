@@ -40,7 +40,7 @@ namespace EditorConfig
             var line = point.Value.GetContainingLine();
 
             var lineSpan = new SnapshotSpan(line.Start, line.End);
-            var classificationSpans = _classifier.GetClassificationSpans(lineSpan).Where(c => c.ClassificationType.IsOfType(PredefinedClassificationTypeNames.Keyword));
+            var classificationSpans = _classifier.GetClassificationSpans(lineSpan).Where(c => c.ClassificationType.IsOfType(PredefinedClassificationTypeNames.Identifier));
 
             if (!classificationSpans.Any())
                 return;

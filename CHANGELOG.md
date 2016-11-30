@@ -5,6 +5,8 @@
 - [x] Updated logo
 - [x] Added C# and .NET style rules
 - [x] Validate severity values
+- [x] Make validator case insensitive
+- [x] Validate unknown keywords
 
 Features that have a checkmark are complete and available for
 download in the

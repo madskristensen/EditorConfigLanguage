@@ -3,6 +3,18 @@
 - [ ] Implement custom parser
 - [ ] Intellisense Filters (icons at bottom of completion list)
 - [ ] Intellisense substring match on typing
+
+Features that have a checkmark are complete and available for
+download in the
+[CI build](http://vsixgallery.com/extension/1209461d-57f8-46a4-814a-dbe5fecef941/).
+
+# Change log
+
+These are the changes to each version that has been released
+on the official Visual Studio extension gallery.
+
+## 1.3
+
 - [x] Move strings to .resx file
 - [x] Updated logo
 - [x] Added C# and .NET style rules
@@ -13,15 +25,6 @@
 - [x] Filter completion list on typing
 - [x] Warning icons for unsupported properties
 - [x] Persist outlining state
-
-Features that have a checkmark are complete and available for
-download in the
-[CI build](http://vsixgallery.com/extension/1209461d-57f8-46a4-814a-dbe5fecef941/).
-
-# Change log
-
-These are the changes to each version that has been released
-on the official Visual Studio extension gallery.
 
 ## 1.2
 

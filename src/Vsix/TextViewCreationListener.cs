@@ -52,9 +52,7 @@ namespace EditorConfig
             AddCommandFilter(textViewAdapter, new CompletionController(view, CompletionBroker));
             AddCommandFilter(textViewAdapter, new F1Help());
 
-            var viewEx = textViewAdapter as IVsTextViewEx;
-
-            if (viewEx != null)
+            if (textViewAdapter is IVsTextViewEx viewEx)
                 ErrorHandler.ThrowOnFailure(viewEx.PersistOutliningState());
 
             if (DocumentService.TryGetTextDocument(view.TextBuffer, out var document))

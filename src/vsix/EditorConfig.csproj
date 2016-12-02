@@ -78,7 +78,7 @@
     <Compile Include="Helpers\ProjectHelpers.cs" />
     <Compile Include="Outlining\OutliningTagger.cs" />
     <Compile Include="Outlining\OutliningTaggerProvider.cs" />
-    <Compile Include="ProvideAutoBraceCompletionAttribute.cs" />
+    <Compile Include="ProvideBraceCompletionAttribute.cs" />
     <Compile Include="QuickInfo\EditorConfigQuickInfo.cs" />
     <Compile Include="QuickInfo\EditorConfigQuickInfoController.cs" />
     <Compile Include="QuickInfo\EditorConfigQuickInfoControllerProvider.cs" />

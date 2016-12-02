@@ -131,7 +131,7 @@ namespace EditorConfig
 
             if (list.Any())
             {
-                completionSets.Add(new CompletionSet("All", "All", applicableTo, list, Enumerable.Empty<Completion3>()));
+                completionSets.Add(new CompletionSet2("All", "All", applicableTo, list, Enumerable.Empty<Completion3>(), null));
             }
         }
 
@@ -146,13 +146,15 @@ namespace EditorConfig
         private Completion3 CreateCompletion(string name, ImageMoniker moniker, bool isSupported = true, string description = null)
         {
             string tooltip = description;
+            IEnumerable<CompletionIcon2> icon = null;
 
             if (!isSupported)
             {
+                icon = new[] { new CompletionIcon2(KnownMonikers.IntellisenseWarning, "warning", "") };
                 tooltip = $"{Resources.Text.NotSupportedByVS}\r\n\r\n{description}";
             }
 
-            return new Completion3(name, name, tooltip, moniker, null);
+            return new Completion3(name, name, tooltip, moniker, null, icon);
         }
 
         private ITrackingSpan FindTokenSpanAtPosition(ICompletionSession session)

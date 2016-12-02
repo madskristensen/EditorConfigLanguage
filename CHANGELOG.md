@@ -1,6 +1,8 @@
 # Road map
 
 - [ ] Implement custom parser
+- [ ] Intellisense Filters (icons at bottom of completion list)
+- [ ] Intellisense substring match on typing
 - [x] Move strings to .resx file
 - [x] Updated logo
 - [x] Added C# and .NET style rules
@@ -9,6 +11,7 @@
 - [x] Validate unknown keywords
 - [x] Using built-in brace completion logic
 - [x] Filter completion list on typing
+- [x] Warning icons for unsupported properties
 
 Features that have a checkmark are complete and available for
 download in the

@@ -12,6 +12,7 @@
 - [x] Using built-in brace completion logic
 - [x] Filter completion list on typing
 - [x] Warning icons for unsupported properties
+- [x] Persist outlining state
 
 Features that have a checkmark are complete and available for
 download in the

@@ -18,7 +18,6 @@ namespace EditorConfig
             {new CompletionItem("tab_width", true, Resources.Text.KeywordTabWidth, KnownMonikers.Property) },
             {new CompletionItem("trim_trailing_whitespace", false, Resources.Text.KeywordTrimTrailingWhitespace, KnownMonikers.Property, "true", "false")},
             {new CompletionItem("insert_final_newline", false, Resources.Text.KeywordInsertFinalNewline, KnownMonikers.Property, "true", "false")},
-            //{new CompletionItem("max_line_length", "Forces hard line wrapping after the amount of characters specified (Not supported by Visual Studio)")},
 
             // C# code analysis
             {new CompletionItem("csharp_style_conditional_delegate_call", true, "Prefer conditional delegate calls.", KnownMonikers.CSFileNode, "true", "false")},
@@ -59,7 +58,7 @@ namespace EditorConfig
             IsSupported = isSupported;
         }
 
-        public static IEnumerable<CompletionItem> Items
+        public static IEnumerable<CompletionItem> AllItems
         {
             get { return _dic; }
         }

@@ -43,13 +43,13 @@ namespace EditorConfig
             if (item != null)
             {
                 qiContent.Add(item.Description);
-                applicableToSpan = lineSpan.Snapshot.CreateTrackingSpan(span.Span, SpanTrackingMode.EdgeNegative);
             }
+
+            applicableToSpan = lineSpan.Snapshot.CreateTrackingSpan(span.Span, SpanTrackingMode.EdgeNegative);
         }
 
         public void Dispose()
         {
-            // Nothing to dispose
         }
     }
 }

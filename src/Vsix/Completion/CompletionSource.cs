@@ -61,7 +61,7 @@ namespace EditorConfig
 
             if (string.IsNullOrWhiteSpace(line.GetText()))
             {
-                foreach (var key in CompletionItem.Items)
+                foreach (var key in CompletionItem.AllItems)
                     list.Add(CreateCompletion(key.Name, key.Moniker, key.IsSupported, key.Description));
             }
             else if (position > 0 && snapshot.Length > 1 && snapshot.GetText(position - 1, 1) == ":")
@@ -83,7 +83,7 @@ namespace EditorConfig
                         if (!span.Span.Contains(extent))
                             continue;
 
-                        foreach (var key in CompletionItem.Items)
+                        foreach (var key in CompletionItem.AllItems)
                             list.Add(CreateCompletion(key.Name, key.Moniker, key.IsSupported, key.Description));
                     }
                     else if (span.ClassificationType.IsOfType(PredefinedClassificationTypeNames.Keyword))

@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.Editor;
+﻿using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -51,6 +52,11 @@ namespace EditorConfig
             AddCommandFilter(textViewAdapter, new CompletionController(view, CompletionBroker));
             AddCommandFilter(textViewAdapter, new F1Help());
 
+            var viewEx = textViewAdapter as IVsTextViewEx;
+
+            if (viewEx != null)
+                ErrorHandler.ThrowOnFailure(viewEx.PersistOutliningState());
+
             if (DocumentService.TryGetTextDocument(view.TextBuffer, out var document))
             {
                 document.FileActionOccurred += Document_FileActionOccurred;
@@ -91,6 +97,7 @@ namespace EditorConfig
             {
                 _errorList.Tasks.Clear();
                 _errorList.Dispose();
+                _errorList = null;
             }
         }
     }

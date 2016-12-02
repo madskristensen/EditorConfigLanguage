@@ -7,6 +7,7 @@
 - [x] Validate severity values
 - [x] Make validator case insensitive
 - [x] Validate unknown keywords
+- [x] Using built-in brace completion logic
 
 Features that have a checkmark are complete and available for
 download in the

@@ -19,19 +19,19 @@ namespace EditorConfig
     internal sealed class VsTextViewCreationListener : IVsTextViewCreationListener
     {
         [Import]
-        IVsEditorAdaptersFactoryService AdaptersFactory = null;
+        private IVsEditorAdaptersFactoryService AdaptersFactory { get; set; }
 
         [Import]
-        ICompletionBroker CompletionBroker = null;
+        private ICompletionBroker CompletionBroker { get; set; }
 
         [Import]
-        SVsServiceProvider ServiceProvider = null;
-
-        [Import(typeof(ITextBufferUndoManagerProvider))]
-        ITextBufferUndoManagerProvider UndoProvider { get; set; }
+        private SVsServiceProvider ServiceProvider { get; set; }
 
         [Import]
-        ITextDocumentFactoryService DocumentService { get; set; }
+        private ITextBufferUndoManagerProvider UndoProvider { get; set; }
+
+        [Import]
+        private ITextDocumentFactoryService DocumentService { get; set; }
 
         private ErrorListProvider _errorList;
 

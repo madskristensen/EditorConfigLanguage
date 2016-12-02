@@ -8,6 +8,7 @@
 - [x] Make validator case insensitive
 - [x] Validate unknown keywords
 - [x] Using built-in brace completion logic
+- [x] Filter completion list on typing
 
 Features that have a checkmark are complete and available for
 download in the

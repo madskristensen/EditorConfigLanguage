@@ -79,6 +79,7 @@ namespace EditorConfig
                             else if (!char.IsPunctuation(ch) && !char.IsControl(ch))
                             {
                                 StartSession();
+                                Filter();
                             }
                             else if (_currentSession != null)
                             {
@@ -87,8 +88,8 @@ namespace EditorConfig
 
                             break;
                         case VSConstants.VSStd2KCmdID.BACKSPACE:
-                            if (_currentSession != null)
-                                Filter();
+                        case VSConstants.VSStd2KCmdID.DELETE:
+                            Filter();
                             break;
                     }
                 }
@@ -99,15 +100,15 @@ namespace EditorConfig
 
         private void Filter()
         {
-            if (_currentSession == null)
+            if (_currentSession == null || _currentSession.IsDismissed)
                 return;
 
-            _currentSession.SelectedCompletionSet.Filter();
+            _currentSession.Filter();
         }
 
         bool Cancel()
         {
-            if (_currentSession == null)
+            if (_currentSession == null || _currentSession.IsDismissed)
                 return false;
 
             _currentSession.Dismiss();

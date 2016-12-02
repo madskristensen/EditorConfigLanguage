@@ -20,7 +20,7 @@ namespace EditorConfig
     [ProvideEditorLogicalView(typeof(EditorFactory), VSConstants.LOGVIEWID.TextView_string, IsTrusted = true)]
 
     [ProvideEditorExtension(typeof(EditorFactory), Constants.FileName, 1000)]
-    [ProvideAutoBraceCompletion(Constants.LanguageName)]
+    [ProvideBraceCompletion(Constants.LanguageName)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     public sealed class EditorConfigPackage : AsyncPackage
     {

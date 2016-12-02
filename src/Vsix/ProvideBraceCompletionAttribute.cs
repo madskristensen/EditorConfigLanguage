@@ -5,10 +5,10 @@ using System.Globalization;
 namespace EditorConfig
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
-    public class ProvideAutoBraceCompletionAttribute : RegistrationAttribute
+    public class ProvideBraceCompletionAttribute : RegistrationAttribute
     {
         private string languageName;
-        public ProvideAutoBraceCompletionAttribute(string languageName)
+        public ProvideBraceCompletionAttribute(string languageName)
         {
             this.languageName = languageName;
         }

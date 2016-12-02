@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Operations;
 using System;
+using System.Linq;
 using System.Text;
 
 namespace EditorConfig
@@ -56,7 +57,13 @@ namespace EditorConfig
 
                 if (!isEmpty)
                 {
-                    sb.AppendLine(text.Trim());
+                    var eq = text.IndexOf('=');
+                    var clean = text.Trim();
+
+                    if (eq > -1)
+                        clean = string.Join(" = ", text.Split('=').Select(s => s.Trim()));
+
+                    sb.AppendLine(clean);
                     emptyCount = 0;
                 }
                 else

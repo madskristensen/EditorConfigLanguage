@@ -67,14 +67,15 @@ namespace EditorConfig
                         case VSConstants.VSStd2KCmdID.TYPECHAR:
                             char ch = GetTypeChar(pvaIn);
 
-                            if (ch == '=' || ch == ' ')
-                            {
-                                Cancel();
-                            }
-                            else if (ch == ':')
+                            if (ch == ':')
                             {
                                 Cancel();
                                 StartSession();
+                            }
+                            else if (ch == '=')
+                            {
+                                Complete(true);
+                                hresult = Next.Exec(pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
                             }
                             else if (!char.IsPunctuation(ch) && !char.IsControl(ch))
                             {
@@ -103,7 +104,9 @@ namespace EditorConfig
             if (_currentSession == null || _currentSession.IsDismissed)
                 return;
 
-            _currentSession.Filter();
+            _currentSession.SelectedCompletionSet.SelectBestMatch();
+            _currentSession.SelectedCompletionSet.Recalculate();
+            _currentSession.SelectedCompletionSet.Filter();
         }
 
         bool Cancel()

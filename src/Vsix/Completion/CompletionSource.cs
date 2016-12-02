@@ -119,7 +119,7 @@ namespace EditorConfig
 
                             if (triggerPoint.Value.Position > eqPos)
                                 foreach (var value in item.Values)
-                                    list.Add(CreateCompletion(value, KnownMonikers.Property));
+                                    list.Add(CreateCompletion(value, KnownMonikers.EnumerationItemPublic));
                         }
                     }
                 }

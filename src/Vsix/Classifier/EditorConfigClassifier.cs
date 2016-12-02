@@ -10,7 +10,7 @@ namespace EditorConfig
 {
     internal class EditorConfigClassifier : IClassifier
     {
-        private static Regex _rxValue = new Regex(@"(?<=\=\s?)([^\s:]+)", RegexOptions.Compiled);
+        private static Regex _rxValue = new Regex(@"(?<=\=[\s]+?)([^\s:]+)", RegexOptions.Compiled);
         private static Regex _rxSeverity = new Regex(@"(?<==[^:]+:)[^\s]+", RegexOptions.Compiled);
         private static Regex _rxKeyword = new Regex(@"^([^=]+)\b(?=\=?)", RegexOptions.Compiled);
         private static Regex _rxHeader = new Regex(@"\[([^\]]+)\]", RegexOptions.Compiled); // [lib/**.js]

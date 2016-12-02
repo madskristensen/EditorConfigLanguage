@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.25915.0
+VisualStudioVersion = 15.0.25930.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EditorConfig", "src\vsix\EditorConfig.csproj", "{428EFC5A-7AC4-4CE4-8A37-D402B8A03EB4}"
 EndProject

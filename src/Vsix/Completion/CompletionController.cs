@@ -101,12 +101,11 @@ namespace EditorConfig
 
         private void Filter()
         {
-            if (_currentSession == null || _currentSession.IsDismissed)
+            if (_currentSession == null)
                 return;
 
             _currentSession.SelectedCompletionSet.SelectBestMatch();
             _currentSession.SelectedCompletionSet.Recalculate();
-            _currentSession.SelectedCompletionSet.Filter();
         }
 
         bool Cancel()

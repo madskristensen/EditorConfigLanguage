@@ -55,7 +55,7 @@ namespace EditorConfig
                 return;
 
             var line = triggerPoint.Value.GetContainingLine().Extent;
-            var list = new List<Completion3>();
+            var list = new List<Completion4>();
             var applicableTo = snapshot.CreateTrackingSpan(triggerPoint.Value.Position, 0, SpanTrackingMode.EdgeInclusive);
             var position = triggerPoint.Value.Position;
 
@@ -131,11 +131,14 @@ namespace EditorConfig
 
             if (list.Any())
             {
-                completionSets.Add(new CompletionSet2("All", "All", applicableTo, list, Enumerable.Empty<Completion3>(), null));
+                //var standard = new IntellisenseFilter(KnownMonikers.Property, "Standard rules", "s", "automationText");
+                //var csharp = new IntellisenseFilter(KnownMonikers.CSFileNode, ".NET analysis rules", "c", "automationText");
+                //var dotnet = new IntellisenseFilter(KnownMonikers.DotNET, "C# analysis rules", "d", "automationText");
+                completionSets.Add(new CompletionSet2("All", "All", applicableTo, list, Enumerable.Empty<Completion4>(), null));
             }
         }
 
-        private void AddSeverity(List<Completion3> list)
+        private void AddSeverity(List<Completion4> list)
         {
             list.Add(CreateCompletion("none", KnownMonikers.StatusSuppressed));
             list.Add(CreateCompletion("suggestion", KnownMonikers.StatusInformation));
@@ -143,7 +146,7 @@ namespace EditorConfig
             list.Add(CreateCompletion("error", KnownMonikers.StatusError));
         }
 
-        private Completion3 CreateCompletion(string name, ImageMoniker moniker, bool isSupported = true, string description = null)
+        private Completion4 CreateCompletion(string name, ImageMoniker moniker, bool isSupported = true, string description = null)
         {
             string tooltip = description;
             IEnumerable<CompletionIcon2> icon = null;
@@ -154,7 +157,7 @@ namespace EditorConfig
                 tooltip = $"{Resources.Text.NotSupportedByVS}\r\n\r\n{description}";
             }
 
-            return new Completion3(name, name, tooltip, moniker, null, icon);
+            return new Completion4(name, name, tooltip, moniker, null, icon);
         }
 
         private ITrackingSpan FindTokenSpanAtPosition(ICompletionSession session)

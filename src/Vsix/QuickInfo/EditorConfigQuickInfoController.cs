@@ -31,8 +31,7 @@ namespace EditorConfig
 
             if (point != null)
             {
-                ITrackingPoint triggerPoint = point.Value.Snapshot.CreateTrackingPoint(point.Value.Position,
-                PointTrackingMode.Positive);
+                ITrackingPoint triggerPoint = point.Value.Snapshot.CreateTrackingPoint(point.Value.Position, PointTrackingMode.Positive);
 
                 if (!m_provider.QuickInfoBroker.IsQuickInfoActive(m_textView))
                 {

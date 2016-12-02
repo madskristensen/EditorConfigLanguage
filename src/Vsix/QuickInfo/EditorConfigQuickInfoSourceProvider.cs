@@ -15,12 +15,9 @@ namespace EditorConfig
         [Import]
         IClassifierAggregatorService ClassifierAggregatorService { get; set; }
 
-        [Import]
-        IGlyphService GlyphService { get; set; }
-
         public IQuickInfoSource TryCreateQuickInfoSource(ITextBuffer textBuffer)
         {
-            return textBuffer.Properties.GetOrCreateSingletonProperty(() => new EditorConfigQuickInfo(textBuffer, ClassifierAggregatorService, GlyphService));
+            return textBuffer.Properties.GetOrCreateSingletonProperty(() => new EditorConfigQuickInfo(textBuffer, ClassifierAggregatorService));
         }
     }
 }

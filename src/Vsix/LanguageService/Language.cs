@@ -22,7 +22,7 @@ namespace EditorConfig
 
         public override TypeAndMemberDropdownBars CreateDropDownHelper(IVsTextView forView)
         {
-            return null;
+            return new DropDownBars(this, forView);
         }
 
         public override LanguagePreferences GetLanguagePreferences()

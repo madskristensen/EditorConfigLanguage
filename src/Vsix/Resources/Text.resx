@@ -120,6 +120,9 @@
   <data name="EditorConfigFileAlreadyExist" xml:space="preserve">
     <value>An .editorconfig file already exist in this location</value>
   </data>
+  <data name="FormatDocument" xml:space="preserve">
+    <value>Format document</value>
+  </data>
   <data name="InvalidValue" xml:space="preserve">
     <value>"{0}" is not a valid value for the "{1}" property"</value>
   </data>

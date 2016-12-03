@@ -70,6 +70,15 @@ namespace EditorConfig.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Format document.
+        /// </summary>
+        internal static string FormatDocument {
+            get {
+                return ResourceManager.GetString("FormatDocument", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &quot;{0}&quot; is not a valid value for the &quot;{1}&quot; property&quot;.
         /// </summary>
         internal static string InvalidValue {

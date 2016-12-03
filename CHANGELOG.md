@@ -3,6 +3,7 @@
 - [ ] Implement custom parser
 - [ ] Intellisense Filters (icons at bottom of completion list)
 - [ ] Intellisense substring match on typing
+- [x] Navigational drop downs
 
 Features that have a checkmark are complete and available for
 download in the

@@ -21,31 +21,16 @@ namespace EditorConfig
 
         public override int Exec(ref Guid pguidCmdGroup, uint nCmdID, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
         {
-            if (pguidCmdGroup == VSConstants.VSStd2K)
+            if (pguidCmdGroup == VSConstants.VSStd2K && nCmdID == (uint)VSConstants.VSStd2KCmdID.FORMATDOCUMENT)
             {
-                switch ((VSConstants.VSStd2KCmdID)nCmdID)
-                {
-                    case VSConstants.VSStd2KCmdID.FORMATDOCUMENT:
-                        FormatSpan(0, _view.TextBuffer.CurrentSnapshot.Length);
-                        break;
-                    case VSConstants.VSStd2KCmdID.FORMATSELECTION:
-                        FormatSelection();
-                        break;
-                }
+                FormatDocument();
+                return VSConstants.S_OK;
             }
 
             return Next.Exec(pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
         }
 
-        private void FormatSelection()
-        {
-            int start = _view.Selection.Start.Position.Position;
-            int length = _view.Selection.End.Position.Position - start;
-
-            FormatSpan(start, length);
-        }
-
-        private void FormatSpan(int start, int length)
+        private void FormatDocument()
         {
             var sb = new StringBuilder();
             int emptyCount = 0;
@@ -77,10 +62,10 @@ namespace EditorConfig
                 }
             }
 
-            using (var transaction = _undoManager.TextBufferUndoHistory.CreateTransaction($"Format"))
+            using (var transaction = _undoManager.TextBufferUndoHistory.CreateTransaction(Resources.Text.FormatDocument))
             using (var edit = _view.TextBuffer.CreateEdit())
             {
-                edit.Replace(start, length, sb.ToString());
+                edit.Replace(0, _view.TextBuffer.CurrentSnapshot.Length, sb.ToString());
                 edit.Apply();
                 transaction.Complete();
             }
@@ -88,15 +73,10 @@ namespace EditorConfig
 
         public override int QueryStatus(ref Guid pguidCmdGroup, uint cCmds, OLECMD[] prgCmds, IntPtr pCmdText)
         {
-            if (pguidCmdGroup == VSConstants.VSStd2K)
+            if (pguidCmdGroup == VSConstants.VSStd2K && prgCmds[0].cmdID == (uint)VSConstants.VSStd2KCmdID.FORMATDOCUMENT)
             {
-                switch ((VSConstants.VSStd2KCmdID)prgCmds[0].cmdID)
-                {
-                    case VSConstants.VSStd2KCmdID.FORMATDOCUMENT:
-                    case VSConstants.VSStd2KCmdID.FORMATSELECTION:
-                        prgCmds[0].cmdf = (uint)OLECMDF.OLECMDF_ENABLED | (uint)OLECMDF.OLECMDF_SUPPORTED;
-                        return VSConstants.S_OK;
-                }
+                prgCmds[0].cmdf = (uint)OLECMDF.OLECMDF_ENABLED | (uint)OLECMDF.OLECMDF_SUPPORTED;
+                return VSConstants.S_OK;
             }
 
             return Next.QueryStatus(pguidCmdGroup, cCmds, prgCmds, pCmdText);

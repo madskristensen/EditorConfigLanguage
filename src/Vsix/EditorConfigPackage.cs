@@ -13,7 +13,7 @@ namespace EditorConfig
     [PackageRegistration(UseManagedResourcesOnly = true)]
     [InstalledProductRegistration("#110", "#112", Vsix.Version, IconResourceID = 400)]
 
-    [ProvideLanguageService(typeof(EditorConfigLanguage), Constants.LanguageName, 101, EnableAdvancedMembersOption = true, DefaultToInsertSpaces = true, EnableCommenting = true, AutoOutlining = true, EnableLineNumbers = true, MatchBraces = true, MatchBracesAtCaret = true, ShowMatchingBrace = true)]
+    [ProvideLanguageService(typeof(EditorConfigLanguage), Constants.LanguageName, 101, EnableAdvancedMembersOption = true, ShowDropDownOptions = true, DefaultToInsertSpaces = true, EnableCommenting = true, AutoOutlining = true, EnableLineNumbers = true, MatchBraces = true, MatchBracesAtCaret = true, ShowMatchingBrace = true)]
     [ProvideLanguageExtension(typeof(EditorConfigLanguage), Constants.FileName)]
 
     [ProvideEditorFactory(typeof(EditorFactory), 110, CommonPhysicalViewAttributes = (int)__VSPHYSICALVIEWATTRIBUTES.PVA_None, TrustLevel = __VSEDITORTRUSTLEVEL.ETL_AlwaysTrusted)]

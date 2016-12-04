@@ -31,19 +31,37 @@ namespace EditorConfig
             _textView.Caret.PositionChanged += CaretPositionChanged;
             _textView.TextBuffer.PostChanged += TextBufferChanged;
 
-            UpdateElements(_textView.TextSnapshot, false);
-            SyncDropDowns();
+            UpdateElements(_textView.TextSnapshot, true);
         }
 
         private void TextBufferChanged(object sender, EventArgs e)
         {
             UpdateElements(_textView.TextSnapshot, true);
-            SyncDropDowns();
         }
 
         private void CaretPositionChanged(object sender, CaretPositionChangedEventArgs e)
         {
             SyncDropDowns();
+        }
+
+        public override int GetComboAttributes(int combo, out uint entries, out uint entryType, out IntPtr imageList)
+        {
+            entries = 0;
+            imageList = IntPtr.Zero;
+            entryType = (uint)DROPDOWNENTRYTYPE.ENTRY_ATTR;
+
+            switch (combo)
+            {
+                case 0:
+                    entries = 1;
+                    break;
+
+                case 1:
+                    entries = (uint)_members.Count;
+                    break;
+            }
+
+            return VSConstants.S_OK;
         }
 
         public override bool OnSynchronizeDropdowns(LanguageService languageService, IVsTextView textView, int line, int col, ArrayList dropDownTypes, ArrayList dropDownMembers, ref int selectedType, ref int selectedMember)
@@ -68,7 +86,7 @@ namespace EditorConfig
 
             if (dropDownTypes.Count == 0)
             {
-                dropDownTypes.Add(new DropDownMember("Document", new TextSpan(), 0, DROPDOWNFONTATTR.FONTATTR_BOLD));
+                dropDownTypes.Add(new DropDownMember(Constants.FileName, new TextSpan(), 0, DROPDOWNFONTATTR.FONTATTR_BOLD));
             }
 
             return true;
@@ -87,7 +105,7 @@ namespace EditorConfig
                     if (line.LineNumber > 0 && !list.Any())
                         list.Add(new DropDownItem("<Root>", 1));
 
-                    list.Add(new DropDownItem(text.Trim(), line.LineNumber));
+                    list.Add(new DropDownItem("   " + text.Trim(), line.LineNumber));
                 }
             }
 
@@ -98,6 +116,7 @@ namespace EditorConfig
                 SyncDropDowns();
             }
         }
+
         private void SyncDropDowns()
         {
             ThreadHelper.Generic.BeginInvoke(System.Windows.Threading.DispatcherPriority.ApplicationIdle, () =>

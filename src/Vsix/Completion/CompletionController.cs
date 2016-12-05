@@ -99,8 +99,9 @@ namespace EditorConfig
             if (_currentSession == null)
                 return;
 
+            //_currentSession.SelectedCompletionSet.Recalculate();
+            _currentSession.SelectedCompletionSet.Filter();
             _currentSession.SelectedCompletionSet.SelectBestMatch();
-            _currentSession.SelectedCompletionSet.Recalculate();
         }
 
         bool Cancel()

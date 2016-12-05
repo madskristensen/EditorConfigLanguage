@@ -130,9 +130,9 @@ namespace EditorConfig
 
             if (list.Any())
             {
-                //var standard = new IntellisenseFilter(KnownMonikers.Property, "Standard rules", "s", "automationText");
-                //var csharp = new IntellisenseFilter(KnownMonikers.CSFileNode, ".NET analysis rules", "c", "automationText");
-                //var dotnet = new IntellisenseFilter(KnownMonikers.DotNET, "C# analysis rules", "d", "automationText");
+                var standard = new IntellisenseFilter(KnownMonikers.Property, "Standard rules", "s", "automationText");
+                var csharp = new IntellisenseFilter(KnownMonikers.CSFileNode, ".NET analysis rules", "c", "automationText");
+                var dotnet = new IntellisenseFilter(KnownMonikers.DotNET, "C# analysis rules", "d", "automationText");
                 completionSets.Add(new CompletionSet2("All", "All", applicableTo, list, Enumerable.Empty<Completion4>(), null));
             }
         }

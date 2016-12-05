@@ -46,6 +46,9 @@ namespace EditorConfig
                     // Make sure we don't double classify
                     if (!list.Any(s => s.Span.IntersectsWith(str)))
                         list.Add(new ClassificationSpan(str, tuple.Item2));
+
+                    if (span.End.Position == line.End.Position)
+                        return list;
                 }
 
             return list;

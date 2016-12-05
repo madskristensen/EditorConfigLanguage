@@ -38,8 +38,8 @@ namespace EditorConfig
 
             // .NET style analysis
             {new CompletionItem("dotnet_style_coalesce_expression", true, "Prefer null coalescing operator (??).", KnownMonikers.DotNET, "true", "false")},
-            {new CompletionItem("dotnet_style_collection_initializer ", true, "Prefer collection intiailizers.", KnownMonikers.DotNET, "true", "false")},
-            {new CompletionItem("dotnet_style_null_propagation ", true, "Prefer null propagation (?.).", KnownMonikers.DotNET, "true", "false")},
+            {new CompletionItem("dotnet_style_collection_initializer", true, "Prefer collection intiailizers.", KnownMonikers.DotNET, "true", "false")},
+            {new CompletionItem("dotnet_style_null_propagation", true, "Prefer null propagation (?.).", KnownMonikers.DotNET, "true", "false")},
             {new CompletionItem("dotnet_style_object_initializer", true, "Prefer object initializers.", KnownMonikers.DotNET, "true", "false")},
             {new CompletionItem("dotnet_style_predefined_type_for_locals_parameters_members", true, "Prefer language types (e.g. int, string, float).", KnownMonikers.DotNET, "true", "false")},
             {new CompletionItem("dotnet_style_predefined_type_for_member_access", true, "Prefer language types (e.g. int, string, float).", KnownMonikers.DotNET, "true", "false")},

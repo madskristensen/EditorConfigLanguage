@@ -57,6 +57,7 @@
     <Compile Include="BraceCompletion\BraceCompletionContextProvider.cs" />
     <Compile Include="BraceCompletion\BraceCompletionContext.cs" />
     <Compile Include="Classifier\EditorConfigClassificationTypes.cs" />
+    <Compile Include="Completion\FilteredCompletionSet.cs" />
     <Compile Include="LanguageService\DropDownBars.cs" />
     <Compile Include="Taggers\BraceMatchingTagger.cs" />
     <Compile Include="Taggers\BraceMatchingTaggerProvider.cs" />

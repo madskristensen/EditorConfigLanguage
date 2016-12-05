@@ -4,9 +4,6 @@
 - [ ] Intellisense Filters (icons at bottom of completion list)
 - [ ] Intellisense substring match on typing
 - [ ] Indication of rules not matching any files
-- [x] Navigational drop downs
-- [x] Make headings bold
-- [x] Intellisense filtering when typing
 
 Features that have a checkmark are complete and available for
 download in the
@@ -16,6 +13,12 @@ download in the
 
 These are the changes to each version that has been released
 on the official Visual Studio extension gallery.
+
+## 1.4
+
+- [x] Navigational drop downs
+- [x] Make headings bold
+- [x] Intellisense filtering when typing
 
 ## 1.3
 

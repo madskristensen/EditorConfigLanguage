@@ -41,13 +41,13 @@ namespace EditorConfig
             foreach (var tuple in _map)
                 foreach (Match match in tuple.Item1.Matches(text))
                 {
-                    var str = new SnapshotSpan(line.Snapshot, line.Start.Position + match.Index, match.Length);
+                    var matchSpan = new SnapshotSpan(line.Snapshot, line.Start.Position + match.Index, match.Length);
 
                     // Make sure we don't double classify
-                    if (!list.Any(s => s.Span.IntersectsWith(str)))
-                        list.Add(new ClassificationSpan(str, tuple.Item2));
+                    if (!list.Any(s => s.Span.IntersectsWith(matchSpan)))
+                        list.Add(new ClassificationSpan(matchSpan, tuple.Item2));
 
-                    if (span.End.Position == line.End.Position)
+                    if (matchSpan.End.Position == line.End.Position)
                         return list;
                 }
 

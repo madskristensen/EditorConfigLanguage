@@ -4,6 +4,7 @@
 - [ ] Intellisense Filters (icons at bottom of completion list)
 - [ ] Intellisense substring match on typing
 - [x] Navigational drop downs
+- [x] Make headings bold
 
 Features that have a checkmark are complete and available for
 download in the

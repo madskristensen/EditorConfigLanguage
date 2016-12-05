@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
-using Microsoft.VisualStudio.Language.StandardClassification;
+using System.Windows.Threading;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Tagging;
 using Microsoft.VisualStudio.Utilities;
-using System.Windows.Threading;
 
 namespace EditorConfig
 {
@@ -80,7 +79,7 @@ namespace EditorConfig
 
                 foreach (var cspan in classificationSpans)
                 {
-                    if (cspan.ClassificationType.IsOfType(PredefinedClassificationTypeNames.Identifier))
+                    if (cspan.ClassificationType.IsOfType(EditorConfigClassificationTypes.Keyword))
                     {
                         property = cspan.Span.GetText();
 
@@ -89,7 +88,7 @@ namespace EditorConfig
                         if (item == null)
                             yield return CreateError(line, cspan, string.Format(Resources.Text.ValidateUnknownKeyword, property));
                     }
-                    else if (cspan.ClassificationType.IsOfType(PredefinedClassificationTypeNames.Keyword))
+                    else if (cspan.ClassificationType.IsOfType(EditorConfigClassificationTypes.Value))
                     {
                         if (string.IsNullOrEmpty(property))
                             continue;
@@ -116,7 +115,7 @@ namespace EditorConfig
                         if (lineText.EndsWith("true"))
                             yield return CreateError(line, cspan, Resources.Text.ValidationMissingSeverity);
                     }
-                    else if (cspan.ClassificationType.IsOfType(PredefinedClassificationTypeNames.SymbolDefinition))
+                    else if (cspan.ClassificationType.IsOfType(EditorConfigClassificationTypes.Severity))
                     {
                         string severity = cspan.Span.GetText().Trim();
 

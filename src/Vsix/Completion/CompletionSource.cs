@@ -1,14 +1,13 @@
-﻿using Microsoft.VisualStudio.Imaging;
+﻿using System.Collections.Generic;
+using System.ComponentModel.Composition;
+using System.Linq;
+using Microsoft.VisualStudio.Imaging;
 using Microsoft.VisualStudio.Imaging.Interop;
 using Microsoft.VisualStudio.Language.Intellisense;
-using Microsoft.VisualStudio.Language.StandardClassification;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Operations;
 using Microsoft.VisualStudio.Utilities;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.Linq;
 
 namespace EditorConfig
 {
@@ -76,7 +75,7 @@ namespace EditorConfig
 
                 foreach (var span in spans)
                 {
-                    if (span.ClassificationType.IsOfType(PredefinedClassificationTypeNames.Identifier))
+                    if (span.ClassificationType.IsOfType(EditorConfigClassificationTypes.Keyword))
                     {
                         current = span.Span.GetText();
 
@@ -86,7 +85,7 @@ namespace EditorConfig
                         foreach (var key in CompletionItem.AllItems)
                             list.Add(CreateCompletion(key.Name, key.Moniker, key.IsSupported, key.Description));
                     }
-                    else if (span.ClassificationType.IsOfType(PredefinedClassificationTypeNames.Keyword))
+                    else if (span.ClassificationType.IsOfType(EditorConfigClassificationTypes.Value))
                     {
                         if (!span.Span.Contains(extent))
                             continue;
@@ -98,7 +97,7 @@ namespace EditorConfig
                                 list.Add(CreateCompletion(value, KnownMonikers.EnumerationItemPublic));
                         }
                     }
-                    else if (span.ClassificationType.IsOfType(PredefinedClassificationTypeNames.SymbolDefinition))
+                    else if (span.ClassificationType.IsOfType(EditorConfigClassificationTypes.Severity))
                     {
                         if (span.Span.Contains(extent))
                             AddSeverity(list);

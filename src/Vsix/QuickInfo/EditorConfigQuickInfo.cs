@@ -1,9 +1,8 @@
-﻿using Microsoft.VisualStudio.Language.Intellisense;
-using Microsoft.VisualStudio.Language.StandardClassification;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace EditorConfig
 {
@@ -30,7 +29,7 @@ namespace EditorConfig
             var line = point.Value.GetContainingLine();
 
             var lineSpan = new SnapshotSpan(line.Start, line.End);
-            var classificationSpans = _classifier.GetClassificationSpans(lineSpan).Where(c => c.ClassificationType.IsOfType(PredefinedClassificationTypeNames.Identifier));
+            var classificationSpans = _classifier.GetClassificationSpans(lineSpan).Where(c => c.ClassificationType.IsOfType(EditorConfigClassificationTypes.Keyword));
 
             if (!classificationSpans.Any())
                 return;

@@ -28,6 +28,7 @@ See the [change log](CHANGELOG.md) for changes and road map.
 - Drag 'n drop file onto .editorconfig file
 - Code formatting
 - Hover tooltips
+- Navigational drop downs
 
 ### Create .editorconfig files
 To make it really easy to add a .editorconfig file, you can now right-click

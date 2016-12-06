@@ -2,6 +2,7 @@
 
 - [ ] Implement custom parser
 - [ ] Indication of rules not matching any files
+- [x] Support semicolons as comments
 - [x] Select matching part of completion item
 - [x] Intellisense Filters (icons at bottom of completion list)
 - [x] Intellisense substring match on typing

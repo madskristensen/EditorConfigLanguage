@@ -13,7 +13,7 @@ namespace EditorConfig
         private static Regex _rxSeverity = new Regex(@"(?<==[^:]+:)[^\s]+", RegexOptions.Compiled);
         private static Regex _rxKeyword = new Regex(@"^([^=]+)\b(?=\=?)", RegexOptions.Compiled);
         private static Regex _rxHeader = new Regex(@"\[([^\]]+)\]", RegexOptions.Compiled); // [lib/**.js]
-        private static Regex _rxComment = new Regex(@"#.*", RegexOptions.Compiled); // # comment
+        private static Regex _rxComment = new Regex(@"(#|;).+", RegexOptions.Compiled); // # comment
         private static List<Tuple<Regex, IClassificationType>> _map;
 
         public EditorConfigClassifier(IClassificationTypeRegistryService registry)

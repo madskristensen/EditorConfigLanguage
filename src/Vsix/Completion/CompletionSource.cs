@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.Linq;
 using Microsoft.VisualStudio.Imaging;
 using Microsoft.VisualStudio.Imaging.Interop;
@@ -7,33 +6,15 @@ using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Operations;
-using Microsoft.VisualStudio.Utilities;
 
 namespace EditorConfig
 {
-    [Export(typeof(ICompletionSourceProvider))]
-    [ContentType(Constants.LanguageName)]
-    [Name("Editor Config")]
-    public class EditorConfigCompletionSourceProvider : ICompletionSourceProvider
-    {
-        [Import]
-        IClassifierAggregatorService ClassifierAggregatorService { get; set; }
-
-        [Import]
-        ITextStructureNavigatorSelectorService NavigatorService { get; set; }
-
-        public ICompletionSource TryCreateCompletionSource(ITextBuffer textBuffer)
-        {
-            return new EditorConfigCompletionSource(textBuffer, ClassifierAggregatorService, NavigatorService);
-        }
-    }
-
     class EditorConfigCompletionSource : ICompletionSource
     {
         private ITextBuffer _buffer;
-        private bool _disposed = false;
         private IClassifier _classifier;
         private ITextStructureNavigatorSelectorService _navigator;
+        private bool _disposed = false;
 
         public EditorConfigCompletionSource(ITextBuffer buffer, IClassifierAggregatorService classifier, ITextStructureNavigatorSelectorService navigator)
         {
@@ -130,14 +111,20 @@ namespace EditorConfig
 
             if (list.Any())
             {
-                var standard = new IntellisenseFilter(KnownMonikers.Property, "Standard rules (Alt + S)", "s", "standard");
-                var csharp = new IntellisenseFilter(KnownMonikers.CSFileNode, ".NET analysis rules (Alt + C)", "c", "csharp");
-                var dotnet = new IntellisenseFilter(KnownMonikers.DotNET, "C# analysis rules (Alt + D)", "d", "dotnet");
-
                 if (list.All(c => string.IsNullOrEmpty(c.IconAutomationText)))
+                {
                     completionSets.Add(new FilteredCompletionSet(applicableTo, list, Enumerable.Empty<Completion4>(), null));
+                }
                 else
-                    completionSets.Add(new FilteredCompletionSet(applicableTo, list, Enumerable.Empty<Completion4>(), new[] { standard, csharp, dotnet }));
+                {
+                    var filters = new[] {
+                        new IntellisenseFilter(KnownMonikers.Property, "Standard rules (Alt + S)", "s", "standard"),
+                        new IntellisenseFilter(KnownMonikers.CSFileNode, ".NET analysis rules (Alt + C)", "c", "csharp"),
+                        new IntellisenseFilter(KnownMonikers.DotNET, "C# analysis rules (Alt + D)", "d", "dotnet"),
+                    };
+
+                    completionSets.Add(new FilteredCompletionSet(applicableTo, list, Enumerable.Empty<Completion4>(), filters));
+                }
             }
         }
 

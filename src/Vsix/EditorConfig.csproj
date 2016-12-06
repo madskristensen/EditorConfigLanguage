@@ -84,6 +84,8 @@
       <DependentUpon>EditorConfigPackage.vsct</DependentUpon>
     </Compile>
     <Compile Include="Helpers\ProjectHelpers.cs" />
+    <Compile Include="Taggers\ErrorTagger.cs" />
+    <Compile Include="Taggers\ErrorTaggerProvider.cs" />
     <Compile Include="Taggers\OutliningTagger.cs" />
     <Compile Include="Taggers\OutliningTaggerProvider.cs" />
     <Compile Include="ProvideBraceCompletionAttribute.cs" />
@@ -107,7 +109,6 @@
     <Compile Include="source.extension.cs">
       <DependentUpon>source.extension.vsixmanifest</DependentUpon>
     </Compile>
-    <Compile Include="Validation\EditorConfigErrorTag.cs" />
   </ItemGroup>
   <ItemGroup>
     <VSCTCompile Include="EditorConfigPackage.vsct">

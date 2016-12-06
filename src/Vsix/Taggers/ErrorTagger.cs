@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.Linq;
 using System.Windows.Threading;
 using Microsoft.VisualStudio.Shell;
@@ -8,38 +7,10 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Tagging;
-using Microsoft.VisualStudio.Utilities;
 
 namespace EditorConfig
 {
-    [Export(typeof(ITaggerProvider))]
-    [ContentType(Constants.LanguageName)]
-    [TagType(typeof(ErrorTag))]
-    class CheckTextErrorProvider : ITaggerProvider
-    {
-        [Import]
-        IClassifierAggregatorService _classifierAggregatorService = null;
-
-        [Import]
-        ITextDocumentFactoryService TextDocumentFactoryService { get; set; }
-
-        public ITagger<T> CreateTagger<T>(ITextBuffer buffer) where T : ITag
-        {
-            if (buffer == null)
-                throw new ArgumentNullException(nameof(buffer));
-
-            if (!buffer.Properties.TryGetProperty(typeof(ErrorListProvider), out ErrorListProvider errorlist) ||
-                !buffer.Properties.TryGetProperty(typeof(IWpfTextView), out IWpfTextView view) ||
-                !TextDocumentFactoryService.TryGetTextDocument(buffer, out var document))
-            {
-                return null;
-            }
-
-            return new CheckTextErrorTagger(view, _classifierAggregatorService, errorlist, document) as ITagger<T>;
-        }
-    }
-
-    class CheckTextErrorTagger : ITagger<IErrorTag>
+    class ErrorTagger : ITagger<IErrorTag>
     {
         private IClassifier _classifier;
         private ErrorListProvider _errorlist;
@@ -47,7 +18,7 @@ namespace EditorConfig
         private IWpfTextView _view;
         private bool _hasLoaded;
 
-        public CheckTextErrorTagger(IWpfTextView view, IClassifierAggregatorService classifier, ErrorListProvider errorlist, ITextDocument document)
+        public ErrorTagger(IWpfTextView view, IClassifierAggregatorService classifier, ErrorListProvider errorlist, ITextDocument document)
         {
             _view = view;
             _classifier = classifier.GetClassifier(view.TextBuffer);

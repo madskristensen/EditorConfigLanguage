@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
-using Microsoft.VisualStudio.Text.Editor;
 
 namespace EditorConfig
 {
@@ -23,9 +22,12 @@ namespace EditorConfig
             buffer.Properties.TryGetProperty(typeof(OutliningTagger), out _tagger);
         }
 
-        public Task<bool> HasSuggestedActionsAsync(ISuggestedActionCategorySet requestedActionCategories, SnapshotSpan range, CancellationToken cancellationToken)
+        public async Task<bool> HasSuggestedActionsAsync(ISuggestedActionCategorySet requestedActionCategories, SnapshotSpan range, CancellationToken cancellationToken)
         {
-            return Task.Factory.StartNew(() =>
+            if (_tagger == null)
+                return await Task.FromResult(false);
+
+            return await Task.Factory.StartNew(() =>
             {
                 var sections = from c in _classifier.GetClassificationSpans(range)
                                where c.ClassificationType.IsOfType(EditorConfigClassificationTypes.Section)
@@ -33,7 +35,6 @@ namespace EditorConfig
 
                 foreach (var section in sections)
                 {
-
                     _region = _tagger.Regions.FirstOrDefault(r => r.StartOffset == section.Span.Start);
 
                     if (_region != null)

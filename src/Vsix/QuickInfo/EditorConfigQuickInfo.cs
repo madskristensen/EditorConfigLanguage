@@ -10,11 +10,13 @@ namespace EditorConfig
     {
         private IClassifier _classifier;
         private ITextBuffer _buffer;
+        private ErrorTagger _tagger;
 
         public EditorConfigQuickInfo(ITextBuffer buffer, IClassifierAggregatorService classifierAggregatorService)
         {
             _classifier = classifierAggregatorService.GetClassifier(buffer);
             _buffer = buffer;
+            buffer.Properties.TryGetProperty(typeof(ErrorTagger), out _tagger);
         }
 
         public void AugmentQuickInfoSession(IQuickInfoSession session, IList<object> qiContent, out ITrackingSpan applicableToSpan)
@@ -27,12 +29,13 @@ namespace EditorConfig
                 return;
 
             var line = point.Value.GetContainingLine();
-
             var lineSpan = new SnapshotSpan(line.Start, line.End);
             var classificationSpans = _classifier.GetClassificationSpans(lineSpan).Where(c => c.ClassificationType.IsOfType(EditorConfigClassificationTypes.Keyword));
 
             if (!classificationSpans.Any())
                 return;
+
+            ShowErrors(qiContent, line);
 
             var span = classificationSpans.First();
             var keyword = span.Span.GetText()?.Trim();
@@ -45,6 +48,16 @@ namespace EditorConfig
             }
 
             applicableToSpan = lineSpan.Snapshot.CreateTrackingSpan(span.Span, SpanTrackingMode.EdgeNegative);
+        }
+
+        private void ShowErrors(IList<object> qiContent, ITextSnapshotLine line)
+        {
+            var tags = _tagger.GetTags(new NormalizedSnapshotSpanCollection(line.Extent));
+
+            foreach (var tag in tags)
+            {
+                qiContent.Add(tag.Tag.ToolTipContent);
+            }
         }
 
         public void Dispose()

@@ -39,14 +39,14 @@ namespace EditorConfig
                 yield break;
 
             var span = spans[0];
-            var line = span.Start.GetContainingLine();
-            var classificationSpans = _classifier.GetClassificationSpans(line.Extent);
+            var currentLine = span.Start.GetContainingLine();
+            var classificationSpans = _classifier.GetClassificationSpans(currentLine.Extent);
             string property = null;
 
             try
             {
                 _errorlist.SuspendRefresh();
-                ClearError(line);
+                ClearError(currentLine);
 
                 foreach (var cspan in classificationSpans)
                 {
@@ -57,7 +57,20 @@ namespace EditorConfig
                         var item = CompletionItem.GetCompletionItem(property);
 
                         if (item == null)
-                            yield return CreateError(line, cspan, string.Format(Resources.Text.ValidateUnknownKeyword, property));
+                            yield return CreateError(currentLine, cspan, string.Format(Resources.Text.ValidateUnknownKeyword, property));
+
+                        if (currentLine.LineNumber > 0 && property.Equals("root", StringComparison.OrdinalIgnoreCase))
+                        {
+                            foreach (var l in span.Snapshot.Lines.Where(l => l.LineNumber < currentLine.LineNumber))
+                            {
+                                var hasSection = _classifier.GetClassificationSpans(l.Extent).Any(c => c.ClassificationType.IsOfType(EditorConfigClassificationTypes.Section));
+                                if (hasSection)
+                                {
+                                    yield return CreateError(currentLine, cspan, "\"Root\" is only allowed in the beginning of the document");
+                                }
+                            }
+
+                        }
                     }
                     else if (cspan.ClassificationType.IsOfType(EditorConfigClassificationTypes.Value))
                     {
@@ -72,26 +85,26 @@ namespace EditorConfig
                         string value = cspan.Span.GetText();
 
                         if (!item.Values.Contains(value, StringComparer.OrdinalIgnoreCase) && !(int.TryParse(value, out int intValue) && intValue > 0))
-                            yield return CreateError(line, cspan, string.Format(Resources.Text.InvalidValue, value, property));
+                            yield return CreateError(currentLine, cspan, string.Format(Resources.Text.InvalidValue, value, property));
 
                         // C# style rules validation
                         if (!property.StartsWith("csharp_") && !property.StartsWith("dotnet_"))
                             continue;
 
-                        var lineText = line.Extent.GetText().Trim();
+                        var lineText = currentLine.Extent.GetText().Trim();
 
                         if (lineText.EndsWith(":"))
-                            yield return CreateError(line, cspan, string.Format(Resources.Text.ValidationInvalidEndChar, ":"));
+                            yield return CreateError(currentLine, cspan, string.Format(Resources.Text.ValidationInvalidEndChar, ":"));
 
                         if (lineText.EndsWith("true"))
-                            yield return CreateError(line, cspan, Resources.Text.ValidationMissingSeverity);
+                            yield return CreateError(currentLine, cspan, Resources.Text.ValidationMissingSeverity);
                     }
                     else if (cspan.ClassificationType.IsOfType(EditorConfigClassificationTypes.Severity))
                     {
                         string severity = cspan.Span.GetText().Trim();
 
                         if (!Constants.Severity.Contains(severity))
-                            yield return CreateError(line, cspan, string.Format(Resources.Text.ValidationInvalidSeverity, string.Join(", ", Constants.Severity)));
+                            yield return CreateError(currentLine, cspan, string.Format(Resources.Text.ValidationInvalidSeverity, string.Join(", ", Constants.Severity)));
                     }
                 }
             }

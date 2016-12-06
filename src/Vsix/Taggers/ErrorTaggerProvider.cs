@@ -32,7 +32,7 @@ namespace EditorConfig
                 return null;
             }
 
-            return new ErrorTagger(view, ClassifierService, errorlist, document) as ITagger<T>;
+            return buffer.Properties.GetOrCreateSingletonProperty(() => new ErrorTagger(view, ClassifierService, errorlist, document)) as ITagger<T>;
         }
     }
 }

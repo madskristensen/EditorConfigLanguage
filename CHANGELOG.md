@@ -1,8 +1,8 @@
 # Road map
 
 - [ ] Implement custom parser
-- [ ] Select matching part of completion item
 - [ ] Indication of rules not matching any files
+- [x] Select matching part of completion item
 - [x] Intellisense Filters (icons at bottom of completion list)
 - [x] Intellisense substring match on typing
 

@@ -55,5 +55,17 @@ namespace EditorConfig
             completion.DisplayText.Contains(_typed)
             );
         }
-}
+
+        public override IReadOnlyList<Span> GetHighlightedSpansInDisplayText(string displayText)
+        {
+            int index = displayText.IndexOf(_typed, 0);
+
+            if (index > -1 && displayText.Length >= index + _typed.Length)
+            {
+                return new[] { Span.FromBounds(index, index + _typed.Length) };
+            }
+
+            return new List<Span>();
+        }
+    }
 }

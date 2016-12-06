@@ -1,63 +1,59 @@
-﻿//using System;
-//using System.Linq;
-//using System.Collections.Generic;
-//using System.Text;
-//using System.Threading.Tasks;
-//using Microsoft.VisualStudio.Language.Intellisense;
-//using Microsoft.VisualStudio.Text;
+﻿using System;
+using System.Linq;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.VisualStudio.Language.Intellisense;
+using Microsoft.VisualStudio.Text;
 
-//namespace EditorConfig
-//{
-//    public class FilteredCompletionSet : CompletionSet2
-//    {
-//        private List<Completion> _filteredCompletions;
-//        private List<Completion> _completions;
+namespace EditorConfig
+{
+    public class FilteredCompletionSet : CompletionSet2
+    {
+        public FilteredObservableCollection<Completion> currentCompletions;
+        private BulkObservableCollection<Completion> _completions = new BulkObservableCollection<Completion>();
+        public List<string> _filterBufferText = new List<string>();
+        private string _typed;
 
-//        public FilteredCompletionSet(ITrackingSpan applicableTo, IEnumerable<Completion3> completions, IEnumerable<Completion> completionBuilders, IReadOnlyList<IIntellisenseFilter> filters)
-//            : base("All", "All", applicableTo, completions, completionBuilders, filters)
-//        {
-//            _completions = new List<Completion>(completions);
-//            _filteredCompletions = new List<Completion>(completions);
-//        }
+        public FilteredCompletionSet(ITrackingSpan applicableTo, IEnumerable<Completion> completions, IEnumerable<Completion> completionBuilders, IReadOnlyList<IIntellisenseFilter> filters)
+            : base("All", "All", applicableTo, completions, completionBuilders, filters)
+        {
+            _completions.AddRange(completions);
+            currentCompletions = new FilteredObservableCollection<Completion>(_completions);
+        }
 
-//        public override IList<Completion> Completions
-//        {
-//            get
-//            {
-//                return _filteredCompletions ?? _completions;
-//            }
-//        }
 
-//        public override void Filter()
-//        {
-//            var text = ApplicableTo.GetText(ApplicableTo.TextBuffer.CurrentSnapshot);
-//            //var enabledFilters = Filters.Where(f => f.IsEnabled).Select(f => f.Moniker);
+        public override IList<Completion> Completions
+        {
+            get { return currentCompletions; }
+        }
 
-//            if (!string.IsNullOrWhiteSpace(text))
-//            {
-//                _filteredCompletions = _completions.Where(c => c.DisplayText.IndexOf(text, StringComparison.OrdinalIgnoreCase) > -1).ToList();
-//            }
+        public override void SelectBestMatch()
+        {
+            if (Filters != null && Filters.Any())
+            {
+                var enabledFilters = Filters.Where(f => f.IsChecked).Select(f => f.AutomationText).Distinct();
 
-//            //if (enabledFilters.Any())
-//            //{
-//            //    var comp3 = _filteredCompletions.Cast<Completion3>().ToList();
-//            //    _filteredCompletions.Clear();
-//            //    _filteredCompletions.AddRange(comp3.Where(f => enabledFilters.Any(c => f.IconMoniker.Guid == c.Guid && f.IconMoniker.Id == c.Id)));
-//            //}
-//        }
+                if (!enabledFilters.Any())
+                    enabledFilters = Filters.Select(f => f.AutomationText).Distinct();
 
-//        public override void SelectBestMatch()
-//        {
-//            Filter();
+                _filterBufferText.Clear();
+                _filterBufferText.AddRange(enabledFilters);
 
-//            //if (Completions.Any())
-//            //{
-//            //    SelectionStatus = new CompletionSelectionStatus(Completions.First(), true, false);
-//            //}
-//            //else
-//            //{
-//            base.SelectBestMatch(CompletionMatchType.MatchDisplayText, false);
-//            //}
-//        }
-//    }
-//}
+                _typed = ApplicableTo.GetText(ApplicableTo.TextBuffer.CurrentSnapshot);
+
+                currentCompletions.Filter(new Predicate<Completion>(DoesCompletionMatchAutomationText));
+            }
+
+            base.SelectBestMatch();
+        }
+
+        private bool DoesCompletionMatchAutomationText(Completion completion)
+        {
+            return (_filterBufferText.Exists(x =>
+            x.Equals(completion.IconAutomationText, StringComparison.OrdinalIgnoreCase)) &&
+            completion.DisplayText.Contains(_typed)
+            );
+        }
+}
+}

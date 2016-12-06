@@ -100,7 +100,7 @@ namespace EditorConfig
                 return;
 
             //_currentSession.SelectedCompletionSet.Recalculate();
-            _currentSession.SelectedCompletionSet.Filter();
+            //_currentSession.SelectedCompletionSet.Filter();
             _currentSession.SelectedCompletionSet.SelectBestMatch();
         }
 

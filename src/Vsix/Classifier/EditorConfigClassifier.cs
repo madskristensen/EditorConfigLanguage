@@ -47,6 +47,7 @@ namespace EditorConfig
                     if (!list.Any(s => s.Span.IntersectsWith(matchSpan)))
                         list.Add(new ClassificationSpan(matchSpan, tuple.Item2));
 
+                    // No need to continue if the whole line has been classified
                     if (matchSpan.End.Position == line.End.Position)
                         return list;
                 }

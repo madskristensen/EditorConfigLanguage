@@ -61,7 +61,7 @@ namespace EditorConfig
             if (string.IsNullOrWhiteSpace(line.GetText()))
             {
                 foreach (var key in CompletionItem.AllItems)
-                    list.Add(CreateCompletion(key.Name, key.Moniker, key.IsSupported, key.Description));
+                    list.Add(CreateCompletion(key.Name, key.Moniker, key.Tag, key.IsSupported, key.Description));
             }
             else if (position > 0 && snapshot.Length > 1 && snapshot.GetText(position - 1, 1) == ":")
             {
@@ -83,7 +83,7 @@ namespace EditorConfig
                             continue;
 
                         foreach (var key in CompletionItem.AllItems)
-                            list.Add(CreateCompletion(key.Name, key.Moniker, key.IsSupported, key.Description));
+                            list.Add(CreateCompletion(key.Name, key.Moniker, key.Tag, key.IsSupported, key.Description));
                     }
                     else if (span.ClassificationType.IsOfType(EditorConfigClassificationTypes.Value))
                     {
@@ -130,10 +130,14 @@ namespace EditorConfig
 
             if (list.Any())
             {
-                var standard = new IntellisenseFilter(KnownMonikers.Property, "Standard rules", "s", "automationText");
-                var csharp = new IntellisenseFilter(KnownMonikers.CSFileNode, ".NET analysis rules", "c", "automationText");
-                var dotnet = new IntellisenseFilter(KnownMonikers.DotNET, "C# analysis rules", "d", "automationText");
-                completionSets.Add(new CompletionSet2("All", "All", applicableTo, list, Enumerable.Empty<Completion4>(), null));
+                var standard = new IntellisenseFilter(KnownMonikers.Property, "Standard rules (Alt + S)", "s", "standard");
+                var csharp = new IntellisenseFilter(KnownMonikers.CSFileNode, ".NET analysis rules (Alt + C)", "c", "csharp");
+                var dotnet = new IntellisenseFilter(KnownMonikers.DotNET, "C# analysis rules (Alt + D)", "d", "dotnet");
+
+                if (list.All(c => string.IsNullOrEmpty(c.IconAutomationText)))
+                    completionSets.Add(new FilteredCompletionSet(applicableTo, list, Enumerable.Empty<Completion4>(), null));
+                else
+                    completionSets.Add(new FilteredCompletionSet(applicableTo, list, Enumerable.Empty<Completion4>(), new[] { standard, csharp, dotnet }));
             }
         }
 
@@ -145,7 +149,7 @@ namespace EditorConfig
             list.Add(CreateCompletion("error", KnownMonikers.StatusError));
         }
 
-        private Completion4 CreateCompletion(string name, ImageMoniker moniker, bool isSupported = true, string description = null)
+        private Completion4 CreateCompletion(string name, ImageMoniker moniker, string tag = null, bool isSupported = true, string description = null)
         {
             string tooltip = description;
             IEnumerable<CompletionIcon2> icon = null;
@@ -156,7 +160,7 @@ namespace EditorConfig
                 tooltip = $"{Resources.Text.NotSupportedByVS}\r\n\r\n{description}";
             }
 
-            return new Completion4(name, name, tooltip, moniker, null, icon);
+            return new Completion4(name, name, tooltip, moniker, tag, icon);
         }
 
         private ITrackingSpan FindTokenSpanAtPosition(ICompletionSession session)

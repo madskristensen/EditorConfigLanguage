@@ -1,9 +1,10 @@
 # Road map
 
 - [ ] Implement custom parser
-- [ ] Intellisense Filters (icons at bottom of completion list)
-- [ ] Intellisense substring match on typing
+- [ ] Select matching part of completion item
 - [ ] Indication of rules not matching any files
+- [x] Intellisense Filters (icons at bottom of completion list)
+- [x] Intellisense substring match on typing
 
 Features that have a checkmark are complete and available for
 download in the

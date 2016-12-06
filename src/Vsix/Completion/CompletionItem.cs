@@ -56,6 +56,13 @@ namespace EditorConfig
             Values = values;
             Moniker = moniker;
             IsSupported = isSupported;
+
+            if (name.StartsWith("dotnet"))
+                Tag = "dotnet";
+            else if (name.StartsWith("csharp"))
+                Tag = "csharp";
+            else
+                Tag = "standard";
         }
 
         public static IEnumerable<CompletionItem> AllItems
@@ -73,5 +80,6 @@ namespace EditorConfig
         public IEnumerable<string> Values { get; set; }
         public bool IsSupported { get; set; }
         public ImageMoniker Moniker { get; set; }
+        public string Tag { get; set; }
     }
 }

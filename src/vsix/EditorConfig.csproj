@@ -60,6 +60,10 @@
     <Compile Include="Completion\CompletionSourceProvider.cs" />
     <Compile Include="Completion\FilteredCompletionSet.cs" />
     <Compile Include="LanguageService\DropDownBars.cs" />
+    <Compile Include="SuggestedActions\Actions\BaseSuggestedAction.cs" />
+    <Compile Include="SuggestedActions\Actions\DeleteSectionAction.cs" />
+    <Compile Include="SuggestedActions\SuggestedActionsSource.cs" />
+    <Compile Include="SuggestedActions\SuggestedActionsSourceProvider.cs" />
     <Compile Include="Taggers\BraceMatchingTagger.cs" />
     <Compile Include="Taggers\BraceMatchingTaggerProvider.cs" />
     <Compile Include="Classifier\EditorConfigClassifier.cs" />
@@ -80,6 +84,8 @@
       <DependentUpon>EditorConfigPackage.vsct</DependentUpon>
     </Compile>
     <Compile Include="Helpers\ProjectHelpers.cs" />
+    <Compile Include="Taggers\ErrorTagger.cs" />
+    <Compile Include="Taggers\ErrorTaggerProvider.cs" />
     <Compile Include="Taggers\OutliningTagger.cs" />
     <Compile Include="Taggers\OutliningTaggerProvider.cs" />
     <Compile Include="ProvideBraceCompletionAttribute.cs" />
@@ -103,7 +109,6 @@
     <Compile Include="source.extension.cs">
       <DependentUpon>source.extension.vsixmanifest</DependentUpon>
     </Compile>
-    <Compile Include="Validation\EditorConfigErrorTag.cs" />
   </ItemGroup>
   <ItemGroup>
     <VSCTCompile Include="EditorConfigPackage.vsct">

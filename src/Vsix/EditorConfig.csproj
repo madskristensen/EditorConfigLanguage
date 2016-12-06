@@ -60,6 +60,10 @@
     <Compile Include="Completion\CompletionSourceProvider.cs" />
     <Compile Include="Completion\FilteredCompletionSet.cs" />
     <Compile Include="LanguageService\DropDownBars.cs" />
+    <Compile Include="SuggestedActions\Actions\BaseSuggestedAction.cs" />
+    <Compile Include="SuggestedActions\Actions\DeleteSectionAction.cs" />
+    <Compile Include="SuggestedActions\SuggestedActionsSource.cs" />
+    <Compile Include="SuggestedActions\SuggestedActionsSourceProvider.cs" />
     <Compile Include="Taggers\BraceMatchingTagger.cs" />
     <Compile Include="Taggers\BraceMatchingTaggerProvider.cs" />
     <Compile Include="Classifier\EditorConfigClassifier.cs" />

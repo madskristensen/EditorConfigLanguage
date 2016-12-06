@@ -6,6 +6,7 @@
 - [x] Select matching part of completion item
 - [x] Intellisense Filters (icons at bottom of completion list)
 - [x] Intellisense substring match on typing
+- [x] Light bulb for deleting section
 
 Features that have a checkmark are complete and available for
 download in the

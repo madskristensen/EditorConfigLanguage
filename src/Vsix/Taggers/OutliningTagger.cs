@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Timers;
+using System.Windows.Threading;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
 
@@ -9,26 +11,29 @@ namespace EditorConfig
 {
     internal sealed class OutliningTagger : ITagger<IOutliningRegionTag>, IDisposable
     {
-        readonly ITextBuffer buffer;
-        ITextSnapshot snapshot;
-        IEnumerable<Region> regions;
+        private readonly ITextBuffer _buffer;
+        private ITextSnapshot _snapshot;
         private bool _hasBufferchanged;
         private Timer _timer;
         private bool _isParsing;
 
         public OutliningTagger(ITextBuffer buffer)
         {
-            this.buffer = buffer;
-            this.snapshot = buffer.CurrentSnapshot;
-            this.regions = new List<Region>();
-            this.ReParse();
-            this.buffer.Changed += BufferChanged;
+            _buffer = buffer;
+            _snapshot = buffer.CurrentSnapshot;
+            Regions = new List<Region>();
+            ReParse();
+            _buffer.Changed += BufferChanged;
 
-            // TODO: Replace this with OnIdle logic
-            _timer = new Timer(1000);
-            _timer.Elapsed += Timer_Elapsed;
-            _timer.Start();
+            ThreadHelper.Generic.BeginInvoke(DispatcherPriority.ApplicationIdle, () =>
+            {
+                _timer = new Timer(1000);
+                _timer.Elapsed += Timer_Elapsed;
+                _timer.Start();
+            });
         }
+
+        public IEnumerable<Region> Regions { get; private set; }
 
         void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
@@ -40,9 +45,7 @@ namespace EditorConfig
 
             ReParse();
 
-            TagsChanged(this, new SnapshotSpanEventArgs(
-                    new SnapshotSpan(this.snapshot, 0, this.snapshot.Length))
-                );
+            TagsChanged(this, new SnapshotSpanEventArgs(new SnapshotSpan(_snapshot, 0, _snapshot.Length)));
 
             _timer.Start();
             _hasBufferchanged = false;
@@ -54,8 +57,8 @@ namespace EditorConfig
             if (spans.Count == 0)
                 yield break;
 
-            IEnumerable<Region> currentRegions = this.regions;
-            ITextSnapshot currentSnapshot = this.snapshot;
+            IEnumerable<Region> currentRegions = Regions;
+            ITextSnapshot currentSnapshot = _snapshot;
             SnapshotSpan entire = new SnapshotSpan(spans[0].Start, spans[spans.Count - 1].End).TranslateTo(currentSnapshot, SpanTrackingMode.EdgeExclusive);
             int startLineNumber = entire.Start.GetContainingLine().LineNumber;
             int endLineNumber = entire.End.GetContainingLine().LineNumber;
@@ -79,7 +82,7 @@ namespace EditorConfig
 
         void BufferChanged(object sender, TextContentChangedEventArgs e)
         {
-            if (e.After != buffer.CurrentSnapshot || _isParsing)
+            if (e.After != _buffer.CurrentSnapshot || _isParsing)
                 return;
 
             _hasBufferchanged = true;
@@ -87,7 +90,7 @@ namespace EditorConfig
 
         void ReParse()
         {
-            ITextSnapshot newSnapshot = buffer.CurrentSnapshot;
+            ITextSnapshot newSnapshot = _buffer.CurrentSnapshot;
             List<Region> newRegions = new List<Region>();
             Region currentRegion = null;
             ITextSnapshotLine prev = null;
@@ -136,8 +139,8 @@ namespace EditorConfig
                 prev = line;
             }
 
-            this.snapshot = newSnapshot;
-            this.regions = newRegions.Where(line => line.StartLine != line.EndLine);
+            _snapshot = newSnapshot;
+            Regions = newRegions.Where(line => line.StartLine != line.EndLine);
         }
 
         public void Dispose()

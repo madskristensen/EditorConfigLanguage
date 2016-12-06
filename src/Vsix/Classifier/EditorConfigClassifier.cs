@@ -9,37 +9,30 @@ namespace EditorConfig
 {
     internal class EditorConfigClassifier : IClassifier
     {
-        private static Regex _rxValue = new Regex(@"(?<=\=([\s]+)?)([^\s:]+)", RegexOptions.Compiled);
-        private static Regex _rxSeverity = new Regex(@"(?<==[^:]+:)[^\s]+", RegexOptions.Compiled);
-        private static Regex _rxKeyword = new Regex(@"^([^=]+)\b(?=\=?)", RegexOptions.Compiled);
-        private static Regex _rxHeader = new Regex(@"\[([^\]]+)\]", RegexOptions.Compiled); // [lib/**.js]
-        private static Regex _rxComment = new Regex(@"(#|;).+", RegexOptions.Compiled); // # comment
-        private static List<Tuple<Regex, IClassificationType>> _map;
+        private static IEnumerable<Tuple<string, IClassificationType>> _map;
 
         public EditorConfigClassifier(IClassificationTypeRegistryService registry)
         {
-            if (_map == null)
-                _map = new List<Tuple<Regex, IClassificationType>>
-                {
-                    {Tuple.Create(_rxComment, registry.GetClassificationType(EditorConfigClassificationTypes.Comment))},
-                    {Tuple.Create(_rxHeader, registry.GetClassificationType(EditorConfigClassificationTypes.Header))},
-                    {Tuple.Create(_rxKeyword, registry.GetClassificationType(EditorConfigClassificationTypes.Keyword))},
-                    {Tuple.Create(_rxValue, registry.GetClassificationType(EditorConfigClassificationTypes.Value))},
-                    {Tuple.Create(_rxSeverity, registry.GetClassificationType(EditorConfigClassificationTypes.Severity))},
-                };
+            _map = _map ?? new[] {
+                Tuple.Create(@"(#|;).+", registry.GetClassificationType(EditorConfigClassificationTypes.Comment)),
+                Tuple.Create(@"\[([^\]]+)\]", registry.GetClassificationType(EditorConfigClassificationTypes.Section)),
+                Tuple.Create(@"^([^=]+)\b(?=\=?)", registry.GetClassificationType(EditorConfigClassificationTypes.Keyword)),
+                Tuple.Create(@"(?<=\=([\s]+)?)([^\s:]+)", registry.GetClassificationType(EditorConfigClassificationTypes.Value)),
+                Tuple.Create(@"(?<==[^:]+:)[^\s]+", registry.GetClassificationType(EditorConfigClassificationTypes.Severity)),
+            };
         }
 
         public IList<ClassificationSpan> GetClassificationSpans(SnapshotSpan span)
         {
-            IList<ClassificationSpan> list = new List<ClassificationSpan>();
-            ITextSnapshotLine line = span.Start.GetContainingLine();
+            var list = new List<ClassificationSpan>();
+            var line = span.Start.GetContainingLine();
             string text = line.GetText();
 
             if (string.IsNullOrWhiteSpace(text))
                 return list;
 
             foreach (var tuple in _map)
-                foreach (Match match in tuple.Item1.Matches(text))
+                foreach (Match match in Regex.Matches(text, tuple.Item1))
                 {
                     var matchSpan = new SnapshotSpan(line.Snapshot, line.Start.Position + match.Index, match.Length);
 

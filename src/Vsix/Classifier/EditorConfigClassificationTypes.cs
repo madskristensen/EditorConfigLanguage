@@ -7,28 +7,28 @@ namespace EditorConfig
 {
     public class EditorConfigClassificationTypes
     {
-        public const string Header = "EditorConfig Header";
+        public const string Section = "EditorConfig Section";
         public const string Comment = PredefinedClassificationTypeNames.Comment;
         public const string Keyword = PredefinedClassificationTypeNames.Identifier;
         public const string Value = PredefinedClassificationTypeNames.Keyword;
         public const string Severity = PredefinedClassificationTypeNames.SymbolDefinition;
 
         [Export]
-        [Name(Header)]
+        [Name(Section)]
         [BaseDefinition(PredefinedClassificationTypeNames.String)]
-        internal static ClassificationTypeDefinition EditorConfigHeaderClassification { get; set; }
+        internal static ClassificationTypeDefinition EditorConfigSectionClassification { get; set; }
     }
 
     [Export(typeof(EditorFormatDefinition))]
-    [ClassificationType(ClassificationTypeNames = EditorConfigClassificationTypes.Header)]
-    [Name(EditorConfigClassificationTypes.Header)]
+    [ClassificationType(ClassificationTypeNames = EditorConfigClassificationTypes.Section)]
+    [Name(EditorConfigClassificationTypes.Section)]
     [UserVisible(true)]
-    internal sealed class HeaderFormatDefinition : ClassificationFormatDefinition
+    internal sealed class SectionFormatDefinition : ClassificationFormatDefinition
     {
-        public HeaderFormatDefinition()
+        public SectionFormatDefinition()
         {
             IsBold = true;
-            DisplayName = EditorConfigClassificationTypes.Header;
+            DisplayName = EditorConfigClassificationTypes.Section;
         }
     }
 }

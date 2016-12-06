@@ -13,11 +13,11 @@ namespace EditorConfig
     internal class EditorConfigQuickInfoSourceProvider : IQuickInfoSourceProvider
     {
         [Import]
-        IClassifierAggregatorService ClassifierAggregatorService { get; set; }
+        IClassifierAggregatorService ClassifierService { get; set; }
 
         public IQuickInfoSource TryCreateQuickInfoSource(ITextBuffer textBuffer)
         {
-            return textBuffer.Properties.GetOrCreateSingletonProperty(() => new EditorConfigQuickInfo(textBuffer, ClassifierAggregatorService));
+            return textBuffer.Properties.GetOrCreateSingletonProperty(() => new EditorConfigQuickInfo(textBuffer, ClassifierService));
         }
     }
 }

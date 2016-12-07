@@ -89,7 +89,7 @@ namespace EditorConfig
 
                 if (text == ":")
                     applicableTo = snapshot.CreateTrackingSpan(new Span(span.Start + 1, 0), SpanTrackingMode.EdgeInclusive);
-                else
+                else if (!string.IsNullOrWhiteSpace(text))
                     applicableTo = trackingSpan;
             }
 

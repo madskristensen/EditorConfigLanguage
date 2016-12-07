@@ -23,6 +23,7 @@ namespace EditorConfig
             _errorlist = errorlist;
             _textDocument = document;
             _document = EditorConfigDocument.FromTextBuffer(view.TextBuffer);
+            _document.Parsed += DocumentParsed;
 
             ThreadHelper.Generic.BeginInvoke(DispatcherPriority.ApplicationIdle, () =>
             {
@@ -32,11 +33,17 @@ namespace EditorConfig
             });
         }
 
+        private void DocumentParsed(object sender, EventArgs e)
+        {
+            var span = new SnapshotSpan(_view.TextBuffer.CurrentSnapshot, 0, _view.TextBuffer.CurrentSnapshot.Length);
+            TagsChanged?.Invoke(this, new SnapshotSpanEventArgs(span));
+        }
+
         public IEnumerable<ITagSpan<IErrorTag>> GetTags(NormalizedSnapshotSpanCollection spans)
         {
             var tags = new List<ITagSpan<IErrorTag>>();
 
-            if (!_hasLoaded || !spans.Any() || spans[0].IsEmpty)
+            if (_document.IsParsing | !_hasLoaded || !spans.Any() || spans[0].IsEmpty)
                 return tags;
 
             var line = spans[0].Start.GetContainingLine();

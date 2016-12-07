@@ -68,6 +68,14 @@ namespace EditorConfig
             {
                 item.AddError(Resources.Text.KeywordRoot);
             }
+            else if (item.Parent != null)
+            {
+                var children = item.Parent.Children.Where(c => c.Span.Start < item.Span.Start);
+                if (children.Any(c => c.Text.Equals(item.Text, StringComparison.OrdinalIgnoreCase)))
+                {
+                    item.AddError("Duplicate property");
+                }
+            }
         }
     }
 }

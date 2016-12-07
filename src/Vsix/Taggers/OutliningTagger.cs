@@ -16,9 +16,9 @@ namespace EditorConfig
         public OutliningTagger(ITextBuffer buffer)
         {
             _buffer = buffer;
-            _buffer.Changed += BufferChanged;
             _snapshot = buffer.CurrentSnapshot;
             _document = EditorConfigDocument.FromTextBuffer(buffer);
+            _document.Parsed += BufferChanged;
 
             StartParsing();
         }
@@ -53,11 +53,8 @@ namespace EditorConfig
 
         public event EventHandler<SnapshotSpanEventArgs> TagsChanged;
 
-        void BufferChanged(object sender, TextContentChangedEventArgs e)
+        void BufferChanged(object sender, EventArgs e)
         {
-            if (e.After != _buffer.CurrentSnapshot)
-                return;
-
             StartParsing();
         }
 

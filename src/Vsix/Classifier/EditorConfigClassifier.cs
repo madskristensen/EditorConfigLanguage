@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.VisualStudio.Text;
+﻿using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
+using System;
+using System.Collections.Generic;
 
 namespace EditorConfig
 {
@@ -9,6 +9,7 @@ namespace EditorConfig
     {
         private static Dictionary<ItemType, IClassificationType> _map;
         private EditorConfigDocument _document;
+        private ITextBuffer _buffer;
 
         public EditorConfigClassifier(IClassificationTypeRegistryService registry, ITextBuffer buffer)
         {
@@ -20,18 +21,26 @@ namespace EditorConfig
                 { ItemType.Severity, registry.GetClassificationType(EditorConfigClassificationTypes.Severity)},
             };
 
+            _buffer = buffer;
             _document = EditorConfigDocument.FromTextBuffer(buffer);
+            _document.Parsed += DocumentParsed;
         }
 
-        private void OnBufferChange(SnapshotSpan span)
+        private void DocumentParsed(object sender, EventArgs e)
         {
-            ClassificationChanged?.Invoke(this, new ClassificationChangedEventArgs(span));
+            ClassificationChanged(this,
+                new ClassificationChangedEventArgs(
+                new SnapshotSpan(_buffer.CurrentSnapshot, 0, _buffer.CurrentSnapshot.Length)));
         }
 
         public IList<ClassificationSpan> GetClassificationSpans(SnapshotSpan span)
         {
             var list = new List<ClassificationSpan>();
-            var parseItems = _document.Parse(span);
+
+            if (_document.IsParsing)
+                return list;
+
+            var parseItems = _document.ItemsInSpan(span);
 
             foreach (var item in parseItems)
             {

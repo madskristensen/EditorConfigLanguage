@@ -1,18 +1,33 @@
-﻿using Microsoft.VisualStudio.Text;
+﻿using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Text;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Windows.Threading;
 
 namespace EditorConfig
 {
     partial class EditorConfigDocument
     {
         private ITextBuffer _buffer;
+        private CancellationTokenSource _cancelToken;
 
         private EditorConfigDocument(ITextBuffer buffer)
         {
             _buffer = buffer;
-            ParseItems = Parse(new SnapshotSpan(_buffer.CurrentSnapshot, 0, _buffer.CurrentSnapshot.Length));
+            _buffer.PostChanged += BufferPostChangedAsync;
+            _cancelToken = new CancellationTokenSource();
+
+            ThreadHelper.JoinableTaskFactory.Run(() => ParseAsync(_cancelToken.Token));
+        }
+
+        private async void BufferPostChangedAsync(object sender, EventArgs e)
+        {
+            _cancelToken.Cancel();
+            _cancelToken = new CancellationTokenSource();
+            await ParseAsync(_cancelToken.Token);
+
         }
 
         public List<ParseItem> ParseItems { get; } = new List<ParseItem>();

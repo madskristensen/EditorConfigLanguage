@@ -3,10 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace EditorConfig
 {
-    partial class EditorConfigDocument
+    partial class EditorConfigDocument: IDisposable
     {
         private static IEnumerable<Tuple<string, ItemType>> _map = new[] {
                 Tuple.Create(@"(#|;).+", ItemType.Comment),
@@ -16,44 +17,65 @@ namespace EditorConfig
                 Tuple.Create(@"(?<==[^:]+:)[^\s]+", ItemType.Severity),
             };
 
-        public List<ParseItem> Parse(SnapshotSpan span)
+        public bool IsParsing { get; private set; }
+
+        private async System.Threading.Tasks.Task ParseAsync(CancellationToken cancellationToken)
         {
-            var startLine = span.Snapshot.GetLineFromPosition(span.Start);
-            var items = new List<ParseItem>();
-            ParseItem parent = null;
+            IsParsing = true;
 
-            foreach (var line in span.Snapshot.Lines.Where(l => l.LineNumber >= startLine.LineNumber))
+            await System.Threading.Tasks.Task.Run(() =>
             {
-                string text = line.GetText();
+                var items = new List<ParseItem>();
+                ParseItem parent = null;
 
-                foreach (var tuple in _map)
-                    foreach (Match match in Regex.Matches(text, tuple.Item1))
-                    {
-                        var matchSpan = new SnapshotSpan(line.Snapshot, line.Start.Position + match.Index, match.Length);
+                foreach (var line in _buffer.CurrentSnapshot.Lines)
+                {
+                    string text = line.GetText();
 
-                        // Make sure we don't double classify
-                        if (!items.Any(s => s.Span.IntersectsWith(matchSpan)))
+                    foreach (var tuple in _map)
+                        foreach (Match match in Regex.Matches(text, tuple.Item1))
                         {
-                            var textValue = matchSpan.GetText();
-                            var item = new ParseItem(tuple.Item2, matchSpan, textValue);
-                            items.Add(item);
+                            if (cancellationToken.IsCancellationRequested)
+                            {
+                                IsParsing = false;
+                                return;
+                            }
+                            var matchSpan = new SnapshotSpan(line.Snapshot, line.Start.Position + match.Index, match.Length);
 
-                            if (parent != null && item.ItemType != ItemType.Section && item.ItemType != ItemType.Comment)
-                                parent.AddChild(item);
+                            // Make sure we don't double classify
+                            if (!items.Any(s => s.Span.IntersectsWith(matchSpan)))
+                            {
+                                var textValue = matchSpan.GetText();
+                                var item = new ParseItem(tuple.Item2, matchSpan, textValue);
+                                items.Add(item);
 
-                            if (tuple.Item2 == ItemType.Section)
-                                parent = item;
+                                if (parent != null && item.ItemType != ItemType.Section && item.ItemType != ItemType.Comment)
+                                    parent.AddChild(item);
+
+                                if (tuple.Item2 == ItemType.Section)
+                                    parent = item;
+                            }
                         }
-                    }
-            }
+                }
 
-            ParseItems.RemoveAll(i => i.Span.Start >= startLine.Start);
-            ParseItems.AddRange(items);
-            //ParseItems.Sort((a, b) => { try { return a.Span.Start.CompareTo(b.Span.Start); } catch { return 0; } });
+                ParseItems.Clear();
+                ParseItems.AddRange(items);
 
-            Validate();
+                Validate();
+                IsParsing = false;
 
-            return items;
+                Parsed?.Invoke(this, EventArgs.Empty);
+            });
         }
+
+        public void Dispose()
+        {
+            if (_cancelToken != null)
+            {
+                _cancelToken.Dispose();
+            }
+        }
+
+        public event EventHandler Parsed;
     }
 }

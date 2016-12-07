@@ -50,6 +50,11 @@ namespace EditorConfig
 
             return Span.FromBounds(Span.Start, Children.Last().Span.End);
         }
+
+        public override string ToString()
+        {
+            return ItemType + ": " + Text;
+        }
     }
 
     public enum ItemType

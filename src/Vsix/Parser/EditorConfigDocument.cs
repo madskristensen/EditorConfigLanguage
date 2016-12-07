@@ -11,23 +11,18 @@ namespace EditorConfig
     partial class EditorConfigDocument
     {
         private ITextBuffer _buffer;
-        private CancellationTokenSource _cancelToken;
-
+        
         private EditorConfigDocument(ITextBuffer buffer)
         {
             _buffer = buffer;
             _buffer.PostChanged += BufferPostChangedAsync;
-            _cancelToken = new CancellationTokenSource();
 
-            ThreadHelper.JoinableTaskFactory.Run(() => ParseAsync(_cancelToken.Token));
+            ThreadHelper.JoinableTaskFactory.Run(() => ParseAsync());
         }
 
-        private async void BufferPostChangedAsync(object sender, EventArgs e)
+        private void BufferPostChangedAsync(object sender, EventArgs e)
         {
-            _cancelToken.Cancel();
-            _cancelToken = new CancellationTokenSource();
-            await ParseAsync(_cancelToken.Token);
-
+            ThreadHelper.JoinableTaskFactory.Run(() => ParseAsync());
         }
 
         public List<ParseItem> ParseItems { get; } = new List<ParseItem>();

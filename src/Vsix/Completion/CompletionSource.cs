@@ -44,17 +44,17 @@ namespace EditorConfig
             var parseItem = _document.ItemAtPosition(triggerPoint.Value);
             var prev = _document.ParseItems.LastOrDefault(p => p.Span.Start < position && !p.Span.Contains(position));
 
-            if (string.IsNullOrWhiteSpace(line.GetText()) || parseItem?.ItemType == ItemType.Keyword)
+            if (string.IsNullOrWhiteSpace(line.GetText()) || parseItem?.ItemType == ItemType.Property)
             {
                 var isInRoot = !_document.ParseItems.Exists(p => p.ItemType == ItemType.Section && p.Span.Start < triggerPoint.Value);
-                var items = isInRoot ? Keyword.AllItems : Keyword.AllItems.Where(i => i.Name != "root");
+                var items = isInRoot ? Property.AllProperties : Property.AllProperties.Where(i => i.Text != "root");
 
                 foreach (var key in items)
-                    list.Add(CreateCompletion(key.Name, key.Moniker, key.Tag, key.IsSupported, key.Description));
+                    list.Add(CreateCompletion(key.Text, key.Moniker, key.Tag, key.IsSupported, key.Description));
             }
             else if (parseItem?.ItemType == ItemType.Value)
             {
-                Keyword item = Keyword.GetCompletionItem(prev.Text);
+                Property item = Property.GetCompletionItem(prev.Text);
                 if (item != null)
                 {
                     foreach (var value in item.Values)
@@ -68,7 +68,7 @@ namespace EditorConfig
 
             if (!list.Any())
             {
-                var item = Keyword.GetCompletionItem(prev?.Text);
+                var item = Property.GetCompletionItem(prev?.Text);
 
                 if (item != null)
                 {
@@ -80,7 +80,7 @@ namespace EditorConfig
 
                         if (triggerPoint.Value.Position > eqPos)
                             foreach (var value in item.Values)
-                                list.Add(CreateCompletion(" " + value, KnownMonikers.EnumerationItemPublic));
+                                list.Add(CreateCompletion(value, KnownMonikers.EnumerationItemPublic));
                     }
                 }
             }

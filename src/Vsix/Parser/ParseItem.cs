@@ -1,7 +1,6 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.Text;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.Text;
 
 namespace EditorConfig
 {
@@ -22,7 +21,7 @@ namespace EditorConfig
 
         public string Description
         {
-            get { return Keyword.GetCompletionItem(Text)?.Description; }
+            get { return Property.GetCompletionItem(Text)?.Description; }
         }
 
         public List<string> Errors { get; } = new List<string>();
@@ -61,7 +60,7 @@ namespace EditorConfig
     {
         Comment,
         Section,
-        Keyword,
+        Property,
         Value,
         Severity
     }

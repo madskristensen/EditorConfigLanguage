@@ -66,22 +66,10 @@ namespace EditorConfig
                     {
                         case VSConstants.VSStd2KCmdID.TYPECHAR:
                             char ch = GetTypeChar(pvaIn);
-
-                            if (ch == ':' || ch == '=')
-                            {
-                                Cancel();
+                            if (ch == ' ' || ch == ':' || char.IsLetterOrDigit(ch))
                                 StartSession();
-                            }
-                            else if (!char.IsPunctuation(ch) && !char.IsControl(ch))
-                            {
-                                StartSession();
-                                Filter();
-                            }
                             else if (_currentSession != null)
-                            {
                                 Filter();
-                            }
-
                             break;
                         case VSConstants.VSStd2KCmdID.BACKSPACE:
                         case VSConstants.VSStd2KCmdID.DELETE:
@@ -99,14 +87,13 @@ namespace EditorConfig
             if (_currentSession == null)
                 return;
 
-            //_currentSession.SelectedCompletionSet.Recalculate();
-            //_currentSession.SelectedCompletionSet.Filter();
             _currentSession.SelectedCompletionSet.SelectBestMatch();
+            _currentSession.SelectedCompletionSet.Recalculate();
         }
 
         bool Cancel()
         {
-            if (_currentSession == null || _currentSession.IsDismissed)
+            if (_currentSession == null)
                 return false;
 
             _currentSession.Dismiss();
@@ -149,8 +136,7 @@ namespace EditorConfig
             }
             _currentSession.Dismissed += (sender, args) => _currentSession = null;
 
-            if (!_currentSession.IsStarted)
-                _currentSession.Start();
+            _currentSession.Start();
 
             return true;
         }

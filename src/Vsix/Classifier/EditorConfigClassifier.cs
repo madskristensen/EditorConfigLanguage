@@ -16,7 +16,7 @@ namespace EditorConfig
             _map = new Dictionary<ItemType, IClassificationType> {
                 { ItemType.Comment, registry.GetClassificationType(EditorConfigClassificationTypes.Comment)},
                 { ItemType.Section, registry.GetClassificationType(EditorConfigClassificationTypes.Section)},
-                { ItemType.Keyword, registry.GetClassificationType(EditorConfigClassificationTypes.Keyword)},
+                { ItemType.Property, registry.GetClassificationType(EditorConfigClassificationTypes.Keyword)},
                 { ItemType.Value, registry.GetClassificationType(EditorConfigClassificationTypes.Value)},
                 { ItemType.Severity, registry.GetClassificationType(EditorConfigClassificationTypes.Severity)},
             };

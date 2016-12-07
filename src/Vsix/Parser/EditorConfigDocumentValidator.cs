@@ -13,7 +13,7 @@ namespace EditorConfig
                 {
                     case ItemType.Section:
                         break;
-                    case ItemType.Keyword:
+                    case ItemType.Property:
                         ValidateKeyword(item);
                         break;
                     case ItemType.Value:
@@ -29,13 +29,13 @@ namespace EditorConfig
         private void ValidateValue(ParseItem item)
         {
             var prev = ParseItems.LastOrDefault(p => p.Span.Start < item.Span.Start);
-            var comp = Keyword.GetCompletionItem(prev?.Text);
+            var comp = Property.GetCompletionItem(prev?.Text);
 
             if (comp != null &&
                 !comp.Values.Contains(item.Text, StringComparer.OrdinalIgnoreCase) &&
                 !(int.TryParse(item.Text, out int intValue) && intValue > 0))
             {
-                item.AddError(string.Format(Resources.Text.InvalidValue, item.Text, comp.Name));
+                item.AddError(string.Format(Resources.Text.InvalidValue, item.Text, comp.Text));
             }
 
             if (item.Text.Equals("true", StringComparison.OrdinalIgnoreCase) &&
@@ -60,7 +60,7 @@ namespace EditorConfig
 
         private void ValidateKeyword(ParseItem item)
         {
-            if (Keyword.GetCompletionItem(item.Text) == null)
+            if (Property.GetCompletionItem(item.Text) == null)
             {
                 item.AddError(string.Format(Resources.Text.ValidateUnknownKeyword, item.Text));
             }

@@ -4,6 +4,7 @@
 - [ ] Updated screenshots in readme file
 - [ ] Show inheritance hierarchy
 - [ ] Support for AnyCode
+- [ ] Margin glyphs to show severity
 - [x] Hide "root" from completion when it isn't valid to use
 - [x] Make parsing async
 - [x] Show error on duplicate properties

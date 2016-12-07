@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <Extern href="stdidcmd.h"/>
+  <Extern href="vsshlids.h"/>
+  <Include href="KnownImageIds.vsct"/>
+
+  <Commands package="guidEditorConfigPackage">
+    <Groups>
+      <Group guid="guidEditorConfigPackageCmdSet" id="AddGroup" priority="0x0002" />
+    </Groups>
+
+    <Buttons>
+      <Button guid="guidEditorConfigPackageCmdSet" id="CreateEditorConfigFileId" priority="0x0500" type="Button">
+        <Icon guid="ImageCatalogGuid" id="VisualStudioSettingsFile" />
+        <CommandFlag>IconIsMoniker</CommandFlag>
+        <Strings>
+          <ButtonText>.editorconfig File</ButtonText>
+        </Strings>
+      </Button>
+    </Buttons>
+  </Commands>
+
+  <CommandPlacements>
+    <CommandPlacement guid="guidEditorConfigPackageCmdSet" id="CreateEditorConfigFileId" priority="0x0100">
+      <Parent guid="guidEditorConfigPackageCmdSet" id="AddGroup" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidEditorConfigPackageCmdSet" id="AddGroup" priority="0x0500">
+      <Parent guid="guidSHLMainMenu" id="IDM_VS_CSCD_SOLUTION_ADD" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidEditorConfigPackageCmdSet" id="AddGroup" priority="0x0500">
+      <Parent guid="guidSHLMainMenu" id="IDM_VS_CSCD_PROJECT_ADD" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidEditorConfigPackageCmdSet" id="AddGroup" priority="0x0500">
+      <Parent guid="guidSHLMainMenu" id="IDM_VS_CSCD_SLNFLDR_ADD" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidEditorConfigPackageCmdSet" id="AddGroup" priority="0x0500">
+      <Parent guid="guidSHLMainMenu" id="IDM_VS_CSCD_CV_ITEMADD" />
+    </CommandPlacement>
+  </CommandPlacements>
+
+  <Symbols>
+    <!-- This is the package guid. -->
+    <GuidSymbol name="guidEditorConfigPackage" value="{6736c72d-7a27-49f0-9153-413ff47963ef}" />
+
+    <!-- This is the guid used to group the menu commands together -->
+    <GuidSymbol name="guidEditorConfigPackageCmdSet" value="{a21ee3c5-45b9-4bd8-abd7-30ceb3d990c5}">
+      <IDSymbol name="AddGroup" value="0x0001" />
+      <IDSymbol name="CreateEditorConfigFileId" value="0x0100" />
+    </GuidSymbol>
+  </Symbols>
+</CommandTable>
+

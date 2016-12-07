@@ -76,7 +76,7 @@
     <Compile Include="Commands\BaseCommand.cs" />
     <Compile Include="Commands\F1Help.cs" />
     <Compile Include="Commands\EditorConfigFormatter.cs" />
-    <Compile Include="Parser\Keyword.cs" />
+    <Compile Include="Parser\Property.cs" />
     <Compile Include="Completion\CompletionController.cs" />
     <Compile Include="Completion\CompletionSource.cs" />
     <Compile Include="Commands\CreateEditorConfigFile.cs" />

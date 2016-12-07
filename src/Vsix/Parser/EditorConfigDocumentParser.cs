@@ -3,23 +3,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading;
 
 namespace EditorConfig
 {
-    partial class EditorConfigDocument: IDisposable
+    partial class EditorConfigDocument
     {
         private static IEnumerable<Tuple<string, ItemType>> _map = new[] {
                 Tuple.Create(@"(#|;).+", ItemType.Comment),
                 Tuple.Create(@"\[([^\]]+)\]", ItemType.Section),
-                Tuple.Create(@"^([^=]+)\b(?=\=?)", ItemType.Keyword),
+                Tuple.Create(@"^([^=]+)\b(?=\=?)", ItemType.Property),
                 Tuple.Create(@"(?<=\=([\s]+)?)([^\s:]+)", ItemType.Value),
                 Tuple.Create(@"(?<==[^:]+:)[^\s]+", ItemType.Severity),
             };
 
         public bool IsParsing { get; private set; }
 
-        private async System.Threading.Tasks.Task ParseAsync(CancellationToken cancellationToken)
+        private async System.Threading.Tasks.Task ParseAsync()
         {
             IsParsing = true;
 
@@ -35,26 +34,21 @@ namespace EditorConfig
                     foreach (var tuple in _map)
                         foreach (Match match in Regex.Matches(text, tuple.Item1))
                         {
-                            if (cancellationToken.IsCancellationRequested)
-                            {
-                                IsParsing = false;
-                                return;
-                            }
                             var matchSpan = new SnapshotSpan(line.Snapshot, line.Start.Position + match.Index, match.Length);
 
                             // Make sure we don't double classify
-                            if (!items.Any(s => s.Span.IntersectsWith(matchSpan)))
-                            {
-                                var textValue = matchSpan.GetText();
-                                var item = new ParseItem(tuple.Item2, matchSpan, textValue);
-                                items.Add(item);
+                            if (items.Any(s => s.Span.IntersectsWith(matchSpan)))
+                                continue;
 
-                                if (parent != null && item.ItemType != ItemType.Section && item.ItemType != ItemType.Comment)
-                                    parent.AddChild(item);
+                            var textValue = matchSpan.GetText();
+                            var item = new ParseItem(tuple.Item2, matchSpan, textValue);
+                            items.Add(item);
 
-                                if (tuple.Item2 == ItemType.Section)
-                                    parent = item;
-                            }
+                            if (parent != null && item.ItemType != ItemType.Section && item.ItemType != ItemType.Comment)
+                                parent.AddChild(item);
+
+                            if (tuple.Item2 == ItemType.Section)
+                                parent = item;
                         }
                 }
 
@@ -66,14 +60,6 @@ namespace EditorConfig
 
                 Parsed?.Invoke(this, EventArgs.Empty);
             });
-        }
-
-        public void Dispose()
-        {
-            if (_cancelToken != null)
-            {
-                _cancelToken.Dispose();
-            }
         }
 
         public event EventHandler Parsed;

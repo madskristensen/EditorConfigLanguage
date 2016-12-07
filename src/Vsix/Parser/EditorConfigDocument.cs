@@ -76,7 +76,7 @@ namespace EditorConfig
                     }
             }
 
-            ParseItems.Clear();//.RemoveAll(i => span.IntersectsWith(i.Span));
+            ParseItems.RemoveAll(i => i.Span.Start >= startLine.Start);
             ParseItems.AddRange(items);
             //ParseItems.Sort((a, b) => { try { return a.Span.Start.CompareTo(b.Span.Start); } catch { return 0; } });
 

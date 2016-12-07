@@ -1,60 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Timers;
-using System.Windows.Threading;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
 
 namespace EditorConfig
 {
-    internal sealed class OutliningTagger : ITagger<IOutliningRegionTag>, IDisposable
+    internal sealed class OutliningTagger : ITagger<IOutliningRegionTag>
     {
         private readonly ITextBuffer _buffer;
         private ITextSnapshot _snapshot;
-        private bool _hasBufferchanged;
-        private Timer _timer;
-        private bool _isParsing;
+        private EditorConfigDocument _document;
 
         public OutliningTagger(ITextBuffer buffer)
         {
             _buffer = buffer;
-            _snapshot = buffer.CurrentSnapshot;
-            Regions = new List<Region>();
-            ReParse();
             _buffer.Changed += BufferChanged;
+            _snapshot = buffer.CurrentSnapshot;
+            _document = EditorConfigDocument.FromTextBuffer(buffer);
 
-            ThreadHelper.Generic.BeginInvoke(DispatcherPriority.ApplicationIdle, () =>
-            {
-                _timer = new Timer(1000);
-                _timer.Elapsed += Timer_Elapsed;
-                _timer.Start();
-            });
+            StartParsing();
         }
 
-        public IEnumerable<Region> Regions { get; private set; }
-
-        void Timer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            if (!_hasBufferchanged || _isParsing)
-                return;
-
-            _isParsing = true;
-            _timer.Stop();
-
-            ReParse();
-
-            TagsChanged(this, new SnapshotSpanEventArgs(new SnapshotSpan(_snapshot, 0, _snapshot.Length)));
-
-            _timer.Start();
-            _hasBufferchanged = false;
-            _isParsing = false;
-        }
+        public List<Region> Regions { get; private set; } = new List<Region>();
 
         public IEnumerable<ITagSpan<IOutliningRegionTag>> GetTags(NormalizedSnapshotSpanCollection spans)
         {
-            if (spans.Count == 0)
+            if (spans.Count == 0 || !Regions.Any())
                 yield break;
 
             IEnumerable<Region> currentRegions = Regions;
@@ -82,74 +55,59 @@ namespace EditorConfig
 
         void BufferChanged(object sender, TextContentChangedEventArgs e)
         {
-            if (e.After != _buffer.CurrentSnapshot || _isParsing)
+            if (e.After != _buffer.CurrentSnapshot)
                 return;
 
-            _hasBufferchanged = true;
+            StartParsing();
+        }
+
+        private void StartParsing()
+        {
+            ThreadHelper.Generic.BeginInvoke(() =>
+            {
+                Regions.Clear();
+                ReParse();
+                TagsChanged(this, new SnapshotSpanEventArgs(new SnapshotSpan(_snapshot, 0, _snapshot.Length)));
+            });
         }
 
         void ReParse()
         {
             ITextSnapshot newSnapshot = _buffer.CurrentSnapshot;
+            var entire = new SnapshotSpan(newSnapshot, 0, newSnapshot.Length);
             List<Region> newRegions = new List<Region>();
-            Region currentRegion = null;
-            ITextSnapshotLine prev = null;
 
-            foreach (var line in newSnapshot.Lines)
+            var sections = _document.ItemsInSpan(entire).Where(p => p.ItemType == ItemType.Section);
+
+            foreach (var section in sections)
             {
-                string text = line.GetText();
+                ParseItem lastProperty;
+                var nextSection = _document.ParseItems.FirstOrDefault(p => p.ItemType == ItemType.Section && p.Span.Start > section.Span.Start);
 
-                if (!string.IsNullOrWhiteSpace(text) && text[0] == '[' && currentRegion == null)
+                if (nextSection == null)
+                    lastProperty = _document.ParseItems.LastOrDefault(p => p.ItemType == ItemType.Keyword && p.Span.Start > section.Span.Start);
+                else
+                    lastProperty = _document.ParseItems.LastOrDefault(p => p.ItemType == ItemType.Keyword && p.Span.Start < nextSection.Span.Start);
+
+                if (lastProperty != null)
                 {
-                    currentRegion = new Region
+                    var startLine = newSnapshot.GetLineFromPosition(section.Span.Start);
+                    var endLine = newSnapshot.GetLineFromPosition(lastProperty.Span.End);
+
+                    var region = new Region
                     {
-                        StartLine = line.LineNumber,
-                        StartOffset = line.Start.Position
+                        StartLine = startLine.LineNumber,
+                        StartOffset = startLine.Start,
+                        EndLine = endLine.LineNumber,
+                        EndOffset = endLine.End
                     };
+
+                    newRegions.Add(region);
                 }
-                else if (currentRegion != null)
-                {
-                    if (line.LineNumber == newSnapshot.LineCount - 1 && !string.IsNullOrWhiteSpace(text))
-                    {
-                        currentRegion.EndLine = line.LineNumber;
-                        currentRegion.EndOffset = line.End.Position;
-                        newRegions.Add(currentRegion);
-                        break;
-                    }
-
-                    if (string.IsNullOrWhiteSpace(text) || text[0] == '[')
-                    {
-                        currentRegion.EndLine = prev.LineNumber;
-                        currentRegion.EndOffset = prev.End.Position;
-                        newRegions.Add(currentRegion);
-
-                        currentRegion = null;
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(text) && text[0] == '[')
-                    {
-                        currentRegion = new Region
-                        {
-                            StartLine = line.LineNumber,
-                            StartOffset = line.Start.Position
-                        };
-                    }
-                }
-
-                prev = line;
             }
 
             _snapshot = newSnapshot;
-            Regions = newRegions.Where(line => line.StartLine != line.EndLine);
-        }
-
-        public void Dispose()
-        {
-            if (_timer != null)
-            {
-                _timer.Dispose();
-                _timer = null;
-            }
+            Regions = newRegions.Where(line => line.StartLine != line.EndLine).ToList();
         }
     }
 

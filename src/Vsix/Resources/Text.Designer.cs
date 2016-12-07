@@ -203,5 +203,14 @@ namespace EditorConfig.Resources {
                 return ResourceManager.GetString("ValidationMissingSeverity", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &quot;Root&quot; is only allowed in the beginning of the document.
+        /// </summary>
+        internal static string ValidationRootInSection {
+            get {
+                return ResourceManager.GetString("ValidationRootInSection", resourceCulture);
+            }
+        }
     }
 }

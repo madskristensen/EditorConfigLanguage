@@ -4,7 +4,6 @@ using System.Linq;
 using System.Windows.Threading;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
-using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Tagging;
 
@@ -12,18 +11,18 @@ namespace EditorConfig
 {
     class ErrorTagger : ITagger<IErrorTag>
     {
-        private IClassifier _classifier;
         private ErrorListProvider _errorlist;
-        private ITextDocument _document;
+        private ITextDocument _textDocument;
+        private EditorConfigDocument _document;
         private IWpfTextView _view;
         private bool _hasLoaded;
 
-        public ErrorTagger(IWpfTextView view, IClassifierAggregatorService classifier, ErrorListProvider errorlist, ITextDocument document)
+        public ErrorTagger(IWpfTextView view, ErrorListProvider errorlist, ITextDocument document)
         {
             _view = view;
-            _classifier = classifier.GetClassifier(view.TextBuffer);
             _errorlist = errorlist;
-            _document = document;
+            _textDocument = document;
+            _document = EditorConfigDocument.FromTextBuffer(view.TextBuffer);
 
             ThreadHelper.Generic.BeginInvoke(DispatcherPriority.ApplicationIdle, () =>
             {
@@ -35,78 +34,25 @@ namespace EditorConfig
 
         public IEnumerable<ITagSpan<IErrorTag>> GetTags(NormalizedSnapshotSpanCollection spans)
         {
-            if (!_hasLoaded || !spans.Any() || spans[0].IsEmpty)
-                yield break;
+            var tags = new List<ITagSpan<IErrorTag>>();
 
-            var span = spans[0];
-            var currentLine = span.Start.GetContainingLine();
-            var classificationSpans = _classifier.GetClassificationSpans(currentLine.Extent);
-            string property = null;
+            if (!_hasLoaded || !spans.Any() || spans[0].IsEmpty)
+                return tags;
+
+            var line = spans[0].Start.GetContainingLine();
+            var items = _document.ItemsInSpan(line.Extent);
 
             try
             {
                 _errorlist.SuspendRefresh();
-                ClearError(currentLine);
+                ClearError(line);
 
-                foreach (var cspan in classificationSpans)
+                foreach (var item in items)
                 {
-                    if (cspan.ClassificationType.IsOfType(EditorConfigClassificationTypes.Keyword))
-                    {
-                        property = cspan.Span.GetText();
-
-                        var item = CompletionItem.GetCompletionItem(property);
-
-                        if (item == null)
-                            yield return CreateError(currentLine, cspan, string.Format(Resources.Text.ValidateUnknownKeyword, property));
-
-                        if (currentLine.LineNumber > 0 && property.Equals("root", StringComparison.OrdinalIgnoreCase))
-                        {
-                            foreach (var l in span.Snapshot.Lines.Where(l => l.LineNumber < currentLine.LineNumber))
-                            {
-                                var hasSection = _classifier.GetClassificationSpans(l.Extent).Any(c => c.ClassificationType.IsOfType(EditorConfigClassificationTypes.Section));
-                                if (hasSection)
-                                {
-                                    yield return CreateError(currentLine, cspan, "\"Root\" is only allowed in the beginning of the document");
-                                }
-                            }
-
-                        }
-                    }
-                    else if (cspan.ClassificationType.IsOfType(EditorConfigClassificationTypes.Value))
-                    {
-                        if (string.IsNullOrEmpty(property))
-                            continue;
-
-                        var item = CompletionItem.GetCompletionItem(property);
-
-                        if (item == null)
-                            continue;
-
-                        string value = cspan.Span.GetText();
-
-                        if (!item.Values.Contains(value, StringComparer.OrdinalIgnoreCase) && !(int.TryParse(value, out int intValue) && intValue > 0))
-                            yield return CreateError(currentLine, cspan, string.Format(Resources.Text.InvalidValue, value, property));
-
-                        // C# style rules validation
-                        if (!property.StartsWith("csharp_") && !property.StartsWith("dotnet_"))
-                            continue;
-
-                        var lineText = currentLine.Extent.GetText().Trim();
-
-                        if (lineText.EndsWith(":"))
-                            yield return CreateError(currentLine, cspan, string.Format(Resources.Text.ValidationInvalidEndChar, ":"));
-
-                        if (lineText.EndsWith("true"))
-                            yield return CreateError(currentLine, cspan, Resources.Text.ValidationMissingSeverity);
-                    }
-                    else if (cspan.ClassificationType.IsOfType(EditorConfigClassificationTypes.Severity))
-                    {
-                        string severity = cspan.Span.GetText().Trim();
-
-                        if (!Constants.Severity.Contains(severity))
-                            yield return CreateError(currentLine, cspan, string.Format(Resources.Text.ValidationInvalidSeverity, string.Join(", ", Constants.Severity)));
-                    }
+                    tags.AddRange(CreateError(item));
                 }
+
+                return tags;
             }
             finally
             {
@@ -115,27 +61,32 @@ namespace EditorConfig
             }
         }
 
-        private TagSpan<ErrorTag> CreateError(ITextSnapshotLine line, ClassificationSpan cspan, string message)
+        private IEnumerable<TagSpan<ErrorTag>> CreateError(ParseItem item)
         {
-            ErrorTask task = CreateErrorTask(line, cspan, message);
+            foreach (var error in item.Errors)
+            {
+                var span = new SnapshotSpan(_view.TextBuffer.CurrentSnapshot, item.Span);
 
-            _errorlist.Tasks.Add(task);
+                var task = CreateErrorTask(span, error);
+                _errorlist.Tasks.Add(task);
 
-            SnapshotSpan CheckTextSpan = new SnapshotSpan(cspan.Span.Snapshot, new Span(cspan.Span.Start, cspan.Span.Length));
-            return new TagSpan<ErrorTag>(CheckTextSpan, new ErrorTag(message, message));
+                yield return new TagSpan<ErrorTag>(span, new ErrorTag(error, error));
+            }
         }
 
-        private ErrorTask CreateErrorTask(ITextSnapshotLine line, ClassificationSpan cspan, string text)
+        private ErrorTask CreateErrorTask(SnapshotSpan span, string message)
         {
+            var line = span.Snapshot.GetLineFromPosition(span.Start);
+
             ErrorTask task = new ErrorTask
             {
-                Text = text,
+                Text = message,
                 Line = line.LineNumber,
-                Column = cspan.Span.Start.Position - line.Start.Position,
+                Column = span.Start.Position - line.Start.Position,
                 Category = TaskCategory.Misc,
                 ErrorCategory = TaskErrorCategory.Warning,
                 Priority = TaskPriority.Low,
-                Document = _document.FilePath
+                Document = _textDocument.FilePath
             };
 
             task.Navigate += Navigate;

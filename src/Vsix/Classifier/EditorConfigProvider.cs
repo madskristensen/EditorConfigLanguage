@@ -14,7 +14,7 @@ namespace EditorConfig
 
         public IClassifier GetClassifier(ITextBuffer buffer)
         {
-            return buffer.Properties.GetOrCreateSingletonProperty(() => new EditorConfigClassifier(ClassificationRegistry));
+            return buffer.Properties.GetOrCreateSingletonProperty(() => new EditorConfigClassifier(ClassificationRegistry, buffer));
         }
     }
 }

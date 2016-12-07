@@ -165,4 +165,7 @@
   <data name="ValidationMissingSeverity" xml:space="preserve">
     <value>A severity must be specified. Example: true:warning</value>
   </data>
+  <data name="ValidationRootInSection" xml:space="preserve">
+    <value>"Root" is only allowed in the beginning of the document</value>
+  </data>
 </root>

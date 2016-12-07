@@ -41,7 +41,7 @@ namespace EditorConfig
 
             if (string.IsNullOrWhiteSpace(line.GetText()))
             {
-                foreach (var key in CompletionItem.AllItems)
+                foreach (var key in Keyword.AllItems)
                     list.Add(CreateCompletion(key.Name, key.Moniker, key.Tag, key.IsSupported, key.Description));
             }
             else if (position > 0 && snapshot.Length > 1 && snapshot.GetText(position - 1, 1) == ":")
@@ -63,7 +63,7 @@ namespace EditorConfig
                         if (!span.Span.Contains(extent))
                             continue;
 
-                        foreach (var key in CompletionItem.AllItems)
+                        foreach (var key in Keyword.AllItems)
                             list.Add(CreateCompletion(key.Name, key.Moniker, key.Tag, key.IsSupported, key.Description));
                     }
                     else if (span.ClassificationType.IsOfType(EditorConfigClassificationTypes.Value))
@@ -71,7 +71,7 @@ namespace EditorConfig
                         if (!span.Span.Contains(extent))
                             continue;
 
-                        CompletionItem item = CompletionItem.GetCompletionItem(current);
+                        Keyword item = Keyword.GetCompletionItem(current);
                         if (item != null)
                         {
                             foreach (var value in item.Values)
@@ -87,7 +87,7 @@ namespace EditorConfig
 
                 if (!list.Any())
                 {
-                    var item = CompletionItem.GetCompletionItem(current);
+                    var item = Keyword.GetCompletionItem(current);
 
                     if (item != null)
                     {

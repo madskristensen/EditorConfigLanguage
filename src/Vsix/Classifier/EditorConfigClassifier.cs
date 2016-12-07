@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 
@@ -9,50 +7,41 @@ namespace EditorConfig
 {
     internal class EditorConfigClassifier : IClassifier
     {
-        private static IEnumerable<Tuple<string, IClassificationType>> _map;
+        private static Dictionary<ItemType, IClassificationType> _map;
+        private EditorConfigDocument _document;
 
-        public EditorConfigClassifier(IClassificationTypeRegistryService registry)
+        public EditorConfigClassifier(IClassificationTypeRegistryService registry, ITextBuffer buffer)
         {
-            _map = _map ?? new[] {
-                Tuple.Create(@"(#|;).+", registry.GetClassificationType(EditorConfigClassificationTypes.Comment)),
-                Tuple.Create(@"\[([^\]]+)\]", registry.GetClassificationType(EditorConfigClassificationTypes.Section)),
-                Tuple.Create(@"^([^=]+)\b(?=\=?)", registry.GetClassificationType(EditorConfigClassificationTypes.Keyword)),
-                Tuple.Create(@"(?<=\=([\s]+)?)([^\s:]+)", registry.GetClassificationType(EditorConfigClassificationTypes.Value)),
-                Tuple.Create(@"(?<==[^:]+:)[^\s]+", registry.GetClassificationType(EditorConfigClassificationTypes.Severity)),
+            _map = new Dictionary<ItemType, IClassificationType> {
+                { ItemType.Comment, registry.GetClassificationType(EditorConfigClassificationTypes.Comment)},
+                { ItemType.Section, registry.GetClassificationType(EditorConfigClassificationTypes.Section)},
+                { ItemType.Keyword, registry.GetClassificationType(EditorConfigClassificationTypes.Keyword)},
+                { ItemType.Value, registry.GetClassificationType(EditorConfigClassificationTypes.Value)},
+                { ItemType.Severity, registry.GetClassificationType(EditorConfigClassificationTypes.Severity)},
             };
+
+            _document = EditorConfigDocument.FromTextBuffer(buffer);
+        }
+
+        private void OnBufferChange(SnapshotSpan span)
+        {
+            ClassificationChanged?.Invoke(this, new ClassificationChangedEventArgs(span));
         }
 
         public IList<ClassificationSpan> GetClassificationSpans(SnapshotSpan span)
         {
             var list = new List<ClassificationSpan>();
-            var line = span.Start.GetContainingLine();
-            string text = line.GetText();
+            var parseItems = _document.Parse(span);
 
-            if (string.IsNullOrWhiteSpace(text))
-                return list;
-
-            foreach (var tuple in _map)
-                foreach (Match match in Regex.Matches(text, tuple.Item1))
-                {
-                    var matchSpan = new SnapshotSpan(line.Snapshot, line.Start.Position + match.Index, match.Length);
-
-                    // Make sure we don't double classify
-                    if (!list.Any(s => s.Span.IntersectsWith(matchSpan)))
-                        list.Add(new ClassificationSpan(matchSpan, tuple.Item2));
-
-                    // No need to continue if the whole line has been classified
-                    if (matchSpan.End.Position == line.End.Position)
-                        return list;
-                }
+            foreach (var item in parseItems)
+            {
+                var snapshotSpan = new SnapshotSpan(span.Snapshot, item.Span);
+                list.Add(new ClassificationSpan(snapshotSpan, _map[item.ItemType]));
+            }
 
             return list;
-
         }
 
-        public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged
-        {
-            add { }
-            remove { }
-        }
+        public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged;
     }
 }

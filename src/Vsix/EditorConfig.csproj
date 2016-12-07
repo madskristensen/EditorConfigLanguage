@@ -59,6 +59,8 @@
     <Compile Include="Classifier\EditorConfigClassificationTypes.cs" />
     <Compile Include="Completion\CompletionSourceProvider.cs" />
     <Compile Include="Completion\FilteredCompletionSet.cs" />
+    <Compile Include="Glyphs\SeverityGlyphFactory.cs" />
+    <Compile Include="Glyphs\SeverityGlyphFactoryProvider.cs" />
     <Compile Include="LanguageService\DropDownBars.cs" />
     <Compile Include="Parser\EditorConfigDocumentParser.cs" />
     <Compile Include="Parser\EditorConfigDocument.cs" />
@@ -103,6 +105,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Text.resx</DependentUpon>
     </Compile>
+    <Compile Include="Taggers\SeverityTagger.cs" />
+    <Compile Include="Taggers\SeverityTaggerProvider.cs" />
     <Compile Include="TextViewCreationListener.cs" />
     <Compile Include="LanguageService\ContentTypes.cs" />
     <Compile Include="EditorConfigPackage.cs" />

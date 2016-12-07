@@ -52,9 +52,9 @@ namespace EditorConfig
 
         private void ValidateSeverity(ParseItem item)
         {
-            if (!Constants.Severity.Contains(item.Text))
+            if (!Constants.Severities.ContainsKey(item.Text))
             {
-                item.AddError(string.Format(Resources.Text.ValidationInvalidSeverity, string.Join(", ", Constants.Severity)));
+                item.AddError(string.Format(Resources.Text.ValidationInvalidSeverity, string.Join(", ", Constants.Severities.Keys)));
             }
         }
 

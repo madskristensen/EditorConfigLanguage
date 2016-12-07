@@ -122,10 +122,10 @@ namespace EditorConfig
 
         private void AddSeverity(List<Completion4> list)
         {
-            list.Add(CreateCompletion("none", KnownMonikers.None));
-            list.Add(CreateCompletion("suggestion", KnownMonikers.StatusInformation));
-            list.Add(CreateCompletion("warning", KnownMonikers.StatusWarning));
-            list.Add(CreateCompletion("error", KnownMonikers.StatusError));
+            foreach (var name in Constants.Severities.Keys)
+            {
+                list.Add(CreateCompletion(name, Constants.Severities[name]));
+            }
         }
 
         private Completion4 CreateCompletion(string name, ImageMoniker moniker, string tag = null, bool isSupported = true, string description = null)

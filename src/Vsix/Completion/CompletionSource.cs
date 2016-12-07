@@ -13,6 +13,7 @@ namespace EditorConfig
     {
         private ITextBuffer _buffer;
         private IClassifier _classifier;
+        private EditorConfigDocument _document;
         private ITextStructureNavigatorSelectorService _navigator;
         private bool _disposed = false;
 
@@ -20,6 +21,7 @@ namespace EditorConfig
         {
             _buffer = buffer;
             _classifier = classifier.GetClassifier(buffer);
+            _document = EditorConfigDocument.FromTextBuffer(buffer);
             _navigator = navigator;
         }
 
@@ -39,76 +41,63 @@ namespace EditorConfig
             var applicableTo = snapshot.CreateTrackingSpan(triggerPoint.Value.Position, 0, SpanTrackingMode.EdgeInclusive);
             var position = triggerPoint.Value.Position;
 
-            if (string.IsNullOrWhiteSpace(line.GetText()))
+            var parseItem = _document.ItemAtPosition(triggerPoint.Value);
+            var prev = _document.ParseItems.LastOrDefault(p => p.Span.Start < position && !p.Span.Contains(position));
+
+            if (string.IsNullOrWhiteSpace(line.GetText()) || parseItem?.ItemType == ItemType.Keyword)
             {
                 foreach (var key in Keyword.AllItems)
                     list.Add(CreateCompletion(key.Name, key.Moniker, key.Tag, key.IsSupported, key.Description));
             }
-            else if (position > 0 && snapshot.Length > 1 && snapshot.GetText(position - 1, 1) == ":")
+            else if (parseItem?.ItemType == ItemType.Value)
+            {
+                Keyword item = Keyword.GetCompletionItem(prev.Text);
+                if (item != null)
+                {
+                    foreach (var value in item.Values)
+                        list.Add(CreateCompletion(value, KnownMonikers.EnumerationItemPublic));
+                }
+            }
+            else if ((position > 0 && snapshot.Length > 1 && snapshot.GetText(position - 1, 1) == ":") || parseItem?.ItemType == ItemType.Severity)
             {
                 AddSeverity(list);
             }
-            else
+
+            if (!list.Any())
             {
-                var spans = _classifier.GetClassificationSpans(line);
-                SnapshotSpan extent = FindTokenSpanAtPosition(session).GetSpan(snapshot);
-                string current = string.Empty;
+                var item = Keyword.GetCompletionItem(prev?.Text);
 
-                foreach (var span in spans)
+                if (item != null)
                 {
-                    if (span.ClassificationType.IsOfType(EditorConfigClassificationTypes.Keyword))
+                    var eq = line.GetText().IndexOf("=");
+
+                    if (eq != -1)
                     {
-                        current = span.Span.GetText();
+                        var eqPos = eq + line.Start.Position;
 
-                        if (!span.Span.Contains(extent))
-                            continue;
-
-                        foreach (var key in Keyword.AllItems)
-                            list.Add(CreateCompletion(key.Name, key.Moniker, key.Tag, key.IsSupported, key.Description));
-                    }
-                    else if (span.ClassificationType.IsOfType(EditorConfigClassificationTypes.Value))
-                    {
-                        if (!span.Span.Contains(extent))
-                            continue;
-
-                        Keyword item = Keyword.GetCompletionItem(current);
-                        if (item != null)
-                        {
+                        if (triggerPoint.Value.Position > eqPos)
                             foreach (var value in item.Values)
-                                list.Add(CreateCompletion(value, KnownMonikers.EnumerationItemPublic));
-                        }
+                                list.Add(CreateCompletion(" " + value, KnownMonikers.EnumerationItemPublic));
                     }
-                    else if (span.ClassificationType.IsOfType(EditorConfigClassificationTypes.Severity))
-                    {
-                        if (span.Span.Contains(extent))
-                            AddSeverity(list);
-                    }
-                }
-
-                if (!list.Any())
-                {
-                    var item = Keyword.GetCompletionItem(current);
-
-                    if (item != null)
-                    {
-                        var eq = line.GetText().IndexOf("=");
-
-                        if (eq != -1)
-                        {
-                            var eqPos = eq + line.Start.Position;
-
-                            if (triggerPoint.Value.Position > eqPos)
-                                foreach (var value in item.Values)
-                                    list.Add(CreateCompletion(value, KnownMonikers.EnumerationItemPublic));
-                        }
-                    }
-                }
-                else
-                {
-                    applicableTo = snapshot.CreateTrackingSpan(extent, SpanTrackingMode.EdgeInclusive);
                 }
             }
+            else
+            {
+                var trackingSpan = FindTokenSpanAtPosition(session);
+                var span = trackingSpan.GetSpan(snapshot);
+                var text = span.GetText();
 
+                if (text == ":")
+                    applicableTo = snapshot.CreateTrackingSpan(new Span(span.Start + 1, 0), SpanTrackingMode.EdgeInclusive);
+                else
+                    applicableTo = trackingSpan;
+            }
+
+            CreateCompletionSet(completionSets, list, applicableTo);
+        }
+
+        private static void CreateCompletionSet(IList<CompletionSet> completionSets, List<Completion4> list, ITrackingSpan applicableTo)
+        {
             if (list.Any())
             {
                 if (list.All(c => string.IsNullOrEmpty(c.IconAutomationText)))
@@ -130,7 +119,7 @@ namespace EditorConfig
 
         private void AddSeverity(List<Completion4> list)
         {
-            list.Add(CreateCompletion("none", KnownMonikers.StatusSuppressed));
+            list.Add(CreateCompletion("none", KnownMonikers.None));
             list.Add(CreateCompletion("suggestion", KnownMonikers.StatusInformation));
             list.Add(CreateCompletion("warning", KnownMonikers.StatusWarning));
             list.Add(CreateCompletion("error", KnownMonikers.StatusError));

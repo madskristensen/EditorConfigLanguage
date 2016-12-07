@@ -25,7 +25,7 @@ namespace EditorConfig
             if (session == null || qiContent == null || !point.HasValue || point.Value.Position >= point.Value.Snapshot.Length)
                 return;
 
-            var item = _document.FromPoint(point.Value);
+            var item = _document.ItemAtPosition(point.Value);
 
             if (item == null)
                 return;

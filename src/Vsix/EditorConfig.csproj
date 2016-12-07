@@ -60,6 +60,7 @@
     <Compile Include="Completion\CompletionSourceProvider.cs" />
     <Compile Include="Completion\FilteredCompletionSet.cs" />
     <Compile Include="LanguageService\DropDownBars.cs" />
+    <Compile Include="Parser\EditorConfigDocumentParser.cs" />
     <Compile Include="Parser\EditorConfigDocument.cs" />
     <Compile Include="Parser\EditorConfigDocumentValidator.cs" />
     <Compile Include="Parser\ParseItem.cs" />

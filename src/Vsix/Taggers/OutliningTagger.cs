@@ -79,31 +79,20 @@ namespace EditorConfig
 
             var sections = _document.ItemsInSpan(entire).Where(p => p.ItemType == ItemType.Section);
 
-            foreach (var section in sections)
+            foreach (var section in sections.Where(s => s.Children.Any()))
             {
-                ParseItem lastProperty;
-                var nextSection = _document.ParseItems.FirstOrDefault(p => p.ItemType == ItemType.Section && p.Span.Start > section.Span.Start);
+                var startLine = newSnapshot.GetLineFromPosition(section.Span.Start);
+                var endLine = newSnapshot.GetLineFromPosition(section.Children.Last().Span.End);
 
-                if (nextSection == null)
-                    lastProperty = _document.ParseItems.LastOrDefault(p => p.ItemType == ItemType.Keyword && p.Span.Start > section.Span.Start);
-                else
-                    lastProperty = _document.ParseItems.LastOrDefault(p => p.ItemType == ItemType.Keyword && p.Span.Start < nextSection.Span.Start);
-
-                if (lastProperty != null)
+                var region = new Region
                 {
-                    var startLine = newSnapshot.GetLineFromPosition(section.Span.Start);
-                    var endLine = newSnapshot.GetLineFromPosition(lastProperty.Span.End);
+                    StartLine = startLine.LineNumber,
+                    StartOffset = startLine.Start,
+                    EndLine = endLine.LineNumber,
+                    EndOffset = endLine.End
+                };
 
-                    var region = new Region
-                    {
-                        StartLine = startLine.LineNumber,
-                        StartOffset = startLine.Start,
-                        EndLine = endLine.LineNumber,
-                        EndOffset = endLine.End
-                    };
-
-                    newRegions.Add(region);
-                }
+                newRegions.Add(region);
             }
 
             _snapshot = newSnapshot;

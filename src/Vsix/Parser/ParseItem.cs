@@ -15,22 +15,40 @@ namespace EditorConfig
         }
 
         public Span Span { get; set; }
+        
         public ItemType ItemType { get; set; }
+
         public string Text { get; set; }
+
         public string Description
         {
             get { return Keyword.GetCompletionItem(Text)?.Description; }
         }
+
         public List<string> Errors { get; } = new List<string>();
-        public bool HasErrors
-        {
-            get { return Errors.Any(); }
-        }
+
+        public List<ParseItem> Children { get; } = new List<ParseItem>();
+
+        public ParseItem Parent { get; set; }
 
         public void AddError(string errorMessage)
         {
             if (!Errors.Contains(errorMessage))
                 Errors.Add(errorMessage);
+        }
+
+        public void AddChild(ParseItem child)
+        {
+            Children.Add(child);
+            child.Parent = this;
+        }
+
+        public Span SpanIncludingChildren()
+        {
+            if (!Children.Any())
+                return Span;
+
+            return Span.FromBounds(Span.Start, Children.Last().Span.End);
         }
     }
 

@@ -1,59 +1,38 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.Language.Intellisense;
+using Microsoft.VisualStudio.Text;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.Language.Intellisense;
-using Microsoft.VisualStudio.Text;
-using Microsoft.VisualStudio.Text.Classification;
 
 namespace EditorConfig
 {
     class SuggestedActionsSource : ISuggestedActionsSource
     {
-        private IClassifier _classifier;
-        private OutliningTagger _tagger;
-        private Region _region;
+        private ParseItem _section;
+        private EditorConfigDocument _document;
 
-        public SuggestedActionsSource(ITextBuffer buffer, IClassifierAggregatorService classifierService)
+        public SuggestedActionsSource(ITextBuffer buffer)
         {
-            _classifier = classifierService.GetClassifier(buffer);
-
-            buffer.Properties.TryGetProperty(typeof(OutliningTagger), out _tagger);
+            _document = EditorConfigDocument.FromTextBuffer(buffer);
         }
 
         public async Task<bool> HasSuggestedActionsAsync(ISuggestedActionCategorySet requestedActionCategories, SnapshotSpan range, CancellationToken cancellationToken)
         {
-            if (_tagger == null)
-                return await Task.FromResult(false);
-
             return await Task.Factory.StartNew(() =>
             {
-                var sections = from c in _classifier.GetClassificationSpans(range)
-                               where c.ClassificationType.IsOfType(EditorConfigClassificationTypes.Section)
-                               select c;
+                _section = _document.ItemsInSpan(range).FirstOrDefault(i => i.ItemType == ItemType.Section);
 
-                foreach (var section in sections)
-                {
-                    _region = _tagger.Regions.FirstOrDefault(r => r.StartOffset == section.Span.Start);
-
-                    if (_region != null)
-                        return true;
-                }
-
-                return false;
+                return _section != null;
             });
         }
 
         public IEnumerable<SuggestedActionSet> GetSuggestedActions(ISuggestedActionCategorySet requestedActionCategories, SnapshotSpan range, CancellationToken cancellationToken)
         {
-            var list = new List<SuggestedActionSet>();
-
-            if (_region != null)
+            if (_section != null)
             {
-                var span = new Span(_region.StartOffset, _region.EndOffset - _region.StartOffset);
-
-                var deleteSection = new DeleteSectionAction(range.Snapshot.TextBuffer, span);
+                var deleteSection = new DeleteSectionAction(range.Snapshot.TextBuffer, _section.SpanIncludingChildren());
                 yield return new SuggestedActionSet(new[] { deleteSection });
             }
         }

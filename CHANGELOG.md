@@ -2,9 +2,11 @@
 
 - [ ] Indication of rules not matching any files
 - [ ] Updated screenshots in readme file
-- [ ] Hide "root" from completion when it isn't valid to use
 - [ ] Show inheritance hierarchy
 - [ ] Support for AnyCode
+- [x] Hide "root" from completion when it isn't valid to use
+- [x] Make parsing async
+- [x] Show error on duplicate properties
 - [x] Implement custom parser
 - [x] Show validation error from wrong use of "root"
 - [x] Show error messages in hover tooltips

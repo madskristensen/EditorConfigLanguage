@@ -66,7 +66,7 @@ namespace EditorConfig
             }
             else if (item.Text.Equals("root", StringComparison.OrdinalIgnoreCase) && item != ParseItems.First(p => p.ItemType != ItemType.Comment))
             {
-                item.AddError(Resources.Text.KeywordRoot);
+                item.AddError(Resources.Text.ValidationRootInSection);
             }
             else if (item.Parent != null)
             {

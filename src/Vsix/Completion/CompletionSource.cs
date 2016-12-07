@@ -46,7 +46,10 @@ namespace EditorConfig
 
             if (string.IsNullOrWhiteSpace(line.GetText()) || parseItem?.ItemType == ItemType.Keyword)
             {
-                foreach (var key in Keyword.AllItems)
+                var isInRoot = !_document.ParseItems.Exists(p => p.ItemType == ItemType.Section && p.Span.Start < triggerPoint.Value);
+                var items = isInRoot ? Keyword.AllItems : Keyword.AllItems.Where(i => i.Name != "root");
+
+                foreach (var key in items)
                     list.Add(CreateCompletion(key.Name, key.Moniker, key.Tag, key.IsSupported, key.Description));
             }
             else if (parseItem?.ItemType == ItemType.Value)

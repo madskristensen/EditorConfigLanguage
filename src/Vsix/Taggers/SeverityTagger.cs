@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.Text;
-using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Tagging;
 using System;
 using System.Collections.Generic;
@@ -7,16 +6,6 @@ using System.Linq;
 
 namespace EditorConfig
 {
-    internal class SeverityTag : IGlyphTag
-    {
-        public SeverityTag(ParseItem parseItem)
-        {
-            ParseItem = parseItem;
-        }
-
-        public ParseItem ParseItem { get; }
-    }
-
     internal class SeverityTagger : ITagger<SeverityTag>
     {
         private ITextBuffer _buffer;

@@ -1,31 +1,43 @@
 ﻿using Microsoft.VisualStudio.Imaging.Interop;
 using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio.Text.Editor;
-using Microsoft.VisualStudio.Text.Formatting;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media.Imaging;
 
 namespace EditorConfig
 {
-    internal class SeverityGlyphFactory : IGlyphFactory
+    internal sealed class SeverityAdornment : Image
     {
-        public UIElement GenerateGlyph(IWpfTextViewLine line, IGlyphTag tag)
+        private const int _size = 16;
+
+        internal SeverityAdornment(SeverityTag tag)
         {
-            var severityTag = tag as SeverityTag;
-            string text = severityTag.ParseItem.Text.ToLowerInvariant();
+            Loaded += (s, e) =>
+            {
+                Height = _size;
+                Width = _size;
+                Margin = new Thickness(8, 0, 0, 0);
+                Cursor = Cursors.Arrow;
+
+                Update(tag);
+            };
+        }
+
+        internal void Update(SeverityTag tag)
+        {
+            if (tag == null)
+                return;
+
+            string text = tag.ParseItem.Text.ToLowerInvariant();
 
             if (Constants.Severities.ContainsKey(text))
             {
                 var moniker = Constants.Severities[text];
-                return new Image
-                {
-                    Source = GetImage(moniker, 16)
-                };
+                Source = GetImage(moniker, _size);
+                ToolTip = $"Severity: {text}";
             }
-
-            return null;
         }
 
         private static BitmapSource GetImage(ImageMoniker moniker, int size)
@@ -48,4 +60,5 @@ namespace EditorConfig
             return data as BitmapSource;
         }
     }
+
 }

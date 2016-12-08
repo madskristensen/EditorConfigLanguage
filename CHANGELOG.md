@@ -1,8 +1,20 @@
 # Road map
 
 - [ ] Indication of rules not matching any files
-- [ ] Updated screenshots in readme file
 - [ ] Support for AnyCode
+
+Features that have a checkmark are complete and available for
+download in the
+[CI build](http://vsixgallery.com/extension/1209461d-57f8-46a4-814a-dbe5fecef941/).
+
+# Change log
+
+These are the changes to each version that has been released
+on the official Visual Studio extension gallery.
+
+## 1.5
+
+- [x] Updated screenshots in readme file
 - [x] Show inheritance hierarchy
 - [x] Duplicate section validation
 - [x] Glyphs to show severity
@@ -17,15 +29,6 @@
 - [x] Intellisense Filters (icons at bottom of completion list)
 - [x] Intellisense substring match on typing
 - [x] Light bulb for deleting section
-
-Features that have a checkmark are complete and available for
-download in the
-[CI build](http://vsixgallery.com/extension/1209461d-57f8-46a4-814a-dbe5fecef941/).
-
-# Change log
-
-These are the changes to each version that has been released
-on the official Visual Studio extension gallery.
 
 ## 1.4
 

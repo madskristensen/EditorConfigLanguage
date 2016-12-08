@@ -19,6 +19,7 @@ See the [change log](CHANGELOG.md) for changes and road map.
 
 - Makes it easy to create .editorconfig files
 - Syntax highlighting
+- C# and .NET style analyzers
 - Intellisense
 - Validation
 - Brace completion
@@ -29,6 +30,7 @@ See the [change log](CHANGELOG.md) for changes and road map.
 - Code formatting
 - Hover tooltips
 - Navigational drop downs
+- Inheritance visualizer
 
 ### Create .editorconfig files
 To make it really easy to add a .editorconfig file, you can now right-click
@@ -40,6 +42,13 @@ any folder, project, solution folder and hit **Add -> .editorconfig File**
 Full colorization of the full .editorconfig syntax.
 
 ![Classification](art/classification.png)
+
+### C# and .NET style analyzers
+Visual Studio 2017 lets you add C# and .NET specific rules to the .editorconfig file. In addition to enabling various rules, a severity is also added to control how Visual Studio is going to handle these rules. 
+
+![C# and .NET style analyzers](art/csharp-analyzers.png)
+
+Each severity is clearly marked by an icon to make it easy to identify.
 
 ### Intellisense
 The extension provides Intellisense for both keywords and values.
@@ -57,6 +66,21 @@ Red squiggles are shown for invalid values.
 Hover the mouse over any keyword to see a full description.
 
 ![Classification](art/quick-info.png)
+
+### Navigational drop downs
+Dropdown menus at the top of the editor makes it easy to navigate the document.
+
+![Navigational drop downs](art/navigation-dropdown.png)
+
+### Inheritance visualizer
+A project can have multiple .editorconfig files and the rules in each cascades
+from the top-most and down. It is based on folder structure.
+
+The inheritance visualizer is located at the bottom right corner of the editor window and makes it easy to see this relationship.
+
+![Inheritance visualizer](art/inheritance-visualizer.png)
+
+Note, the inheritance visualizer is only visible when the current file isn't the root of the hierarchys or by specifying the `root = true` property.
 
 ## Contribute
 Check out the [contribution guidelines](.github/CONTRIBUTING.md)

@@ -2,7 +2,7 @@
 
 - [ ] Indication of a rules that are already defined by parent .editorconfig
 - [ ] Indication of rules not matching any files
-- [ ] Support for AnyCode
+- [x] Support for AnyCode
 - [x] Show Intellisense when severity glyph is clicked
 
 Features that have a checkmark are complete and available for

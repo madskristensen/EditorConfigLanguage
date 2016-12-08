@@ -170,6 +170,21 @@ namespace EditorConfig
             }
         }
 
+        public static void OpenFile(string fileName)
+        {
+            VsShellUtilities.OpenDocument(DTE.AsServiceProvider(), fileName);
+            DTE.ExecuteCommandSafe("SolutionExplorer.SyncWithActiveDocument");
+            DTE.ActiveDocument.Activate();
+        }
+
+        public static void ExecuteCommandSafe(this DTE2 dte, string commandName)
+        {
+            var command = dte.Commands.Item(commandName);
+            if (command.IsAvailable)
+            {
+                dte.Commands.Raise(command.Guid, command.ID, null, null);
+            }
+        }
     }
 
     public static class ProjectTypes

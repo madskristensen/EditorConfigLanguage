@@ -57,29 +57,32 @@ namespace EditorConfig
             }
             else
             {
-                ProjectItem newItem = null;
-                File.WriteAllText(fileName, "[*]\r\nend_of_line = crlf\r\n\r\n[*.xml]\r\nindent_style = space");
-
-                if (item is Project proj)
-                {
-                    newItem = proj.AddFileToProject(fileName, "None");
-                }
-                else if (item is ProjectItem projItem && projItem.ContainingProject != null)
-                {
-                    newItem = projItem.ContainingProject.AddFileToProject(fileName, "None");
-                }
-                else if (item is Solution2 solution)
-                {
-                    newItem = AddFileToSolution(fileName, solution);
-                }
+                File.WriteAllText(fileName, Constants.DefaultFileContent);
+                ProjectItem newItem = AddFileToHierarchy(item, fileName);
 
                 if (newItem != null)
                 {
-                    VsShellUtilities.OpenDocument(ServiceProvider, fileName);
-                    dte.ExecuteCommand("SolutionExplorer.SyncWithActiveDocument");
-                    dte.ActiveDocument.Activate();
+                    VsHelpers.OpenFile(fileName);
                 }
             }
+        }
+
+        private static ProjectItem AddFileToHierarchy(object item, string fileName)
+        {
+            if (item is Project proj)
+            {
+                return proj.AddFileToProject(fileName, "None");
+            }
+            else if (item is ProjectItem projItem && projItem.ContainingProject != null)
+            {
+                return projItem.ContainingProject.AddFileToProject(fileName, "None");
+            }
+            else if (item is Solution2 solution)
+            {
+                return AddFileToSolution(fileName, solution);
+            }
+
+            return null;
         }
 
         private static ProjectItem AddFileToSolution(string fileName, Solution2 solution)

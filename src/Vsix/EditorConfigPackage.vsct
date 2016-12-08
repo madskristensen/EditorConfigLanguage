@@ -37,6 +37,9 @@
     <CommandPlacement guid="guidEditorConfigPackageCmdSet" id="AddGroup" priority="0x0500">
       <Parent guid="guidSHLMainMenu" id="IDM_VS_CSCD_CV_ITEMADD" />
     </CommandPlacement>
+    <!--<CommandPlacement guid="guidEditorConfigPackageCmdSet" id="AddGroup" priority="0x1500">
+      <Parent guid="guidWorkspaceExplorerToolWindowPackageCmdSet" id="idmAddNew" />
+    </CommandPlacement>-->
   </CommandPlacements>
 
   <Symbols>
@@ -48,6 +51,11 @@
       <IDSymbol name="AddGroup" value="0x0001" />
       <IDSymbol name="CreateEditorConfigFileId" value="0x0100" />
     </GuidSymbol>
+
+    <!-- The AnyCode AddNewItem menu -->
+    <!--<GuidSymbol name="guidWorkspaceExplorerToolWindowPackageCmdSet" value="{cfb400f1-5c60-4f3c-856e-180d28def0b7}">
+      <IDSymbol name="idmAddNew" value="0x2200"/>
+    </GuidSymbol>-->
   </Symbols>
 </CommandTable>
 

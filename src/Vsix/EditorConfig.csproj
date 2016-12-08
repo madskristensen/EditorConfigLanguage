@@ -130,6 +130,7 @@
       <ResourceName>Menus.ctmenu</ResourceName>
       <Generator>VsctGenerator</Generator>
       <LastGenOutput>EditorConfigPackage1.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </VSCTCompile>
     <Content Include="FileIcons\icons.pkgdef">
       <IncludeInVSIX>true</IncludeInVSIX>

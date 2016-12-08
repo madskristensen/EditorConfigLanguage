@@ -20,9 +20,19 @@ namespace EditorConfig
                 Width = _size;
                 Margin = new Thickness(8, 0, 0, 0);
                 Cursor = Cursors.Arrow;
+                MouseLeftButtonUp += Clicked;
 
                 Update(tag);
             };
+        }
+
+        private void Clicked(object sender, MouseButtonEventArgs e)
+        {
+            var command = VsHelpers.DTE.Commands.Item("Edit.ListMembers");
+            if (command.IsAvailable)
+            {
+                VsHelpers.DTE.Commands.Raise(command.Guid, command.ID, null, null);
+            }
         }
 
         internal void Update(SeverityTag tag)
@@ -60,5 +70,4 @@ namespace EditorConfig
             return data as BitmapSource;
         }
     }
-
 }

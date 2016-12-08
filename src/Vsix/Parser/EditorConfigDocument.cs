@@ -3,8 +3,6 @@ using Microsoft.VisualStudio.Text;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Windows.Threading;
 
 namespace EditorConfig
 {
@@ -16,6 +14,8 @@ namespace EditorConfig
         {
             _buffer = buffer;
             _buffer.PostChanged += BufferPostChangedAsync;
+
+            VsHelpers.SatisfyImportsOnce(this);
 
             ThreadHelper.JoinableTaskFactory.Run(() => ParseAsync());
         }
@@ -31,8 +31,10 @@ namespace EditorConfig
         {
             get
             {
-                var first = ParseItems.FirstOrDefault(p => p.ItemType != ItemType.Comment);
-                return string.Equals(first?.Text, "root", StringComparison.OrdinalIgnoreCase);
+                var prop = ParseItems.FirstOrDefault(p => p.ItemType != ItemType.Comment);
+                var value = ParseItems.FirstOrDefault(p => p.Span.Start > prop?.Span.Start);
+
+                return string.Equals(prop?.Text, "root", StringComparison.OrdinalIgnoreCase) && string.Equals(value?.Text, "true", StringComparison.OrdinalIgnoreCase);
             }
         }
 

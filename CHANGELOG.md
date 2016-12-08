@@ -2,8 +2,8 @@
 
 - [ ] Indication of rules not matching any files
 - [ ] Updated screenshots in readme file
-- [ ] Show inheritance hierarchy
 - [ ] Support for AnyCode
+- [x] Show inheritance hierarchy
 - [x] Duplicate section validation
 - [x] Glyphs to show severity
 - [x] Hide "root" from completion when it isn't valid to use

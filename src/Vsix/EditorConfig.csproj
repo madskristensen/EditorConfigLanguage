@@ -54,6 +54,8 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Adornments\InheritanceAdornmentProvider.cs" />
+    <Compile Include="Adornments\InheritanceAdornment.cs" />
     <Compile Include="Adornments\SeverityAdornment.cs" />
     <Compile Include="Adornments\SeverityAdornmentTagger.cs" />
     <Compile Include="Adornments\SeverityAdornmentTaggerProvider.cs" />
@@ -64,6 +66,7 @@
     <Compile Include="Completion\CompletionSourceProvider.cs" />
     <Compile Include="Completion\FilteredCompletionSet.cs" />
     <Compile Include="LanguageService\DropDownBars.cs" />
+    <Compile Include="Parser\EditorConfigDocumentInheritance.cs" />
     <Compile Include="Parser\EditorConfigDocumentParser.cs" />
     <Compile Include="Parser\EditorConfigDocument.cs" />
     <Compile Include="Parser\EditorConfigDocumentValidator.cs" />
@@ -92,7 +95,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>EditorConfigPackage.vsct</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\ProjectHelpers.cs" />
+    <Compile Include="Helpers\VsHelpers.cs" />
     <Compile Include="Taggers\ErrorTagger.cs" />
     <Compile Include="Taggers\ErrorTaggerProvider.cs" />
     <Compile Include="Taggers\OutliningTagger.cs" />

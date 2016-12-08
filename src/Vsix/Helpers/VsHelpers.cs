@@ -1,14 +1,20 @@
 ﻿using EnvDTE;
 using EnvDTE80;
+using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.TextManager.Interop;
 using System;
+using System.ComponentModel.Composition;
 using System.IO;
 
 namespace EditorConfig
 {
-    public static class ProjectHelpers
+    public static class VsHelpers
     {
-        static DTE2 _dte = Package.GetGlobalService(typeof(DTE)) as DTE2;
+        internal static DTE2 DTE = Package.GetGlobalService(typeof(DTE)) as DTE2;
 
         public static string GetRootFolder(this Project project)
         {
@@ -16,7 +22,7 @@ namespace EditorConfig
                 return null;
 
             if (project.IsKind(ProjectKinds.vsProjectKindSolutionFolder))
-                return Path.GetDirectoryName(_dte.Solution.FullName);
+                return Path.GetDirectoryName(DTE.Solution.FullName);
 
             if (string.IsNullOrEmpty(project.FullName))
                 return null;
@@ -56,7 +62,7 @@ namespace EditorConfig
         public static ProjectItem AddFileToProject(this Project project, string file, string itemType = null)
         {
             if (project.IsKind(ProjectTypes.ASPNET_5, ProjectTypes.SSDT))
-                return _dte.Solution.FindProjectItem(file);
+                return DTE.Solution.FindProjectItem(file);
 
             var root = project.GetRootFolder();
 
@@ -99,7 +105,7 @@ namespace EditorConfig
 
         public static string GetSelectedItemPath(out object selectedItem)
         {
-            var items = (Array)_dte.ToolWindows.SolutionExplorer.SelectedItems;
+            var items = (Array)DTE.ToolWindows.SolutionExplorer.SelectedItems;
             selectedItem = null;
 
             foreach (UIHierarchyItem selItem in items)
@@ -116,8 +122,54 @@ namespace EditorConfig
                 }
             }
 
-            return Path.GetDirectoryName(_dte.Solution.FullName);
+            return Path.GetDirectoryName(DTE.Solution.FullName);
         }
+
+        public static string GetFileName(this ITextBuffer buffer)
+        {
+            if (!buffer.Properties.TryGetProperty(typeof(IVsTextBuffer), out IVsTextBuffer bufferAdapter))
+                return null;
+
+            var persistFileFormat = bufferAdapter as IPersistFileFormat;
+            string ppzsFilename = null;
+            int returnCode = -1;
+
+            if (persistFileFormat != null)
+                try
+                {
+                    returnCode = persistFileFormat.GetCurFile(out ppzsFilename, out uint pnFormatIndex);
+                }
+                catch (NotImplementedException)
+                {
+                    return null;
+                }
+
+            if (returnCode != VSConstants.S_OK)
+                return null;
+
+            return ppzsFilename;
+        }
+
+        public static IServiceProvider AsServiceProvider(this DTE2 dte)
+        {
+            return new ServiceProvider(dte as Microsoft.VisualStudio.OLE.Interop.IServiceProvider);
+        }
+
+        private static IComponentModel _compositionService;
+
+        public static void SatisfyImportsOnce(this object o)
+        {
+            if (_compositionService == null)
+            {
+                _compositionService = ServiceProvider.GlobalProvider.GetService(typeof(SComponentModel)) as IComponentModel;
+            }
+
+            if (_compositionService != null)
+            {
+                _compositionService.DefaultCompositionService.SatisfyImportsOnce(o);
+            }
+        }
+
     }
 
     public static class ProjectTypes

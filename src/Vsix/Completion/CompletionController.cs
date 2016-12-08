@@ -66,10 +66,19 @@ namespace EditorConfig
                     {
                         case VSConstants.VSStd2KCmdID.TYPECHAR:
                             char ch = GetTypeChar(pvaIn);
-                            if (ch == ' ' || ch == ':' || char.IsLetterOrDigit(ch))
+                            if (ch == ' ' || char.IsLetterOrDigit(ch))
+                            {
                                 StartSession();
+                            }
+                            if (ch == ':')
+                            {
+                                Cancel();
+                                StartSession();
+                            }
                             else if (_currentSession != null)
+                            {
                                 Filter();
+                            }
                             break;
                         case VSConstants.VSStd2KCmdID.BACKSPACE:
                         case VSConstants.VSStd2KCmdID.DELETE:

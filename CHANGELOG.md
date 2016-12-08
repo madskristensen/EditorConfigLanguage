@@ -1,5 +1,6 @@
 # Road map
 
+- [ ] Indication of a rules that are already defined by parent .editorconfig
 - [ ] Indication of rules not matching any files
 - [ ] Support for AnyCode
 

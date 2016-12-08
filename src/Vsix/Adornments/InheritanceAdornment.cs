@@ -28,6 +28,7 @@ namespace EditorConfig
             CreateImage();
 
             doc.FileActionOccurred += FileActionOccurred;
+            Updated += InheritanceUpdated;
 
             view.ViewportHeightChanged += SetAdornmentLocation;
             view.ViewportWidthChanged += SetAdornmentLocation;
@@ -36,11 +37,19 @@ namespace EditorConfig
                 _adornmentLayer.AddAdornment(AdornmentPositioningBehavior.ViewportRelative, null, null, _adornment, null);
         }
 
+        private void InheritanceUpdated(object sender, EventArgs e)
+        {
+            ThreadHelper.Generic.BeginInvoke(DispatcherPriority.ApplicationIdle, () =>
+            {
+                CreateImage();
+            });
+        }
+
         private void FileActionOccurred(object sender, TextDocumentFileActionEventArgs e)
         {
             if (e.FileActionType == FileActionTypes.ContentSavedToDisk)
             {
-                CreateImage();
+                Updated?.Invoke(this, EventArgs.Empty);
             }
         }
 
@@ -126,6 +135,8 @@ namespace EditorConfig
                 Canvas.SetTop(_adornment, view.ViewportBottom - _adornment.ActualHeight - 20);
             }
         }
+
+        public static event EventHandler<EventArgs> Updated;
     }
 }
 ;

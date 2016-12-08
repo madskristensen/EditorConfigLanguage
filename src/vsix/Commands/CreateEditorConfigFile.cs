@@ -44,7 +44,7 @@ namespace EditorConfig
         private void CreateFile(object sender, EventArgs e)
         {
             var dte = ServiceProvider.GetService(typeof(DTE)) as DTE2;
-            var folder = ProjectHelpers.GetSelectedItemPath(out object item);
+            var folder = VsHelpers.GetSelectedItemPath(out object item);
 
             if (string.IsNullOrEmpty(folder))
                 return;

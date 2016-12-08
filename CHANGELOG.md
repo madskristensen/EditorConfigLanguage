@@ -4,7 +4,7 @@
 - [ ] Updated screenshots in readme file
 - [ ] Show inheritance hierarchy
 - [ ] Support for AnyCode
-- [ ] Duplicate section validation
+- [x] Duplicate section validation
 - [x] Glyphs to show severity
 - [x] Hide "root" from completion when it isn't valid to use
 - [x] Make parsing async

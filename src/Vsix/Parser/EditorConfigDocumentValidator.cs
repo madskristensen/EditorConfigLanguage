@@ -12,6 +12,7 @@ namespace EditorConfig
                 switch (item.ItemType)
                 {
                     case ItemType.Section:
+                        ValidateSection(item);
                         break;
                     case ItemType.Property:
                         ValidateKeyword(item);
@@ -23,6 +24,14 @@ namespace EditorConfig
                         ValidateSeverity(item);
                         break;
                 }
+            }
+        }
+
+        private void ValidateSection(ParseItem item)
+        {
+            if (ParseItems.Exists(p => p.ItemType == ItemType.Section && p.Span.Start < item.Span.Start && p.Text == item.Text))
+            {
+                item.AddError(string.Format("A section with the value \"{0}\" has already been defined", item.Text));
             }
         }
 

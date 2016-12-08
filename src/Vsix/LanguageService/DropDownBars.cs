@@ -10,14 +10,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Threading;
 
 namespace EditorConfig
 {
     public class DropDownBars : TypeAndMemberDropdownBars
     {
         private readonly LanguageService _languageService;
-        private readonly ITextView _textView;
+        private readonly ITextBuffer _buffer;
         private List<DropDownItem> _members;
+        private EditorConfigDocument _document;
 
         public DropDownBars(LanguageService languageService, IVsTextView view)
         : base(languageService)
@@ -26,17 +28,20 @@ namespace EditorConfig
 
             var componentModel = (IComponentModel)languageService.GetService(typeof(SComponentModel));
             var editorAdapterFactoryService = componentModel.GetService<IVsEditorAdaptersFactoryService>();
-            _textView = editorAdapterFactoryService.GetWpfTextView(view);
+            var textView = editorAdapterFactoryService.GetWpfTextView(view);
+            textView.Caret.PositionChanged += CaretPositionChanged;
 
-            _textView.Caret.PositionChanged += CaretPositionChanged;
-            _textView.TextBuffer.PostChanged += TextBufferChanged;
+            _buffer = textView.TextBuffer;
 
-            UpdateElements(_textView.TextSnapshot, true);
+            _document = EditorConfigDocument.FromTextBuffer(_buffer);
+            _document.Parsed += DocumentParsed;
+            
+            UpdateElements();
         }
 
-        private void TextBufferChanged(object sender, EventArgs e)
+        private void DocumentParsed(object sender, EventArgs e)
         {
-            UpdateElements(_textView.TextSnapshot, true);
+            UpdateElements();
         }
 
         private void CaretPositionChanged(object sender, CaretPositionChangedEventArgs e)
@@ -92,34 +97,30 @@ namespace EditorConfig
             return true;
         }
 
-        private void UpdateElements(ITextSnapshot snapshot, bool synchronize)
+        private void UpdateElements()
         {
             var list = new List<DropDownItem>();
+            var sections = _document.ParseItems.Where(p => p.ItemType == ItemType.Section);
 
-            foreach (var line in snapshot.Lines)
+            foreach (var section in sections)
             {
-                string text = line.GetText();
+                int lineNumber = _buffer.CurrentSnapshot.GetLineNumberFromPosition(section.Span.Start);
 
-                if (text.StartsWith("[", StringComparison.Ordinal))
-                {
-                    if (line.LineNumber > 0 && !list.Any())
-                        list.Add(new DropDownItem("<Root>", 1));
+                if (lineNumber > 0 && !list.Any())
+                    list.Add(new DropDownItem("<Root>", 1));
 
-                    list.Add(new DropDownItem("   " + text.Trim(), line.LineNumber));
-                }
+
+                list.Add(new DropDownItem("   " + section.Text, lineNumber));
             }
-
+            
             _members = list;
 
-            if (synchronize)
-            {
-                SyncDropDowns();
-            }
+            SyncDropDowns();
         }
 
         private void SyncDropDowns()
         {
-            ThreadHelper.Generic.BeginInvoke(System.Windows.Threading.DispatcherPriority.ApplicationIdle, () =>
+            ThreadHelper.Generic.BeginInvoke(DispatcherPriority.ApplicationIdle, () =>
             {
                 _languageService.SynchronizeDropdowns();
             });

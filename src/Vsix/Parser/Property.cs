@@ -8,10 +8,12 @@ namespace EditorConfig
 {
     class Property
     {
+        public const string Root = "root";
+
         private static List<Property> _cache = new List<Property>
         {
             // Standard properties
-            {new Property("root", true, Resources.Text.KeywordRoot, KnownMonikers.Property, "true", "false")},
+            {new Property(Root, true, Resources.Text.KeywordRoot, KnownMonikers.Property, "true", "false")},
             {new Property("charset", true, Resources.Text.KeywordCharset, KnownMonikers.Property, "latin1", "utf-8", "utf-8-bom", "utf-16be", "utf-16le", "utf-8-bom")},
             {new Property("end_of_line", true, Resources.Text.KeywordEndOfLine, KnownMonikers.Property, "lf", "crlf", "cr") },
             {new Property("indent_style", true, Resources.Text.KeywordIndentStyle, KnownMonikers.Property, "tab", "space")},

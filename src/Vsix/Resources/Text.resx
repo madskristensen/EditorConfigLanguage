@@ -156,6 +156,12 @@
   <data name="ValidateUnknownKeyword" xml:space="preserve">
     <value>The keyword "{0}" is unknown</value>
   </data>
+  <data name="ValidationDuplicateProperty" xml:space="preserve">
+    <value>The property has already been defined in this section</value>
+  </data>
+  <data name="ValidationDuplicateSection" xml:space="preserve">
+    <value>A section with the value "{0}" has already been defined</value>
+  </data>
   <data name="ValidationInvalidEndChar" xml:space="preserve">
     <value>Values must not end with a {0}</value>
   </data>

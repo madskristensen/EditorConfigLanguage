@@ -47,7 +47,7 @@ namespace EditorConfig
             if (string.IsNullOrWhiteSpace(line.GetText()) || parseItem?.ItemType == ItemType.Property)
             {
                 var isInRoot = !_document.ParseItems.Exists(p => p.ItemType == ItemType.Section && p.Span.Start < triggerPoint.Value);
-                var items = isInRoot ? Property.AllProperties : Property.AllProperties.Where(i => i.Text != "root");
+                var items = isInRoot ? Property.AllProperties : Property.AllProperties.Where(i => i.Text != Property.Root);
 
                 foreach (var key in items)
                     list.Add(CreateCompletion(key.Text, key.Moniker, key.Tag, key.IsSupported, key.Description));

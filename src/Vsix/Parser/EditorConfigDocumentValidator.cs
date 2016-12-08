@@ -31,7 +31,7 @@ namespace EditorConfig
         {
             if (ParseItems.Exists(p => p.ItemType == ItemType.Section && p.Span.Start < item.Span.Start && p.Text == item.Text))
             {
-                item.AddError(string.Format("A section with the value \"{0}\" has already been defined", item.Text));
+                item.AddError(string.Format(Resources.Text.ValidationDuplicateSection, item.Text));
             }
         }
 
@@ -73,7 +73,7 @@ namespace EditorConfig
             {
                 item.AddError(string.Format(Resources.Text.ValidateUnknownKeyword, item.Text));
             }
-            else if (item.Text.Equals("root", StringComparison.OrdinalIgnoreCase) && item != ParseItems.First(p => p.ItemType != ItemType.Comment))
+            else if (item.Text.Equals(Property.Root, StringComparison.OrdinalIgnoreCase) && item != ParseItems.First(p => p.ItemType != ItemType.Comment))
             {
                 item.AddError(Resources.Text.ValidationRootInSection);
             }
@@ -82,7 +82,7 @@ namespace EditorConfig
                 var children = item.Parent.Children.Where(c => c.Span.Start < item.Span.Start);
                 if (children.Any(c => c.Text.Equals(item.Text, StringComparison.OrdinalIgnoreCase)))
                 {
-                    item.AddError("Duplicate property");
+                    item.AddError(Resources.Text.ValidationDuplicateProperty);
                 }
             }
         }

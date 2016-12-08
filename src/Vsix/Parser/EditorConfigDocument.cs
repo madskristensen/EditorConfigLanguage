@@ -34,7 +34,7 @@ namespace EditorConfig
                 var prop = ParseItems.FirstOrDefault(p => p.ItemType != ItemType.Comment);
                 var value = ParseItems.FirstOrDefault(p => p.Span.Start > prop?.Span.Start);
 
-                return string.Equals(prop?.Text, "root", StringComparison.OrdinalIgnoreCase) && string.Equals(value?.Text, "true", StringComparison.OrdinalIgnoreCase);
+                return string.Equals(prop?.Text, Property.Root, StringComparison.OrdinalIgnoreCase) && string.Equals(value?.Text, "true", StringComparison.OrdinalIgnoreCase);
             }
         }
 

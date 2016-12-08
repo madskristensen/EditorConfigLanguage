@@ -178,6 +178,24 @@ namespace EditorConfig.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The property has already been defined in this section.
+        /// </summary>
+        internal static string ValidationDuplicateProperty {
+            get {
+                return ResourceManager.GetString("ValidationDuplicateProperty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A section with the value &quot;{0}&quot; has already been defined.
+        /// </summary>
+        internal static string ValidationDuplicateSection {
+            get {
+                return ResourceManager.GetString("ValidationDuplicateSection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Values must not end with a {0}.
         /// </summary>
         internal static string ValidationInvalidEndChar {

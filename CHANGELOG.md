@@ -3,6 +3,7 @@
 - [ ] Indication of a rules that are already defined by parent .editorconfig
 - [ ] Indication of rules not matching any files
 - [ ] Validate syntax of sections
+- [x] Dark theme support
 - [x] Support for AnyCode
 - [x] Show Intellisense when severity glyph is clicked
 - [x] Validate severity used on standard properties

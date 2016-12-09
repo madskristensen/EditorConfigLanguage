@@ -68,9 +68,16 @@ namespace EditorConfig
             // Severity
             else if ((position > 0 && snapshot.Length > 1 && snapshot.GetText(position - 1, 1) == ":") || parseItem?.ItemType == ItemType.Severity)
             {
-                var prop = Property.FromName(prev?.Prev.Text);
-                if (prop != null && prop.SupportsSeverity)
+                if (parseItem?.ItemType == ItemType.Severity)
+                {
                     AddSeverity(list);
+                }
+                else
+                {
+                    var prop = Property.FromName(prev?.Prev.Text);
+                    if (prop != null && prop.SupportsSeverity)
+                        AddSeverity(list);
+                }
             }
 
             if (!list.Any())

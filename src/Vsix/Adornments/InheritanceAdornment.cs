@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.Shell;
+﻿using Microsoft.VisualStudio.PlatformUI;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using System;
@@ -9,19 +10,13 @@ using System.Windows.Threading;
 
 namespace EditorConfig
 {
-    class InheritanceAdornment
+    class InheritanceAdornment : StackPanel
     {
         private IAdornmentLayer _adornmentLayer;
-        private Panel _adornment = new StackPanel();
         private EditorConfigDocument _document;
-        private ITextDocumentFactoryService _documentService;
 
-        public InheritanceAdornment(IWpfTextView view, ITextDocumentFactoryService documentService)
+        public InheritanceAdornment(IWpfTextView view, ITextDocument doc)
         {
-            if (!documentService.TryGetTextDocument(view.TextBuffer, out ITextDocument doc))
-                return;
-
-            _documentService = documentService;
             _adornmentLayer = view.GetAdornmentLayer(InheritanceAdornmentLayer.LayerName);
             _document = EditorConfigDocument.FromTextBuffer(view.TextBuffer);
 
@@ -34,7 +29,7 @@ namespace EditorConfig
             view.ViewportWidthChanged += SetAdornmentLocation;
 
             if (_adornmentLayer.IsEmpty)
-                _adornmentLayer.AddAdornment(AdornmentPositioningBehavior.ViewportRelative, null, null, _adornment, null);
+                _adornmentLayer.AddAdornment(AdornmentPositioningBehavior.ViewportRelative, null, null, this, null);
         }
 
         private void InheritanceUpdated(object sender, EventArgs e)
@@ -55,34 +50,30 @@ namespace EditorConfig
 
         private void CreateImage()
         {
-            _adornment.Children.Clear();
+            Children.Clear();
 
             var parent = _document.InheritsFrom(out string parentFileName);
             var parentsCount = 0;
 
             if (parent != null)
             {
-                var inherits = new TextBlock()
+                var inherits = new ThemedTextBlock()
                 {
                     Text = "Inherits from",
                     FontSize = 22,
-                    Foreground = Brushes.Gray,
-                    Opacity = 0.5,
                 };
 
-                inherits.SetValue(TextOptions.TextRenderingModeProperty, TextRenderingMode.Aliased);
-                inherits.SetValue(TextOptions.TextFormattingModeProperty, TextFormattingMode.Ideal);
-                _adornment.Children.Add(inherits);
+                Children.Add(inherits);
             }
 
             while (parent != null)
             {
                 CreateInheritance(parentFileName, parentsCount);
-                parentsCount += 4;
+                parentsCount += 3;
                 parent = parent.InheritsFrom(out parentFileName);
             }
 
-            _adornment.UpdateLayout();
+            UpdateLayout();
 
             ThreadHelper.Generic.BeginInvoke(DispatcherPriority.ApplicationIdle, () =>
             {
@@ -99,40 +90,47 @@ namespace EditorConfig
 
             var relative = PackageUtilities.MakeRelative(fileName, parentFileName);
 
-            var inherits = new TextBlock()
+            var inherits = new ThemedTextBlock()
             {
                 Text = ("└─  " + relative).PadLeft(relative.Length + 4 + padding),// "→ " + relative, 
                 FontSize = 16,
-                Foreground = Brushes.Gray,
-                Opacity = 0.5,
                 Cursor = Cursors.Hand,
                 ToolTip = "Click to open " + parentFileName,
                 Margin = new System.Windows.Thickness(0, 3, 0, 0),
             };
 
-            inherits.SetValue(TextOptions.TextRenderingModeProperty, TextRenderingMode.Aliased);
-            inherits.SetValue(TextOptions.TextFormattingModeProperty, TextFormattingMode.Ideal);
             inherits.MouseLeftButtonDown += (s, e) =>
             {
                 e.Handled = true;
                 VsHelpers.DTE.ItemOperations.OpenFile(parentFileName);
             };
 
-            _adornment.Children.Add(inherits);
+            Children.Add(inherits);
+        }
+
+        private class ThemedTextBlock : TextBlock
+        {
+            public ThemedTextBlock()
+            {
+                Opacity = 0.5;
+                SetValue(TextOptions.TextRenderingModeProperty, TextRenderingMode.Aliased);
+                SetValue(TextOptions.TextFormattingModeProperty, TextFormattingMode.Ideal);
+                SetResourceReference(TextBlock.ForegroundProperty, EnvironmentColors.SystemMenuTextBrushKey);
+            }
         }
 
         private void SetAdornmentLocation(object sender, EventArgs e)
         {
-            if (_adornment.ActualWidth == 0)
+            if (ActualWidth == 0)
             {
-                Canvas.SetLeft(_adornment, 9999);
-                Canvas.SetTop(_adornment, 9999);
+                Canvas.SetLeft(this, 9999);
+                Canvas.SetTop(this, 9999);
             }
             else
             {
                 IWpfTextView view = _adornmentLayer.TextView;
-                Canvas.SetLeft(_adornment, view.ViewportRight - _adornment.ActualWidth - 20);
-                Canvas.SetTop(_adornment, view.ViewportBottom - _adornment.ActualHeight - 20);
+                Canvas.SetLeft(this, view.ViewportRight - ActualWidth - 20);
+                Canvas.SetTop(this, view.ViewportBottom - ActualHeight - 20);
             }
         }
 

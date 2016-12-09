@@ -8,22 +8,22 @@ namespace EditorConfig
 {
     internal sealed class SeverityAdornmentTagger : IntraTextAdornmentTagger<SeverityTag, SeverityAdornment>
     {
+        private ITagAggregator<SeverityTag> _tagger;
+
+        private SeverityAdornmentTagger(IWpfTextView view, ITagAggregator<SeverityTag> taggeragger)
+        : base(view)
+        {
+            _tagger = taggeragger;
+        }
+
         internal static ITagger<IntraTextAdornmentTag> GetTagger(IWpfTextView view, Lazy<ITagAggregator<SeverityTag>> colorTagger)
         {
             return view.Properties.GetOrCreateSingletonProperty(() => new SeverityAdornmentTagger(view, colorTagger.Value));
         }
 
-        private ITagAggregator<SeverityTag> _severityTagger;
-
-        private SeverityAdornmentTagger(IWpfTextView view, ITagAggregator<SeverityTag> alertTagger)
-        : base(view)
-        {
-            _severityTagger = alertTagger;
-        }
-
         public void Dispose()
         {
-            _severityTagger.Dispose();
+            _tagger.Dispose();
 
             view.Properties.RemoveProperty(typeof(SeverityAdornmentTagger));
         }
@@ -38,7 +38,7 @@ namespace EditorConfig
 
             ITextSnapshot snapshot = spans[0].Snapshot;
 
-            var tags = _severityTagger.GetTags(spans);
+            var tags = _tagger.GetTags(spans);
 
             foreach (IMappingTagSpan<SeverityTag> dataTagSpan in tags)
             {

@@ -10,7 +10,7 @@ namespace EditorConfig
     {
         private static IEnumerable<Tuple<string, ItemType>> _map = new[] {
                 Tuple.Create(@"(#|;).+", ItemType.Comment),
-                Tuple.Create(@"\[([^\]]+)\]", ItemType.Section),
+                Tuple.Create(@"^\s*\[([^#;]+)\]", ItemType.Section),
                 Tuple.Create(@"^([^=]+)\b(?=\=?)", ItemType.Property),
                 Tuple.Create(@"(?<=\=([\s]+)?)([^\s:]+)", ItemType.Value),
                 Tuple.Create(@"(?<==[^:]+:)[^\s]+", ItemType.Severity),

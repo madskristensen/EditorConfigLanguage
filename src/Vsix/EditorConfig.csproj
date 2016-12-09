@@ -64,7 +64,9 @@
     <Compile Include="BraceCompletion\BraceCompletionContext.cs" />
     <Compile Include="Classifier\EditorConfigClassificationTypes.cs" />
     <Compile Include="Commands\CreateEditorConfigFileAnyCode.cs" />
+    <Compile Include="Completion\CompletionElementProvider.cs" />
     <Compile Include="Completion\CompletionSourceProvider.cs" />
+    <Compile Include="Shared\TooltipControl.cs" />
     <Compile Include="Completion\FilteredCompletionSet.cs" />
     <Compile Include="LanguageService\DropDownBars.cs" />
     <Compile Include="Parser\EditorConfigDocumentInheritance.cs" />
@@ -95,7 +97,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>EditorConfigPackage.vsct</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\VsHelpers.cs" />
+    <Compile Include="Shared\VsHelpers.cs" />
     <Compile Include="Taggers\ErrorTagger.cs" />
     <Compile Include="Taggers\ErrorTaggerProvider.cs" />
     <Compile Include="Taggers\OutliningTagger.cs" />

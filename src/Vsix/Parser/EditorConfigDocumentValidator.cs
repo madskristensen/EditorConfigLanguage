@@ -63,9 +63,9 @@ namespace EditorConfig
             {
                 item.AddError(string.Format("The \"{0}\" property does not support a severity suffix", prop.Text));
             }
-            else if (!Constants.Severities.ContainsKey(item.Text))
+            else if (!Constants.SeverityMonikers.ContainsKey(item.Text))
             {
-                item.AddError(string.Format(Resources.Text.ValidationInvalidSeverity, string.Join(", ", Constants.Severities.Keys)));
+                item.AddError(string.Format(Resources.Text.ValidationInvalidSeverity, string.Join(", ", Constants.SeverityMonikers.Keys)));
             }
         }
 

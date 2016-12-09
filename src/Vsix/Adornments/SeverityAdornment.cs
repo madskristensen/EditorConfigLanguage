@@ -42,7 +42,7 @@ namespace EditorConfig
 
             string text = tag.ParseItem.Text.ToLowerInvariant();
 
-            if (Constants.Severities.ContainsKey(text))
+            if (Constants.SeverityMonikers.ContainsKey(text))
             {
                 Source = GetBitmapSource(text);
                 ToolTip = $"Severity: {text}";
@@ -53,36 +53,12 @@ namespace EditorConfig
         {
             if (!_imageCache.ContainsKey(severity))
             {
-                var moniker = Constants.Severities[severity];
-                var bitmap = GetImage(moniker, _size);
+                var moniker = Constants.SeverityMonikers[severity];
+                var bitmap = moniker.ToBitmap(_size);
                 _imageCache.Add(severity, bitmap);
             }
 
             return _imageCache[severity];
-        }
-
-        private static BitmapSource GetImage(ImageMoniker moniker, int size)
-        {
-            var shell = (IVsUIShell5)Package.GetGlobalService(typeof(SVsUIShell));
-            var backgroundColor = VsColors.GetThemedColorRgba(shell, EnvironmentColors.MainWindowButtonInactiveBorderBrushKey);
-
-            var imageAttributes = new ImageAttributes
-            {
-                Flags = (uint)_ImageAttributesFlags.IAF_RequiredFlags | unchecked((uint)_ImageAttributesFlags.IAF_Background),
-                ImageType = (uint)_UIImageType.IT_Bitmap,
-                Format = (uint)_UIDataFormat.DF_WPF,
-                Dpi = 96,
-                LogicalHeight = size,
-                LogicalWidth = size,
-                Background = backgroundColor,
-                StructSize = Marshal.SizeOf(typeof(ImageAttributes))
-            };
-
-            var service = (IVsImageService2)Package.GetGlobalService(typeof(SVsImageService));
-            IVsUIObject result = service.GetImage(moniker, imageAttributes);
-            result.get_Data(out object data);
-
-            return data as BitmapSource;
         }
     }
 }

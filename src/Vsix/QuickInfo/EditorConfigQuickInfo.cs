@@ -35,7 +35,17 @@ namespace EditorConfig
                 qiContent.Add(error);
             }
 
-            if (!string.IsNullOrEmpty(item.Description))
+            if (item.ItemType == ItemType.Property)
+            {
+                qiContent.Add(new TooltipControl(item));
+            }
+            else if (item.ItemType == ItemType.Severity && Constants.SeverityMonikers.ContainsKey(item.Text))
+            {
+                var desc = Constants.SeverityDescriptions[item.Text];
+                var moniker = Constants.SeverityMonikers[item.Text];
+                qiContent.Add(new TooltipControl(item.Text, desc, moniker));
+            }
+            else if (!string.IsNullOrEmpty(item.Description))
             {
                 qiContent.Add(item.Description);
             }

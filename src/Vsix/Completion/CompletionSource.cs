@@ -136,9 +136,9 @@ namespace EditorConfig
 
         private void AddSeverity(List<Completion4> list)
         {
-            foreach (var name in Constants.Severities.Keys)
+            foreach (var name in Constants.SeverityMonikers.Keys)
             {
-                list.Add(CreateCompletion(name, Constants.Severities[name]));
+                list.Add(CreateCompletion(name, Constants.SeverityMonikers[name]));
             }
         }
 

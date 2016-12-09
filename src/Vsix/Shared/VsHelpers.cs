@@ -2,6 +2,7 @@
 using EnvDTE80;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.ComponentModelHost;
+using Microsoft.VisualStudio.Imaging.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Text;
@@ -9,6 +10,8 @@ using Microsoft.VisualStudio.TextManager.Interop;
 using System;
 using System.ComponentModel.Composition;
 using System.IO;
+using System.Runtime.InteropServices;
+using System.Windows.Media.Imaging;
 
 namespace EditorConfig
 {
@@ -184,6 +187,31 @@ namespace EditorConfig
             {
                 dte.Commands.Raise(command.Guid, command.ID, null, null);
             }
+        }
+
+        public static BitmapSource ToBitmap(this ImageMoniker moniker, int size)
+        {
+            var shell = (IVsUIShell5)Package.GetGlobalService(typeof(SVsUIShell));
+            //var backgroundColor = VsColors.GetThemedColorRgba(shell, EnvironmentColors.MainWindowButtonActiveBorderBrushKey);
+
+            var imageAttributes = new ImageAttributes
+            {
+                //Flags = (uint)_ImageAttributesFlags.IAF_RequiredFlags | unchecked((uint)_ImageAttributesFlags.IAF_Background),
+                Flags = (uint)_ImageAttributesFlags.IAF_RequiredFlags,
+                ImageType = (uint)_UIImageType.IT_Bitmap,
+                Format = (uint)_UIDataFormat.DF_WPF,
+                Dpi = 96,
+                LogicalHeight = size,
+                LogicalWidth = size,
+                //Background = backgroundColor,
+                StructSize = Marshal.SizeOf(typeof(ImageAttributes))
+            };
+
+            var service = (IVsImageService2)Package.GetGlobalService(typeof(SVsImageService));
+            IVsUIObject result = service.GetImage(moniker, imageAttributes);
+            result.get_Data(out object data);
+
+            return data as BitmapSource;
         }
     }
 

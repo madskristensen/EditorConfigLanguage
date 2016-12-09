@@ -13,18 +13,18 @@ namespace EditorConfig
 
         public static Dictionary<string, ImageMoniker> SeverityMonikers = new Dictionary<string, ImageMoniker>
         {
-            { "none", KnownMonikers.None},
-            { "suggestion", KnownMonikers.StatusInformation},
-            { "warning", KnownMonikers.StatusWarning},
-            { "error", KnownMonikers.StatusError},
+            { "none", KnownMonikers.None },
+            { "suggestion", KnownMonikers.StatusInformation },
+            { "warning", KnownMonikers.StatusWarning },
+            { "error", KnownMonikers.StatusError },
         };
 
         public static Dictionary<string, string> SeverityDescriptions = new Dictionary<string, string>
         {
-            { "none", "Does not show as errors in the Error List, but will effect formatting"},
-            { "suggestion", "Shows up under \"Messages\" in the Error List"},
-            { "warning", "Shows up under \"Warnings\" in the Error List"},
-            { "error", "Shows up under \"Errors\" in the Error List"},
+            { "none", Resources.Text.SeverityNone },
+            { "suggestion", Resources.Text.SeveritySuggestion },
+            { "warning", Resources.Text.SeverityWarning },
+            { "error", Resources.Text.SeverityError },
         };
     }
 }

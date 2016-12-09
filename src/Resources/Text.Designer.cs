@@ -169,6 +169,42 @@ namespace EditorConfig.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Violations are marked with a red squiggle in the editor and appear under Errors in the Error List.
+        /// </summary>
+        internal static string SeverityError {
+            get {
+                return ResourceManager.GetString("SeverityError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Has no editor treatment and does not appear in Error List but affects code generation.
+        /// </summary>
+        internal static string SeverityNone {
+            get {
+                return ResourceManager.GetString("SeverityNone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Violations are dotted in the editor and appear under Messages in Error List.
+        /// </summary>
+        internal static string SeveritySuggestion {
+            get {
+                return ResourceManager.GetString("SeveritySuggestion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Violations are marked with a green squiggle in the editor and appear under Warnings in the Error List.
+        /// </summary>
+        internal static string SeverityWarning {
+            get {
+                return ResourceManager.GetString("SeverityWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The keyword &quot;{0}&quot; is unknown.
         /// </summary>
         internal static string ValidateUnknownKeyword {

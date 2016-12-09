@@ -153,6 +153,18 @@
   <data name="NotSupportedByVS" xml:space="preserve">
     <value>Not supported by Visual Studio</value>
   </data>
+  <data name="SeverityError" xml:space="preserve">
+    <value>Violations are marked with a red squiggle in the editor and appear under Errors in the Error List</value>
+  </data>
+  <data name="SeverityNone" xml:space="preserve">
+    <value>Has no editor treatment and does not appear in Error List but affects code generation</value>
+  </data>
+  <data name="SeveritySuggestion" xml:space="preserve">
+    <value>Violations are dotted in the editor and appear under Messages in Error List</value>
+  </data>
+  <data name="SeverityWarning" xml:space="preserve">
+    <value>Violations are marked with a green squiggle in the editor and appear under Warnings in the Error List</value>
+  </data>
   <data name="ValidateUnknownKeyword" xml:space="preserve">
     <value>The keyword "{0}" is unknown</value>
   </data>

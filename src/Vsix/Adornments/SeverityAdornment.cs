@@ -45,7 +45,6 @@ namespace EditorConfig
             if (Constants.SeverityMonikers.ContainsKey(text))
             {
                 Source = GetBitmapSource(text);
-                ToolTip = $"Severity: {text}";
             }
         }
 

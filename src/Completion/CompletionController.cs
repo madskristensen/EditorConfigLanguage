@@ -70,20 +70,20 @@ namespace EditorConfig
                             {
                                 StartSession();
                             }
-                            if (ch == ':')
+                            else if (ch == ':')
                             {
                                 Cancel();
                                 StartSession();
                             }
-                            else if (_currentSession != null)
-                            {
-                                Filter();
-                            }
+                            //else if (_currentSession != null)
+                            //{
+                            //    Filter();
+                            //}
                             break;
-                        case VSConstants.VSStd2KCmdID.BACKSPACE:
-                        case VSConstants.VSStd2KCmdID.DELETE:
-                            Filter();
-                            break;
+                        //case VSConstants.VSStd2KCmdID.BACKSPACE:
+                        //case VSConstants.VSStd2KCmdID.DELETE:
+                        //    Filter();
+                        //    break;
                     }
                 }
             }

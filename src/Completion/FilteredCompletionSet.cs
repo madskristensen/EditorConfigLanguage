@@ -10,7 +10,7 @@ namespace EditorConfig
     {
         public FilteredObservableCollection<Completion> currentCompletions;
         private BulkObservableCollection<Completion> _completions = new BulkObservableCollection<Completion>();
-        public List<string> _filterBufferText = new List<string>();
+        public List<string> _activeFilters = new List<string>();
         private string _typed;
 
         public FilteredCompletionSet(ITrackingSpan applicableTo, IEnumerable<Completion> completions, IEnumerable<Completion> completionBuilders, IReadOnlyList<IIntellisenseFilter> filters)
@@ -25,36 +25,42 @@ namespace EditorConfig
             get { return currentCompletions; }
         }
 
+        public override void Filter()
+        {
+            // This is handled in SelectBestMatch
+        }
+
         public override void SelectBestMatch()
         {
             _typed = ApplicableTo.GetText(ApplicableTo.TextBuffer.CurrentSnapshot);
+            var currentActiveFilters = Filters;
 
-            if (Filters != null && Filters.Any())
+            if (currentActiveFilters != null && currentActiveFilters.Count > 0)
             {
-                var enabledFilters = Filters.Where(f => f.IsChecked).Select(f => f.AutomationText);
+                var activeFilters = currentActiveFilters.Where(f => f.IsChecked).Select(f => f.AutomationText);
 
-                if (!enabledFilters.Any())
-                    enabledFilters = Filters.Select(f => f.AutomationText);
+                if (!activeFilters.Any())
+                    activeFilters = currentActiveFilters.Select(f => f.AutomationText);
 
-                _filterBufferText.Clear();
-                _filterBufferText.AddRange(enabledFilters);
+                _activeFilters.Clear();
+                _activeFilters.AddRange(activeFilters);
 
                 currentCompletions.Filter(new Predicate<Completion>(DoesCompletionMatchAutomationText));
             }
 
-            base.SelectBestMatch();
+            SelectBestMatch(CompletionMatchType.MatchDisplayText, false);
         }
 
         private bool DoesCompletionMatchAutomationText(Completion completion)
         {
-            return _filterBufferText.Exists(x =>
+            return _activeFilters.Exists(x =>
                 x.Equals(completion.IconAutomationText, StringComparison.OrdinalIgnoreCase)) &&
-                completion.DisplayText.Contains(_typed);
+                completion.DisplayText.IndexOf(_typed, StringComparison.OrdinalIgnoreCase) > -1;
         }
 
         public override IReadOnlyList<Span> GetHighlightedSpansInDisplayText(string displayText)
         {
-            int index = displayText.IndexOf(_typed, 0);
+            int index = displayText.IndexOf(_typed, 0, StringComparison.OrdinalIgnoreCase);
 
             if (index > -1 && displayText.Length >= index + _typed.Length)
             {

@@ -14,7 +14,7 @@ namespace EditorConfig
             TextBuffer.Changed += BufferChangedAsync;
 
             VsHelpers.SatisfyImportsOnce(this);
-            ThreadHelper.JoinableTaskFactory.RunAsync(() => ParseAsync());
+            var tsak = ParseAsync();
         }
 
         private async void BufferChangedAsync(object sender, EventArgs e)

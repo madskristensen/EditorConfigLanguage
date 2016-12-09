@@ -18,11 +18,11 @@ namespace EditorConfig
 
         public bool IsParsing { get; private set; }
 
-        private async System.Threading.Tasks.Task ParseAsync()
+        private  System.Threading.Tasks.Task ParseAsync()
         {
             IsParsing = true;
 
-            await System.Threading.Tasks.Task.Run(() =>
+            return System.Threading.Tasks.Task.Run(() =>
             {
                 var items = new List<ParseItem>();
                 ParseItem parent = null;

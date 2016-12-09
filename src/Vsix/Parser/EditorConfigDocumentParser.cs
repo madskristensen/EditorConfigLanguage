@@ -42,6 +42,14 @@ namespace EditorConfig
 
                             var textValue = matchSpan.GetText();
                             var item = new ParseItem(tuple.Item2, matchSpan, textValue);
+                            var prev = items.LastOrDefault();
+
+                            if (prev != null)
+                            {
+                                item.Prev = prev;
+                                prev.Next = item;
+                            }
+
                             items.Add(item);
 
                             if (parent != null && item.ItemType != ItemType.Section && item.ItemType != ItemType.Comment)

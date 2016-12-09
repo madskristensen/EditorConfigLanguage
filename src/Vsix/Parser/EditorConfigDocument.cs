@@ -13,16 +13,16 @@ namespace EditorConfig
         private EditorConfigDocument(ITextBuffer buffer)
         {
             _buffer = buffer;
-            _buffer.PostChanged += BufferPostChangedAsync;
+            _buffer.Changed += BufferPostChangedAsync;
 
             VsHelpers.SatisfyImportsOnce(this);
 
-            ThreadHelper.JoinableTaskFactory.Run(() => ParseAsync());
+            ThreadHelper.JoinableTaskFactory.RunAsync(() => ParseAsync());
         }
 
         private void BufferPostChangedAsync(object sender, EventArgs e)
         {
-            ThreadHelper.JoinableTaskFactory.Run(() => ParseAsync());
+            ThreadHelper.JoinableTaskFactory.RunAsync(() => ParseAsync());
         }
 
         public List<ParseItem> ParseItems { get; } = new List<ParseItem>();

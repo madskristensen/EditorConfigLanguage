@@ -21,7 +21,7 @@ namespace EditorConfig
 
         public string Description
         {
-            get { return Property.GetCompletionItem(Text)?.Description; }
+            get { return Property.FromName(Text)?.Description; }
         }
 
         public List<string> Errors { get; } = new List<string>();
@@ -29,6 +29,10 @@ namespace EditorConfig
         public List<ParseItem> Children { get; } = new List<ParseItem>();
 
         public ParseItem Parent { get; set; }
+
+        public ParseItem Next { get; set; }
+
+        public ParseItem Prev { get; set; }
 
         public void AddError(string errorMessage)
         {

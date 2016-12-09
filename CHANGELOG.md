@@ -4,6 +4,8 @@
 - [ ] Indication of rules not matching any files
 - [x] Support for AnyCode
 - [x] Show Intellisense when severity glyph is clicked
+- [x] Validate severity used on standard properties
+- [x] Hide severity completion from standard properties
 
 Features that have a checkmark are complete and available for
 download in the

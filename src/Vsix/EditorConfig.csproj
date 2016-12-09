@@ -72,7 +72,6 @@
     <Compile Include="Parser\EditorConfigDocument.cs" />
     <Compile Include="Parser\EditorConfigDocumentValidator.cs" />
     <Compile Include="Parser\ParseItem.cs" />
-    <Compile Include="Parser\Parser.cs" />
     <Compile Include="SuggestedActions\Actions\BaseSuggestedAction.cs" />
     <Compile Include="SuggestedActions\Actions\DeleteSectionAction.cs" />
     <Compile Include="SuggestedActions\SuggestedActionsSource.cs" />

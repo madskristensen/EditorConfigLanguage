@@ -37,8 +37,7 @@ namespace EditorConfig
 
         private void ValidateValue(ParseItem item)
         {
-            var prev = ParseItems.LastOrDefault(p => p.Span.Start < item.Span.Start);
-            var comp = Property.GetCompletionItem(prev?.Text);
+            var comp = Property.FromName(item.Prev?.Text);
 
             if (comp != null &&
                 !comp.Values.Contains(item.Text, StringComparer.OrdinalIgnoreCase) &&
@@ -47,12 +46,9 @@ namespace EditorConfig
                 item.AddError(string.Format(Resources.Text.InvalidValue, item.Text, comp.Text));
             }
 
-            if (item.Text.Equals("true", StringComparison.OrdinalIgnoreCase) &&
-               (prev.Text.StartsWith("csharp_") || prev.Text.StartsWith("dotnet_")))
+            if (item.Text.Equals("true", StringComparison.OrdinalIgnoreCase) && comp != null && comp.SupportsSeverity)
             {
-                var next = ParseItems.FirstOrDefault(p => p.Span.Start > item.Span.Start);
-
-                if (next == null || next.ItemType != ItemType.Severity)
+                if (item.Next == null || item.Next.ItemType != ItemType.Severity)
                 {
                     item.AddError(Resources.Text.ValidationMissingSeverity);
                 }
@@ -61,7 +57,13 @@ namespace EditorConfig
 
         private void ValidateSeverity(ParseItem item)
         {
-            if (!Constants.Severities.ContainsKey(item.Text))
+            var prop = Property.FromName(item.Prev?.Prev?.Text);
+
+            if (prop != null && !prop.SupportsSeverity)
+            {
+                item.AddError(string.Format("The \"{0}\" property does not support a severity suffix", prop.Text));
+            }
+            else if (!Constants.Severities.ContainsKey(item.Text))
             {
                 item.AddError(string.Format(Resources.Text.ValidationInvalidSeverity, string.Join(", ", Constants.Severities.Keys)));
             }
@@ -69,7 +71,7 @@ namespace EditorConfig
 
         private void ValidateKeyword(ParseItem item)
         {
-            if (Property.GetCompletionItem(item.Text) == null)
+            if (Property.FromName(item.Text) == null)
             {
                 item.AddError(string.Format(Resources.Text.ValidateUnknownKeyword, item.Text));
             }

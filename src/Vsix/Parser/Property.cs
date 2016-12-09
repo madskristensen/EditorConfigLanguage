@@ -51,7 +51,7 @@ namespace EditorConfig
             {new Property("dotnet_style_qualification_for_method", true, "Prefer this for methods.", KnownMonikers.DotNET, "true", "false")},
             {new Property("dotnet_style_qualification_for_property", true, "Prefer this for properties.", KnownMonikers.DotNET, "true", "false")},
         };
-
+        
         private Property(string name, bool isSupported, string description, ImageMoniker moniker, params string[] values)
         {
             Text = name;
@@ -73,7 +73,7 @@ namespace EditorConfig
             get { return _cache; }
         }
 
-        public static Property GetCompletionItem(string name)
+        public static Property FromName(string name)
         {
             return _cache.SingleOrDefault(c => c.Text.Equals(name, StringComparison.OrdinalIgnoreCase));
         }
@@ -84,5 +84,12 @@ namespace EditorConfig
         public bool IsSupported { get; set; }
         public ImageMoniker Moniker { get; set; }
         public string Tag { get; set; }
+        public bool SupportsSeverity
+        {
+            get
+            {
+                return Text.StartsWith("csharp_", StringComparison.OrdinalIgnoreCase) || Text.StartsWith("dotnet_", StringComparison.OrdinalIgnoreCase);
+            }
+        }
     }
 }

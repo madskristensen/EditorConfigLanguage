@@ -27,7 +27,7 @@ namespace EditorConfig
 
         public void AugmentCompletionSession(ICompletionSession session, IList<CompletionSet> completionSets)
         {
-            if (_disposed)
+            if (_disposed || _document.IsParsing)
                 return;
 
             ITextSnapshot snapshot = _buffer.CurrentSnapshot;
@@ -38,37 +38,44 @@ namespace EditorConfig
 
             var line = triggerPoint.Value.GetContainingLine().Extent;
             var list = new List<Completion4>();
-            var applicableTo = snapshot.CreateTrackingSpan(triggerPoint.Value.Position, 0, SpanTrackingMode.EdgeInclusive);
             var position = triggerPoint.Value.Position;
+            var applicableTo = snapshot.CreateTrackingSpan(position, 0, SpanTrackingMode.EdgeInclusive);
 
-            var parseItem = _document.ItemAtPosition(triggerPoint.Value);
+            var parseItem = _document.ItemAtPosition(position);
             var prev = _document.ParseItems.LastOrDefault(p => p.Span.Start < position && !p.Span.Contains(position));
 
+            // Property
             if (string.IsNullOrWhiteSpace(line.GetText()) || parseItem?.ItemType == ItemType.Property)
             {
-                var isInRoot = !_document.ParseItems.Exists(p => p.ItemType == ItemType.Section && p.Span.Start < triggerPoint.Value);
+                var isInRoot = !_document.ParseItems.Exists(p => p.ItemType == ItemType.Section && p.Span.Start < position);
                 var items = isInRoot ? Property.AllProperties : Property.AllProperties.Where(i => i.Text != Property.Root);
 
                 foreach (var key in items)
                     list.Add(CreateCompletion(key.Text, key.Moniker, key.Tag, key.IsSupported, key.Description));
             }
+
+            // Value
             else if (parseItem?.ItemType == ItemType.Value)
             {
-                Property item = Property.GetCompletionItem(prev.Text);
+                Property item = Property.FromName(prev.Text);
                 if (item != null)
                 {
                     foreach (var value in item.Values)
                         list.Add(CreateCompletion(value, KnownMonikers.EnumerationItemPublic));
                 }
             }
+
+            // Severity
             else if ((position > 0 && snapshot.Length > 1 && snapshot.GetText(position - 1, 1) == ":") || parseItem?.ItemType == ItemType.Severity)
             {
-                AddSeverity(list);
+                var prop = Property.FromName(prev?.Prev.Text);
+                if (prop != null && prop.SupportsSeverity)
+                    AddSeverity(list);
             }
 
             if (!list.Any())
             {
-                var item = Property.GetCompletionItem(prev?.Text);
+                var item = Property.FromName(prev?.Text);
 
                 if (item != null)
                 {

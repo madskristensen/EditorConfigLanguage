@@ -28,11 +28,7 @@ namespace EditorConfig
 
         private void Clicked(object sender, MouseButtonEventArgs e)
         {
-            var command = VsHelpers.DTE.Commands.Item("Edit.ListMembers");
-            if (command.IsAvailable)
-            {
-                VsHelpers.DTE.Commands.Raise(command.Guid, command.ID, null, null);
-            }
+            VsHelpers.DTE.ExecuteCommandSafe("Edit.ListMembers");
         }
 
         internal void Update(SeverityTag tag)

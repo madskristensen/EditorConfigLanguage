@@ -8,22 +8,21 @@ namespace EditorConfig
 {
     partial class EditorConfigDocument
     {
-        private ITextBuffer _buffer;
-        
         private EditorConfigDocument(ITextBuffer buffer)
         {
-            _buffer = buffer;
-            _buffer.Changed += BufferPostChangedAsync;
+            TextBuffer = buffer;
+            TextBuffer.Changed += BufferChangedAsync;
 
             VsHelpers.SatisfyImportsOnce(this);
-
             ThreadHelper.JoinableTaskFactory.RunAsync(() => ParseAsync());
         }
 
-        private void BufferPostChangedAsync(object sender, EventArgs e)
+        private async void BufferChangedAsync(object sender, EventArgs e)
         {
-            ThreadHelper.JoinableTaskFactory.RunAsync(() => ParseAsync());
+            await ParseAsync();
         }
+
+        public ITextBuffer TextBuffer { get; }
 
         public List<ParseItem> ParseItems { get; } = new List<ParseItem>();
 

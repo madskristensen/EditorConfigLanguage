@@ -27,7 +27,7 @@ namespace EditorConfig
                 var items = new List<ParseItem>();
                 ParseItem parent = null;
 
-                foreach (var line in _buffer.CurrentSnapshot.Lines)
+                foreach (var line in TextBuffer.CurrentSnapshot.Lines)
                 {
                     string text = line.GetText();
 

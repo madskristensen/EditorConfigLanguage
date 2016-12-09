@@ -21,7 +21,7 @@ namespace EditorConfig
             if (IsRoot)
                 return null;
 
-            _fileName = _fileName ?? _buffer.GetFileName();
+            _fileName = _fileName ?? TextBuffer.GetFileName();
 
             if (!File.Exists(_fileName))
                 return null;

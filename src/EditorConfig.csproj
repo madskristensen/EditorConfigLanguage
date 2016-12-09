@@ -7,6 +7,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <UseCodebase>true</UseCodebase>
+    <Ngen>true</Ngen>
   </PropertyGroup>
   <PropertyGroup>
     <StartAction>Program</StartAction>

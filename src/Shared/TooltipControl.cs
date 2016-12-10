@@ -9,11 +9,14 @@ namespace EditorConfig
     {
         private const int _iconSize = 14;
 
-        internal TooltipControl(ParseItem item) : this(Property.FromName(item.Text))
+        internal TooltipControl(ISchemaItem item) : this(item.Name, item.Description, item.Moniker)
         { }
 
-        internal TooltipControl(Property item) : this(item?.Text, item?.Description, item.Moniker)
-        { }
+        //internal TooltipControl(ParseItem item) : this(Property.FromName(item.Text))
+        //{ }
+
+        //internal TooltipControl(Property item) : this(item?.Name, item?.Description, item.Moniker)
+        //{ }
 
         internal TooltipControl(string name, string description, ImageMoniker moniker)
         {
@@ -36,6 +39,8 @@ namespace EditorConfig
             {
                 Text = description,
                 Margin = new Thickness(0, 4, 0, 0),
+                MaxWidth = 500,
+                TextWrapping = TextWrapping.Wrap,
             };
             descBlock.SetResourceReference(TextBlock.ForegroundProperty, EnvironmentColors.SystemMenuTextBrushKey);
             return descBlock;

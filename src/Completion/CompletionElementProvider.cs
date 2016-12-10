@@ -17,13 +17,14 @@ namespace EditorConfig
         {
             if (elementType == UIElementType.Tooltip)
             {
-                var prop = Property.FromName(itemToRender.DisplayText);
-                return new TooltipControl(prop);
+                if (SchemaCatalog.TryGetProperty(itemToRender.DisplayText, out Property prop))
+                    return new TooltipControl(prop);
+
+                if (SchemaCatalog.TryGetSeverity(itemToRender.DisplayText, out Severity severity))
+                    return new TooltipControl(severity);
             }
-            else
-            {
-                return null;
-            }
+
+            return null;
         }
     }
 }

@@ -35,19 +35,13 @@ namespace EditorConfig
                 qiContent.Add(error);
             }
 
-            if (item.ItemType == ItemType.Property)
+            if (item.ItemType == ItemType.Property && SchemaCatalog.TryGetProperty(item.Text, out Property property))
             {
-                qiContent.Add(new TooltipControl(item));
+                qiContent.Add(new TooltipControl(property));
             }
-            else if (item.ItemType == ItemType.Severity && Constants.SeverityMonikers.ContainsKey(item.Text))
+            else if (item.ItemType == ItemType.Severity && SchemaCatalog.TryGetSeverity(item.Text, out Severity severity))
             {
-                var desc = Constants.SeverityDescriptions[item.Text];
-                var moniker = Constants.SeverityMonikers[item.Text];
-                qiContent.Add(new TooltipControl(item.Text, desc, moniker));
-            }
-            else if (!string.IsNullOrEmpty(item.Description))
-            {
-                qiContent.Add(item.Description);
+                qiContent.Add(new TooltipControl(severity));
             }
 
             applicableToSpan = point.Value.Snapshot.CreateTrackingSpan(item.Span, SpanTrackingMode.EdgeNegative);

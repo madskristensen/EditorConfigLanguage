@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -36,23 +38,22 @@ namespace EditorConfig
                 return;
 
             string text = tag.ParseItem.Text.ToLowerInvariant();
-
-            if (Constants.SeverityMonikers.ContainsKey(text))
+            var severity = SchemaCatalog.Severities.SingleOrDefault(s => s.Name.Equals(text, StringComparison.OrdinalIgnoreCase));
+            if (severity != null)
             {
-                Source = GetBitmapSource(text);
+                Source = GetBitmapSource(severity);
             }
         }
 
-        private static BitmapSource GetBitmapSource(string severity)
+        private static BitmapSource GetBitmapSource(Severity severity)
         {
-            if (!_imageCache.ContainsKey(severity))
+            if (!_imageCache.ContainsKey(severity.Name))
             {
-                var moniker = Constants.SeverityMonikers[severity];
-                var bitmap = moniker.ToBitmap(_size);
-                _imageCache.Add(severity, bitmap);
+                var bitmap = severity.Moniker.ToBitmap(_size);
+                _imageCache.Add(severity.Name, bitmap);
             }
 
-            return _imageCache[severity];
+            return _imageCache[severity.Name];
         }
     }
 }

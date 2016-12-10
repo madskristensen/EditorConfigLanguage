@@ -17,12 +17,12 @@ namespace EditorConfig
         
         public ItemType ItemType { get; set; }
 
-        public string Text { get; set; }
+        public string Text { get; set; } 
 
-        public string Description
-        {
-            get { return Property.FromName(Text)?.Description; }
-        }
+        //public string Description
+        //{
+        //    get { return Property.FromName(Text)?.Description; }
+        //}
 
         public List<string> Errors { get; } = new List<string>();
 

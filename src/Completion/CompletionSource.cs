@@ -48,17 +48,16 @@ namespace EditorConfig
             if (string.IsNullOrWhiteSpace(line.GetText()) || parseItem?.ItemType == ItemType.Property)
             {
                 var isInRoot = !_document.ParseItems.Exists(p => p.ItemType == ItemType.Section && p.Span.Start < position);
-                var items = isInRoot ? Property.AllProperties : Property.AllProperties.Where(i => i.Text != Property.Root);
+                var items = isInRoot ? SchemaCatalog.Properties : SchemaCatalog.Properties.Where(i => i.Name != SchemaCatalog.Root);
 
                 foreach (var key in items)
-                    list.Add(CreateCompletion(key.Text, key.Moniker, key.Tag, key.IsSupported, key.Description));
+                    list.Add(CreateCompletion(key.Name, key.Moniker, key.Tag, key.IsSupported, key.Description));
             }
 
             // Value
             else if (parseItem?.ItemType == ItemType.Value)
             {
-                Property item = Property.FromName(prev.Text);
-                if (item != null)
+                if (SchemaCatalog.TryGetProperty(prev.Text, out Property item))
                 {
                     foreach (var value in item.Values)
                         list.Add(CreateCompletion(value, KnownMonikers.EnumerationItemPublic));
@@ -74,17 +73,14 @@ namespace EditorConfig
                 }
                 else
                 {
-                    var prop = Property.FromName(prev?.Prev.Text);
-                    if (prop != null && prop.SupportsSeverity)
+                    if (SchemaCatalog.TryGetProperty(prev?.Prev.Text, out Property prop) && prop.SupportsSeverity)
                         AddSeverity(list);
                 }
             }
 
             if (!list.Any())
             {
-                var item = Property.FromName(prev?.Text);
-
-                if (item != null)
+                if (SchemaCatalog.TryGetProperty(prev?.Text, out Property property))
                 {
                     var eq = line.GetText().IndexOf("=");
 
@@ -93,7 +89,7 @@ namespace EditorConfig
                         var eqPos = eq + line.Start.Position;
 
                         if (triggerPoint.Value.Position > eqPos)
-                            foreach (var value in item.Values)
+                            foreach (var value in property.Values)
                                 list.Add(CreateCompletion(value, KnownMonikers.EnumerationItemPublic));
                     }
                 }
@@ -136,9 +132,9 @@ namespace EditorConfig
 
         private void AddSeverity(List<Completion4> list)
         {
-            foreach (var name in Constants.SeverityMonikers.Keys)
+            foreach (var severity in SchemaCatalog.Severities)
             {
-                list.Add(CreateCompletion(name, Constants.SeverityMonikers[name]));
+                list.Add(CreateCompletion(severity.Name, severity.Moniker, description: severity.Description));
             }
         }
 

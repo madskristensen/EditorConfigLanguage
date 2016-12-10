@@ -241,7 +241,7 @@ namespace EditorConfig.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Severity is invalid. Must be one of these values: {0}.
+        ///   Looks up a localized string similar to &quot;{0}&quot; is not a valid value for severity.
         /// </summary>
         internal static string ValidationInvalidSeverity {
             get {

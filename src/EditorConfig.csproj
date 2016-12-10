@@ -67,6 +67,9 @@
     <Compile Include="Commands\CreateEditorConfigFileAnyCode.cs" />
     <Compile Include="Completion\CompletionElementProvider.cs" />
     <Compile Include="Completion\CompletionSourceProvider.cs" />
+    <Compile Include="Schema\ISchemaItem.cs" />
+    <Compile Include="Schema\SchemaCatalog.cs" />
+    <Compile Include="Schema\Severity.cs" />
     <Compile Include="Shared\TooltipControl.cs" />
     <Compile Include="Completion\FilteredCompletionSet.cs" />
     <Compile Include="LanguageService\DropDownBars.cs" />
@@ -86,7 +89,7 @@
     <Compile Include="Commands\BaseCommand.cs" />
     <Compile Include="Commands\F1Help.cs" />
     <Compile Include="Commands\EditorConfigFormatter.cs" />
-    <Compile Include="Parser\Property.cs" />
+    <Compile Include="Schema\Property.cs" />
     <Compile Include="Completion\CompletionController.cs" />
     <Compile Include="Completion\CompletionSource.cs" />
     <Compile Include="Commands\CreateEditorConfigFile.cs" />

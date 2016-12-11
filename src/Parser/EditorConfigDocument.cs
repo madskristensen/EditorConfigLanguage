@@ -5,15 +5,16 @@ using System.Linq;
 
 namespace EditorConfig
 {
-    partial class EditorConfigDocument
+    partial class EditorConfigDocument : IDisposable
     {
         private EditorConfigDocument(ITextBuffer buffer)
         {
             TextBuffer = buffer;
             TextBuffer.Changed += BufferChangedAsync;
 
-            VsHelpers.SatisfyImportsOnce(this);
-            var tsak = ParseAsync();
+            InitializeValidator();
+            InitializeParser();
+            InitializeInheritance();
         }
 
         private async void BufferChangedAsync(object sender, EventArgs e)
@@ -50,6 +51,11 @@ namespace EditorConfig
         public ParseItem ItemAtPosition(int point)
         {
             return ParseItems?.FirstOrDefault(p => p.Span.Contains(point - 1));
+        }
+
+        public void Dispose()
+        {
+            DisposeValidator();
         }
     }
 }

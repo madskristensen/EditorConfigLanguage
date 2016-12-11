@@ -1,41 +1,60 @@
 ﻿using System;
 using System.Linq;
+using System.Timers;
 
 namespace EditorConfig
 {
     partial class EditorConfigDocument
     {
-        private DateTime _lastRequestForValidation;
         private const int _validationDelay = 1000;
+        private Timer _timer;
+        private bool _hasChanged;
 
-        private async System.Threading.Tasks.Task ValidateAsync()
+        private void InitializeValidator()
         {
-            _lastRequestForValidation = DateTime.Now;
-            await System.Threading.Tasks.Task.Delay(_validationDelay);
+            Parsed += DocumentParsed;
+        }
 
-            if (DateTime.Now.AddMilliseconds(-_validationDelay) < _lastRequestForValidation)
-                return;
+        private void DocumentParsed(object sender, EventArgs e)
+        {
+            _hasChanged = true;
 
+            if (_timer == null)
+            {
+                _timer = new Timer(1000);
+                _timer.Elapsed += TimerElapsed;
+            }
+
+            _timer.Enabled = true;
+        }
+
+        private void TimerElapsed(object sender, ElapsedEventArgs e)
+        {
+            _timer.Stop();
+
+            if (_hasChanged && !IsParsing)
+                Validate();
+
+            _hasChanged = false;
+        }
+
+        private void Validate()
+        {
             foreach (var item in ParseItems)
             {
                 switch (item.ItemType)
                 {
-                    case ItemType.Section:
-                        ValidateSection(item);
-                        break;
-                    case ItemType.Property:
-                        ValidateProperty(item);
-                        break;
-                    case ItemType.Value:
-                        ValidateValue(item);
-                        break;
-                    case ItemType.Severity:
-                        ValidateSeverity(item);
-                        break;
                     case ItemType.Unknown:
                         ValidateUnknown(item);
                         break;
                 }
+            }
+
+            ValidateSection();
+
+            foreach (var property in Properties)
+            {
+                ValidateProperty(property);
             }
 
             Validated?.Invoke(this, EventArgs.Empty);
@@ -45,65 +64,74 @@ namespace EditorConfig
         {
             item.AddError("Syntax error. Element not valid at current location");
         }
-
-        private void ValidateSection(ParseItem item)
+        
+        private void ValidateSection()
         {
-            if (ParseItems.Exists(p => p.ItemType == ItemType.Section && p.Span.Start < item.Span.Start && p.Text == item.Text))
+            foreach (var section in Sections)
             {
-                item.AddError(string.Format(Resources.Text.ValidationDuplicateSection, item.Text));
+                foreach (var property in section.Properties)
+                {
+                    ValidateProperty(property);
+
+                    if (section.Properties.First(p => p.Keyword.Text.Equals(property.Keyword.Text, StringComparison.OrdinalIgnoreCase)) != property)
+                        property.Keyword.AddError(Resources.Text.ValidationDuplicateProperty);
+                }
+
+                if (Sections.First(s => s.Item.Text == section.Item.Text) != section)
+                    section.Item.AddError(string.Format(Resources.Text.ValidationDuplicateSection, section.Item.Text));
             }
         }
 
-        private void ValidateValue(ParseItem item)
+        private void ValidateProperties()
         {
-            if (!SchemaCatalog.TryGetProperty(item.Prev?.Text, out Keyword comp))
-                return;
-
-            if (!comp.Values.Any(v => v.Name.Equals(item.Text, StringComparison.OrdinalIgnoreCase)) &&
-                !(int.TryParse(item.Text, out int intValue) && intValue > 0))
+            foreach (var property in Properties)
             {
-                item.AddError(string.Format(Resources.Text.InvalidValue, item.Text, comp.Name));
+                if (property != Root)
+                    property.Keyword.AddError(Resources.Text.ValidationRootInSection);
+            }
+        }
+
+        private void ValidateProperty(Property property)
+        {
+            // Keyword
+            if (!SchemaCatalog.TryGetProperty(property.Keyword.Text, out Keyword keyword))
+            {
+                property.Keyword.AddError(string.Format(Resources.Text.ValidateUnknownKeyword, property.Keyword.Text));
             }
 
-            if (item.Text.Equals("true", StringComparison.OrdinalIgnoreCase) && comp.SupportsSeverity)
+            // Value
+            else if (!keyword.Values.Any(v => v.Name.Equals(property.Value.Text, StringComparison.OrdinalIgnoreCase)) &&
+                !(int.TryParse(property.Value.Text, out int intValue) && intValue > 0))
             {
-                if (item.Next == null || item.Next.ItemType != ItemType.Severity)
+                property.Value.AddError(string.Format(Resources.Text.InvalidValue, property.Value.Text, keyword.Name));
+            }
+
+            // Severity
+            else if (property.Severity == null && property.Value.Text.Equals("true", StringComparison.OrdinalIgnoreCase) && keyword.SupportsSeverity)
+            {
+                property.Value.AddError(Resources.Text.ValidationMissingSeverity);
+            }
+            else if (property.Severity != null)
+            {
+                if (!keyword.SupportsSeverity)
                 {
-                    item.AddError(Resources.Text.ValidationMissingSeverity);
+                    property.Severity.AddError(string.Format("The \"{0}\" property does not support a severity suffix", keyword.Name));
+                }
+                else if (!SchemaCatalog.TryGetSeverity(property.Severity.Text, out Severity severity))
+                {
+                    property.Severity.AddError(string.Format(Resources.Text.ValidationInvalidSeverity, property.Severity.Text));
                 }
             }
         }
 
-        private void ValidateSeverity(ParseItem item)
+        public void DisposeValidator()
         {
-            if (SchemaCatalog.TryGetProperty(item.Prev?.Prev?.Text, out Keyword prop) && !prop.SupportsSeverity)
+            if (_timer != null)
             {
-                item.AddError(string.Format("The \"{0}\" property does not support a severity suffix", prop.Name));
+                _timer.Dispose();
             }
-            else if (!SchemaCatalog.TryGetSeverity(item.Text, out Severity severity))
-            {
-                item.AddError(string.Format(Resources.Text.ValidationInvalidSeverity, item.Text));
-            }
-        }
 
-        private void ValidateProperty(ParseItem item)
-        {
-            if (!SchemaCatalog.TryGetProperty(item.Text, out Keyword prop))
-            {
-                item.AddError(string.Format(Resources.Text.ValidateUnknownKeyword, item.Text));
-            }
-            else if (item.Text.Equals(SchemaCatalog.Root, StringComparison.OrdinalIgnoreCase) && item != ParseItems.First(p => p.ItemType != ItemType.Comment))
-            {
-                item.AddError(Resources.Text.ValidationRootInSection);
-            }
-            else if (item.Parent != null)
-            {
-                var children = item.Parent.Children.Where(c => c.Span.Start < item.Span.Start);
-                if (children.Any(c => c.Text.Equals(item.Text, StringComparison.OrdinalIgnoreCase)))
-                {
-                    item.AddError(Resources.Text.ValidationDuplicateProperty);
-                }
-            }
+            Validated = null;
         }
 
         public event EventHandler Validated;

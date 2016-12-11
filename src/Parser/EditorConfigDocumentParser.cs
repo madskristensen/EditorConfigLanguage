@@ -15,6 +15,11 @@ namespace EditorConfig
 
         public bool IsParsing { get; private set; }
 
+        private void InitializeParser()
+        {
+            var task = ParseAsync();
+        }
+
         private System.Threading.Tasks.Task ParseAsync()
         {
             IsParsing = true;
@@ -101,8 +106,7 @@ namespace EditorConfig
                 Sections.AddRange(sections);
                 Properties.Clear();
                 Properties.AddRange(properties);
-
-                ValidateAsync().ConfigureAwait(false);
+                
                 IsParsing = false;
 
                 Parsed?.Invoke(this, EventArgs.Empty);
@@ -139,6 +143,11 @@ namespace EditorConfig
             var item = new ParseItem(type, matchSpan, textValue);
 
             return item;
+        }
+
+        private void DisposeParser()
+        {
+            Parsed = null;
         }
 
         public event EventHandler Parsed;

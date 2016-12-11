@@ -10,9 +10,19 @@ namespace EditorConfig
     partial class EditorConfigDocument
     {
         [Import]
-        public ITextDocumentFactoryService DocumentService { get; set; }
+        private ITextDocumentFactoryService DocumentService { get; set; }
 
         private string _fileName;
+        private IContentType _contentType;
+
+        private void InitializeInheritance()
+        {
+            VsHelpers.SatisfyImportsOnce(this);
+
+            var componentModel = (IComponentModel)Package.GetGlobalService(typeof(SComponentModel));
+            var contentTypeRegistry = componentModel.DefaultExportProvider.GetExportedValue<IContentTypeRegistryService>();
+            _contentType = contentTypeRegistry.GetContentType(Constants.LanguageName);
+        }
 
         public EditorConfigDocument InheritsFrom(out string parentFileName)
         {
@@ -35,10 +45,7 @@ namespace EditorConfig
 
                 if (File.Exists(parentFileName))
                 {
-                    var componentModel = (IComponentModel)Package.GetGlobalService(typeof(SComponentModel));
-                    var contentTypeRegistry = componentModel.DefaultExportProvider.GetExportedValue<IContentTypeRegistryService>();
-
-                    var doc = DocumentService.CreateAndLoadTextDocument(parentFileName, contentTypeRegistry.GetContentType(Constants.LanguageName));
+                    var doc = DocumentService.CreateAndLoadTextDocument(parentFileName, _contentType);
                     return new EditorConfigDocument(doc.TextBuffer) { _fileName = parentFileName };
                 }
 

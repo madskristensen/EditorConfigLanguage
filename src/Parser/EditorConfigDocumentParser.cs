@@ -11,7 +11,7 @@ namespace EditorConfig
         private static Regex _property = new Regex(@"^\s*(?<keyword>[\w-]+)\s*[=:]?\s*(?<value>[^;#:\s]+)?(:?(?<severity>[^#;\s:]+))?\s*");
         private static Regex _section = new Regex(@"^\s*\[([^#;]+)\]");
         private static Regex _comment = new Regex(@"^\s*[#;].+");
-        private static Regex _unknown = new Regex(@"\S.*");
+        private static Regex _unknown = new Regex(@"[^\s:].*");
 
         public bool IsParsing { get; private set; }
 

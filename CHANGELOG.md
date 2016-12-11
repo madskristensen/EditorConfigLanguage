@@ -3,6 +3,10 @@
 - [ ] Indication of a rules that are already defined by parent .editorconfig
 - [ ] Indication of rules not matching any files
 - [ ] Validate syntax of sections
+- [ ] Align equal chars on format
+- [x] Hide severity completion for standard properties
+- [x] Validate missing property value
+- [x] Run validation on idle
 - [x] Overflow long lines in QuickInfo tooltips
 
 Features that have a checkmark are complete and available for

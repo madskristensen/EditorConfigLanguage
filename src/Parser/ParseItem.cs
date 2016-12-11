@@ -14,15 +14,10 @@ namespace EditorConfig
         }
 
         public Span Span { get; set; }
-        
+
         public ItemType ItemType { get; set; }
 
-        public string Text { get; set; } 
-
-        //public string Description
-        //{
-        //    get { return Property.FromName(Text)?.Description; }
-        //}
+        public string Text { get; set; }
 
         public List<string> Errors { get; } = new List<string>();
 
@@ -34,6 +29,11 @@ namespace EditorConfig
 
         public ParseItem Prev { get; set; }
 
+        public bool IsValid
+        {
+            get { return ItemType == ItemType.Unknown; }
+        }
+
         public void AddError(string errorMessage)
         {
             if (!Errors.Contains(errorMessage))
@@ -44,14 +44,6 @@ namespace EditorConfig
         {
             Children.Add(child);
             child.Parent = this;
-        }
-
-        public Span SpanIncludingChildren()
-        {
-            if (!Children.Any())
-                return Span;
-
-            return Span.FromBounds(Span.Start, Children.Last().Span.End);
         }
 
         public override string ToString()
@@ -66,6 +58,7 @@ namespace EditorConfig
         Section,
         Property,
         Value,
-        Severity
+        Severity,
+        Unknown
     }
 }

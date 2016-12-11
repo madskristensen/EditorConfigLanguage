@@ -1,10 +1,10 @@
-﻿using System;
-using System.Runtime.InteropServices;
-using Microsoft.VisualStudio;
+﻿using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
+using System;
+using System.Runtime.InteropServices;
 
 namespace EditorConfig
 {
@@ -75,15 +75,15 @@ namespace EditorConfig
                                 Cancel();
                                 StartSession();
                             }
-                            //else if (_currentSession != null)
-                            //{
-                            //    Filter();
-                            //}
+                            else if (_currentSession != null)
+                            {
+                                Filter();
+                            }
                             break;
-                        //case VSConstants.VSStd2KCmdID.BACKSPACE:
-                        //case VSConstants.VSStd2KCmdID.DELETE:
-                        //    Filter();
-                        //    break;
+                        case VSConstants.VSStd2KCmdID.BACKSPACE:
+                        case VSConstants.VSStd2KCmdID.DELETE:
+                            Filter();
+                            break;
                     }
                 }
             }

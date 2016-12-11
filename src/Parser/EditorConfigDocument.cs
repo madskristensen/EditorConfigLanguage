@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Text;
+﻿using Microsoft.VisualStudio.Text;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,14 +25,15 @@ namespace EditorConfig
 
         public List<ParseItem> ParseItems { get; } = new List<ParseItem>();
 
-        public bool IsRoot
+        public List<Section> Sections { get;} = new List<Section>();
+
+        public List<Property> Properties { get; } = new List<Property>();
+
+        public Property Root
         {
             get
             {
-                var prop = ParseItems.FirstOrDefault(p => p.ItemType != ItemType.Comment);
-                var value = ParseItems.FirstOrDefault(p => p.Span.Start > prop?.Span.Start);
-
-                return string.Equals(prop?.Text, SchemaCatalog.Root, StringComparison.OrdinalIgnoreCase) && string.Equals(value?.Text, "true", StringComparison.OrdinalIgnoreCase);
+                return Properties.FirstOrDefault(p => p.Keyword.Text.Equals(SchemaCatalog.Root));
             }
         }
 
@@ -44,12 +44,12 @@ namespace EditorConfig
 
         public IEnumerable<ParseItem> ItemsInSpan(Span span)
         {
-            return ParseItems.Where(i => span.Contains(i.Span));
+            return ParseItems?.Where(i => span.Contains(i.Span));
         }
 
         public ParseItem ItemAtPosition(int point)
         {
-            return ParseItems.FirstOrDefault(p => p.Span.Contains(point - 1));
+            return ParseItems?.FirstOrDefault(p => p.Span.Contains(point - 1));
         }
     }
 }

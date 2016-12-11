@@ -9,32 +9,23 @@ namespace EditorConfig
     {
         private const int _iconSize = 14;
 
-        internal TooltipControl(ISchemaItem item) : this(item.Name, item.Description, item.Moniker)
-        { }
-
-        //internal TooltipControl(ParseItem item) : this(Property.FromName(item.Text))
-        //{ }
-
-        //internal TooltipControl(Property item) : this(item?.Name, item?.Description, item.Moniker)
-        //{ }
-
-        internal TooltipControl(string name, string description, ImageMoniker moniker)
+        internal TooltipControl(ISchemaItem item)
         {
-            if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(description))
-                return;
-
             Loaded += (s, e) =>
             {
-                var nameControl = CreateNameControl(name, moniker);
-                var desciptionControl = CreateDescriptionControl(description);
+                var nameControl = CreateNameControl(item.Name, item.Moniker);
+                var desciptionControl = CreateDescriptionControl(item.Description, item.IsSupported);
 
                 Children.Add(nameControl);
                 Children.Add(desciptionControl);
             };
         }
 
-        private static UIElement CreateDescriptionControl(string description)
+        private static UIElement CreateDescriptionControl(string description, bool isSupported)
         {
+            if (!isSupported)
+                description += $"\r\n\r\n{EditorConfig.Resources.Text.NotSupportedByVS}";
+
             var descBlock = new TextBlock()
             {
                 Text = description,

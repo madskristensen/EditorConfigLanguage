@@ -99,7 +99,11 @@ namespace EditorConfig
                 Dictionary<SnapshotSpan, TAdornment> translatedAdornmentCache = new Dictionary<SnapshotSpan, TAdornment>();
 
                 foreach (var keyValuePair in adornmentCache)
-                    translatedAdornmentCache.Add(keyValuePair.Key.TranslateTo(Snapshot, SpanTrackingMode.EdgeExclusive), keyValuePair.Value);
+                {
+                    var translated = keyValuePair.Key.TranslateTo(Snapshot, SpanTrackingMode.EdgeExclusive);
+                    if (!translatedAdornmentCache.ContainsKey(translated))
+                        translatedAdornmentCache.Add(translated, keyValuePair.Value);
+                }
 
                 adornmentCache = translatedAdornmentCache;
             }

@@ -100,9 +100,8 @@ namespace EditorConfig
         private void UpdateElements()
         {
             var list = new List<DropDownItem>();
-            var sections = _document.ParseItems.Where(p => p.ItemType == ItemType.Section);
 
-            foreach (var section in sections)
+            foreach (var section in _document.Sections)
             {
                 int lineNumber = _buffer.CurrentSnapshot.GetLineNumberFromPosition(section.Span.Start);
 
@@ -110,7 +109,7 @@ namespace EditorConfig
                     list.Add(new DropDownItem("<Root>", 1));
 
 
-                list.Add(new DropDownItem("   " + section.Text, lineNumber));
+                list.Add(new DropDownItem("   " + section.Item.Text, lineNumber));
             }
             
             _members = list;

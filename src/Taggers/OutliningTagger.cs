@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.VisualStudio.Shell;
+﻿using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace EditorConfig
 {
@@ -17,6 +17,7 @@ namespace EditorConfig
         {
             _buffer = buffer;
             _snapshot = buffer.CurrentSnapshot;
+
             _document = EditorConfigDocument.FromTextBuffer(buffer);
             _document.Parsed += BufferChanged;
 
@@ -27,7 +28,7 @@ namespace EditorConfig
 
         public IEnumerable<ITagSpan<IOutliningRegionTag>> GetTags(NormalizedSnapshotSpanCollection spans)
         {
-            if (spans.Count == 0 || !Regions.Any())
+            if (_document.IsParsing || spans.Count == 0 || !Regions.Any())
                 yield break;
 
             IEnumerable<Region> currentRegions = Regions;
@@ -71,15 +72,12 @@ namespace EditorConfig
         void ReParse()
         {
             ITextSnapshot newSnapshot = _buffer.CurrentSnapshot;
-            var entire = new SnapshotSpan(newSnapshot, 0, newSnapshot.Length);
             List<Region> newRegions = new List<Region>();
 
-            var sections = _document.ItemsInSpan(entire).Where(p => p.ItemType == ItemType.Section);
-
-            foreach (var section in sections.Where(s => s.Children.Any()))
+            foreach (var section in _document.Sections)
             {
                 var startLine = newSnapshot.GetLineFromPosition(section.Span.Start);
-                var endLine = newSnapshot.GetLineFromPosition(section.Children.Last().Span.End);
+                var endLine = newSnapshot.GetLineFromPosition(section.Span.End);
 
                 var region = new Region
                 {

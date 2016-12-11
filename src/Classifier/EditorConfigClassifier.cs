@@ -44,8 +44,11 @@ namespace EditorConfig
 
             foreach (var item in parseItems)
             {
-                var snapshotSpan = new SnapshotSpan(span.Snapshot, item.Span);
-                list.Add(new ClassificationSpan(snapshotSpan, _map[item.ItemType]));
+                if (_map.ContainsKey(item.ItemType))
+                {
+                    var snapshotSpan = new SnapshotSpan(span.Snapshot, item.Span);
+                    list.Add(new ClassificationSpan(snapshotSpan, _map[item.ItemType]));
+                }
             }
 
             return list;

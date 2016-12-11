@@ -5,8 +5,17 @@ namespace EditorConfig
 {
     partial class EditorConfigDocument
     {
-        public void Validate()
+        private DateTime _lastRequestForValidation;
+        private const int _validationDelay = 1000;
+
+        private async System.Threading.Tasks.Task ValidateAsync()
         {
+            _lastRequestForValidation = DateTime.Now;
+            await System.Threading.Tasks.Task.Delay(_validationDelay);
+
+            if (DateTime.Now.AddMilliseconds(-_validationDelay) < _lastRequestForValidation)
+                return;
+
             foreach (var item in ParseItems)
             {
                 switch (item.ItemType)
@@ -23,8 +32,18 @@ namespace EditorConfig
                     case ItemType.Severity:
                         ValidateSeverity(item);
                         break;
+                    case ItemType.Unknown:
+                        ValidateUnknown(item);
+                        break;
                 }
             }
+
+            Validated?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void ValidateUnknown(ParseItem item)
+        {
+            item.AddError("Syntax error. Element not valid at current location");
         }
 
         private void ValidateSection(ParseItem item)
@@ -37,10 +56,10 @@ namespace EditorConfig
 
         private void ValidateValue(ParseItem item)
         {
-            if (!SchemaCatalog.TryGetProperty(item.Prev?.Text, out Property comp))
+            if (!SchemaCatalog.TryGetProperty(item.Prev?.Text, out Keyword comp))
                 return;
 
-            if (!comp.Values.Contains(item.Text, StringComparer.OrdinalIgnoreCase) &&
+            if (!comp.Values.Any(v => v.Name.Equals(item.Text, StringComparison.OrdinalIgnoreCase)) &&
                 !(int.TryParse(item.Text, out int intValue) && intValue > 0))
             {
                 item.AddError(string.Format(Resources.Text.InvalidValue, item.Text, comp.Name));
@@ -57,7 +76,7 @@ namespace EditorConfig
 
         private void ValidateSeverity(ParseItem item)
         {
-            if (SchemaCatalog.TryGetProperty(item.Prev?.Prev?.Text, out Property prop) && !prop.SupportsSeverity)
+            if (SchemaCatalog.TryGetProperty(item.Prev?.Prev?.Text, out Keyword prop) && !prop.SupportsSeverity)
             {
                 item.AddError(string.Format("The \"{0}\" property does not support a severity suffix", prop.Name));
             }
@@ -69,7 +88,7 @@ namespace EditorConfig
 
         private void ValidateProperty(ParseItem item)
         {
-            if (!SchemaCatalog.TryGetProperty(item.Text, out Property prop))
+            if (!SchemaCatalog.TryGetProperty(item.Text, out Keyword prop))
             {
                 item.AddError(string.Format(Resources.Text.ValidateUnknownKeyword, item.Text));
             }
@@ -86,5 +105,7 @@ namespace EditorConfig
                 }
             }
         }
+
+        public event EventHandler Validated;
     }
 }

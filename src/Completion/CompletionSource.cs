@@ -50,17 +50,17 @@ namespace EditorConfig
                 var isInRoot = !_document.ParseItems.Exists(p => p.ItemType == ItemType.Section && p.Span.Start < position);
                 var items = isInRoot ? SchemaCatalog.Properties : SchemaCatalog.Properties.Where(i => i.Name != SchemaCatalog.Root);
 
-                foreach (var key in items)
-                    list.Add(CreateCompletion(key.Name, key.Moniker, key.Tag, key.IsSupported, key.Description));
+                foreach (var property in items)
+                    list.Add(CreateCompletion(property, property.Category));
             }
 
             // Value
             else if (parseItem?.ItemType == ItemType.Value)
             {
-                if (SchemaCatalog.TryGetProperty(prev.Text, out Property item))
+                if (SchemaCatalog.TryGetProperty(prev.Text, out Keyword item))
                 {
                     foreach (var value in item.Values)
-                        list.Add(CreateCompletion(value, KnownMonikers.EnumerationItemPublic));
+                        list.Add(CreateCompletion(value));
                 }
             }
 
@@ -73,14 +73,14 @@ namespace EditorConfig
                 }
                 else
                 {
-                    if (SchemaCatalog.TryGetProperty(prev?.Prev.Text, out Property prop) && prop.SupportsSeverity)
+                    if (SchemaCatalog.TryGetProperty(prev?.Prev.Text, out Keyword prop) && prop.SupportsSeverity)
                         AddSeverity(list);
                 }
             }
 
             if (!list.Any())
             {
-                if (SchemaCatalog.TryGetProperty(prev?.Text, out Property property))
+                if (SchemaCatalog.TryGetProperty(prev?.Text, out Keyword property))
                 {
                     var eq = line.GetText().IndexOf("=");
 
@@ -90,7 +90,7 @@ namespace EditorConfig
 
                         if (triggerPoint.Value.Position > eqPos)
                             foreach (var value in property.Values)
-                                list.Add(CreateCompletion(value, KnownMonikers.EnumerationItemPublic));
+                                list.Add(CreateCompletion(value));
                     }
                 }
             }
@@ -120,9 +120,9 @@ namespace EditorConfig
                 else
                 {
                     var filters = new[] {
-                        new IntellisenseFilter(KnownMonikers.Property, "Standard rules (Alt + S)", "s", "standard"),
-                        new IntellisenseFilter(KnownMonikers.CSFileNode, ".NET analysis rules (Alt + C)", "c", "csharp"),
-                        new IntellisenseFilter(KnownMonikers.DotNET, "C# analysis rules (Alt + D)", "d", "dotnet"),
+                        new IntellisenseFilter(KnownMonikers.Property, "Standard rules (Alt + S)", "s", Category.Standard.ToString()),
+                        new IntellisenseFilter(KnownMonikers.CSFileNode, ".NET analysis rules (Alt + C)", "c", Category.CSharp.ToString()),
+                        new IntellisenseFilter(KnownMonikers.DotNET, "C# analysis rules (Alt + D)", "d", Category.DotNet.ToString()),
                     };
 
                     completionSets.Add(new FilteredCompletionSet(applicableTo, list, Enumerable.Empty<Completion4>(), filters));
@@ -134,22 +134,26 @@ namespace EditorConfig
         {
             foreach (var severity in SchemaCatalog.Severities)
             {
-                list.Add(CreateCompletion(severity.Name, severity.Moniker, description: severity.Description));
+                list.Add(CreateCompletion(severity));
             }
         }
 
-        private Completion4 CreateCompletion(string name, ImageMoniker moniker, string tag = null, bool isSupported = true, string description = null)
+        private Completion4 CreateCompletion(ISchemaItem item, Category category = Category.None)
         {
-            string tooltip = description;
             IEnumerable<CompletionIcon2> icon = null;
+            string automationText = null;
 
-            if (!isSupported)
+            if (!item.IsSupported)
             {
                 icon = new[] { new CompletionIcon2(KnownMonikers.IntellisenseWarning, "warning", "") };
-                tooltip = $"{Resources.Text.NotSupportedByVS}\r\n\r\n{description}";
             }
 
-            return new Completion4(name, name, tooltip, moniker, tag, icon);
+            if (category != Category.None)
+            {
+                automationText = category.ToString();
+            }
+
+            return new Completion4(item.Name, item.Name, item.Description, item.Moniker, automationText, icon);
         }
 
         private ITrackingSpan FindTokenSpanAtPosition(ICompletionSession session)

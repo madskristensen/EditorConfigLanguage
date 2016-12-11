@@ -88,119 +88,11 @@ namespace EditorConfig.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to File character encoding, NOTE: if visual studio thinks your file is ascii it will always save it as us-ascii.
-        /// </summary>
-        internal static string KeywordCharset {
-            get {
-                return ResourceManager.GetString("KeywordCharset", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Line ending file format (Unix, DOS, Mac).
-        /// </summary>
-        internal static string KeywordEndOfLine {
-            get {
-                return ResourceManager.GetString("KeywordEndOfLine", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to A whole number defining the number of columns used for each indentation level and the width of soft tabs (when supported). When set to tab, the value of tab_width (if specified) will be used.
-        /// </summary>
-        internal static string KeywordIndentSize {
-            get {
-                return ResourceManager.GetString("KeywordIndentSize", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Indentation Style.
-        /// </summary>
-        internal static string KeywordIndentStyle {
-            get {
-                return ResourceManager.GetString("KeywordIndentStyle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Denotes whether file should end with a newline.
-        /// </summary>
-        internal static string KeywordInsertFinalNewline {
-            get {
-                return ResourceManager.GetString("KeywordInsertFinalNewline", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Special property that should be specified at the top of the file outside of any sections. Set to “true” to stop .editorconfig files search on current file..
-        /// </summary>
-        internal static string KeywordRoot {
-            get {
-                return ResourceManager.GetString("KeywordRoot", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to A whole number defining the number of columns used to represent a tab character. This defaults to the value of indent_size and doesn&apos;t usually need to be specified..
-        /// </summary>
-        internal static string KeywordTabWidth {
-            get {
-                return ResourceManager.GetString("KeywordTabWidth", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Denotes whether whitespace is allowed at the end of lines.
-        /// </summary>
-        internal static string KeywordTrimTrailingWhitespace {
-            get {
-                return ResourceManager.GetString("KeywordTrimTrailingWhitespace", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Not supported by Visual Studio.
         /// </summary>
         internal static string NotSupportedByVS {
             get {
                 return ResourceManager.GetString("NotSupportedByVS", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Violations are marked with a red squiggle in the editor and appear under Errors in the Error List.
-        /// </summary>
-        internal static string SeverityError {
-            get {
-                return ResourceManager.GetString("SeverityError", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Has no editor treatment and does not appear in Error List but affects code generation.
-        /// </summary>
-        internal static string SeverityNone {
-            get {
-                return ResourceManager.GetString("SeverityNone", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Violations are dotted in the editor and appear under Messages in Error List.
-        /// </summary>
-        internal static string SeveritySuggestion {
-            get {
-                return ResourceManager.GetString("SeveritySuggestion", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Violations are marked with a green squiggle in the editor and appear under Warnings in the Error List.
-        /// </summary>
-        internal static string SeverityWarning {
-            get {
-                return ResourceManager.GetString("SeverityWarning", resourceCulture);
             }
         }
         

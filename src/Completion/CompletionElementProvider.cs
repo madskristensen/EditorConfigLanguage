@@ -17,7 +17,7 @@ namespace EditorConfig
         {
             if (elementType == UIElementType.Tooltip)
             {
-                if (SchemaCatalog.TryGetProperty(itemToRender.DisplayText, out Property prop))
+                if (SchemaCatalog.TryGetProperty(itemToRender.DisplayText, out Keyword prop))
                     return new TooltipControl(prop);
 
                 if (SchemaCatalog.TryGetSeverity(itemToRender.DisplayText, out Severity severity))

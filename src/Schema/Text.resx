@@ -117,37 +117,40 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="EditorConfigFileAlreadyExist" xml:space="preserve">
-    <value>An .editorconfig file already exist in this location</value>
+  <data name="KeywordCharset" xml:space="preserve">
+    <value>File character encoding, NOTE: if visual studio thinks your file is ascii it will always save it as us-ascii</value>
   </data>
-  <data name="FormatDocument" xml:space="preserve">
-    <value>Format document</value>
+  <data name="KeywordEndOfLine" xml:space="preserve">
+    <value>Line ending file format (Unix, DOS, Mac)</value>
   </data>
-  <data name="InvalidValue" xml:space="preserve">
-    <value>"{0}" is not a valid value for the "{1}" property"</value>
+  <data name="KeywordIndentSize" xml:space="preserve">
+    <value>A whole number defining the number of columns used for each indentation level and the width of soft tabs (when supported). When set to tab, the value of tab_width (if specified) will be used</value>
   </data>
-  <data name="NotSupportedByVS" xml:space="preserve">
-    <value>Not supported by Visual Studio</value>
+  <data name="KeywordIndentStyle" xml:space="preserve">
+    <value>Indentation Style</value>
   </data>
-  <data name="ValidateUnknownKeyword" xml:space="preserve">
-    <value>The keyword "{0}" is unknown</value>
+  <data name="KeywordInsertFinalNewline" xml:space="preserve">
+    <value>Denotes whether file should end with a newline</value>
   </data>
-  <data name="ValidationDuplicateProperty" xml:space="preserve">
-    <value>The property has already been defined in this section</value>
+  <data name="KeywordRoot" xml:space="preserve">
+    <value>Special property that should be specified at the top of the file outside of any sections. Set to “true” to stop .editorconfig files search on current file.</value>
   </data>
-  <data name="ValidationDuplicateSection" xml:space="preserve">
-    <value>A section with the value "{0}" has already been defined</value>
+  <data name="KeywordTabWidth" xml:space="preserve">
+    <value>A whole number defining the number of columns used to represent a tab character. This defaults to the value of indent_size and doesn't usually need to be specified.</value>
   </data>
-  <data name="ValidationInvalidEndChar" xml:space="preserve">
-    <value>Values must not end with a {0}</value>
+  <data name="KeywordTrimTrailingWhitespace" xml:space="preserve">
+    <value>Denotes whether whitespace is allowed at the end of lines</value>
   </data>
-  <data name="ValidationInvalidSeverity" xml:space="preserve">
-    <value>"{0}" is not a valid value for severity</value>
+  <data name="SeverityError" xml:space="preserve">
+    <value>Violations are marked with a red squiggle in the editor and appear under Errors in the Error List</value>
   </data>
-  <data name="ValidationMissingSeverity" xml:space="preserve">
-    <value>A severity must be specified. Example: true:warning</value>
+  <data name="SeverityNone" xml:space="preserve">
+    <value>Has no editor treatment and does not appear in Error List but affects code generation</value>
   </data>
-  <data name="ValidationRootInSection" xml:space="preserve">
-    <value>"Root" is only allowed in the beginning of the document</value>
+  <data name="SeveritySuggestion" xml:space="preserve">
+    <value>Violations are dotted in the editor and appear under Messages in Error List</value>
+  </data>
+  <data name="SeverityWarning" xml:space="preserve">
+    <value>Violations are marked with a green squiggle in the editor and appear under Warnings in the Error List</value>
   </data>
 </root>

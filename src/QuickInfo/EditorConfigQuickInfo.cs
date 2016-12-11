@@ -35,7 +35,7 @@ namespace EditorConfig
                 qiContent.Add(error);
             }
 
-            if (item.ItemType == ItemType.Property && SchemaCatalog.TryGetProperty(item.Text, out Property property))
+            if (item.ItemType == ItemType.Property && SchemaCatalog.TryGetProperty(item.Text, out Keyword property))
             {
                 qiContent.Add(new TooltipControl(property));
             }

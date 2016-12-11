@@ -18,7 +18,7 @@ namespace EditorConfig
         {
             parentFileName = null;
 
-            if (IsRoot)
+            if (Root != null)
                 return null;
 
             _fileName = _fileName ?? TextBuffer.GetFileName();

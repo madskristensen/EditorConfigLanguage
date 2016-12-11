@@ -11,8 +11,9 @@ namespace EditorConfig
             Moniker = moniker;
         }
 
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public ImageMoniker Moniker { get; set; }
+        public string Name { get; }
+        public string Description { get; }
+        public ImageMoniker Moniker { get; }
+        public bool IsSupported => true;
     }
 }

@@ -3,7 +3,7 @@
 - [ ] Indication of a rules that are already defined by parent .editorconfig
 - [ ] Indication of rules not matching any files
 - [ ] Validate syntax of sections
-- [ ] Overflow long lines in QuickInfo tooltips
+- [x] Overflow long lines in QuickInfo tooltips
 
 Features that have a checkmark are complete and available for
 download in the

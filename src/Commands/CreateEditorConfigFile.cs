@@ -5,7 +5,6 @@ using System;
 using System.ComponentModel.Design;
 using System.IO;
 using System.Windows;
-using Task = System.Threading.Tasks.Task;
 
 namespace EditorConfig
 {
@@ -17,12 +16,9 @@ namespace EditorConfig
         {
             _package = package ?? throw new ArgumentNullException(nameof(package));
 
-            if (commandService != null)
-            {
-                var cmdId = new CommandID(PackageGuids.guidEditorConfigPackageCmdSet, PackageIds.CreateEditorConfigFileId);
-                var menuItem = new MenuCommand(CreateFile, cmdId);
-                commandService.AddCommand(menuItem);
-            }
+            var cmdId = new CommandID(PackageGuids.guidEditorConfigPackageCmdSet, PackageIds.CreateEditorConfigFileId);
+            var menuItem = new MenuCommand(CreateFile, cmdId);
+            commandService.AddCommand(menuItem);
         }
         public static CreateEditorConfigFile Instance
         {
@@ -35,9 +31,8 @@ namespace EditorConfig
             get { return _package; }
         }
 
-        public static async Task InitializeAsync(AsyncPackage package)
+        public static void Initialize(Package package, OleMenuCommandService commandService)
         {
-            var commandService = await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
             Instance = new CreateEditorConfigFile(package, commandService);
         }
 

@@ -8,7 +8,7 @@ namespace EditorConfig
 {
     partial class EditorConfigDocument
     {
-        private static Regex _property = new Regex(@"^\s*(?<keyword>[\w-]+)\s*[=:]?\s*(?<value>[^;#:\s]+)?(:?(?<severity>[^#;\s:]+))?\s*");
+        private static Regex _property = new Regex(@"^\s*(?<keyword>[\w-]+)\s*[=:]?\s*(?<value>[^;#:\s]+)?\s*:?\s*(?<severity>[^#;\s:]+)?\s*");
         private static Regex _section = new Regex(@"^\s*\[([^#;]+)\]");
         private static Regex _comment = new Regex(@"^\s*[#;].+");
         private static Regex _unknown = new Regex(@"[^\s:].*");
@@ -18,6 +18,7 @@ namespace EditorConfig
         private void InitializeParser()
         {
             var task = ParseAsync();
+            FormatterOptions.Changed += FormatterOptionsChanged;
         }
 
         private System.Threading.Tasks.Task ParseAsync()
@@ -145,9 +146,15 @@ namespace EditorConfig
             return item;
         }
 
+        private void FormatterOptionsChanged(object sender, EventArgs e)
+        {
+            Parsed?.Invoke(this, EventArgs.Empty);
+        }
+
         private void DisposeParser()
         {
             Parsed = null;
+            FormatterOptions.Changed -= FormatterOptionsChanged;
         }
 
         public event EventHandler Parsed;

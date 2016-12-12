@@ -13,7 +13,7 @@ namespace EditorConfig
     internal sealed partial class PackageGuids
     {
         public const string guidEditorConfigPackageString = "6736c72d-7a27-49f0-9153-413ff47963ef";
-        public const string guidEditorConfigPackageCmdSetString = "a21ee3c5-45b9-4bd8-abd7-30ceb3d990c5";
+        public const string guidEditorConfigPackageCmdSetString = "13cabf99-9eae-4ecc-a6f4-89f3ad54dc83";
         public const string guidWorkspaceExplorerToolWindowPackageCmdSetString = "cfb400f1-5c60-4f3c-856e-180d28def0b7";
         public static Guid guidEditorConfigPackage = new Guid(guidEditorConfigPackageString);
         public static Guid guidEditorConfigPackageCmdSet = new Guid(guidEditorConfigPackageCmdSetString);
@@ -26,8 +26,10 @@ namespace EditorConfig
     {
         public const int AddGroup = 0x0001;
         public const int AddGroupAnyCode = 0x0002;
+        public const int EditorContextMenu = 0x0003;
         public const int CreateEditorConfigFileId = 0x0100;
         public const int CreateEditorConfigFileAnyCodeId = 0x0200;
+        public const int OpenSettingsId = 0x0300;
         public const int idmAddNew = 0x2200;
     }
 }

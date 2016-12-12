@@ -3,8 +3,8 @@
 - [ ] Indication of a rules that are already defined by parent .editorconfig
 - [ ] Indication of rules not matching any files
 - [ ] Validate syntax of sections
-- [ ] Context menu command to open settings page
-- [ ] New color scheme
+- [x] Context menu command to open settings page
+- [x] New color scheme
 - [x] Align equal chars on format
 - [x] Hide severity completion for standard properties
 - [x] Validate missing property value

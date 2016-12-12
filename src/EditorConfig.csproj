@@ -67,9 +67,10 @@
     <Compile Include="Commands\CreateEditorConfigFileAnyCode.cs" />
     <Compile Include="Completion\CompletionElementProvider.cs" />
     <Compile Include="Completion\CompletionSourceProvider.cs" />
+    <Compile Include="Commands\OpenSettings.cs" />
     <Compile Include="Formatting\EditorConfigFormatter.cs" />
     <Compile Include="Formatting\FormattingType.cs" />
-    <Compile Include="Options.cs">
+    <Compile Include="Formatting\FormatterOptions.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Parser\Property.cs" />

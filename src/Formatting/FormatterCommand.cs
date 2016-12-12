@@ -33,9 +33,12 @@ namespace EditorConfig
             using (var transaction = _undoManager.TextBufferUndoHistory.CreateTransaction(Resources.Text.FormatDocument))
             {
                 var formatter = _view.Properties.GetOrCreateSingletonProperty(() => new EditorConfigFormatter(_view.TextBuffer));
-                formatter.Format();
+                var changed = formatter.Format();
 
-                transaction.Complete();
+                if (changed)
+                    transaction.Complete();
+                else
+                    transaction.Cancel();
             }
         }
 

@@ -15,7 +15,7 @@ namespace EditorConfig
         {
             _buffer = buffer;
             _document = EditorConfigDocument.FromTextBuffer(buffer);
-            _document.Parsed += DocumentParsed;
+            _document.Parsed += DocumentParsed;            
         }
 
         private void DocumentParsed(object sender, EventArgs e)
@@ -29,7 +29,7 @@ namespace EditorConfig
 
         public IEnumerable<ITagSpan<SeverityTag>> GetTags(NormalizedSnapshotSpanCollection spans)
         {
-            if (_document.IsParsing || spans.Count == 0)
+            if (_document.IsParsing || spans.Count == 0 || !EditorConfigPackage.Options.ShowSeverityIcons)
                 yield break;
 
             var items = _document.ItemsInSpan(spans[0]).Where(p => p.ItemType == ItemType.Severity);

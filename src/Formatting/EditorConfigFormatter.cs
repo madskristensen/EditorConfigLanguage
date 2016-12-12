@@ -8,16 +8,23 @@ namespace EditorConfig
     class EditorConfigFormatter
     {
         private EditorConfigDocument _document;
+        private int _spaceBeforeEquals, _spaceAfterEquals;
+        private int _spaceBeforeColon, _spaceAfterColon;
 
         public EditorConfigFormatter(ITextBuffer buffer)
         {
             _document = EditorConfigDocument.FromTextBuffer(buffer);
         }
 
-        public void Format()
+        public bool Format()
         {
+            _spaceBeforeEquals = EditorConfigPackage.Options.SpacesBeforeEquals;
+            _spaceAfterEquals = EditorConfigPackage.Options.SpacesAfterEquals;
+            _spaceBeforeColon = EditorConfigPackage.Options.SpacesBeforeColon;
+            _spaceAfterColon = EditorConfigPackage.Options.SpacesAfterColon;
+
             // Trim lines
-            TrimLines();
+            var changed = TrimLines();
 
             // Format properties
             using (var edit = _document.TextBuffer.CreateEdit())
@@ -28,27 +35,38 @@ namespace EditorConfig
                 FormatRoot(edit, keywordLength);
 
                 if (edit.HasEffectiveChanges)
+                {
+                    changed = true;
                     edit.Apply();
+                }
             }
+
+            return changed;
         }
 
-        private void TrimLines()
+        private bool TrimLines()
         {
-            var sb = new StringBuilder();
-
-            foreach (var line in _document.TextBuffer.CurrentSnapshot.Lines)
-            {
-                if (line.Extent.IsEmpty)
-                    sb.AppendLine();
-                else
-                    sb.AppendLine(line.GetText().Trim());
-            }
+            bool changed = false;
 
             using (var edit = _document.TextBuffer.CreateEdit())
             {
-                edit.Replace(0, edit.Snapshot.Length, sb.ToString());
-                edit.Apply();
+                foreach (var line in _document.TextBuffer.CurrentSnapshot.Lines)
+                {
+                    var originalText = line.GetText();
+                    var newText = line.Extent.IsEmpty ? string.Empty : originalText.Trim();
+
+                    if (originalText != newText)
+                        edit.Replace(line.Start, line.Length, newText);
+                }
+
+                if (edit.HasEffectiveChanges)
+                {
+                    changed = true;
+                    edit.Apply();
+                }
             }
+
+            return changed;
         }
 
         private int GetKeywordLength()
@@ -90,11 +108,16 @@ namespace EditorConfig
             var originalText = edit.Snapshot.GetText(property.Span);
             var newText = property.Keyword.Text.PadRight(keywordLength);
 
+            var spaceBeforeEquals = string.Empty.PadRight(_spaceBeforeEquals);
+            var spaceAfterEquals = string.Empty.PadRight(_spaceAfterEquals);
+            var spaceBeforeColon = string.Empty.PadRight(_spaceBeforeColon);
+            var spaceAfterColon = string.Empty.PadRight(_spaceAfterColon);
+
             if (property.Value != null)
-                newText += $" = {property.Value.Text}";
+                newText += $"{spaceBeforeEquals}={spaceAfterEquals}{property.Value.Text}";
 
             if (property.Severity != null)
-                newText += $":{property.Severity.Text}";
+                newText += $"{spaceBeforeColon}:{spaceAfterColon}{property.Severity.Text}";
 
             if (originalText != newText)
                 edit.Replace(property.Span, newText);

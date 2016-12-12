@@ -61,6 +61,12 @@ namespace EditorConfig
             }
 
             view.Closed += OnViewClosed;
+            FormatterOptions.Changed += OptionsChanged;
+        }
+
+        private void OptionsChanged(object sender, EventArgs e)
+        {
+            VsHelpers.DTE.ExecuteCommandSafe("Edit.FormatDocument");
         }
 
         private void Document_FileActionOccurred(object sender, TextDocumentFileActionEventArgs e)
@@ -90,6 +96,7 @@ namespace EditorConfig
         {
             IWpfTextView view = (IWpfTextView)sender;
             view.Closed -= OnViewClosed;
+            FormatterOptions.Changed -= OptionsChanged;
 
             if (_errorList != null)
             {

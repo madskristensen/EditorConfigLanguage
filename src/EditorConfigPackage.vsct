@@ -9,6 +9,7 @@
     <Groups>
       <Group guid="guidEditorConfigPackageCmdSet" id="AddGroup" priority="0x0002" />
       <Group guid="guidEditorConfigPackageCmdSet" id="AddGroupAnyCode" priority="0x0002" />
+      <Group guid="guidEditorConfigPackageCmdSet" id="EditorContextMenu" priority="0x0500" />
     </Groups>
 
     <Buttons>
@@ -24,6 +25,16 @@
         <CommandFlag>IconIsMoniker</CommandFlag>
         <Strings>
           <ButtonText>.editorconfig File</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidEditorConfigPackageCmdSet" id="OpenSettingsId" priority="0x0200" type="Button">
+        <Icon guid="ImageCatalogGuid" id="VisualStudioSettingsFile" />
+        <CommandFlag>IconIsMoniker</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <Strings>
+          <ButtonText>EditorConfig Options...</ButtonText>
         </Strings>
       </Button>
     </Buttons>
@@ -54,18 +65,27 @@
     <CommandPlacement guid="guidEditorConfigPackageCmdSet" id="AddGroupAnyCode" priority="0x1500">
       <Parent guid="guidWorkspaceExplorerToolWindowPackageCmdSet" id="idmAddNew" />
     </CommandPlacement>
-  </CommandPlacements>
 
+    <!-- Editor contextmenu -->
+    <CommandPlacement guid="guidEditorConfigPackageCmdSet" id="EditorContextMenu" priority="0x0900">
+      <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_CODEWIN" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidEditorConfigPackageCmdSet" id="OpenSettingsId" priority="0x0100">
+      <Parent guid="guidEditorConfigPackageCmdSet" id="EditorContextMenu" />
+    </CommandPlacement>
+  </CommandPlacements>
   <Symbols>
     <!-- This is the package guid. -->
     <GuidSymbol name="guidEditorConfigPackage" value="{6736c72d-7a27-49f0-9153-413ff47963ef}" />
 
     <!-- This is the guid used to group the menu commands together -->
-    <GuidSymbol name="guidEditorConfigPackageCmdSet" value="{a21ee3c5-45b9-4bd8-abd7-30ceb3d990c5}">
+    <GuidSymbol name="guidEditorConfigPackageCmdSet" value="{13cabf99-9eae-4ecc-a6f4-89f3ad54dc83}">
       <IDSymbol name="AddGroup" value="0x0001" />
       <IDSymbol name="AddGroupAnyCode" value="0x0002" />
+      <IDSymbol name="EditorContextMenu" value="0x0003" />
       <IDSymbol name="CreateEditorConfigFileId" value="0x0100" />
       <IDSymbol name="CreateEditorConfigFileAnyCodeId" value="0x0200" />
+      <IDSymbol name="OpenSettingsId" value="0x0300" />
     </GuidSymbol>
 
     <!-- The AnyCode AddNewItem menu -->

@@ -254,8 +254,7 @@ namespace EditorConfig
                 if (textLines == null)
                 {
                     // Try get the text buffer from textbuffer provider
-                    IVsTextBufferProvider textBufferProvider = dataObject as IVsTextBufferProvider;
-                    if (textBufferProvider != null)
+                    if (dataObject is IVsTextBufferProvider textBufferProvider)
                     {
                         textBufferProvider.GetTextBuffer(out textLines);
                     }
@@ -300,8 +299,7 @@ namespace EditorConfig
             ErrorHandler.ThrowOnFailure(window.SetBaseEditorCaption(null));
             ErrorHandler.ThrowOnFailure(window.GetEditorCaption(READONLYSTATUS.ROSTATUS_Unknown, out editorCaption));
 
-            IVsUserData userData = textLines as IVsUserData;
-            if (userData != null)
+            if (textLines is IVsUserData userData)
             {
                 if (PromptEncodingOnLoad)
                 {

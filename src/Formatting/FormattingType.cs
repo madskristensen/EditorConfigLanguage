@@ -2,7 +2,7 @@
 {
     public enum FormattingType
     {
-        Normal,
+        None,
         Section,
         Document
     }

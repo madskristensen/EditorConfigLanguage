@@ -28,7 +28,7 @@
         </Strings>
       </Button>
       <Button guid="guidEditorConfigPackageCmdSet" id="OpenSettingsId" priority="0x0200" type="Button">
-        <Icon guid="ImageCatalogGuid" id="VisualStudioSettingsFile" />
+        <Icon guid="ImageCatalogGuid" id="Settings" />
         <CommandFlag>IconIsMoniker</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>

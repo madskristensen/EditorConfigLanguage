@@ -34,6 +34,9 @@ namespace EditorConfig
         [Import]
         private ITextDocumentFactoryService DocumentService { get; set; }
 
+        [Import]
+        private IQuickInfoBroker QuickInfoBroker { get; set; }
+
         private ErrorListProvider _errorList;
 
         public void VsTextViewCreated(IVsTextView textViewAdapter)
@@ -49,7 +52,7 @@ namespace EditorConfig
             var undoManager = UndoProvider.GetTextBufferUndoManager(view.TextBuffer);
 
             AddCommandFilter(textViewAdapter, new FormatterCommand(view, undoManager));
-            AddCommandFilter(textViewAdapter, new CompletionController(view, CompletionBroker));
+            AddCommandFilter(textViewAdapter, new CompletionController(view, CompletionBroker, QuickInfoBroker));
             AddCommandFilter(textViewAdapter, new F1Help());
 
             if (textViewAdapter is IVsTextViewEx viewEx)

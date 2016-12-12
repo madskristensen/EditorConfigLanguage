@@ -11,10 +11,12 @@ namespace EditorConfig
     internal sealed class CompletionController : BaseCommand
     {
         private ICompletionSession _currentSession;
+        private IQuickInfoBroker _quickInfoBroker;
 
-        public CompletionController(IWpfTextView textView, ICompletionBroker broker)
+        public CompletionController(IWpfTextView textView, ICompletionBroker broker, IQuickInfoBroker quickInfoBroker)
         {
             _currentSession = null;
+            _quickInfoBroker = quickInfoBroker;
 
             TextView = textView;
             Broker = broker;
@@ -146,6 +148,11 @@ namespace EditorConfig
             _currentSession.Dismissed += (sender, args) => _currentSession = null;
 
             _currentSession.Start();
+
+            if (_quickInfoBroker.IsQuickInfoActive(TextView))
+            {
+                _quickInfoBroker.GetSessions(TextView)[0].Dismiss();
+            }
 
             return true;
         }

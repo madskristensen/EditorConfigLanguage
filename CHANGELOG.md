@@ -3,6 +3,7 @@
 - [ ] Indication of a rules that are already defined by parent .editorconfig
 - [ ] Indication of rules not matching any files
 - [ ] Validate syntax of sections
+- [x] Dismiss QuickInfo on completion sesstion start
 - [x] Context menu command to open settings page
 - [x] New color scheme
 - [x] Align equal chars on format

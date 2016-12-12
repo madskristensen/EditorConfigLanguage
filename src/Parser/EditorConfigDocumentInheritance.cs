@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Utilities;
+using System;
 using System.ComponentModel.Composition;
 using System.IO;
 
@@ -28,7 +29,7 @@ namespace EditorConfig
         {
             parentFileName = null;
 
-            if (Root != null)
+            if (Root != null && Root.IsValid && Root.Value.Text.Equals("true", StringComparison.OrdinalIgnoreCase) && Root.Severity == null)
                 return null;
 
             _fileName = _fileName ?? TextBuffer.GetFileName();

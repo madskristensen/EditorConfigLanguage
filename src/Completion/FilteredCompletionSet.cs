@@ -30,11 +30,6 @@ namespace EditorConfig
             // This is handled in SelectBestMatch
         }
 
-        public override void Recalculate()
-        {
-            // This is handled in SelectBestMatch
-        }
-
         public override void SelectBestMatch()
         {
             _typed = ApplicableTo.GetText(ApplicableTo.TextBuffer.CurrentSnapshot);

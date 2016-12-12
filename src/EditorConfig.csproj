@@ -67,6 +67,11 @@
     <Compile Include="Commands\CreateEditorConfigFileAnyCode.cs" />
     <Compile Include="Completion\CompletionElementProvider.cs" />
     <Compile Include="Completion\CompletionSourceProvider.cs" />
+    <Compile Include="Formatting\EditorConfigFormatter.cs" />
+    <Compile Include="Formatting\FormattingType.cs" />
+    <Compile Include="Options.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Parser\Property.cs" />
     <Compile Include="Parser\Section.cs" />
     <Compile Include="Schema\ISchemaItem.cs" />
@@ -86,8 +91,8 @@
     <Compile Include="Parser\EditorConfigDocument.cs" />
     <Compile Include="Parser\EditorConfigDocumentValidator.cs" />
     <Compile Include="Parser\ParseItem.cs" />
-    <Compile Include="SuggestedActions\Actions\BaseSuggestedAction.cs" />
-    <Compile Include="SuggestedActions\Actions\DeleteSectionAction.cs" />
+    <Compile Include="SuggestedActions\BaseSuggestedAction.cs" />
+    <Compile Include="SuggestedActions\DeleteSectionAction.cs" />
     <Compile Include="SuggestedActions\SuggestedActionsSource.cs" />
     <Compile Include="SuggestedActions\SuggestedActionsSourceProvider.cs" />
     <Compile Include="Taggers\BraceMatchingTagger.cs" />
@@ -96,7 +101,7 @@
     <Compile Include="Classifier\EditorConfigProvider.cs" />
     <Compile Include="Commands\BaseCommand.cs" />
     <Compile Include="Commands\F1Help.cs" />
-    <Compile Include="Commands\EditorConfigFormatter.cs" />
+    <Compile Include="Formatting\FormatterCommand.cs" />
     <Compile Include="Schema\Keyword.cs" />
     <Compile Include="Completion\CompletionController.cs" />
     <Compile Include="Completion\CompletionSource.cs" />

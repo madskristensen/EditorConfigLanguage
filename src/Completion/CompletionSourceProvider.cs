@@ -13,14 +13,11 @@ namespace EditorConfig
     public class EditorConfigCompletionSourceProvider : ICompletionSourceProvider
     {
         [Import]
-        IClassifierAggregatorService ClassifierAService { get; set; }
-
-        [Import]
         ITextStructureNavigatorSelectorService NavigatorService { get; set; }
 
         public ICompletionSource TryCreateCompletionSource(ITextBuffer textBuffer)
         {
-            return new EditorConfigCompletionSource(textBuffer, ClassifierAService, NavigatorService);
+            return textBuffer.Properties.GetOrCreateSingletonProperty(() => new EditorConfigCompletionSource(textBuffer, NavigatorService));
         }
     }
 }

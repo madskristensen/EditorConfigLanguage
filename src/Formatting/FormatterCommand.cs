@@ -3,17 +3,15 @@ using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Operations;
 using System;
-using System.Linq;
-using System.Text;
 
 namespace EditorConfig
 {
-    internal sealed class EditorConfigFormatter : BaseCommand
+    internal sealed class FormatterCommand : BaseCommand
     {
         private ITextBufferUndoManager _undoManager;
         private IWpfTextView _view;
 
-        public EditorConfigFormatter(IWpfTextView textView, ITextBufferUndoManager undoManager)
+        public FormatterCommand(IWpfTextView textView, ITextBufferUndoManager undoManager)
         {
             _view = textView;
             _undoManager = undoManager;
@@ -32,41 +30,11 @@ namespace EditorConfig
 
         private void FormatDocument()
         {
-            var sb = new StringBuilder();
-            int emptyCount = 0;
-
-            foreach (var line in _view.TextBuffer.CurrentSnapshot.Lines)
-            {
-                var text = line.GetText();
-                var isEmpty = string.IsNullOrWhiteSpace(text);
-
-                if (!isEmpty)
-                {
-                    var eq = text.IndexOf('=');
-                    var clean = text.Trim();
-
-                    if (eq > -1)
-                        clean = string.Join(" = ", text.Split('=').Select(s => s.Trim()));
-
-                    sb.AppendLine(clean);
-                    emptyCount = 0;
-                }
-                else
-                {
-                    if (emptyCount < 1)
-                    {
-                        sb.AppendLine();
-                    }
-
-                    emptyCount++;
-                }
-            }
-
             using (var transaction = _undoManager.TextBufferUndoHistory.CreateTransaction(Resources.Text.FormatDocument))
-            using (var edit = _view.TextBuffer.CreateEdit())
             {
-                edit.Replace(0, _view.TextBuffer.CurrentSnapshot.Length, sb.ToString());
-                edit.Apply();
+                var formatter = _view.Properties.GetOrCreateSingletonProperty(() => new EditorConfigFormatter(_view.TextBuffer));
+                formatter.Format();
+
                 transaction.Complete();
             }
         }

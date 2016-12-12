@@ -22,7 +22,7 @@ namespace EditorConfig
         {
             return await Task.Factory.StartNew(() =>
             {
-                _section = _document.Sections.FirstOrDefault(s => s.Item.Span.Contains(range));
+                _section =  _document.Sections.FirstOrDefault(s => s.Item.Span.Contains(range));
 
                 return _section != null;
             });

@@ -15,6 +15,7 @@ namespace EditorConfig
 
     [ProvideLanguageService(typeof(EditorConfigLanguage), Constants.LanguageName, 101, EnableAdvancedMembersOption = true, ShowDropDownOptions = true, DefaultToInsertSpaces = true, EnableCommenting = true, AutoOutlining = true, EnableLineNumbers = true, MatchBraces = true, MatchBracesAtCaret = true, ShowMatchingBrace = true)]
     [ProvideLanguageExtension(typeof(EditorConfigLanguage), Constants.FileName)]
+    [ProvideLanguageEditorOptionPage(typeof(Options), Constants.LanguageName, null, "Formatting", "#101", new[] { "editorconfig", "Editor Config" })]
 
     [ProvideEditorFactory(typeof(EditorFactory), 110, CommonPhysicalViewAttributes = (int)__VSPHYSICALVIEWATTRIBUTES.PVA_None, TrustLevel = __VSEDITORTRUSTLEVEL.ETL_AlwaysTrusted)]
     [ProvideEditorLogicalView(typeof(EditorFactory), VSConstants.LOGVIEWID.TextView_string, IsTrusted = true)]
@@ -30,9 +31,16 @@ namespace EditorConfig
             private set;
         }
 
+        public static Options Options
+        {
+            get;
+            private set;
+        }
+
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
             Language = new EditorConfigLanguage(this);
+            Options = (Options)GetDialogPage(typeof(Options));
 
             var serviceContainer = this as IServiceContainer;
             serviceContainer.AddService(typeof(EditorConfigLanguage), Language, true);

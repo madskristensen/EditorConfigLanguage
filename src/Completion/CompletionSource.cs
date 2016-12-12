@@ -1,7 +1,6 @@
 ﻿using Microsoft.VisualStudio.Imaging;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
-using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Operations;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,17 +10,15 @@ namespace EditorConfig
     class EditorConfigCompletionSource : ICompletionSource
     {
         private ITextBuffer _buffer;
-        private IClassifier _classifier;
         private EditorConfigDocument _document;
         private ITextStructureNavigatorSelectorService _navigator;
         private bool _disposed = false;
 
-        public EditorConfigCompletionSource(ITextBuffer buffer, IClassifierAggregatorService classifier, ITextStructureNavigatorSelectorService navigator)
+        public EditorConfigCompletionSource(ITextBuffer buffer, ITextStructureNavigatorSelectorService navigator)
         {
             _buffer = buffer;
-            _classifier = classifier.GetClassifier(buffer);
-            _document = EditorConfigDocument.FromTextBuffer(buffer);
             _navigator = navigator;
+            _document = EditorConfigDocument.FromTextBuffer(buffer);
         }
 
         public void AugmentCompletionSession(ICompletionSession session, IList<CompletionSet> completionSets)
@@ -40,8 +37,8 @@ namespace EditorConfig
             var position = triggerPoint.Value.Position;
             var applicableTo = snapshot.CreateTrackingSpan(position, 0, SpanTrackingMode.EdgeInclusive);
 
-            var parseItem = _document.ItemAtPosition(position);
             var prev = _document.ParseItems.LastOrDefault(p => p.Span.Start < position && !p.Span.Contains(position - 1));
+            var parseItem = _document.ItemAtPosition(position);
 
             // Property
             if (string.IsNullOrWhiteSpace(line.GetText()) || parseItem?.ItemType == ItemType.Property)
@@ -66,15 +63,8 @@ namespace EditorConfig
             // Severity
             else if ((position > 0 && snapshot.Length > 1 && snapshot.GetText(position - 1, 1) == ":") || parseItem?.ItemType == ItemType.Severity)
             {
-                //if (parseItem?.ItemType == ItemType.Severity)
-                //{
-                //    AddSeverity(list);
-                //}
-                //else
-                //{
-                    if (SchemaCatalog.TryGetProperty(prev?.Prev.Text, out Keyword prop) && prop.SupportsSeverity)
-                        AddSeverity(list);
-                //}
+                if (SchemaCatalog.TryGetProperty(prev?.Prev.Text, out Keyword prop) && prop.SupportsSeverity)
+                    AddSeverity(list);
             }
 
             if (!list.Any())

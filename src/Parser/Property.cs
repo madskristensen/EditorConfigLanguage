@@ -26,7 +26,7 @@ namespace EditorConfig
         {
             get
             {
-                return Keyword == null || Value == null;
+                return Keyword != null && Value != null;
             }
         }
     }

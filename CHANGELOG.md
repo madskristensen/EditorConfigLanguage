@@ -3,7 +3,9 @@
 - [ ] Indication of a rules that are already defined by parent .editorconfig
 - [ ] Indication of rules not matching any files
 - [ ] Validate syntax of sections
-- [ ] Align equal chars on format
+- [ ] Context menu command to open settings page
+- [ ] New color scheme
+- [x] Align equal chars on format
 - [x] Hide severity completion for standard properties
 - [x] Validate missing property value
 - [x] Run validation on idle

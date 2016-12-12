@@ -20,8 +20,8 @@ namespace EditorConfig
             Broker = broker;
         }
 
-        public IWpfTextView TextView { get; private set; }
-        public ICompletionBroker Broker { get; private set; }
+        public IWpfTextView TextView { get; }
+        public ICompletionBroker Broker { get; }
 
         private static char GetTypeChar(IntPtr pvaIn)
         {

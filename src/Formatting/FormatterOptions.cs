@@ -14,7 +14,7 @@ namespace EditorConfig
         [Description("Determins if the = character should be aligned by section, document or not at all")]
         [DefaultValue(FormattingType.Section)]
         [TypeConverter(typeof(EnumConverter))]
-        public FormattingType FormattingType { get; set; }
+        public FormattingType FormattingType { get; set; } = FormattingType.Section;
 
         [Category(_properties)]
         [DisplayName("Spaces before =")]

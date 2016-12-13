@@ -93,6 +93,8 @@
     <Compile Include="Parser\EditorConfigDocumentValidator.cs" />
     <Compile Include="Parser\ParseItem.cs" />
     <Compile Include="SuggestedActions\BaseSuggestedAction.cs" />
+    <Compile Include="SuggestedActions\SortAllPropertiesAction.cs" />
+    <Compile Include="SuggestedActions\SortPropertiesAction.cs" />
     <Compile Include="SuggestedActions\DeleteSectionAction.cs" />
     <Compile Include="SuggestedActions\SuggestedActionsSource.cs" />
     <Compile Include="SuggestedActions\SuggestedActionsSourceProvider.cs" />

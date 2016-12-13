@@ -22,7 +22,7 @@ namespace EditorConfig
         {
             return await Task.Factory.StartNew(() =>
             {
-                _section =  _document.Sections.FirstOrDefault(s => s.Item.Span.Contains(range));
+                _section = _document.Sections.FirstOrDefault(s => s.Item.Span.Contains(range));
 
                 return _section != null;
             });
@@ -32,8 +32,13 @@ namespace EditorConfig
         {
             if (_section != null)
             {
+                var sortProperties = new SortPropertiesAction(_section, range.Snapshot.TextBuffer);
+                var sortAllProperties = new SortAllPropertiesAction(_document);
+                yield return new SuggestedActionSet(new ISuggestedAction[] { sortProperties, sortAllProperties });
+
+
                 var deleteSection = new DeleteSectionAction(range.Snapshot.TextBuffer, _section.Span);
-                yield return new SuggestedActionSet(new[] { deleteSection });
+                yield return new SuggestedActionSet(new ISuggestedAction[] { deleteSection });
             }
         }
 

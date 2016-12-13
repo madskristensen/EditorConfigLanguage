@@ -29,5 +29,18 @@ namespace EditorConfig
                 return Keyword != null && Value != null;
             }
         }
+
+        public override string ToString()
+        {
+            var text = Keyword.Text;
+
+            if (Value != null)
+                text += $" = {Value.Text}";
+
+            if (Severity != null)
+                text += $" : {Severity.Text}";
+
+            return text;
+        }
     }
 }

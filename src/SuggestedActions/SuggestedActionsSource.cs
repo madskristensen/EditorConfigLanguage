@@ -37,7 +37,7 @@ namespace EditorConfig
                 yield return new SuggestedActionSet(new ISuggestedAction[] { sortProperties, sortAllProperties });
 
 
-                var deleteSection = new DeleteSectionAction(range.Snapshot.TextBuffer, _section.Span);
+                var deleteSection = new DeleteSectionAction(range.Snapshot.TextBuffer, _section);
                 yield return new SuggestedActionSet(new ISuggestedAction[] { deleteSection });
             }
         }

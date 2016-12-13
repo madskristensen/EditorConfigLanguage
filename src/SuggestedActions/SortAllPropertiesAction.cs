@@ -15,7 +15,7 @@ namespace EditorConfig
 
         public override string DisplayText
         {
-            get { return "Sort Properties in all sections"; }
+            get { return "Sort Properties in All Sections"; }
         }
 
         public override ImageMoniker IconMoniker

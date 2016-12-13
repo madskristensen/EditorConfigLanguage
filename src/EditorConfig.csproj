@@ -63,7 +63,7 @@
     <Compile Include="Adornments\IntraTextAdornmentTagger.cs" />
     <Compile Include="BraceCompletion\BraceCompletionContextProvider.cs" />
     <Compile Include="BraceCompletion\BraceCompletionContext.cs" />
-    <Compile Include="BraceCompletion\Classifier\EditorConfigClassificationTypes.cs" />
+    <Compile Include="Classifier\EditorConfigClassificationTypes.cs" />
     <Compile Include="Commands\CreateEditorConfigFileAnyCode.cs" />
     <Compile Include="Completion\CompletionElementProvider.cs" />
     <Compile Include="Completion\CompletionSourceProvider.cs" />
@@ -100,8 +100,8 @@
     <Compile Include="SuggestedActions\SuggestedActionsSourceProvider.cs" />
     <Compile Include="Taggers\BraceMatchingTagger.cs" />
     <Compile Include="Taggers\BraceMatchingTaggerProvider.cs" />
-    <Compile Include="BraceCompletion\Classifier\EditorConfigClassifier.cs" />
-    <Compile Include="BraceCompletion\Classifier\EditorConfigProvider.cs" />
+    <Compile Include="Classifier\EditorConfigClassifier.cs" />
+    <Compile Include="Classifier\EditorConfigProvider.cs" />
     <Compile Include="Commands\BaseCommand.cs" />
     <Compile Include="Commands\F1Help.cs" />
     <Compile Include="Formatting\FormatterCommand.cs" />

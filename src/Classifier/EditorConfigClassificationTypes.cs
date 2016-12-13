@@ -16,7 +16,7 @@ namespace EditorConfig
 
         [Export, Name(Section)]
         internal static ClassificationTypeDefinition EditorConfigSectionClassification { get; set; }
-        
+
         [Export, Name(Value)]
         internal static ClassificationTypeDefinition EditorConfigValueClassification { get; set; }
 
@@ -37,7 +37,7 @@ namespace EditorConfig
             DisplayName = EditorConfigClassificationTypes.Section;
         }
     }
-    
+
     [Export(typeof(EditorFormatDefinition))]
     [ClassificationType(ClassificationTypeNames = EditorConfigClassificationTypes.Value)]
     [Name(EditorConfigClassificationTypes.Value)]

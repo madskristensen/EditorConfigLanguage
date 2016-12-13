@@ -20,7 +20,7 @@ namespace EditorConfig
 
         public override string DisplayText
         {
-            get { return "Sort Properties"; }
+            get { return "Sort Properties in Section"; }
         }
 
         public override ImageMoniker IconMoniker

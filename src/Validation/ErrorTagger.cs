@@ -23,7 +23,7 @@ namespace EditorConfig
             _errorlist = errorlist;
             _textDocument = document;
             _document = EditorConfigDocument.FromTextBuffer(view.TextBuffer);
-            _document.Validated += DocumentValidated;
+            _document.Validator.Validated += DocumentValidated;
 
             ThreadHelper.Generic.BeginInvoke(DispatcherPriority.ApplicationIdle, () =>
             {

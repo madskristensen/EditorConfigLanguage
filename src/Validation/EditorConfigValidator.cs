@@ -4,15 +4,17 @@ using System.Timers;
 
 namespace EditorConfig
 {
-    partial class EditorConfigDocument
+    class EditorConfigValidator: IDisposable
     {
+        private EditorConfigDocument _document;
         private const int _validationDelay = 1000;
         private Timer _timer;
         private bool _hasChanged;
 
-        private void InitializeValidator()
+        public EditorConfigValidator(EditorConfigDocument document)
         {
-            Parsed += DocumentParsed;
+            _document = document;
+            _document.Parsed += DocumentParsed;
         }
 
         private void DocumentParsed(object sender, EventArgs e)
@@ -32,7 +34,7 @@ namespace EditorConfig
         {
             _timer.Stop();
 
-            if (_hasChanged && !IsParsing)
+            if (_hasChanged && !_document.IsParsing)
                 Validate();
 
             _hasChanged = false;
@@ -42,14 +44,14 @@ namespace EditorConfig
         {
             try
             {
-                foreach (var item in ParseItems.Where(i => i.ItemType == ItemType.Unknown))
+                foreach (var item in _document.ParseItems.Where(i => i.ItemType == ItemType.Unknown))
                 {
                     ValidateUnknown(item);
                 }
 
                 ValidateSection();
 
-                foreach (var property in Properties)
+                foreach (var property in _document.Properties)
                 {
                     ValidateProperty(property);
                 }
@@ -69,29 +71,29 @@ namespace EditorConfig
 
         private void ValidateSection()
         {
-            foreach (var section in Sections)
+            foreach (var section in _document.Sections)
             {
                 foreach (var property in section.Properties)
                 {
                     ValidateProperty(property);
-                    
+
                     // Duplicate property
                     if (section.Properties.First(p => p.Keyword.Text.Equals(property.Keyword.Text, StringComparison.OrdinalIgnoreCase)) != property)
                         property.Keyword.AddError(Resources.Text.ValidationDuplicateProperty);
                 }
 
                 // Duplicate section
-                if (Sections.First(s => s.Item.Text == section.Item.Text) != section)
+                if (_document.Sections.First(s => s.Item.Text == section.Item.Text) != section)
                     section.Item.AddError(string.Format(Resources.Text.ValidationDuplicateSection, section.Item.Text));
             }
         }
 
         private void ValidateProperties()
         {
-            foreach (var property in Properties)
+            foreach (var property in _document.Properties)
             {
                 // Only root property allowed
-                if (property != Root)
+                if (property != _document.Root)
                     property.Keyword.AddError(Resources.Text.ValidationRootInSection);
             }
         }
@@ -115,7 +117,7 @@ namespace EditorConfig
             {
                 property.Value.AddError(string.Format(Resources.Text.InvalidValue, property.Value.Text, keyword.Name));
             }
-            
+
             // Missing severity
             else if (property.Severity == null && property.Value.Text.Equals("true", StringComparison.OrdinalIgnoreCase) && keyword.SupportsSeverity)
             {
@@ -136,7 +138,7 @@ namespace EditorConfig
             }
         }
 
-        public void DisposeValidator()
+        public void Dispose()
         {
             if (_timer != null)
             {

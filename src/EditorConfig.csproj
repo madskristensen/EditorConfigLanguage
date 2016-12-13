@@ -90,7 +90,7 @@
     <Compile Include="Parser\EditorConfigDocumentInheritance.cs" />
     <Compile Include="Parser\EditorConfigDocumentParser.cs" />
     <Compile Include="Parser\EditorConfigDocument.cs" />
-    <Compile Include="Parser\EditorConfigDocumentValidator.cs" />
+    <Compile Include="Validation\EditorConfigValidator.cs" />
     <Compile Include="Parser\ParseItem.cs" />
     <Compile Include="SuggestedActions\BaseSuggestedAction.cs" />
     <Compile Include="SuggestedActions\SortAllPropertiesAction.cs" />
@@ -98,8 +98,8 @@
     <Compile Include="SuggestedActions\DeleteSectionAction.cs" />
     <Compile Include="SuggestedActions\SuggestedActionsSource.cs" />
     <Compile Include="SuggestedActions\SuggestedActionsSourceProvider.cs" />
-    <Compile Include="Taggers\BraceMatchingTagger.cs" />
-    <Compile Include="Taggers\BraceMatchingTaggerProvider.cs" />
+    <Compile Include="BraceCompletion\BraceMatchingTagger.cs" />
+    <Compile Include="BraceCompletion\BraceMatchingTaggerProvider.cs" />
     <Compile Include="Classifier\EditorConfigClassifier.cs" />
     <Compile Include="Classifier\EditorConfigProvider.cs" />
     <Compile Include="Commands\BaseCommand.cs" />
@@ -112,16 +112,16 @@
     <Compile Include="Constants.cs" />
     <Compile Include="DragDrop\EditorConfigDropHandler.cs" />
     <Compile Include="DragDrop\EditorConfigDropHandlerProvider.cs" />
-    <Compile Include="EditorConfigPackage1.cs">
+    <Compile Include="CommandTable.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>EditorConfigPackage.vsct</DependentUpon>
+      <DependentUpon>CommandTable.vsct</DependentUpon>
     </Compile>
     <Compile Include="Shared\VsHelpers.cs" />
-    <Compile Include="Taggers\ErrorTagger.cs" />
-    <Compile Include="Taggers\ErrorTaggerProvider.cs" />
-    <Compile Include="Taggers\OutliningTagger.cs" />
-    <Compile Include="Taggers\OutliningTaggerProvider.cs" />
+    <Compile Include="Validation\ErrorTagger.cs" />
+    <Compile Include="Validation\ErrorTaggerProvider.cs" />
+    <Compile Include="Outlining\OutliningTagger.cs" />
+    <Compile Include="Outlining\OutliningTaggerProvider.cs" />
     <Compile Include="ProvideBraceCompletionAttribute.cs" />
     <Compile Include="QuickInfo\EditorConfigQuickInfo.cs" />
     <Compile Include="QuickInfo\EditorConfigQuickInfoController.cs" />
@@ -132,9 +132,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Text.resx</DependentUpon>
     </Compile>
-    <Compile Include="Taggers\SeverityTag.cs" />
-    <Compile Include="Taggers\SeverityTagger.cs" />
-    <Compile Include="Taggers\SeverityTaggerProvider.cs" />
+    <Compile Include="Adornments\SeverityTag.cs" />
+    <Compile Include="Adornments\SeverityTagger.cs" />
+    <Compile Include="Adornments\SeverityTaggerProvider.cs" />
     <Compile Include="TextViewCreationListener.cs" />
     <Compile Include="LanguageService\ContentTypes.cs" />
     <Compile Include="EditorConfigPackage.cs" />
@@ -148,10 +148,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <VSCTCompile Include="EditorConfigPackage.vsct">
+    <VSCTCompile Include="CommandTable.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
       <Generator>VsctGenerator</Generator>
-      <LastGenOutput>EditorConfigPackage1.cs</LastGenOutput>
+      <LastGenOutput>CommandTable.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </VSCTCompile>
     <Content Include="FileIcons\icons.pkgdef">

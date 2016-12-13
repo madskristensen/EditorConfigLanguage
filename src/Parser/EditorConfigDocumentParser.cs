@@ -8,10 +8,10 @@ namespace EditorConfig
 {
     partial class EditorConfigDocument
     {
-        private static Regex _property = new Regex(@"^\s*(?<keyword>[\w-]+)\s*[=:]?\s*(?<value>[^;#:\s]+)?\s*:?\s*(?<severity>[^#;\s:]+)?\s*");
+        private static Regex _property = new Regex(@"^\s*(?<keyword>[\w-]+)\s*[=:]?\s*(?<value>[^;#:\s]+)?(\s*:\s*(?<severity>[^;#:\s]+))?");
         private static Regex _section = new Regex(@"^\s*\[([^#;]+)\]");
         private static Regex _comment = new Regex(@"^\s*[#;].+");
-        private static Regex _unknown = new Regex(@"[^\s:].*");
+        private static Regex _unknown = new Regex(@"\s*(?<unknown>.+)");
 
         public bool IsParsing { get; private set; }
 
@@ -94,7 +94,8 @@ namespace EditorConfig
 
                         if (!string.IsNullOrEmpty(remaining) && IsMatch(_unknown, remaining, out Match unknownMatch))
                         {
-                            var span = new Span(line.Start + match.Length, unknownMatch.Length);
+                            var group = unknownMatch.Groups["unknown"];
+                            var span = new Span(line.Start + match.Length + group.Index, group.Length);
                             var unknown = new ParseItem(ItemType.Unknown, span, remaining);
                             AddToList(items, unknown);
                         }
@@ -107,7 +108,7 @@ namespace EditorConfig
                 Sections.AddRange(sections);
                 Properties.Clear();
                 Properties.AddRange(properties);
-                
+
                 IsParsing = false;
 
                 Parsed?.Invoke(this, EventArgs.Empty);

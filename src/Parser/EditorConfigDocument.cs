@@ -11,8 +11,8 @@ namespace EditorConfig
         {
             TextBuffer = buffer;
             TextBuffer.Changed += BufferChangedAsync;
+            Validator = new EditorConfigValidator(this);
 
-            InitializeValidator();
             InitializeParser();
             InitializeInheritance();
         }
@@ -23,6 +23,8 @@ namespace EditorConfig
         }
 
         public ITextBuffer TextBuffer { get; }
+
+        public EditorConfigValidator Validator { get; }
 
         public List<ParseItem> ParseItems { get; } = new List<ParseItem>();
 
@@ -55,7 +57,7 @@ namespace EditorConfig
 
         public void Dispose()
         {
-            DisposeValidator();
+            Validator?.Dispose();
         }
     }
 }

@@ -107,13 +107,19 @@ namespace EditorConfig
                     ValidateProperty(property);
 
                     // Duplicate property
-                    if (section.Properties.First(p => p.Keyword.Text.Equals(property.Keyword.Text, StringComparison.OrdinalIgnoreCase)) != property)
-                        property.Keyword.AddError(Resources.Text.ValidationDuplicateProperty);
+                    if (EditorConfigPackage.ValidationOptions.EnableDuplicateProperties)
+                    {
+                        if (section.Properties.First(p => p.Keyword.Text.Equals(property.Keyword.Text, StringComparison.OrdinalIgnoreCase)) != property)
+                            property.Keyword.AddError(Resources.Text.ValidationDuplicateProperty);
+                    }
                 }
 
                 // Duplicate section
-                if (_document.Sections.First(s => s.Item.Text == section.Item.Text) != section)
-                    section.Item.AddError(string.Format(Resources.Text.ValidationDuplicateSection, section.Item.Text));
+                if (EditorConfigPackage.ValidationOptions.EnableDuplicateSections)
+                {
+                    if (_document.Sections.First(s => s.Item.Text == section.Item.Text) != section)
+                        section.Item.AddError(string.Format(Resources.Text.ValidationDuplicateSection, section.Item.Text));
+                }
             }
         }
 

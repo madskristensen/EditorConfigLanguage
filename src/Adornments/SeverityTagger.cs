@@ -16,6 +16,15 @@ namespace EditorConfig
             _buffer = buffer;
             _document = EditorConfigDocument.FromTextBuffer(buffer);
             _document.Parsed += DocumentParsed;
+
+            FormatterOptions.Saved += FormatterOptions_Saved;
+        }
+
+        private void FormatterOptions_Saved(object sender, EventArgs e)
+        {
+            // HACK: This triggers reparsing of the document. Otherwise GetTags never gets called
+            var text = _buffer.CurrentSnapshot.GetText();
+            _buffer.Replace(new Span(0, _buffer.CurrentSnapshot.Length), text);
         }
 
         private void DocumentParsed(object sender, EventArgs e)
@@ -24,8 +33,6 @@ namespace EditorConfig
                 new SnapshotSpanEventArgs(
                 new SnapshotSpan(_buffer.CurrentSnapshot, 0, _buffer.CurrentSnapshot.Length)));
         }
-
-        public event EventHandler<SnapshotSpanEventArgs> TagsChanged;
 
         public IEnumerable<ITagSpan<SeverityTag>> GetTags(NormalizedSnapshotSpanCollection spans)
         {
@@ -40,5 +47,7 @@ namespace EditorConfig
                 yield return new TagSpan<SeverityTag>(span, new SeverityTag(item));
             }
         }
+
+        public event EventHandler<SnapshotSpanEventArgs> TagsChanged;
     }
 }

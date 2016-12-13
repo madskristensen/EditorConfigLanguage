@@ -30,6 +30,18 @@ namespace EditorConfig
         [DefaultValue(true)]
         public bool EnableUnknownValues { get; set; } = true;
 
+        [Category(_rules)]
+        [DisplayName("Validate duplicate sections")]
+        [Description("This will show errors when a section has already been defined earlier in the document.")]
+        [DefaultValue(true)]
+        public bool EnableDuplicateSections { get; set; } = true;
+
+        [Category(_rules)]
+        [DisplayName("Validate duplicate properties")]
+        [Description("This will show errors when a property has already been defined earlier in the section.")]
+        [DefaultValue(true)]
+        public bool EnableDuplicateProperties { get; set; } = true;
+
         public override void SaveSettingsToStorage()
         {
             base.SaveSettingsToStorage();

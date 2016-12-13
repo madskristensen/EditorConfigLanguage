@@ -1,13 +1,7 @@
-﻿using Microsoft.VisualStudio.Text.Tagging;
+﻿using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text.Tagging;
 using Microsoft.VisualStudio.Utilities;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.VisualStudio.Text;
-using Microsoft.VisualStudio.Text.Editor;
 
 namespace EditorConfig
 {
@@ -18,8 +12,8 @@ namespace EditorConfig
     {
         public ITagger<T> CreateTagger<T>(ITextBuffer buffer) where T : ITag
         {
-            return new SeverityTagger(buffer) as ITagger<T>;
-            //return buffer.Properties.GetOrCreateSingletonProperty(() => new SeverityTagger(buffer)) as ITagger<T>;
+            //return new SeverityTagger(buffer) as ITagger<T>;
+            return buffer.Properties.GetOrCreateSingletonProperty(() => new SeverityTagger(buffer)) as ITagger<T>;
         }
     }
 }

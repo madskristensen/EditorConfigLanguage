@@ -20,16 +20,19 @@ namespace EditorConfig
             _adornmentLayer = view.GetAdornmentLayer(InheritanceAdornmentLayer.LayerName);
             _document = EditorConfigDocument.FromTextBuffer(view.TextBuffer);
 
-            CreateImage();
+            Loaded += (s, e) =>
+            {
+                CreateImage();
+                doc.FileActionOccurred += FileActionOccurred;
+                Updated += InheritanceUpdated;
 
-            doc.FileActionOccurred += FileActionOccurred;
-            Updated += InheritanceUpdated;
+                view.ViewportHeightChanged += SetAdornmentLocation;
+                view.ViewportWidthChanged += SetAdornmentLocation;
 
-            view.ViewportHeightChanged += SetAdornmentLocation;
-            view.ViewportWidthChanged += SetAdornmentLocation;
+                if (_adornmentLayer.IsEmpty)
+                    _adornmentLayer.AddAdornment(AdornmentPositioningBehavior.ViewportRelative, null, null, this, null);
 
-            if (_adornmentLayer.IsEmpty)
-                _adornmentLayer.AddAdornment(AdornmentPositioningBehavior.ViewportRelative, null, null, this, null);
+            };
         }
 
         private void InheritanceUpdated(object sender, EventArgs e)
@@ -92,7 +95,7 @@ namespace EditorConfig
 
             var inherits = new ThemedTextBlock()
             {
-                Text = ("└─  " + relative).PadLeft(relative.Length + 4 + padding),// "→ " + relative, 
+                Text = ("└─  " + relative).PadLeft(relative.Length + 4 + padding),// "→ " + relative,
                 FontSize = 16,
                 Cursor = Cursors.Hand,
                 ToolTip = "Click to open " + parentFileName,
@@ -108,17 +111,6 @@ namespace EditorConfig
             Children.Add(inherits);
         }
 
-        private class ThemedTextBlock : TextBlock
-        {
-            public ThemedTextBlock()
-            {
-                Opacity = 0.5;
-                SetValue(TextOptions.TextRenderingModeProperty, TextRenderingMode.Aliased);
-                SetValue(TextOptions.TextFormattingModeProperty, TextFormattingMode.Ideal);
-                SetResourceReference(TextBlock.ForegroundProperty, EnvironmentColors.SystemMenuTextBrushKey);
-            }
-        }
-
         private void SetAdornmentLocation(object sender, EventArgs e)
         {
             if (ActualWidth == 0)
@@ -131,6 +123,17 @@ namespace EditorConfig
                 IWpfTextView view = _adornmentLayer.TextView;
                 Canvas.SetLeft(this, view.ViewportRight - ActualWidth - 20);
                 Canvas.SetTop(this, view.ViewportBottom - ActualHeight - 20);
+            }
+        }
+
+        private class ThemedTextBlock : TextBlock
+        {
+            public ThemedTextBlock()
+            {
+                Opacity = 0.5;
+                SetValue(TextOptions.TextRenderingModeProperty, TextRenderingMode.Aliased);
+                SetValue(TextOptions.TextFormattingModeProperty, TextFormattingMode.Ideal);
+                SetResourceReference(TextBlock.ForegroundProperty, EnvironmentColors.SystemMenuTextBrushKey);
             }
         }
 

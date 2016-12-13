@@ -18,7 +18,7 @@ namespace EditorConfig
         private void InitializeParser()
         {
             var task = ParseAsync();
-            FormatterOptions.Changed += FormatterOptionsChanged;
+            //FormatterOptions.Changed += FormatterOptionsChanged;
         }
 
         private System.Threading.Tasks.Task ParseAsync()
@@ -95,9 +95,12 @@ namespace EditorConfig
                         if (!string.IsNullOrEmpty(remaining) && IsMatch(_unknown, remaining, out Match unknownMatch))
                         {
                             var group = unknownMatch.Groups["unknown"];
-                            var span = new Span(line.Start + match.Length + group.Index, group.Length);
-                            var unknown = new ParseItem(ItemType.Unknown, span, remaining);
-                            AddToList(items, unknown);
+                            if (!string.IsNullOrWhiteSpace(group.Value))
+                            {
+                                var span = new Span(line.Start + match.Length + group.Index, group.Length);
+                                var unknown = new ParseItem(ItemType.Unknown, span, remaining);
+                                AddToList(items, unknown);
+                            }
                         }
                     }
                 }
@@ -147,15 +150,15 @@ namespace EditorConfig
             return item;
         }
 
-        private void FormatterOptionsChanged(object sender, EventArgs e)
-        {
-            Parsed?.Invoke(this, EventArgs.Empty);
-        }
+        //private void FormatterOptionsChanged(object sender, EventArgs e)
+        //{
+        //    Parsed?.Invoke(this, EventArgs.Empty);
+        //}
 
         private void DisposeParser()
         {
             Parsed = null;
-            FormatterOptions.Changed -= FormatterOptionsChanged;
+            //FormatterOptions.Changed -= FormatterOptionsChanged;
         }
 
         public event EventHandler Parsed;

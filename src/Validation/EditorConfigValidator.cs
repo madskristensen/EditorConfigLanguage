@@ -4,30 +4,59 @@ using System.Timers;
 
 namespace EditorConfig
 {
-    class EditorConfigValidator: IDisposable
+    class EditorConfigValidator : IDisposable
     {
         private EditorConfigDocument _document;
         private const int _validationDelay = 1000;
         private Timer _timer;
         private bool _hasChanged;
+        private bool _prevEnabled = EditorConfigPackage.ValidationOptions.EnableValidation;
 
-        public EditorConfigValidator(EditorConfigDocument document)
+        private EditorConfigValidator(EditorConfigDocument document)
         {
             _document = document;
             _document.Parsed += DocumentParsed;
+
+            if (_prevEnabled)
+                Validate();
+
+            ValidationOptions.Saved += DocumentParsed;
+        }
+
+        public static EditorConfigValidator FromDocument(EditorConfigDocument document)
+        {
+            return document.TextBuffer.Properties.GetOrCreateSingletonProperty(() => new EditorConfigValidator(document));
         }
 
         private void DocumentParsed(object sender, EventArgs e)
         {
-            _hasChanged = true;
-
-            if (_timer == null)
+            if (!EditorConfigPackage.ValidationOptions.EnableValidation)
             {
-                _timer = new Timer(1000);
-                _timer.Elapsed += TimerElapsed;
+                // Don't run the logic unless the user changed the settings since last run
+                if (_prevEnabled != EditorConfigPackage.ValidationOptions.EnableValidation)
+                {
+                    foreach (var item in _document.ParseItems.Where(i => i.Errors.Any()))
+                    {
+                        item.Errors.Clear();
+                    }
+
+                    Validated?.Invoke(this, EventArgs.Empty);
+                }
+            }
+            else
+            {
+                _hasChanged = true;
+
+                if (_timer == null)
+                {
+                    _timer = new Timer(1000);
+                    _timer.Elapsed += TimerElapsed;
+                }
+
+                _timer.Enabled = true;
             }
 
-            _timer.Enabled = true;
+            _prevEnabled = EditorConfigPackage.ValidationOptions.EnableValidation;
         }
 
         private void TimerElapsed(object sender, ElapsedEventArgs e)
@@ -101,7 +130,7 @@ namespace EditorConfig
         private void ValidateProperty(Property property)
         {
             // Keyword
-            if (!SchemaCatalog.TryGetProperty(property.Keyword.Text, out Keyword keyword))
+            if (EditorConfigPackage.ValidationOptions.EnableUnknownProperties & !SchemaCatalog.TryGetProperty(property.Keyword.Text, out Keyword keyword))
             {
                 property.Keyword.AddError(string.Format(Resources.Text.ValidateUnknownKeyword, property.Keyword.Text));
             }
@@ -112,7 +141,8 @@ namespace EditorConfig
                 property.Keyword.AddError("A value must be specified");
             }
             // Value not in schema
-            else if (!keyword.Values.Any(v => v.Name.Equals(property.Value?.Text, StringComparison.OrdinalIgnoreCase)) &&
+            else if (EditorConfigPackage.ValidationOptions.EnableUnknownValues &&
+                !keyword.Values.Any(v => v.Name.Equals(property.Value?.Text, StringComparison.OrdinalIgnoreCase)) &&
                 !(int.TryParse(property.Value.Text, out int intValue) && intValue > 0))
             {
                 property.Value.AddError(string.Format(Resources.Text.InvalidValue, property.Value.Text, keyword.Name));
@@ -143,9 +173,13 @@ namespace EditorConfig
             if (_timer != null)
             {
                 _timer.Dispose();
+                _timer = null;
             }
 
             Validated = null;
+
+            _document.Parsed -= DocumentParsed;
+            ValidationOptions.Saved -= DocumentParsed;
         }
 
         public event EventHandler Validated;

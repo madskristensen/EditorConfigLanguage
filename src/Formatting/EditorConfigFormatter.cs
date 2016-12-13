@@ -18,10 +18,10 @@ namespace EditorConfig
 
         public bool Format()
         {
-            _spaceBeforeEquals = EditorConfigPackage.Options.SpacesBeforeEquals;
-            _spaceAfterEquals = EditorConfigPackage.Options.SpacesAfterEquals;
-            _spaceBeforeColon = EditorConfigPackage.Options.SpacesBeforeColon;
-            _spaceAfterColon = EditorConfigPackage.Options.SpacesAfterColon;
+            _spaceBeforeEquals = EditorConfigPackage.FormatterOptions.SpacesBeforeEquals;
+            _spaceAfterEquals = EditorConfigPackage.FormatterOptions.SpacesAfterEquals;
+            _spaceBeforeColon = EditorConfigPackage.FormatterOptions.SpacesBeforeColon;
+            _spaceAfterColon = EditorConfigPackage.FormatterOptions.SpacesAfterColon;
 
             // Trim lines
             var changed = TrimLines();
@@ -71,7 +71,7 @@ namespace EditorConfig
 
         private int GetKeywordLength()
         {
-            switch (EditorConfigPackage.Options.FormattingType)
+            switch (EditorConfigPackage.FormatterOptions.FormattingType)
             {
                 case FormattingType.Section:
                     return int.MinValue;

@@ -1,10 +1,9 @@
-﻿using System;
-using System.ComponentModel.Composition;
-using Microsoft.VisualStudio.Shell;
+﻿using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Tagging;
 using Microsoft.VisualStudio.Utilities;
+using System.ComponentModel.Composition;
 
 namespace EditorConfig
 {
@@ -20,9 +19,9 @@ namespace EditorConfig
         {
             if (buffer.Properties.TryGetProperty(typeof(ErrorListProvider), out ErrorListProvider errorlist) &&
                 buffer.Properties.TryGetProperty(typeof(IWpfTextView), out IWpfTextView view) &&
-                DocumentService.TryGetTextDocument(buffer, out var document))
+                DocumentService.TryGetTextDocument(buffer, out var doc))
             {
-                return buffer.Properties.GetOrCreateSingletonProperty(() => new ErrorTagger(view, errorlist, document)) as ITagger<T>;
+                return buffer.Properties.GetOrCreateSingletonProperty(() => new ErrorTagger(view, errorlist, doc.FilePath)) as ITagger<T>;
             }
 
             return null;

@@ -1,29 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Threading;
-using Microsoft.VisualStudio.Shell;
+﻿using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Tagging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Threading;
 
 namespace EditorConfig
 {
-    class ErrorTagger : ITagger<IErrorTag>
+    class ErrorTagger : ITagger<IErrorTag>, IDisposable
     {
         private ErrorListProvider _errorlist;
-        private ITextDocument _textDocument;
+        private string _file;
         private EditorConfigDocument _document;
         private IWpfTextView _view;
+        private EditorConfigValidator _validator;
         private bool _hasLoaded;
 
-        public ErrorTagger(IWpfTextView view, ErrorListProvider errorlist, ITextDocument document)
+        public ErrorTagger(IWpfTextView view, ErrorListProvider errorlist, string file)
         {
             _view = view;
             _errorlist = errorlist;
-            _textDocument = document;
+            _file = file;
+
             _document = EditorConfigDocument.FromTextBuffer(view.TextBuffer);
-            _document.Validator.Validated += DocumentValidated;
+            _validator = EditorConfigValidator.FromDocument(_document);
+            _validator.Validated += DocumentValidated;
 
             ThreadHelper.Generic.BeginInvoke(DispatcherPriority.ApplicationIdle, () =>
             {
@@ -93,7 +96,7 @@ namespace EditorConfig
                 Category = TaskCategory.Misc,
                 ErrorCategory = TaskErrorCategory.Warning,
                 Priority = TaskPriority.Low,
-                Document = _textDocument.FilePath
+                Document = _file
             };
 
             task.Navigate += Navigate;
@@ -120,6 +123,11 @@ namespace EditorConfig
                 if (task.Line == line.LineNumber)
                     _errorlist.Tasks.RemoveAt(i);
             }
+        }
+
+        public void Dispose()
+        {
+            _validator.Validated -= DocumentValidated;
         }
 
         public event EventHandler<SnapshotSpanEventArgs> TagsChanged;

@@ -5,13 +5,12 @@ using System.Linq;
 
 namespace EditorConfig
 {
-    partial class EditorConfigDocument : IDisposable
+    partial class EditorConfigDocument
     {
         private EditorConfigDocument(ITextBuffer buffer)
         {
             TextBuffer = buffer;
             TextBuffer.Changed += BufferChangedAsync;
-            Validator = new EditorConfigValidator(this);
 
             InitializeParser();
             InitializeInheritance();
@@ -24,11 +23,9 @@ namespace EditorConfig
 
         public ITextBuffer TextBuffer { get; }
 
-        public EditorConfigValidator Validator { get; }
-
         public List<ParseItem> ParseItems { get; } = new List<ParseItem>();
 
-        public List<Section> Sections { get;} = new List<Section>();
+        public List<Section> Sections { get; } = new List<Section>();
 
         public List<Property> Properties { get; } = new List<Property>();
 
@@ -53,11 +50,6 @@ namespace EditorConfig
         public ParseItem ItemAtPosition(int point)
         {
             return ParseItems?.FirstOrDefault(p => p.Span.Contains(point - 1));
-        }
-
-        public void Dispose()
-        {
-            Validator?.Dispose();
         }
     }
 }

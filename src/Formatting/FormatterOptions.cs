@@ -45,16 +45,16 @@ namespace EditorConfig
 
         [Category(_severity)]
         [DisplayName("Show icons")]
-        [Description("[C# only] Show icons next to the severity value for easy identification")]
+        [Description("[C# only] Show icons next to the severity value for easy identification. Reopen document required")]
         [DefaultValue(true)]
         public bool ShowSeverityIcons { get; set; } = true;
 
         public override void SaveSettingsToStorage()
         {
             base.SaveSettingsToStorage();
-            Changed?.Invoke(this, EventArgs.Empty);
+            Saved?.Invoke(this, EventArgs.Empty);
         }
 
-        public static event EventHandler Changed;
+        public static event EventHandler Saved;
     }
 }

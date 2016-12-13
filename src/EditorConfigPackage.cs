@@ -15,7 +15,8 @@ namespace EditorConfig
 
     [ProvideLanguageService(typeof(EditorConfigLanguage), Constants.LanguageName, 101, EnableAdvancedMembersOption = true, ShowDropDownOptions = true, DefaultToInsertSpaces = true, EnableCommenting = true, AutoOutlining = true, EnableLineNumbers = true, MatchBraces = true, MatchBracesAtCaret = true, ShowMatchingBrace = true)]
     [ProvideLanguageExtension(typeof(EditorConfigLanguage), Constants.FileName)]
-    [ProvideLanguageEditorOptionPage(typeof(FormatterOptions), Constants.LanguageName, null, "Formatting", "#101", new[] { "editorconfig", "Editor Config" })]
+    [ProvideLanguageEditorOptionPage(typeof(FormatterOptions), Constants.LanguageName, null, "Formatting", "#101", new[] { "editorconfig", "formatting" })]
+    [ProvideLanguageEditorOptionPage(typeof(ValidationOptions), Constants.LanguageName, null, "Validation", "#102", new[] { "editorconfig", "validation" })]
 
     [ProvideEditorFactory(typeof(EditorFactory), 110, CommonPhysicalViewAttributes = (int)__VSPHYSICALVIEWATTRIBUTES.PVA_None, TrustLevel = __VSEDITORTRUSTLEVEL.ETL_AlwaysTrusted)]
     [ProvideEditorLogicalView(typeof(EditorFactory), VSConstants.LOGVIEWID.TextView_string, IsTrusted = true)]
@@ -31,7 +32,13 @@ namespace EditorConfig
             private set;
         }
 
-        public static FormatterOptions Options
+        public static FormatterOptions FormatterOptions
+        {
+            get;
+            private set;
+        }
+
+        public static ValidationOptions ValidationOptions
         {
             get;
             private set;
@@ -40,7 +47,8 @@ namespace EditorConfig
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
             Language = new EditorConfigLanguage(this);
-            Options = (FormatterOptions)GetDialogPage(typeof(FormatterOptions));
+            FormatterOptions = (FormatterOptions)GetDialogPage(typeof(FormatterOptions));
+            ValidationOptions = (ValidationOptions)GetDialogPage(typeof(ValidationOptions));
 
             var serviceContainer = this as IServiceContainer;
             serviceContainer.AddService(typeof(EditorConfigLanguage), Language, true);

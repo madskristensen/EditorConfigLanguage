@@ -28,7 +28,7 @@ namespace EditorConfig
 
         private void DocumentParsed(object sender, EventArgs e)
         {
-            ClassificationChanged(this,
+            ClassificationChanged?.Invoke(this,
                 new ClassificationChangedEventArgs(
                 new SnapshotSpan(_buffer.CurrentSnapshot, 0, _buffer.CurrentSnapshot.Length)));
         }

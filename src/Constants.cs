@@ -1,8 +1,4 @@
-﻿using Microsoft.VisualStudio.Imaging;
-using Microsoft.VisualStudio.Imaging.Interop;
-using System.Collections.Generic;
-
-namespace EditorConfig
+﻿namespace EditorConfig
 {
     public class Constants
     {

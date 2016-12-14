@@ -37,11 +37,11 @@ namespace EditorConfig
 
             if (item.ItemType == ItemType.Property && SchemaCatalog.TryGetProperty(item.Text, out Keyword property))
             {
-                qiContent.Add(new TooltipControl(property));
+                qiContent.Add(new Shared.EditorTooltip(property));
             }
             else if (item.ItemType == ItemType.Severity && SchemaCatalog.TryGetSeverity(item.Text, out Severity severity))
             {
-                qiContent.Add(new TooltipControl(severity));
+                qiContent.Add(new Shared.EditorTooltip(severity));
             }
 
             applicableToSpan = point.Value.Snapshot.CreateTrackingSpan(item.Span, SpanTrackingMode.EdgeNegative);

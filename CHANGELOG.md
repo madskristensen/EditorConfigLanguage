@@ -3,6 +3,8 @@
 - [ ] Indication of a rules that are already defined by parent .editorconfig
 - [ ] Indication of rules not matching any files
 - [ ] Validate syntax of sections
+- [ ] Swith icons to the official .editorconfig icon
+- [x] Update tooltip to display larger icon
 
 Features that have a checkmark are complete and available for
 download in the

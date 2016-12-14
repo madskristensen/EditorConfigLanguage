@@ -84,7 +84,9 @@
     <Compile Include="Schema\SchemaCatalog.cs" />
     <Compile Include="Schema\Severity.cs" />
     <Compile Include="Schema\Value.cs" />
-    <Compile Include="Shared\TooltipControl.cs" />
+    <Compile Include="Shared\EditorTooltip.xaml.cs">
+      <DependentUpon>EditorTooltip.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Completion\FilteredCompletionSet.cs" />
     <Compile Include="LanguageService\DropDownBars.cs" />
     <Compile Include="Parser\EditorConfigDocumentInheritance.cs" />
@@ -371,7 +373,12 @@
       <ManifestResourceName>VSPackage</ManifestResourceName>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Page Include="Shared\EditorTooltip.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -18,10 +18,10 @@ namespace EditorConfig
             if (elementType == UIElementType.Tooltip)
             {
                 if (SchemaCatalog.TryGetProperty(itemToRender.DisplayText, out Keyword prop))
-                    return new TooltipControl(prop);
+                    return new Shared.EditorTooltip(prop);
 
                 if (SchemaCatalog.TryGetSeverity(itemToRender.DisplayText, out Severity severity))
-                    return new TooltipControl(severity);
+                    return new Shared.EditorTooltip(severity);
             }
 
             return null;

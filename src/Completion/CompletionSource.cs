@@ -63,7 +63,8 @@ namespace EditorConfig
             // Severity
             else if ((position > 0 && snapshot.Length > 1 && snapshot.GetText(position - 1, 1) == ":") || parseItem?.ItemType == ItemType.Severity)
             {
-                if (SchemaCatalog.TryGetProperty(prev?.Prev.Text, out Keyword prop) && prop.SupportsSeverity)
+                var prop = _document.PropertyAtPosition(position);
+                if (SchemaCatalog.TryGetProperty(prop?.Keyword?.Text, out Keyword key) && key.SupportsSeverity)
                     AddSeverity(list);
             }
 

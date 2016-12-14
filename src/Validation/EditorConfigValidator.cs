@@ -112,6 +112,12 @@ namespace EditorConfig
                         if (section.Properties.First(p => p.Keyword.Text.Equals(property.Keyword.Text, StringComparison.OrdinalIgnoreCase)) != property)
                             property.Keyword.AddError(Resources.Text.ValidationDuplicateProperty);
                     }
+
+                    // Root in section
+                    if (property.Keyword.Text.Equals(SchemaCatalog.Root, StringComparison.OrdinalIgnoreCase))
+                    {
+                        property.Keyword.AddError(Resources.Text.ValidationRootInSection);
+                    }
                 }
 
                 // Duplicate section

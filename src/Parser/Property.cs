@@ -9,10 +9,16 @@ namespace EditorConfig
             Keyword = keyword;
         }
 
+        /// <summary>The keyword is the name of the property.</summary>
         public ParseItem Keyword { get; set; }
+
+        /// <summary>The value is what comes after the = character.</summary>
         public ParseItem Value { get; set; }
+
+        /// <summary>This applies to C# and .NET specific keywords only.</summary>
         public ParseItem Severity { get; set; }
 
+        /// <summary>The full span of the property including the value and severity.</summary>
         public Span Span
         {
             get
@@ -22,6 +28,7 @@ namespace EditorConfig
             }
         }
 
+        /// <summary>Returns true if there are no syntax errors on the property.</summary>
         public bool IsValid
         {
             get

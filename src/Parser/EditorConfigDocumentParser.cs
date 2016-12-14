@@ -1,7 +1,6 @@
 ﻿using Microsoft.VisualStudio.Text;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace EditorConfig
@@ -13,12 +12,12 @@ namespace EditorConfig
         private static Regex _comment = new Regex(@"^\s*[#;].+");
         private static Regex _unknown = new Regex(@"\s*(?<unknown>.+)");
 
+        /// <summary>Returns true if the document is currently being parsed.</summary>
         public bool IsParsing { get; private set; }
 
         private void InitializeParser()
         {
             var task = ParseAsync();
-            //FormatterOptions.Changed += FormatterOptionsChanged;
         }
 
         private System.Threading.Tasks.Task ParseAsync()
@@ -30,7 +29,6 @@ namespace EditorConfig
                 var items = new List<ParseItem>();
                 var sections = new List<Section>();
                 var properties = new List<Property>();
-                ParseItem parent = null;
                 Section parentSection = null;
 
                 foreach (var line in TextBuffer.CurrentSnapshot.Lines)
@@ -51,7 +49,6 @@ namespace EditorConfig
                     {
                         var section = CreateParseItem(ItemType.Section, line, match);
                         AddToList(items, section);
-                        parent = section;
 
                         var s = new Section(section);
                         sections.Add(s);
@@ -62,20 +59,18 @@ namespace EditorConfig
                     {
                         var keyword = CreateParseItem(ItemType.Property, line, match.Groups["keyword"]);
                         AddToList(items, keyword);
-                        parent?.Children.Add(keyword);
 
                         var property = new Property(keyword);
 
                         if (parentSection == null)
                             properties.Add(property);
                         else
-                            parentSection?.Properties.Add(property);
+                            parentSection.Properties.Add(property);
 
                         if (match.Groups["value"].Success)
                         {
                             var value = CreateParseItem(ItemType.Value, line, match.Groups["value"]);
                             AddToList(items, value);
-                            parent?.Children.Add(value);
                             property.Value = value;
                         }
 
@@ -83,7 +78,6 @@ namespace EditorConfig
                         {
                             var severity = CreateParseItem(ItemType.Severity, line, match.Groups["severity"]);
                             AddToList(items, severity);
-                            parent?.Children.Add(severity);
                             property.Severity = severity;
                         }
                     }
@@ -123,14 +117,6 @@ namespace EditorConfig
             if (item.Span.Length == 0)
                 return;
 
-            var prev = items.LastOrDefault();
-
-            if (prev != null)
-            {
-                item.Prev = prev;
-                prev.Next = item;
-            }
-
             items.Add(item);
         }
 
@@ -150,17 +136,12 @@ namespace EditorConfig
             return item;
         }
 
-        //private void FormatterOptionsChanged(object sender, EventArgs e)
-        //{
-        //    Parsed?.Invoke(this, EventArgs.Empty);
-        //}
-
         private void DisposeParser()
         {
             Parsed = null;
-            //FormatterOptions.Changed -= FormatterOptionsChanged;
         }
 
+        /// <summary>The event is fired when the document has been parsed.</summary>
         public event EventHandler Parsed;
     }
 }

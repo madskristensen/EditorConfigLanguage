@@ -20,6 +20,8 @@ namespace EditorConfig
             _adornmentLayer = view.GetAdornmentLayer(InheritanceAdornmentLayer.LayerName);
             _document = EditorConfigDocument.FromTextBuffer(view.TextBuffer);
 
+            Visibility = System.Windows.Visibility.Hidden;
+
             Loaded += (s, e) =>
             {
                 CreateImage();
@@ -119,6 +121,7 @@ namespace EditorConfig
             }
             else
             {
+                Visibility = System.Windows.Visibility.Visible;
                 IWpfTextView view = _adornmentLayer.TextView;
                 Canvas.SetLeft(this, view.ViewportRight - ActualWidth - 20);
                 Canvas.SetTop(this, view.ViewportBottom - ActualHeight - 20);

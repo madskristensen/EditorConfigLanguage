@@ -1,7 +1,6 @@
 ﻿using Microsoft.VisualStudio.Text;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace EditorConfig
 {
@@ -13,10 +12,13 @@ namespace EditorConfig
             Properties = new List<Property>();
         }
 
-        public ParseItem Item { get; set; }
+        /// <summary>The ParseItem containing the section display text.</summary>
+        public ParseItem Item { get; }
 
-        public IList<Property> Properties { get; set; }
+        /// <summary>A list of properties under the Section.</summary>
+        public IList<Property> Properties { get; }
 
+        /// <summary>The full span of the section including the properties.</summary>
         public Span Span
         {
             get
@@ -24,32 +26,6 @@ namespace EditorConfig
                 var last = Properties.LastOrDefault();
                 return last != null ? Span.FromBounds(Item.Span.Start, last.Span.End) : Item.Span;
             }
-        }
-
-        public bool IsValid
-        {
-            get
-            {
-                return Properties.All(p => p.IsValid);
-            }
-        }
-
-        public override string ToString()
-        {
-            var sb = new StringBuilder();
-
-            foreach (Property property in Properties)
-            {
-                sb.AppendLine(property.Keyword.Text);
-
-                if (property.Value != null)
-                    sb.Append($" = {property.Value.Text}");
-
-                if (property.Severity != null)
-                    sb.Append($":{property.Severity.Text}");
-            }
-
-            return sb.ToString();
         }
     }
 }

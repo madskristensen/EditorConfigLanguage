@@ -5,6 +5,7 @@
 - [ ] Validate syntax of sections
 - [ ] Swith icons to the official .editorconfig icon
 - [x] Update tooltip to display larger icon
+- [x] Removing empty lines when sorting sections
 
 Features that have a checkmark are complete and available for
 download in the

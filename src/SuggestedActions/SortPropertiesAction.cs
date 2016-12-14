@@ -61,7 +61,7 @@ namespace EditorConfig
             var sb = new StringBuilder();
             sb.AppendLine(section.Item.Text);
 
-            foreach (var property in properties)
+            foreach (var property in properties.Where(p => !string.IsNullOrWhiteSpace(p)))
             {
                 sb.AppendLine(property);
             }

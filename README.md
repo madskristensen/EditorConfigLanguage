@@ -73,6 +73,11 @@ Sorting properties and deleting sections is easy with the commands being shown a
 
 ![Light bulbs](art%2Flight-bulb.png)
 
+### Code formatting
+Typing `Ctrl+K,D` will invoke Visual Studio's *Format Document* command. By default that will align all the equal (`=`) delimeters and add 1 space character around both equal- and colon characters. This behavior is configurable in the settings (see below).
+
+![Code formatting](art%2Fformatting.png)
+
 ### Navigational drop downs
 Dropdown menus at the top of the editor makes it easy to navigate the document.
 

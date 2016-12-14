@@ -1,6 +1,7 @@
 using Microsoft.VisualStudio.Imaging;
 using Microsoft.VisualStudio.Imaging.Interop;
 using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text.Editor;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -10,12 +11,12 @@ namespace EditorConfig
     class SortPropertiesAction : BaseSuggestedAction
     {
         private Section _section;
-        private ITextBuffer _buffer;
+        private ITextView _view;
 
-        public SortPropertiesAction(Section section, ITextBuffer buffer)
+        public SortPropertiesAction(Section section, ITextView view)
         {
             _section = section;
-            _buffer = buffer;
+            _view = view;
         }
 
         public override string DisplayText
@@ -30,13 +31,17 @@ namespace EditorConfig
 
         public override void Execute(CancellationToken cancellationToken)
         {
-            using (var edit = _buffer.CreateEdit())
+            var caretPost = _view.Caret.Position.BufferPosition;
+
+            using (var edit = _view.TextBuffer.CreateEdit())
             {
                 SortSection(_section, edit);
 
                 if (edit.HasEffectiveChanges)
                     edit.Apply();
             }
+
+            _view.Caret.MoveTo(new SnapshotPoint(_view.TextBuffer.CurrentSnapshot, caretPost));
         }
 
         public static void SortSection(Section section, ITextEdit edit)

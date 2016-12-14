@@ -13,7 +13,7 @@ namespace EditorConfig
     {
         public ISuggestedActionsSource CreateSuggestedActionsSource(ITextView textView, ITextBuffer buffer)
         {
-            return textView.Properties.GetOrCreateSingletonProperty(() => new SuggestedActionsSource(buffer));
+            return textView.Properties.GetOrCreateSingletonProperty(() => new SuggestedActionsSource(textView, buffer));
         }
     }
 }

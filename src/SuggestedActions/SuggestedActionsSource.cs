@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text.Editor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,11 +11,13 @@ namespace EditorConfig
 {
     class SuggestedActionsSource : ISuggestedActionsSource
     {
-        private Section _section;
+        private ITextView _view;
         private EditorConfigDocument _document;
+        private Section _section;
 
-        public SuggestedActionsSource(ITextBuffer buffer)
+        public SuggestedActionsSource(ITextView view, ITextBuffer buffer)
         {
+            _view = view;
             _document = EditorConfigDocument.FromTextBuffer(buffer);
         }
 
@@ -32,10 +35,9 @@ namespace EditorConfig
         {
             if (_section != null)
             {
-                var sortProperties = new SortPropertiesAction(_section, range.Snapshot.TextBuffer);
-                var sortAllProperties = new SortAllPropertiesAction(_document);
+                var sortProperties = new SortPropertiesAction(_section, _view);
+                var sortAllProperties = new SortAllPropertiesAction(_document, _view);
                 yield return new SuggestedActionSet(new ISuggestedAction[] { sortProperties, sortAllProperties });
-
 
                 var deleteSection = new DeleteSectionAction(range.Snapshot.TextBuffer, _section);
                 yield return new SuggestedActionSet(new ISuggestedAction[] { deleteSection });

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.Shell;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Timers;
 
@@ -100,17 +102,39 @@ namespace EditorConfig
 
         private void ValidateSection()
         {
+            var parents = new Dictionary<string, EditorConfigDocument>();
+            var parent = _document.InheritsFrom(out string parentFileName);
+
+            while (parent != null)
+            {
+                parents.Add(parentFileName, parent);
+                parent = parent.InheritsFrom(out parentFileName);
+            }
+
             foreach (var section in _document.Sections)
             {
+                var parentSection = parents.Values.SelectMany(d => d.Sections).FirstOrDefault(s => s.Item.Text == section.Item.Text);
+
                 foreach (var property in section.Properties)
                 {
                     ValidateProperty(property);
+
+                    // Parent duplicate
+                    if (parentSection != null)
+                    {
+                        var parentProperty = parentSection.Properties.SingleOrDefault(p => p.ToString() == property.ToString());
+                        if (parentProperty != null)
+                        {
+                            var fileName = PackageUtilities.MakeRelative(_document.FileName, parentSection.Item.Document.FileName);
+                            property.Keyword.AddError($"Duplicate of parent property found in\r\n{fileName}", ErrorType.Message);
+                        }
+                    }
 
                     // Duplicate property
                     if (EditorConfigPackage.ValidationOptions.EnableDuplicateProperties)
                     {
                         if (section.Properties.First(p => p.Keyword.Text.Equals(property.Keyword.Text, StringComparison.OrdinalIgnoreCase)) != property)
-                            property.Keyword.AddError(Resources.Text.ValidationDuplicateProperty);
+                            property.Keyword.AddError(Resources.Text.ValidationDuplicateProperty, ErrorType.Warning);
                     }
 
                     // Root in section
@@ -124,7 +148,7 @@ namespace EditorConfig
                 if (EditorConfigPackage.ValidationOptions.EnableDuplicateSections)
                 {
                     if (_document.Sections.First(s => s.Item.Text == section.Item.Text) != section)
-                        section.Item.AddError(string.Format(Resources.Text.ValidationDuplicateSection, section.Item.Text));
+                        section.Item.AddError(string.Format(Resources.Text.ValidationDuplicateSection, section.Item.Text), ErrorType.Warning);
                 }
             }
         }

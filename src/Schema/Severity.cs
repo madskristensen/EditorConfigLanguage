@@ -2,7 +2,7 @@
 
 namespace EditorConfig
 {
-    public class Severity : ISchemaItem
+    public class Severity : ITooltip
     {
         public Severity(string name, string description, ImageMoniker moniker)
         {

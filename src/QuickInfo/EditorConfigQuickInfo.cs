@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using Microsoft.VisualStudio.Language.Intellisense;
+﻿using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
-using Microsoft.VisualStudio.Text.Classification;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace EditorConfig
 {
@@ -30,12 +30,14 @@ namespace EditorConfig
             if (item == null)
                 return;
 
-            foreach (var error in item.Errors)
+            if (item.Errors.Any())
             {
-                qiContent.Add(error);
+                foreach (var error in item.Errors)
+                {
+                    qiContent.Add(new Shared.EditorTooltip(error));
+                }
             }
-
-            if (item.ItemType == ItemType.Property && SchemaCatalog.TryGetProperty(item.Text, out Keyword property))
+            else if (item.ItemType == ItemType.Property && SchemaCatalog.TryGetProperty(item.Text, out Keyword property))
             {
                 qiContent.Add(new Shared.EditorTooltip(property));
             }

@@ -92,7 +92,7 @@ namespace EditorConfig
                             if (!string.IsNullOrWhiteSpace(group.Value))
                             {
                                 var span = new Span(line.Start + match.Length + group.Index, group.Length);
-                                var unknown = new ParseItem(ItemType.Unknown, span, remaining);
+                                var unknown = new ParseItem(this, ItemType.Unknown, span, remaining);
                                 AddToList(items, unknown);
                             }
                         }
@@ -126,12 +126,12 @@ namespace EditorConfig
             return match.Success;
         }
 
-        private static ParseItem CreateParseItem(ItemType type, ITextSnapshotLine line, Capture match)
+        private ParseItem CreateParseItem(ItemType type, ITextSnapshotLine line, Capture match)
         {
             var matchSpan = new SnapshotSpan(line.Snapshot, line.Start.Position + match.Index, match.Length);
 
             var textValue = matchSpan.GetText();
-            var item = new ParseItem(type, matchSpan, textValue);
+            var item = new ParseItem(this, type, matchSpan, textValue);
 
             return item;
         }

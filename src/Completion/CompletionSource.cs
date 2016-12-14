@@ -135,7 +135,7 @@ namespace EditorConfig
             }
         }
 
-        private Completion4 CreateCompletion(ISchemaItem item, Category category = Category.None)
+        private Completion4 CreateCompletion(ITooltip item, Category category = Category.None)
         {
             IEnumerable<CompletionIcon2> icon = null;
             string automationText = null;

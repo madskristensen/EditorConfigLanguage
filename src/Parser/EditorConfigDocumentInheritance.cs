@@ -8,12 +8,12 @@ using System.IO;
 
 namespace EditorConfig
 {
-    partial class EditorConfigDocument
+   public partial class EditorConfigDocument
     {
         [Import]
         private ITextDocumentFactoryService DocumentService { get; set; }
 
-        private string _fileName;
+        public string FileName { get; private set; }
         private IContentType _contentType;
 
         private void InitializeInheritance()
@@ -32,12 +32,12 @@ namespace EditorConfig
             if (Root != null && Root.IsValid && Root.Value.Text.Equals("true", StringComparison.OrdinalIgnoreCase) && Root.Severity == null)
                 return null;
 
-            _fileName = _fileName ?? TextBuffer.GetFileName();
+            FileName = FileName ?? TextBuffer.GetFileName();
 
-            if (!File.Exists(_fileName))
+            if (!File.Exists(FileName))
                 return null;
 
-            var file = new FileInfo(_fileName);
+            var file = new FileInfo(FileName);
             var parent = file.Directory.Parent;
 
             while (parent != null)
@@ -47,7 +47,7 @@ namespace EditorConfig
                 if (File.Exists(parentFileName))
                 {
                     var doc = DocumentService.CreateAndLoadTextDocument(parentFileName, _contentType);
-                    return new EditorConfigDocument(doc.TextBuffer) { _fileName = parentFileName };
+                    return new EditorConfigDocument(doc.TextBuffer) { FileName = parentFileName };
                 }
 
                 parent = parent.Parent;

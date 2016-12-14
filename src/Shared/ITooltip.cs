@@ -2,7 +2,7 @@
 
 namespace EditorConfig
 {
-    public interface ISchemaItem
+    public interface ITooltip
     {
         string Name { get; }
         string Description { get; }

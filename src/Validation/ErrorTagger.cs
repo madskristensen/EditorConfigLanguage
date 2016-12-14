@@ -80,21 +80,23 @@ namespace EditorConfig
                 var task = CreateErrorTask(span, error);
                 _errorlist.Tasks.Add(task);
 
-                yield return new TagSpan<ErrorTag>(span, new ErrorTag(error, error));
+                var errorType = ErrorFormatDefinitions.GetErrorType(error.ErrorType);
+
+                yield return new TagSpan<ErrorTag>(span, new ErrorTag(errorType, error.Name));
             }
         }
 
-        private ErrorTask CreateErrorTask(SnapshotSpan span, string message)
+        private ErrorTask CreateErrorTask(SnapshotSpan span, Error error)
         {
             var line = span.Snapshot.GetLineFromPosition(span.Start);
 
             ErrorTask task = new ErrorTask
             {
-                Text = message,
+                Text = error.Description,
                 Line = line.LineNumber,
                 Column = span.Start.Position - line.Start.Position,
                 Category = TaskCategory.Misc,
-                ErrorCategory = TaskErrorCategory.Warning,
+                ErrorCategory = GetErrorCategory(error.ErrorType),
                 Priority = TaskPriority.Low,
                 Document = _file
             };
@@ -102,6 +104,19 @@ namespace EditorConfig
             task.Navigate += Navigate;
 
             return task;
+        }
+
+        private TaskErrorCategory GetErrorCategory(ErrorType errorType)
+        {
+            switch (errorType)
+            {
+                case ErrorType.Error:
+                    return TaskErrorCategory.Error;
+                case ErrorType.Warning:
+                    return TaskErrorCategory.Warning;
+            }
+
+            return TaskErrorCategory.Message;
         }
 
         private void Navigate(object sender, EventArgs e)

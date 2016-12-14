@@ -1,16 +1,20 @@
 ﻿using Microsoft.VisualStudio.Text;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EditorConfig
 {
     public class ParseItem
     {
-        public ParseItem(ItemType type, Span span, string text)
+        public ParseItem(EditorConfigDocument document, ItemType type, Span span, string text)
         {
+            Document = document;
             ItemType = type;
             Span = span;
             Text = text;
         }
+
+        public EditorConfigDocument Document { get; set; }
 
         public Span Span { get; set; }
 
@@ -18,12 +22,17 @@ namespace EditorConfig
 
         public string Text { get; set; }
 
-        public List<string> Errors { get; } = new List<string>();
+        public List<Error> Errors { get; } = new List<Error>();
 
         public void AddError(string errorMessage)
         {
-            if (!Errors.Contains(errorMessage))
-                Errors.Add(errorMessage);
+            AddError(errorMessage, ErrorType.Error);
+        }
+
+        public void AddError(string errorMessage, ErrorType errorType)
+        {
+            if (!Errors.Any(e => e.Name.Equals(errorMessage, System.StringComparison.OrdinalIgnoreCase)))
+                Errors.Add(new Error(errorMessage, errorType));
         }
 
         public override string ToString()

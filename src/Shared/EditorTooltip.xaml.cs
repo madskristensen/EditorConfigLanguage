@@ -10,7 +10,7 @@ namespace EditorConfig.Shared
     {
         private const int _iconSize = 32;
 
-        internal EditorTooltip(ISchemaItem item)
+        internal EditorTooltip(ITooltip item)
         {
             InitializeComponent();
 

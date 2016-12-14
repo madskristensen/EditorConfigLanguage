@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace EditorConfig
 {
-    public class Keyword : ISchemaItem
+    public class Keyword : ITooltip
     {
         public Keyword(string name, string description, Category category, params string[] values)
         {

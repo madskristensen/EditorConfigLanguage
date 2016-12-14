@@ -75,7 +75,7 @@
     </Compile>
     <Compile Include="Parser\Property.cs" />
     <Compile Include="Parser\Section.cs" />
-    <Compile Include="Schema\ISchemaItem.cs" />
+    <Compile Include="Shared\ITooltip.cs" />
     <Compile Include="Schema\Text.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -120,6 +120,8 @@
       <DependentUpon>CommandTable.vsct</DependentUpon>
     </Compile>
     <Compile Include="Shared\VsHelpers.cs" />
+    <Compile Include="Validation\Error.cs" />
+    <Compile Include="Validation\ErrorFormatDefinitions.cs" />
     <Compile Include="Validation\ErrorTagger.cs" />
     <Compile Include="Validation\ErrorTaggerProvider.cs" />
     <Compile Include="Outlining\OutliningTagger.cs" />

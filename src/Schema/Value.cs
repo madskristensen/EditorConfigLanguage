@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.Imaging.Interop;
 
 namespace EditorConfig
 {
-    public class Value : ISchemaItem
+    public class Value : ITooltip
     {
         public Value(string name)
         {

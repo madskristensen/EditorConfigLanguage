@@ -63,9 +63,16 @@ namespace EditorConfig
             // Severity
             else if ((position > 0 && snapshot.Length > 1 && snapshot.GetText(position - 1, 1) == ":") || parseItem?.ItemType == ItemType.Severity)
             {
-                var prop = _document.PropertyAtPosition(position);
-                if (SchemaCatalog.TryGetProperty(prop?.Keyword?.Text, out Keyword key) && key.SupportsSeverity)
+                if (parseItem?.ItemType == ItemType.Unknown) // Colon was typed
+                {
                     AddSeverity(list);
+                }
+                else
+                {
+                    var prop = _document.PropertyAtPosition(position);
+                    if (SchemaCatalog.TryGetProperty(prop?.Keyword?.Text, out Keyword key) && key.SupportsSeverity)
+                        AddSeverity(list);
+                }
             }
 
             if (!list.Any())

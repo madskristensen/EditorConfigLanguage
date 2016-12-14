@@ -29,6 +29,7 @@ See the [change log](CHANGELOG.md) for changes and road map.
 - Drag 'n drop file onto .editorconfig file
 - Code formatting
 - Hover tooltips
+- Light bulbs
 - Navigational drop downs
 - Inheritance visualizer
 
@@ -67,6 +68,11 @@ Hover the mouse over any keyword to see a full description.
 
 ![Classification](art/quick-info.png)
 
+### Light bulbs
+Sorting properties and deleting sections is easy with the commands being shown as light bulbs in the editor margin.
+
+![Light bulbs](art%2Flight-bulb.png)
+
 ### Navigational drop downs
 Dropdown menus at the top of the editor makes it easy to navigate the document.
 
@@ -81,6 +87,13 @@ The inheritance visualizer is located at the bottom right corner of the editor w
 ![Inheritance visualizer](art/inheritance-visualizer.png)
 
 Note, the inheritance visualizer is only visible when the current file isn't the root of the hierarchys or by specifying the `root = true` property.
+
+### Settings
+Change the behavior of the editor from **Tools -> Options** or simply by right-clicking in the editor.
+
+![Open EditorConfig settings](art%2Feditor-context-menu.png)
+
+![Settings](art/settings.png)
 
 ## Contribute
 Check out the [contribution guidelines](.github/CONTRIBUTING.md)

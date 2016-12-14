@@ -20,19 +20,15 @@ namespace EditorConfig
             _adornmentLayer = view.GetAdornmentLayer(InheritanceAdornmentLayer.LayerName);
             _document = EditorConfigDocument.FromTextBuffer(view.TextBuffer);
 
-            Loaded += (s, e) =>
-            {
-                CreateImage();
-                doc.FileActionOccurred += FileActionOccurred;
-                Updated += InheritanceUpdated;
+            CreateImage();
+            doc.FileActionOccurred += FileActionOccurred;
+            Updated += InheritanceUpdated;
 
-                view.ViewportHeightChanged += SetAdornmentLocation;
-                view.ViewportWidthChanged += SetAdornmentLocation;
+            view.ViewportHeightChanged += SetAdornmentLocation;
+            view.ViewportWidthChanged += SetAdornmentLocation;
 
-                if (_adornmentLayer.IsEmpty)
-                    _adornmentLayer.AddAdornment(AdornmentPositioningBehavior.ViewportRelative, null, null, this, null);
-
-            };
+            if (_adornmentLayer.IsEmpty)
+                _adornmentLayer.AddAdornment(AdornmentPositioningBehavior.ViewportRelative, null, null, this, null);
         }
 
         private void InheritanceUpdated(object sender, EventArgs e)

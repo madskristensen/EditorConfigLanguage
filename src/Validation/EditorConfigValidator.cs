@@ -102,32 +102,27 @@ namespace EditorConfig
 
         private void ValidateSection()
         {
-            var parents = new Dictionary<string, EditorConfigDocument>();
-            var parent = _document.InheritsFrom(out string parentFileName);
+            var parents = new List<EditorConfigDocument>();
+            var parent = _document.Parent;
 
             while (parent != null)
             {
-                parents.Add(parentFileName, parent);
-                parent = parent.InheritsFrom(out parentFileName);
+                parents.Add(parent);
+                parent = parent.Parent;
             }
 
             foreach (var section in _document.Sections)
             {
-                var parentSection = parents.Values.SelectMany(d => d.Sections).FirstOrDefault(s => s.Item.Text == section.Item.Text);
+                var parentSections = parents.SelectMany(d => d.Sections).Where(s => s.Item.Text == section.Item.Text);
 
                 foreach (var property in section.Properties)
                 {
                     ValidateProperty(property);
 
-                    // Parent duplicate
-                    if (parentSection != null && property.IsValid)
+                    // Root in section
+                    if (property.Keyword.Text.Equals(SchemaCatalog.Root, StringComparison.OrdinalIgnoreCase))
                     {
-                        var parentProperty = parentSection.Properties.SingleOrDefault(p => p.ToString() == property.ToString());
-                        if (parentProperty != null)
-                        {
-                            var fileName = PackageUtilities.MakeRelative(_document.FileName, parentSection.Item.Document.FileName);
-                            property.Value.AddError(string.Format(Resources.Text.ValidationParentPropertyDuplicate, fileName), ErrorType.Message);
-                        }
+                        property.Keyword.AddError(Resources.Text.ValidationRootInSection, ErrorType.Error);
                     }
 
                     // Duplicate property
@@ -137,10 +132,15 @@ namespace EditorConfig
                             property.Keyword.AddError(Resources.Text.ValidationDuplicateProperty, ErrorType.Warning);
                     }
 
-                    // Root in section
-                    if (property.Keyword.Text.Equals(SchemaCatalog.Root, StringComparison.OrdinalIgnoreCase))
+                    // Parent duplicate
+                    if (EditorConfigPackage.ValidationOptions.EnableDuplicateFoundInParent && property.IsValid && !property.Keyword.Errors.Any() && parentSections.Any())
                     {
-                        property.Keyword.AddError(Resources.Text.ValidationRootInSection, ErrorType.Error);
+                        var parentProperties = parentSections.SelectMany(s => s.Properties.Where(p => p.ToString() == property.ToString()));
+                        if (parentProperties.Any())
+                        {
+                            var fileName = PackageUtilities.MakeRelative(_document.FileName, parentProperties.First().Keyword.Document.FileName);
+                            property.Value.AddError(string.Format(Resources.Text.ValidationParentPropertyDuplicate, fileName), ErrorType.Message);
+                        }
                     }
                 }
 

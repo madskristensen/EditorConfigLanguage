@@ -56,7 +56,7 @@ namespace EditorConfig
         {
             Children.Clear();
 
-            var parent = _document.InheritsFrom(out string parentFileName);
+            var parent = _document.Parent;
             var parentsCount = 0;
 
             if (parent != null)
@@ -72,9 +72,9 @@ namespace EditorConfig
 
             while (parent != null)
             {
-                CreateInheritance(parentFileName, parentsCount);
+                CreateInheritance(parent.FileName, parentsCount);
                 parentsCount += 3;
-                parent = parent.InheritsFrom(out parentFileName);
+                parent = parent.Parent;
             }
 
             UpdateLayout();

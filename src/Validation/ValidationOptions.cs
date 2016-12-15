@@ -48,6 +48,12 @@ namespace EditorConfig
         [DefaultValue(true)]
         public bool EnableDuplicateProperties { get; set; } = true;
 
+        [Category(_rules)]
+        [DisplayName("Validate parent overrides")]
+        [Description("Show an error if a property was also defined in a parent document with the same value and severity.")]
+        [DefaultValue(true)]
+        public bool EnableDuplicateFoundInParent { get; set; } = true;
+
         public override void SaveSettingsToStorage()
         {
             base.SaveSettingsToStorage();

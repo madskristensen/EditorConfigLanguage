@@ -8,13 +8,26 @@ using System.IO;
 
 namespace EditorConfig
 {
-   public partial class EditorConfigDocument
+    public partial class EditorConfigDocument
     {
+        private IContentType _contentType;
+        private EditorConfigDocument _parent;
+
         [Import]
         private ITextDocumentFactoryService DocumentService { get; set; }
 
         public string FileName { get; private set; }
-        private IContentType _contentType;
+
+        public EditorConfigDocument Parent
+        {
+            get
+            {
+                if (_parent == null)
+                    _parent = InheritsFrom();
+
+                return _parent;
+            }
+        }
 
         private void InitializeInheritance()
         {
@@ -23,18 +36,16 @@ namespace EditorConfig
             var componentModel = (IComponentModel)Package.GetGlobalService(typeof(SComponentModel));
             var contentTypeRegistry = componentModel.DefaultExportProvider.GetExportedValue<IContentTypeRegistryService>();
             _contentType = contentTypeRegistry.GetContentType(Constants.LanguageName);
+
+            if (DocumentService.TryGetTextDocument(TextBuffer, out ITextDocument doc))
+            {
+                FileName = doc.FilePath;
+            }
         }
 
-        public EditorConfigDocument InheritsFrom(out string parentFileName)
+        private EditorConfigDocument InheritsFrom()
         {
-            parentFileName = null;
-
             if (Root != null && Root.IsValid && Root.Value.Text.Equals("true", StringComparison.OrdinalIgnoreCase) && Root.Severity == null)
-                return null;
-
-            FileName = FileName ?? TextBuffer.GetFileName();
-
-            if (!File.Exists(FileName))
                 return null;
 
             var file = new FileInfo(FileName);
@@ -42,7 +53,7 @@ namespace EditorConfig
 
             while (parent != null)
             {
-                parentFileName = Path.Combine(parent.FullName, Constants.FileName);
+                string parentFileName = Path.Combine(parent.FullName, Constants.FileName);
 
                 if (File.Exists(parentFileName))
                 {

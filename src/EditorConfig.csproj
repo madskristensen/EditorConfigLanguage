@@ -121,7 +121,6 @@
     </Compile>
     <Compile Include="Shared\VsHelpers.cs" />
     <Compile Include="Validation\Error.cs" />
-    <Compile Include="Validation\ErrorFormatDefinitions.cs" />
     <Compile Include="Validation\ErrorTagger.cs" />
     <Compile Include="Validation\ErrorTaggerProvider.cs" />
     <Compile Include="Outlining\OutliningTagger.cs" />

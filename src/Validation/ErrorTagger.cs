@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text.Adornments;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Tagging;
 using System;
@@ -80,10 +81,23 @@ namespace EditorConfig
                 var task = CreateErrorTask(span, error);
                 _errorlist.Tasks.Add(task);
 
-                var errorType = ErrorFormatDefinitions.GetErrorType(error.ErrorType);
+                var errorType = GetErrorType(error.ErrorType);
 
                 yield return new TagSpan<ErrorTag>(span, new ErrorTag(errorType, error.Name));
             }
+        }
+
+        public static string GetErrorType(ErrorType errorType)
+        {
+            switch (errorType)
+            {
+                case ErrorType.Error:
+                    return PredefinedErrorTypeNames.SyntaxError;
+                case ErrorType.Warning:
+                    return PredefinedErrorTypeNames.Warning;
+            }
+
+            return PredefinedErrorTypeNames.OtherError;
         }
 
         private ErrorTask CreateErrorTask(SnapshotSpan span, Error error)

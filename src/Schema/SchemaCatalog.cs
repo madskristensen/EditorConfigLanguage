@@ -44,6 +44,7 @@ namespace EditorConfig
             category = Category.DotNet;
             yield return new Keyword("dotnet_style_coalesce_expression", "Prefer null coalescing operator (??).", category, "true", "false");
             yield return new Keyword("dotnet_style_collection_initializer", "Prefer collection intiailizers.", category, "true", "false");
+            yield return new Keyword("dotnet_style_explicit_tuple_names", "Prefer explicit tuple names.", category, "true", "false");
             yield return new Keyword("dotnet_style_null_propagation", "Prefer null propagation (?.).", category, "true", "false");
             yield return new Keyword("dotnet_style_object_initializer", "Prefer object initializers.", category, "true", "false");
             yield return new Keyword("dotnet_style_predefined_type_for_locals_parameters_members", "Prefer language types (e.g. int, string, float).", category, "true", "false");

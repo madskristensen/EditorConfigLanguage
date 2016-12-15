@@ -142,6 +142,15 @@ namespace EditorConfig.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A value must be specified.
+        /// </summary>
+        internal static string ValidationMissingPropertyValue {
+            get {
+                return ResourceManager.GetString("ValidationMissingPropertyValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A severity must be specified. Example: true:warning.
         /// </summary>
         internal static string ValidationMissingSeverity {
@@ -151,11 +160,39 @@ namespace EditorConfig.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A property with the same value is defined in parent document
+        ///{0}.
+        /// </summary>
+        internal static string ValidationParentPropertyDuplicate {
+            get {
+                return ResourceManager.GetString("ValidationParentPropertyDuplicate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &quot;Root&quot; is only allowed in the beginning of the document.
         /// </summary>
         internal static string ValidationRootInSection {
             get {
                 return ResourceManager.GetString("ValidationRootInSection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The &quot;{0}&quot; property does not support a severity suffix.
+        /// </summary>
+        internal static string ValidationSeverityNotApplicable {
+            get {
+                return ResourceManager.GetString("ValidationSeverityNotApplicable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Syntax error. Element not valid at current location.
+        /// </summary>
+        internal static string ValidationUnknownElement {
+            get {
+                return ResourceManager.GetString("ValidationUnknownElement", resourceCulture);
             }
         }
     }

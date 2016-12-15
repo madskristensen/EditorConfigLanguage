@@ -108,15 +108,13 @@ namespace EditorConfig
 
         private TaskErrorCategory GetErrorCategory(ErrorType errorType)
         {
-            switch (errorType)
-            {
-                case ErrorType.Error:
-                    return TaskErrorCategory.Error;
-                case ErrorType.Warning:
-                    return TaskErrorCategory.Warning;
-            }
+            if (errorType == ErrorType.Message)
+                return TaskErrorCategory.Message;
 
-            return TaskErrorCategory.Message;
+            if (errorType == ErrorType.Warning || EditorConfigPackage.ValidationOptions.ShowErrorsAsWarnings)
+                return TaskErrorCategory.Warning;
+
+            return TaskErrorCategory.Error;
         }
 
         private void Navigate(object sender, EventArgs e)

@@ -97,7 +97,7 @@ namespace EditorConfig
 
         private void ValidateUnknown(ParseItem item)
         {
-            item.AddError("Syntax error. Element not valid at current location");
+            item.AddError(Resources.Text.ValidationUnknownElement, ErrorType.Error);
         }
 
         private void ValidateSection()
@@ -120,18 +120,18 @@ namespace EditorConfig
                     ValidateProperty(property);
 
                     // Parent duplicate
-                    if (parentSection != null)
+                    if (parentSection != null && property.IsValid)
                     {
                         var parentProperty = parentSection.Properties.SingleOrDefault(p => p.ToString() == property.ToString());
                         if (parentProperty != null)
                         {
                             var fileName = PackageUtilities.MakeRelative(_document.FileName, parentSection.Item.Document.FileName);
-                            property.Keyword.AddError($"Duplicate of parent property found in\r\n{fileName}", ErrorType.Message);
+                            property.Value.AddError(string.Format(Resources.Text.ValidationParentPropertyDuplicate, fileName), ErrorType.Message);
                         }
                     }
 
                     // Duplicate property
-                    if (EditorConfigPackage.ValidationOptions.EnableDuplicateProperties)
+                    if (EditorConfigPackage.ValidationOptions.EnableDuplicateProperties && property.IsValid)
                     {
                         if (section.Properties.First(p => p.Keyword.Text.Equals(property.Keyword.Text, StringComparison.OrdinalIgnoreCase)) != property)
                             property.Keyword.AddError(Resources.Text.ValidationDuplicateProperty, ErrorType.Warning);
@@ -140,7 +140,7 @@ namespace EditorConfig
                     // Root in section
                     if (property.Keyword.Text.Equals(SchemaCatalog.Root, StringComparison.OrdinalIgnoreCase))
                     {
-                        property.Keyword.AddError(Resources.Text.ValidationRootInSection);
+                        property.Keyword.AddError(Resources.Text.ValidationRootInSection, ErrorType.Error);
                     }
                 }
 
@@ -148,7 +148,7 @@ namespace EditorConfig
                 if (EditorConfigPackage.ValidationOptions.EnableDuplicateSections)
                 {
                     if (_document.Sections.First(s => s.Item.Text == section.Item.Text) != section)
-                        section.Item.AddError(string.Format(Resources.Text.ValidationDuplicateSection, section.Item.Text), ErrorType.Warning);
+                        section.Item.AddError(string.Format(Resources.Text.ValidationDuplicateSection, section.Item.Text), ErrorType.Message);
                 }
             }
         }
@@ -159,47 +159,47 @@ namespace EditorConfig
             {
                 // Only root property allowed
                 if (property != _document.Root)
-                    property.Keyword.AddError(Resources.Text.ValidationRootInSection);
+                    property.Keyword.AddError(Resources.Text.ValidationRootInSection, ErrorType.Error);
             }
         }
 
         private void ValidateProperty(Property property)
         {
-            // Keyword
+            // Unknown keyword
             if (EditorConfigPackage.ValidationOptions.EnableUnknownProperties & !SchemaCatalog.TryGetProperty(property.Keyword.Text, out Keyword keyword))
             {
-                property.Keyword.AddError(string.Format(Resources.Text.ValidateUnknownKeyword, property.Keyword.Text));
+                property.Keyword.AddError(string.Format(Resources.Text.ValidateUnknownKeyword, property.Keyword.Text), ErrorType.Error);
             }
 
             // Missing value
             else if (property.Value == null)
             {
-                property.Keyword.AddError("A value must be specified");
+                property.Keyword.AddError(Resources.Text.ValidationMissingPropertyValue, ErrorType.Error);
             }
             // Value not in schema
             else if (EditorConfigPackage.ValidationOptions.EnableUnknownValues &&
                 !keyword.Values.Any(v => v.Name.Equals(property.Value?.Text, StringComparison.OrdinalIgnoreCase)) &&
                 !(int.TryParse(property.Value.Text, out int intValue) && intValue > 0))
             {
-                property.Value.AddError(string.Format(Resources.Text.InvalidValue, property.Value.Text, keyword.Name));
+                property.Value.AddError(string.Format(Resources.Text.InvalidValue, property.Value.Text, keyword.Name), ErrorType.Error);
             }
 
             // Missing severity
             else if (property.Severity == null && property.Value.Text.Equals("true", StringComparison.OrdinalIgnoreCase) && keyword.SupportsSeverity)
             {
-                property.Value.AddError(Resources.Text.ValidationMissingSeverity);
+                property.Value.AddError(Resources.Text.ValidationMissingSeverity, ErrorType.Error);
             }
             else if (property.Severity != null)
             {
                 // Severity not applicaple to property
                 if (!keyword.SupportsSeverity)
                 {
-                    property.Severity.AddError(string.Format("The \"{0}\" property does not support a severity suffix", keyword.Name));
+                    property.Severity.AddError(string.Format(Resources.Text.ValidationSeverityNotApplicable, keyword.Name), ErrorType.Error);
                 }
                 // Severity not in schema
                 else if (!SchemaCatalog.TryGetSeverity(property.Severity.Text, out Severity severity))
                 {
-                    property.Severity.AddError(string.Format(Resources.Text.ValidationInvalidSeverity, property.Severity.Text));
+                    property.Severity.AddError(string.Format(Resources.Text.ValidationInvalidSeverity, property.Severity.Text), ErrorType.Error);
                 }
             }
         }

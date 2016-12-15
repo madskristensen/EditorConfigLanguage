@@ -15,6 +15,12 @@ namespace EditorConfig
         [DefaultValue(true)]
         public bool EnableValidation { get; set; } = true;
 
+        [Category(_general)]
+        [DisplayName("Display errors as warnings")]
+        [Description("This will make errors found in the document show up as warnings in the Error List.")]
+        [DefaultValue(true)]
+        public bool ShowErrorsAsWarnings { get; set; } = true;
+
         // Rules
         private const string _rules = "Rules";
 

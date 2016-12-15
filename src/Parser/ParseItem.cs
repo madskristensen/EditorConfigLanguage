@@ -24,11 +24,6 @@ namespace EditorConfig
 
         public List<Error> Errors { get; } = new List<Error>();
 
-        public void AddError(string errorMessage)
-        {
-            AddError(errorMessage, ErrorType.Error);
-        }
-
         public void AddError(string errorMessage, ErrorType errorType)
         {
             if (!Errors.Any(e => e.Name.Equals(errorMessage, System.StringComparison.OrdinalIgnoreCase)))

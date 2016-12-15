@@ -144,10 +144,23 @@
   <data name="ValidationInvalidSeverity" xml:space="preserve">
     <value>"{0}" is not a valid value for severity</value>
   </data>
+  <data name="ValidationMissingPropertyValue" xml:space="preserve">
+    <value>A value must be specified</value>
+  </data>
   <data name="ValidationMissingSeverity" xml:space="preserve">
     <value>A severity must be specified. Example: true:warning</value>
   </data>
+  <data name="ValidationParentPropertyDuplicate" xml:space="preserve">
+    <value>A property with the same value is defined in parent document
+{0}</value>
+  </data>
   <data name="ValidationRootInSection" xml:space="preserve">
     <value>"Root" is only allowed in the beginning of the document</value>
+  </data>
+  <data name="ValidationSeverityNotApplicable" xml:space="preserve">
+    <value>The "{0}" property does not support a severity suffix</value>
+  </data>
+  <data name="ValidationUnknownElement" xml:space="preserve">
+    <value>Syntax error. Element not valid at current location</value>
   </data>
 </root>

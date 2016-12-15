@@ -10,7 +10,20 @@ namespace EditorConfig
     {
         public const string Error = Constants.LanguageName + " Error";
         public const string Warning = Constants.LanguageName + " Warning";
-        public const string Message = Constants.LanguageName + " Mesage";
+        public const string Message = Constants.LanguageName + " Message";
+
+        public static string GetErrorType(ErrorType errorType)
+        {
+            switch (errorType)
+            {
+                case ErrorType.Error:
+                    return Error;
+                case ErrorType.Warning:
+                    return Warning;
+            }
+
+            return Message;
+        }
 
         // Error
         [Export(typeof(ErrorTypeDefinition))]
@@ -47,7 +60,7 @@ namespace EditorConfig
             public WarningFormat()
             {
                 DisplayName = Error;
-                ForegroundColor = (Color)ColorConverter.ConvertFromString("#00859900");
+                ForegroundColor = (Color)ColorConverter.ConvertFromString("#00dc322f");
 
             }
         }
@@ -69,19 +82,6 @@ namespace EditorConfig
                 DisplayName = Error;
                 ForegroundColor = (Color)ColorConverter.ConvertFromString("#00268bd2");
             }
-        }
-
-        public static string  GetErrorType(ErrorType errorType)
-        {
-            switch (errorType)
-            {
-                case ErrorType.Error:
-                    return Error;
-                case ErrorType.Warning:
-                    return Warning;
-            }
-
-            return Message;
         }
     }
 }

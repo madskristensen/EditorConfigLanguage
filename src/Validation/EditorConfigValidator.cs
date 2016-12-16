@@ -9,7 +9,7 @@ namespace EditorConfig
     class EditorConfigValidator : IDisposable
     {
         private EditorConfigDocument _document;
-        private const int _validationDelay = 1000;
+        private const int _validationDelay = 500;
         private DateTime _lastRequestForValidation;
         private Timer _timer;
         private bool _hasChanged;

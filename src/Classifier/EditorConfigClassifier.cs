@@ -35,9 +35,17 @@ namespace EditorConfig
 
         private void DocumentValiated(object sender, EventArgs e)
         {
-            ClassificationChanged?.Invoke(this,
+            if (ClassificationChanged == null)
+                return;
+
+            var duplicates = _document.ParseItems.Where(p => p.Errors.Any(err => err.ErrorCode == 103 || err.ErrorCode == 104));
+
+            foreach (var item in duplicates)
+            {
+                ClassificationChanged?.Invoke(this,
                 new ClassificationChangedEventArgs(
-                new SnapshotSpan(_buffer.CurrentSnapshot, 0, _buffer.CurrentSnapshot.Length)));
+                new SnapshotSpan(_buffer.CurrentSnapshot, item.Span)));
+            }
         }
 
         public IList<ClassificationSpan> GetClassificationSpans(SnapshotSpan span)

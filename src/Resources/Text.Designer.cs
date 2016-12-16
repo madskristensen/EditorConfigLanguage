@@ -160,8 +160,8 @@ namespace EditorConfig.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A property with the same value is defined in parent document
-        ///{0}.
+        ///   Looks up a localized string similar to This property is a duplicate of one in
+        ///&quot;{0}&quot; and can be safely removed.
         /// </summary>
         internal static string ValidationParentPropertyDuplicate {
             get {

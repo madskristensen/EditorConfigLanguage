@@ -54,8 +54,7 @@ namespace EditorConfig
         private bool DoesCompletionMatchAutomationText(Completion completion)
         {
             return _activeFilters.Exists(x =>
-                x.Equals(completion.IconAutomationText, StringComparison.OrdinalIgnoreCase)) &&
-                completion.DisplayText.IndexOf(_typed, StringComparison.OrdinalIgnoreCase) > -1;
+                x.Equals(completion.IconAutomationText, StringComparison.OrdinalIgnoreCase));
         }
 
         public override IReadOnlyList<Span> GetHighlightedSpansInDisplayText(string displayText)

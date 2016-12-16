@@ -10,6 +10,7 @@ namespace EditorConfig
     {
         private EditorConfigDocument _document;
         private const int _validationDelay = 1000;
+        private DateTime _lastRequestForValidation;
         private Timer _timer;
         private bool _hasChanged;
         private bool _prevEnabled = EditorConfigPackage.ValidationOptions.EnableValidation;
@@ -47,11 +48,12 @@ namespace EditorConfig
             }
             else
             {
+                _lastRequestForValidation = DateTime.Now;
                 _hasChanged = true;
 
                 if (_timer == null)
                 {
-                    _timer = new Timer(1000);
+                    _timer = new Timer(_validationDelay);
                     _timer.Elapsed += TimerElapsed;
                 }
 
@@ -63,12 +65,12 @@ namespace EditorConfig
 
         private void TimerElapsed(object sender, ElapsedEventArgs e)
         {
-            _timer.Stop();
-
-            if (_hasChanged && !_document.IsParsing)
+            if (DateTime.Now.AddMilliseconds(-_validationDelay) > _lastRequestForValidation && _hasChanged && !_document.IsParsing)
+            {
+                _timer.Stop();
                 Validate();
-
-            _hasChanged = false;
+                _hasChanged = false;
+            }
         }
 
         private void Validate()

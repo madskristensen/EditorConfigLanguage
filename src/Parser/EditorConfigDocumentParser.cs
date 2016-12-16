@@ -18,6 +18,12 @@ namespace EditorConfig
         private void InitializeParser()
         {
             var task = ParseAsync();
+            TextBuffer.Changed += BufferChangedAsync;
+        }
+
+        private async void BufferChangedAsync(object sender, TextContentChangedEventArgs e)
+        {
+            await ParseAsync();
         }
 
         private System.Threading.Tasks.Task ParseAsync()

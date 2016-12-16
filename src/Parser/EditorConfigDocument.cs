@@ -10,15 +10,9 @@ namespace EditorConfig
         private EditorConfigDocument(ITextBuffer buffer)
         {
             TextBuffer = buffer;
-            TextBuffer.Changed += BufferChangedAsync;
 
             InitializeParser();
             InitializeInheritance();
-        }
-
-        private async void BufferChangedAsync(object sender, EventArgs e)
-        {
-            await ParseAsync();
         }
 
         /// <summary>The ITextBuffer associated with the document.</summary>

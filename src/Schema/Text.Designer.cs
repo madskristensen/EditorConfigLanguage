@@ -61,7 +61,7 @@ namespace EditorConfig.Schema {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to File character encoding, NOTE: if visual studio thinks your file is ascii it will always save it as us-ascii.
+        ///   Looks up a localized string similar to File character encoding.
         /// </summary>
         internal static string KeywordCharset {
             get {

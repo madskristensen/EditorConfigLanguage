@@ -14,7 +14,7 @@ namespace EditorConfig
     {
         [Import]
         private IBufferTagAggregatorFactoryService TagAggregatorService { get; set; }
-        
+
         public ITagger<T> CreateTagger<T>(ITextView textView, ITextBuffer buffer) where T : ITag
         {
             var lazy = new Lazy<ITagAggregator<SeverityTag>>(() => TagAggregatorService.CreateTagAggregator<SeverityTag>(textView.TextBuffer));

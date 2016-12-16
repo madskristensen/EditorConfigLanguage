@@ -54,7 +54,7 @@ namespace EditorConfig
         public IEnumerable<SuggestedActionSet> CreateActionSet(params BaseSuggestedAction[] actions)
         {
             var enabledActions = actions.Where(action => action.IsEnabled);
-            return new[] { new SuggestedActionSet(enabledActions, "The title") };
+            return new[] { new SuggestedActionSet(enabledActions) };
         }
 
         public void Dispose()

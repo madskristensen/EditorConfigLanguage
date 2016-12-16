@@ -151,8 +151,8 @@
     <value>A severity must be specified. Example: true:warning</value>
   </data>
   <data name="ValidationParentPropertyDuplicate" xml:space="preserve">
-    <value>A property with the same value is defined in parent document
-{0}</value>
+    <value>This property is a duplicate of one in
+"{0}" and can be safely removed</value>
   </data>
   <data name="ValidationRootInSection" xml:space="preserve">
     <value>"Root" is only allowed in the beginning of the document</value>

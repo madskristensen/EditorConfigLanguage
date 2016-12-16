@@ -63,6 +63,14 @@ Red squiggles are shown for invalid values.
 
 ![Classification](art/validation.png)
 
+Properties that are being overridden by a duplicate property in the same section is easy to identify.
+
+![Validate duplicates](art/validation-duplicates.png)
+
+If a parent document contains the exact same property and value in a section with the same globbing pattern, a suggestion shows up to remove it.
+
+![Validate parent](art/validation-duplicates-parent.png)
+
 ### Hover tooltips
 Hover the mouse over any keyword to see a full description.
 
@@ -71,7 +79,7 @@ Hover the mouse over any keyword to see a full description.
 ### Light bulbs
 Sorting properties and deleting sections is easy with the commands being shown as light bulbs in the editor margin.
 
-![Light bulbs](art%2Flight-bulb.png)
+![Light bulbs](art/light-bulb.png)
 
 ### Code formatting
 Typing `Ctrl+K,D` will invoke Visual Studio's *Format Document* command. By default that will align all the equal (`=`) delimeters and add 1 space character around both equal- and colon characters. This behavior is configurable in the settings (see below).

@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="KeywordCharset" xml:space="preserve">
-    <value>File character encoding, NOTE: if visual studio thinks your file is ascii it will always save it as us-ascii</value>
+    <value>File character encoding</value>
   </data>
   <data name="KeywordEndOfLine" xml:space="preserve">
     <value>Line ending file format (Unix, DOS, Mac)</value>

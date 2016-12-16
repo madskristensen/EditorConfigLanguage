@@ -15,7 +15,9 @@ namespace EditorConfig
         {
             _buffer = buffer;
             _document = EditorConfigDocument.FromTextBuffer(buffer);
-            _document.Parsed += DocumentParsed;
+
+            var validator = EditorConfigValidator.FromDocument(_document);
+            validator.Validated += DocumentValidated;
 
             FormatterOptions.Saved += FormatterOptions_Saved;
         }
@@ -27,7 +29,7 @@ namespace EditorConfig
             _buffer.Replace(new Span(0, _buffer.CurrentSnapshot.Length), text);
         }
 
-        private void DocumentParsed(object sender, EventArgs e)
+        private void DocumentValidated(object sender, EventArgs e)
         {
             TagsChanged(this,
                 new SnapshotSpanEventArgs(
@@ -39,7 +41,7 @@ namespace EditorConfig
             if (_document.IsParsing || spans.Count == 0 || !EditorConfigPackage.FormatterOptions.ShowSeverityIcons)
                 yield break;
 
-            var items = _document.ItemsInSpan(spans[0]).Where(p => p.ItemType == ItemType.Severity);
+            var items = _document.ItemsInSpan(spans[0]).Where(p => p.ItemType == ItemType.Severity && !p.HasErrors).ToList();
 
             foreach (var item in items)
             {

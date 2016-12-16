@@ -3,6 +3,7 @@
 - [ ] Indication of rules not matching any files
 - [ ] Validate syntax of sections
 - [ ] Swith icons to the official .editorconfig icon
+- [ ] Incremental parsing
 - [x] Light bulb to remove duplicate properties
 - [x] Indication of rules that are already defined by parent .editorconfig
 - [x] Update tooltip to display larger icon

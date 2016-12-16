@@ -28,13 +28,12 @@ namespace EditorConfig
 
             _buffer = buffer;
             _document = EditorConfigDocument.FromTextBuffer(buffer);
-            //_document.Parsed += DocumentParsed;
 
             _validator = EditorConfigValidator.FromDocument(_document);
-            _validator.Validated += DocumentParsed;
+            _validator.Validated += DocumentValiated;
         }
 
-        private void DocumentParsed(object sender, EventArgs e)
+        private void DocumentValiated(object sender, EventArgs e)
         {
             ClassificationChanged?.Invoke(this,
                 new ClassificationChangedEventArgs(

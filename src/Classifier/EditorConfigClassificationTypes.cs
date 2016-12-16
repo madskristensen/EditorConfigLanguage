@@ -13,6 +13,7 @@ namespace EditorConfig
         public const string Keyword = PredefinedClassificationTypeNames.Identifier;
         public const string Value = Constants.LanguageName + " Value";
         public const string Severity = Constants.LanguageName + " Severity";
+        public const string Duplicate = Constants.LanguageName + " Duplicate";
 
         [Export, Name(Section)]
         internal static ClassificationTypeDefinition EditorConfigSectionClassification { get; set; }
@@ -22,6 +23,9 @@ namespace EditorConfig
 
         [Export, Name(Severity)]
         internal static ClassificationTypeDefinition EditorConfigSeverityClassification { get; set; }
+
+        [Export, Name(Duplicate)]
+        internal static ClassificationTypeDefinition EditorConfigDuplicateClassification { get; set; }
     }
 
     [Export(typeof(EditorFormatDefinition))]
@@ -61,6 +65,19 @@ namespace EditorConfig
         {
             ForegroundColor = (Color)ColorConverter.ConvertFromString("#002aa198"); // cyan
             DisplayName = EditorConfigClassificationTypes.Severity;
+        }
+    }
+
+    [Export(typeof(EditorFormatDefinition))]
+    [ClassificationType(ClassificationTypeNames = EditorConfigClassificationTypes.Duplicate)]
+    [Name(EditorConfigClassificationTypes.Duplicate)]
+    [UserVisible(true)]
+    internal sealed class DuplicateFormatDefinition : ClassificationFormatDefinition
+    {
+        public DuplicateFormatDefinition()
+        {
+            ForegroundColor = (Color)ColorConverter.ConvertFromString("#00839496"); // base0
+            DisplayName = EditorConfigClassificationTypes.Duplicate;
         }
     }
 }

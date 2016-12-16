@@ -5,12 +5,14 @@ namespace EditorConfig
 {
     public class Error : ITooltip
     {
-        public Error(string description, ErrorType errorType)
+        public Error(int errorCode, string description, ErrorType errorType)
         {
+            ErrorCode = errorCode;
             Description = description;
             ErrorType = errorType;
         }
 
+        public int ErrorCode { get; set; }
         public ErrorType ErrorType { get; set; } = ErrorType.Warning;
         public string Description { get; set; }
 
@@ -45,6 +47,6 @@ namespace EditorConfig
     {
         Error,
         Warning,
-        Message,
+        Suggestion,
     }
 }

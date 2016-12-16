@@ -24,10 +24,10 @@ namespace EditorConfig
 
         public List<Error> Errors { get; } = new List<Error>();
 
-        public void AddError(string errorMessage, ErrorType errorType)
+        public void AddError(int errorCode, string errorMessage, ErrorType errorType)
         {
             if (!Errors.Any(e => e.Name.Equals(errorMessage, System.StringComparison.OrdinalIgnoreCase)))
-                Errors.Add(new Error(errorMessage, errorType));
+                Errors.Add(new Error(errorCode, errorMessage, errorType));
         }
 
         public override string ToString()

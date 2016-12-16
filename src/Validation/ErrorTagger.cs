@@ -97,7 +97,7 @@ namespace EditorConfig
                     return PredefinedErrorTypeNames.Warning;
             }
 
-            return PredefinedErrorTypeNames.OtherError;
+            return PredefinedErrorTypeNames.Suggestion;
         }
 
         private ErrorTask CreateErrorTask(SnapshotSpan span, Error error)
@@ -122,7 +122,7 @@ namespace EditorConfig
 
         private TaskErrorCategory GetErrorCategory(ErrorType errorType)
         {
-            if (errorType == ErrorType.Message)
+            if (errorType == ErrorType.Suggestion)
                 return TaskErrorCategory.Message;
 
             if (errorType == ErrorType.Warning || EditorConfigPackage.ValidationOptions.ShowErrorsAsWarnings)

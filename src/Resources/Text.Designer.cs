@@ -106,7 +106,7 @@ namespace EditorConfig.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The property has already been defined in this section.
+        ///   Looks up a localized string similar to The property is overridden by a property by the same name in this section.
         /// </summary>
         internal static string ValidationDuplicateProperty {
             get {

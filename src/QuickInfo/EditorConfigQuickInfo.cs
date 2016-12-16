@@ -35,6 +35,7 @@ namespace EditorConfig
                 foreach (var error in item.Errors)
                 {
                     qiContent.Add(new Shared.EditorTooltip(error));
+                    break;
                 }
             }
             else if (item.ItemType == ItemType.Property && SchemaCatalog.TryGetProperty(item.Text, out Keyword property))

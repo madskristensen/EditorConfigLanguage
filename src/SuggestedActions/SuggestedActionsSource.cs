@@ -25,7 +25,7 @@ namespace EditorConfig
         {
             return await Task.Factory.StartNew(() =>
             {
-                _section = _document.Sections.FirstOrDefault(s => s.Item.Span.Contains(range));
+                _section = _document.Sections.FirstOrDefault(s => s.Span.Contains(range));
 
                 return _section != null;
             });
@@ -33,15 +33,28 @@ namespace EditorConfig
 
         public IEnumerable<SuggestedActionSet> GetSuggestedActions(ISuggestedActionCategorySet requestedActionCategories, SnapshotSpan range, CancellationToken cancellationToken)
         {
+            var list = new List<SuggestedActionSet>();
+
             if (_section != null)
             {
+                var removeDuplicate = new RemoveDuplicatePropertiesAction(_section, _view);
+                list.AddRange(CreateActionSet(removeDuplicate));
+
                 var sortProperties = new SortPropertiesAction(_section, _view);
                 var sortAllProperties = new SortAllPropertiesAction(_document, _view);
-                yield return new SuggestedActionSet(new ISuggestedAction[] { sortProperties, sortAllProperties });
+                list.AddRange(CreateActionSet(sortProperties, sortAllProperties));
 
                 var deleteSection = new DeleteSectionAction(range.Snapshot.TextBuffer, _section);
-                yield return new SuggestedActionSet(new ISuggestedAction[] { deleteSection });
+                list.AddRange(CreateActionSet(deleteSection));
             }
+
+            return list;
+        }
+
+        public IEnumerable<SuggestedActionSet> CreateActionSet(params BaseSuggestedAction[] actions)
+        {
+            var enabledActions = actions.Where(action => action.IsEnabled);
+            return new[] { new SuggestedActionSet(enabledActions, "The title") };
         }
 
         public void Dispose()

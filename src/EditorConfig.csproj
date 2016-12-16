@@ -92,6 +92,7 @@
     <Compile Include="Parser\EditorConfigDocumentInheritance.cs" />
     <Compile Include="Parser\EditorConfigDocumentParser.cs" />
     <Compile Include="Parser\EditorConfigDocument.cs" />
+    <Compile Include="SuggestedActions\RemoveDuplicatePropertiesAction.cs" />
     <Compile Include="Validation\EditorConfigValidator.cs" />
     <Compile Include="Parser\ParseItem.cs" />
     <Compile Include="SuggestedActions\BaseSuggestedAction.cs" />

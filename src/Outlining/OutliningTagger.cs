@@ -61,11 +61,14 @@ namespace EditorConfig
 
         private void StartParsing()
         {
+            if (TagsChanged == null)
+                return;
+
             ThreadHelper.Generic.BeginInvoke(() =>
             {
                 Regions.Clear();
                 ReParse();
-                TagsChanged(this, new SnapshotSpanEventArgs(new SnapshotSpan(_snapshot, 0, _snapshot.Length)));
+                TagsChanged?.Invoke(this, new SnapshotSpanEventArgs(new SnapshotSpan(_snapshot, 0, _snapshot.Length)));
             });
         }
 

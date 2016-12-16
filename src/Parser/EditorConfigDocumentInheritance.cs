@@ -22,6 +22,9 @@ namespace EditorConfig
         {
             get
             {
+                if (Root != null && Root.IsValid && Root.Value.Text.Equals("true", StringComparison.OrdinalIgnoreCase) && Root.Severity == null)
+                    return null;
+
                 if (_parent == null)
                     _parent = InheritsFrom();
 
@@ -45,9 +48,6 @@ namespace EditorConfig
 
         private EditorConfigDocument InheritsFrom()
         {
-            if (Root != null && Root.IsValid && Root.Value.Text.Equals("true", StringComparison.OrdinalIgnoreCase) && Root.Severity == null)
-                return null;
-
             var file = new FileInfo(FileName);
             var parent = file.Directory.Parent;
 

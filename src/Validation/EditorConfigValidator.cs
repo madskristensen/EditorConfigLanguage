@@ -97,7 +97,7 @@ namespace EditorConfig
 
         private void ValidateUnknown(ParseItem item)
         {
-            item.AddError(Resources.Text.ValidationUnknownElement, ErrorType.Error);
+            item.AddError(101, Resources.Text.ValidationUnknownElement, ErrorType.Error);
         }
 
         private void ValidateSection()
@@ -122,14 +122,16 @@ namespace EditorConfig
                     // Root in section
                     if (property.Keyword.Text.Equals(SchemaCatalog.Root, StringComparison.OrdinalIgnoreCase))
                     {
-                        property.Keyword.AddError(Resources.Text.ValidationRootInSection, ErrorType.Error);
+                        property.Keyword.AddError(102, Resources.Text.ValidationRootInSection, ErrorType.Error);
                     }
 
                     // Duplicate property
                     if (EditorConfigPackage.ValidationOptions.EnableDuplicateProperties && property.IsValid)
                     {
-                        if (section.Properties.First(p => p.Keyword.Text.Equals(property.Keyword.Text, StringComparison.OrdinalIgnoreCase)) != property)
-                            property.Keyword.AddError(Resources.Text.ValidationDuplicateProperty, ErrorType.Warning);
+                        if (section.Properties.Last(p => p.Keyword.Text.Equals(property.Keyword.Text, StringComparison.OrdinalIgnoreCase)) != property)
+                        {
+                            property.Keyword.AddError(103, Resources.Text.ValidationDuplicateProperty, ErrorType.Suggestion);
+                        }
                     }
 
                     // Parent duplicate
@@ -139,7 +141,7 @@ namespace EditorConfig
                         if (parentProperties.Any())
                         {
                             var fileName = PackageUtilities.MakeRelative(_document.FileName, parentProperties.First().Keyword.Document.FileName);
-                            property.Value.AddError(string.Format(Resources.Text.ValidationParentPropertyDuplicate, fileName), ErrorType.Message);
+                            property.Keyword.AddError(104, string.Format(Resources.Text.ValidationParentPropertyDuplicate, fileName), ErrorType.Suggestion);
                         }
                     }
                 }
@@ -148,7 +150,7 @@ namespace EditorConfig
                 if (EditorConfigPackage.ValidationOptions.EnableDuplicateSections)
                 {
                     if (_document.Sections.First(s => s.Item.Text == section.Item.Text) != section)
-                        section.Item.AddError(string.Format(Resources.Text.ValidationDuplicateSection, section.Item.Text), ErrorType.Message);
+                        section.Item.AddError(105, string.Format(Resources.Text.ValidationDuplicateSection, section.Item.Text), ErrorType.Suggestion);
                 }
             }
         }
@@ -159,7 +161,7 @@ namespace EditorConfig
             {
                 // Only root property allowed
                 if (property != _document.Root)
-                    property.Keyword.AddError(Resources.Text.ValidationRootInSection, ErrorType.Error);
+                    property.Keyword.AddError(106, Resources.Text.ValidationRootInSection, ErrorType.Error);
             }
         }
 
@@ -168,38 +170,38 @@ namespace EditorConfig
             // Unknown keyword
             if (EditorConfigPackage.ValidationOptions.EnableUnknownProperties & !SchemaCatalog.TryGetProperty(property.Keyword.Text, out Keyword keyword))
             {
-                property.Keyword.AddError(string.Format(Resources.Text.ValidateUnknownKeyword, property.Keyword.Text), ErrorType.Error);
+                property.Keyword.AddError(107, string.Format(Resources.Text.ValidateUnknownKeyword, property.Keyword.Text), ErrorType.Error);
             }
 
             // Missing value
             else if (property.Value == null)
             {
-                property.Keyword.AddError(Resources.Text.ValidationMissingPropertyValue, ErrorType.Error);
+                property.Keyword.AddError(108, Resources.Text.ValidationMissingPropertyValue, ErrorType.Error);
             }
             // Value not in schema
             else if (EditorConfigPackage.ValidationOptions.EnableUnknownValues &&
                 !keyword.Values.Any(v => v.Name.Equals(property.Value?.Text, StringComparison.OrdinalIgnoreCase)) &&
                 !(int.TryParse(property.Value.Text, out int intValue) && intValue > 0))
             {
-                property.Value.AddError(string.Format(Resources.Text.InvalidValue, property.Value.Text, keyword.Name), ErrorType.Error);
+                property.Value.AddError(109, string.Format(Resources.Text.InvalidValue, property.Value.Text, keyword.Name), ErrorType.Error);
             }
 
             // Missing severity
             else if (property.Severity == null && property.Value.Text.Equals("true", StringComparison.OrdinalIgnoreCase) && keyword.SupportsSeverity)
             {
-                property.Value.AddError(Resources.Text.ValidationMissingSeverity, ErrorType.Error);
+                property.Value.AddError(110, Resources.Text.ValidationMissingSeverity, ErrorType.Error);
             }
             else if (property.Severity != null)
             {
                 // Severity not applicaple to property
                 if (!keyword.SupportsSeverity)
                 {
-                    property.Severity.AddError(string.Format(Resources.Text.ValidationSeverityNotApplicable, keyword.Name), ErrorType.Error);
+                    property.Severity.AddError(111, string.Format(Resources.Text.ValidationSeverityNotApplicable, keyword.Name), ErrorType.Error);
                 }
                 // Severity not in schema
                 else if (!SchemaCatalog.TryGetSeverity(property.Severity.Text, out Severity severity))
                 {
-                    property.Severity.AddError(string.Format(Resources.Text.ValidationInvalidSeverity, property.Severity.Text), ErrorType.Error);
+                    property.Severity.AddError(112, string.Format(Resources.Text.ValidationInvalidSeverity, property.Severity.Text), ErrorType.Error);
                 }
             }
         }

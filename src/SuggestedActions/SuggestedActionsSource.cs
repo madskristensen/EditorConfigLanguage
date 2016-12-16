@@ -38,7 +38,8 @@ namespace EditorConfig
             if (_section != null)
             {
                 var removeDuplicate = new RemoveDuplicatePropertiesAction(_section, _view);
-                list.AddRange(CreateActionSet(removeDuplicate));
+                if (removeDuplicate.IsEnabled)
+                    list.AddRange(CreateActionSet(removeDuplicate));
 
                 var sortProperties = new SortPropertiesAction(_section, _view);
                 var sortAllProperties = new SortAllPropertiesAction(_document, _view);
@@ -53,8 +54,7 @@ namespace EditorConfig
 
         public IEnumerable<SuggestedActionSet> CreateActionSet(params BaseSuggestedAction[] actions)
         {
-            var enabledActions = actions.Where(action => action.IsEnabled);
-            return new[] { new SuggestedActionSet(enabledActions) };
+            return new[] { new SuggestedActionSet(actions) };
         }
 
         public void Dispose()

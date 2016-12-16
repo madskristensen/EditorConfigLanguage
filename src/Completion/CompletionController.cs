@@ -72,7 +72,7 @@ namespace EditorConfig
                             {
                                 StartSession();
                             }
-                            else if (ch == ':')
+                            else if (ch == ':' || ch == '=')
                             {
                                 Cancel();
                                 StartSession();

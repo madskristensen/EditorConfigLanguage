@@ -48,7 +48,17 @@ namespace EditorConfig
                 currentCompletions.Filter(new Predicate<Completion>(DoesCompletionMatchAutomationText));
             }
 
-            SelectBestMatch(CompletionMatchType.MatchDisplayText, false);
+            var ordered = currentCompletions.OrderByDescending(c => GetHighlightedSpansInDisplayText(c.DisplayText).Sum(s => s.Length));
+
+            //var matches = currentCompletions.Where(c => GetHighlightedSpansInDisplayText(c.DisplayText).Any());
+            if (ordered.Any())
+            {
+                SelectionStatus = new CompletionSelectionStatus(ordered.First(), ordered.Count() == 1, ordered.Count() == 1);
+            }
+            else
+            {
+                SelectBestMatch(CompletionMatchType.MatchDisplayText, false);
+            }
         }
 
         private bool DoesCompletionMatchAutomationText(Completion completion)
@@ -59,14 +69,32 @@ namespace EditorConfig
 
         public override IReadOnlyList<Span> GetHighlightedSpansInDisplayText(string displayText)
         {
-            int index = displayText.IndexOf(_typed, 0, StringComparison.OrdinalIgnoreCase);
+            var matches = new Dictionary<int, Span>();
+            string match = string.Empty;
 
-            if (index > -1 && displayText.Length >= index + _typed.Length)
+            for (int i = 0; i < _typed.Length; i++)
             {
-                return new[] { Span.FromBounds(index, index + _typed.Length) };
+                char c = _typed[i];
+                var current = match + c;
+
+                if (displayText.Contains(current))
+                {
+                    var index = displayText.IndexOf(current);
+                    if (index > 0)
+                        index = displayText.IndexOf("_" + current) + 1;
+
+                    if (index > -1)
+                        matches[index] = new Span(index, current.Length);
+                }
+                else
+                {
+                    match = string.Empty;
+                }
+
+                match += c;
             }
 
-            return new List<Span>();
+            return matches.Values.ToArray();
         }
     }
 }

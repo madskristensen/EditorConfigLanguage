@@ -75,23 +75,30 @@ namespace EditorConfig
             for (int i = 0; i < _typed.Length; i++)
             {
                 char c = _typed[i];
+
+                if (!displayText.Contains(match + c))
+                {
+                    match = string.Empty;
+                }
+
                 var current = match + c;
 
                 if (displayText.Contains(current))
                 {
                     var index = displayText.IndexOf(current);
+                    var offset = 0;
+
                     if (index > 0)
-                        index = displayText.IndexOf("_" + current) + 1;
+                    {
+                        index = displayText.IndexOf("_" + current);
+                        offset = 1;
+                    }
 
                     if (index > -1)
-                        matches[index] = new Span(index, current.Length);
-                }
-                else
-                {
-                    match = string.Empty;
-                }
+                        matches[index] = new Span(index + offset, current.Length);
 
-                match += c;
+                    match += c;
+                }
             }
 
             return matches.Values.ToArray();

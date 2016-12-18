@@ -92,6 +92,12 @@ namespace EditorConfig
 
         private static bool FindMatchingCloseChar(SnapshotPoint startPoint, char open, char close, int maxLines, out SnapshotSpan pairSpan)
         {
+            if (startPoint.Snapshot.Length < 2)
+            {
+                pairSpan = new SnapshotSpan(startPoint.Snapshot, 0, startPoint.Snapshot.Length);
+                return false;
+            }
+
             pairSpan = new SnapshotSpan(startPoint.Snapshot, 1, 1);
             ITextSnapshotLine line = startPoint.GetContainingLine();
             string lineText = line.GetText();

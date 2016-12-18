@@ -115,6 +115,7 @@ namespace EditorConfig
 
             foreach (var section in _document.Sections)
             {
+
                 var parentSections = parents.SelectMany(d => d.Sections).Where(s => s.Item.Text == section.Item.Text);
 
                 foreach (var property in section.Properties)

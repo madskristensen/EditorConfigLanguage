@@ -1,6 +1,7 @@
 ﻿using EditorConfig;
 using System;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle(Vsix.Name)]
@@ -11,6 +12,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCopyright(Vsix.Author)]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
+
+[assembly: InternalsVisibleTo("EditorConfigTest")]
 
 [assembly: ComVisible(false)]
 [assembly: CLSCompliant(false)]

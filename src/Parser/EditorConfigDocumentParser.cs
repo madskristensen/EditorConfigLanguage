@@ -7,7 +7,7 @@ namespace EditorConfig
 {
     partial class EditorConfigDocument
     {
-        private static Regex _property = new Regex(@"^\s*(?<keyword>[\w-]+)\s*[=:]?\s*(?<value>[^;#:\s]+)?(\s*:\s*(?<severity>[^;#:\s]+))?");
+        private static Regex _property = new Regex(@"^\s*(?<keyword>[^;#:\s=]+)\s*[=:]?\s*(?<value>[^;#:\s]+)?(\s*:\s*(?<severity>[^;#:\s]+))?");
         private static Regex _section = new Regex(@"^\s*\[([^#;]+)\]");
         private static Regex _comment = new Regex(@"^\s*[#;].+");
         private static Regex _unknown = new Regex(@"\s*(?<unknown>.+)");

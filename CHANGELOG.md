@@ -1,8 +1,9 @@
 # Road map
 
 - [ ] Indication of sections not matching any files
-- [ ] Validate syntax of sections
 - [ ] Swith icons to the official .editorconfig icon
+- [x] Invalidate empty section
+- [x] Reduce items in Intellisense while typing
 - [x] Intellisense substring filtering
 - [x] Light bulb to remove duplicate properties
 - [x] Indication of rules that are already defined by parent .editorconfig

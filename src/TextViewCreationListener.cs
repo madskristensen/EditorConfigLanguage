@@ -100,6 +100,16 @@ namespace EditorConfig
                 _errorList.Dispose();
                 _errorList = null;
             }
+
+            if (view.TextBuffer.Properties.TryGetProperty(typeof(EditorConfigDocument), out EditorConfigDocument doc))
+            {
+                doc.Dispose();
+            }
+
+            if (view.TextBuffer.Properties.TryGetProperty(typeof(EditorConfigValidator), out EditorConfigValidator val))
+            {
+                val.Dispose();
+            }
         }
     }
 }

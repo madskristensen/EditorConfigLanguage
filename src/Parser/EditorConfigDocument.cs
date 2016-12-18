@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace EditorConfig
 {
-    partial class EditorConfigDocument
+    partial class EditorConfigDocument: IDisposable
     {
         private EditorConfigDocument(ITextBuffer buffer)
         {
@@ -70,6 +70,12 @@ namespace EditorConfig
             }
 
             return null;
+        }
+
+        public void Dispose()
+        {
+            DisposeParser();
+            DisposeInheritance();
         }
     }
 }

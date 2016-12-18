@@ -66,5 +66,13 @@ namespace EditorConfig
 
             return null;
         }
+
+        private void DisposeInheritance()
+        {
+            if (_parent != null)
+            {
+                _parent.Dispose();
+            }
+        }
     }
 }

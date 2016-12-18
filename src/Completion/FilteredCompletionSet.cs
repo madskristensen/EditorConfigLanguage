@@ -12,6 +12,7 @@ namespace EditorConfig
         private BulkObservableCollection<Completion> _completions = new BulkObservableCollection<Completion>();
         public List<string> _activeFilters = new List<string>();
         private string _typed;
+        private static List<Span> _defaultEmptyList = new List<Span>();
 
         public FilteredCompletionSet(ITrackingSpan applicableTo, IEnumerable<Completion> completions, IEnumerable<Completion> completionBuilders, IReadOnlyList<IIntellisenseFilter> filters)
             : base("All", "All", applicableTo, completions, completionBuilders, filters)
@@ -50,10 +51,10 @@ namespace EditorConfig
 
             var ordered = currentCompletions.OrderByDescending(c => GetHighlightedSpansInDisplayText(c.DisplayText).Sum(s => s.Length));
 
-            //var matches = currentCompletions.Where(c => GetHighlightedSpansInDisplayText(c.DisplayText).Any());
             if (ordered.Any())
             {
-                SelectionStatus = new CompletionSelectionStatus(ordered.First(), ordered.Count() == 1, ordered.Count() == 1);
+                var count = ordered.Count();
+                SelectionStatus = new CompletionSelectionStatus(ordered.First(), count == 1, count == 1);
             }
             else
             {
@@ -69,39 +70,53 @@ namespace EditorConfig
 
         public override IReadOnlyList<Span> GetHighlightedSpansInDisplayText(string displayText)
         {
-            var matches = new Dictionary<int, Span>();
-            string match = string.Empty;
+            return GetHighlightedSpans(displayText, _typed);
+        }
 
-            for (int i = 0; i < _typed.Length; i++)
+        public static List<Span> GetHighlightedSpans(string displayText, string typed)
+        {
+            var matches = new SortedList<int, Span>();
+            string match = string.Empty;
+            int startIndex = 0;
+
+            for (int i = 0; i < typed.Length; i++)
             {
-                char c = _typed[i];
+                char c = typed[i];
 
                 if (!displayText.Contains(match + c))
                 {
+                    if (!matches.Any())
+                        return _defaultEmptyList;
+
                     match = string.Empty;
+                    startIndex = matches.Last().Value.End;
                 }
 
                 var current = match + c;
+                var index = displayText.IndexOf(current, startIndex);
+                var offset = 0;
 
-                if (displayText.Contains(current))
+                if (index == -1)
+                    return _defaultEmptyList;
+
+                if (index > 0)
                 {
-                    var index = displayText.IndexOf(current);
-                    var offset = 0;
+                    index = displayText.IndexOf("_" + current, startIndex);
+                    offset = 1;
+                }
 
-                    if (index > 0)
-                    {
-                        index = displayText.IndexOf("_" + current);
-                        offset = 1;
-                    }
-
-                    if (index > -1)
-                        matches[index] = new Span(index + offset, current.Length);
-
+                if (index > -1)
+                {
+                    matches[index] = new Span(index + offset, current.Length);
                     match += c;
+                }
+                else
+                {
+                    return _defaultEmptyList;
                 }
             }
 
-            return matches.Values.ToArray();
+            return matches.Values.ToList();
         }
     }
 }

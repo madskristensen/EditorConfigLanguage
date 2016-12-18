@@ -210,11 +210,8 @@ namespace EditorConfig
 
         public void Dispose()
         {
-            if (_timer != null)
-            {
-                _timer.Dispose();
-                _timer = null;
-            }
+            _timer?.Dispose();
+            _timer = null;
 
             Validated = null;
 

@@ -2,13 +2,6 @@
 
 - [ ] Indication of sections not matching any files
 - [ ] Swith icons to the official .editorconfig icon
-- [x] Invalidate empty section
-- [x] Reduce items in Intellisense while typing
-- [x] Intellisense substring filtering
-- [x] Light bulb to remove duplicate properties
-- [x] Indication of rules that are already defined by parent .editorconfig
-- [x] Update tooltip to display larger icon
-- [x] Removing empty lines when sorting sections
 
 Features that have a checkmark are complete and available for
 download in the
@@ -18,6 +11,16 @@ download in the
 
 These are the changes to each version that has been released
 on the official Visual Studio extension gallery.
+
+## 1.8
+
+- [x] Invalidate empty section
+- [x] Reduce items in Intellisense while typing
+- [x] Intellisense substring filtering
+- [x] Light bulb to remove duplicate properties
+- [x] Indication of rules that are already defined by parent .editorconfig
+- [x] Update tooltip to display larger icon
+- [x] Removing empty lines when sorting sections
 
 ## 1.7
 

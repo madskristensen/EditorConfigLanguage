@@ -16,7 +16,7 @@ namespace EditorConfig
         {
             Category category = Category.Standard;
             yield return new Keyword(Root, Schema.Text.KeywordRoot, category, "true", "false");
-            yield return new Keyword("charset", Schema.Text.KeywordCharset, category, "latin1", "utf-8", "utf-8-bom", "utf-16be", "utf-16le", "utf-8-bom");
+            yield return new Keyword("charset", Schema.Text.KeywordCharset, category, "latin1", "utf-8", "utf-8-bom", "utf-16be", "utf-16le");
             yield return new Keyword("end_of_line", Schema.Text.KeywordEndOfLine, category, "lf", "crlf", "cr");
             yield return new Keyword("indent_style", Schema.Text.KeywordIndentStyle, category, "tab", "space");
             yield return new Keyword("indent_size", Schema.Text.KeywordIndentSize, category, "tab");

@@ -139,6 +139,10 @@ namespace EditorConfig
         {
             IEnumerable<CompletionIcon2> icon = null;
             string automationText = null;
+            string text = item.Name;
+
+            if (int.TryParse(item.Name, out int integer))
+                text = "<integer>";
 
             if (!item.IsSupported)
             {
@@ -150,7 +154,7 @@ namespace EditorConfig
                 automationText = category.ToString();
             }
 
-            return new Completion4(item.Name, item.Name, item.Description, item.Moniker, automationText, icon);
+            return new Completion4(text, item.Name, item.Description, item.Moniker, automationText, icon);
         }
 
         private ITrackingSpan FindTokenSpanAtPosition(ICompletionSession session)

@@ -132,6 +132,9 @@
   <data name="KeywordInsertFinalNewline" xml:space="preserve">
     <value>Denotes whether file should end with a newline</value>
   </data>
+  <data name="KeywordMaxLineLength" xml:space="preserve">
+    <value>Forces hard line wrapping after the amount of characters specified</value>
+  </data>
   <data name="KeywordRoot" xml:space="preserve">
     <value>Special property that should be specified at the top of the file outside of any sections. Set to “true” to stop .editorconfig files search on current file.</value>
   </data>

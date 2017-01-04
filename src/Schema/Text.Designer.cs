@@ -106,6 +106,15 @@ namespace EditorConfig.Schema {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Forces hard line wrapping after the amount of characters specified.
+        /// </summary>
+        internal static string KeywordMaxLineLength {
+            get {
+                return ResourceManager.GetString("KeywordMaxLineLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Special property that should be specified at the top of the file outside of any sections. Set to “true” to stop .editorconfig files search on current file..
         /// </summary>
         internal static string KeywordRoot {

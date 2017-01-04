@@ -19,10 +19,11 @@ namespace EditorConfig
             yield return new Keyword("charset", Schema.Text.KeywordCharset, category, "latin1", "utf-8", "utf-8-bom", "utf-16be", "utf-16le");
             yield return new Keyword("end_of_line", Schema.Text.KeywordEndOfLine, category, "lf", "crlf", "cr");
             yield return new Keyword("indent_style", Schema.Text.KeywordIndentStyle, category, "tab", "space");
-            yield return new Keyword("indent_size", Schema.Text.KeywordIndentSize, category, "tab");
+            yield return new Keyword("indent_size", Schema.Text.KeywordIndentSize, category, "2", "tab");
             yield return new Keyword("tab_width", Schema.Text.KeywordTabWidth, category);
             yield return new Keyword("trim_trailing_whitespace", Schema.Text.KeywordTrimTrailingWhitespace, category, "true", "false") { IsSupported = false };
             yield return new Keyword("insert_final_newline", Schema.Text.KeywordInsertFinalNewline, category, "true", "false") { IsSupported = false };
+            yield return new Keyword("max_line_length", Schema.Text.KeywordMaxLineLength, category, "80", "off") { IsSupported = false };
 
             category = Category.CSharp;
             yield return new Keyword("csharp_style_conditional_delegate_call", "Prefer conditional delegate calls.", category, "true", "false");

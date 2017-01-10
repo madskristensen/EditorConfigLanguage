@@ -63,7 +63,7 @@ namespace EditorConfig
             {
                 dte.UndoContext.Open(DisplayText);
                 Execute(cancellationToken);
-                Telemetry.TrackUserTask("LightBulb - "+ DisplayText);
+                Telemetry.TrackUserTask("LightBulb-" + DisplayText);
             }
             finally
             {

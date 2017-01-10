@@ -66,17 +66,17 @@ namespace EditorConfig
         {
             if (item is Project proj)
             {
-                Telemetry.TrackUserTask("File added to project");
+                Telemetry.TrackUserTask("FileAddedToProject");
                 return proj.AddFileToProject(fileName, "None");
             }
             else if (item is ProjectItem projItem && projItem.ContainingProject != null)
             {
-                Telemetry.TrackUserTask("File added to folder");
+                Telemetry.TrackUserTask("FileAddedToFolder");
                 return projItem.ContainingProject.AddFileToProject(fileName, "None");
             }
             else if (item is Solution2 solution)
             {
-                Telemetry.TrackUserTask("File added to solution");
+                Telemetry.TrackUserTask("FileAddedToSolution");
                 return AddFileToSolution(fileName, solution);
             }
 

@@ -9,22 +9,20 @@ namespace EditorConfig
 
         public static void TrackUserTask(string name, TelemetryResult result = TelemetryResult.Success)
         {
-            TelemetryService.DefaultSession.PostUserTask(_namespace + name, result);
+            string actualName = name.Replace(" ", "_");
+            TelemetryService.DefaultSession.PostUserTask(_namespace + actualName, result);
         }
 
         public static void TrackOperation(string name, TelemetryResult result = TelemetryResult.Success)
         {
-            TelemetryService.DefaultSession.PostOperation(_namespace + name, result);
+            string actualName = name.Replace(" ", "_");
+            TelemetryService.DefaultSession.PostOperation(_namespace + actualName, result);
         }
 
         public static void TrackException(string name, Exception exception)
         {
-            TelemetryService.DefaultSession.PostFault(name, exception.Message, exception);
-        }
-
-        private static TelemetryEvent CreateTelemetryEvent(string name)
-        {
-            return new TelemetryEvent(_namespace + name);
+            string actualName = name.Replace(" ", "_");
+            TelemetryService.DefaultSession.PostFault(actualName, exception.Message, exception);
         }
     }
 }

@@ -51,6 +51,7 @@ namespace EditorConfig
 
         public override void SaveSettingsToStorage()
         {
+            Telemetry.TrackOperation("FormattingOptionsSaved");
             base.SaveSettingsToStorage();
             Saved?.Invoke(this, EventArgs.Empty);
         }

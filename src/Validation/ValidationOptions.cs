@@ -56,6 +56,7 @@ namespace EditorConfig
 
         public override void SaveSettingsToStorage()
         {
+            Telemetry.TrackOperation("ValidationOptionsSaved");
             base.SaveSettingsToStorage();
             Saved?.Invoke(this, EventArgs.Empty);
         }

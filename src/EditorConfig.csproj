@@ -92,6 +92,7 @@
     <Compile Include="Parser\EditorConfigDocumentInheritance.cs" />
     <Compile Include="Parser\EditorConfigDocumentParser.cs" />
     <Compile Include="Parser\EditorConfigDocument.cs" />
+    <Compile Include="Shared\Telemetry.cs" />
     <Compile Include="SuggestedActions\RemoveDuplicatePropertiesAction.cs" />
     <Compile Include="Validation\EditorConfigValidator.cs" />
     <Compile Include="Parser\ParseItem.cs" />
@@ -279,6 +280,10 @@
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.9.0, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <HintPath>..\packages\Microsoft.VisualStudio.Shell.Interop.9.0.9.0.30729\lib\Microsoft.VisualStudio.Shell.Interop.9.0.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Telemetry">
+      <HintPath>..\lib\Microsoft.VisualStudio.Telemetry.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Text.Data, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">

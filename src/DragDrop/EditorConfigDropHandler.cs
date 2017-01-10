@@ -41,10 +41,12 @@ namespace EditorConfig
                     edit.Apply();
                     transaction.Complete();
                 }
+
+                Telemetry.TrackUserTask("FileDragged");
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.Write(ex);
+                Telemetry.TrackException("DragDrop", ex);
             }
 
             return DragDropPointerEffects.Copy;

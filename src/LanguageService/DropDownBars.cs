@@ -35,7 +35,7 @@ namespace EditorConfig
 
             _document = EditorConfigDocument.FromTextBuffer(_buffer);
             _document.Parsed += DocumentParsed;
-            
+
             UpdateElements();
         }
 
@@ -111,7 +111,7 @@ namespace EditorConfig
 
                 list.Add(new DropDownItem("   " + section.Item.Text, lineNumber));
             }
-            
+
             _members = list;
 
             SyncDropDowns();

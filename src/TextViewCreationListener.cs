@@ -41,6 +41,7 @@ namespace EditorConfig
 
         public void VsTextViewCreated(IVsTextView textViewAdapter)
         {
+            Telemetry.TrackOperation("FileOpened");
             IWpfTextView view = AdaptersFactory.GetWpfTextView(textViewAdapter);
 
             view.TextBuffer.Properties.GetOrCreateSingletonProperty(() => view);

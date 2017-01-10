@@ -107,6 +107,7 @@ namespace EditorConfig
             {
                 e.Handled = true;
                 VsHelpers.DTE.ItemOperations.OpenFile(parentFileName);
+                Telemetry.TrackUserTask("InheritanceNavigated");
             };
 
             Children.Add(inherits);

@@ -1,6 +1,8 @@
 ﻿using Microsoft.VisualStudio.Shell;
+using Minimatch;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Timers;
 
@@ -14,16 +16,17 @@ namespace EditorConfig
         private Timer _timer;
         private bool _hasChanged;
         private bool _prevEnabled = EditorConfigPackage.ValidationOptions.EnableValidation;
+        private Dictionary<string, bool> _globbingCache = new Dictionary<string, bool>();
 
         private EditorConfigValidator(EditorConfigDocument document)
         {
             _document = document;
-            _document.Parsed += DocumentParsed;
+            _document.Parsed += DocumentParsedAsync;
 
             if (_prevEnabled)
-                Validate();
+                ValidateAsync().ConfigureAwait(false);
 
-            ValidationOptions.Saved += DocumentParsed;
+            ValidationOptions.Saved += DocumentParsedAsync;
         }
 
         public static EditorConfigValidator FromDocument(EditorConfigDocument document)
@@ -31,70 +34,91 @@ namespace EditorConfig
             return document.TextBuffer.Properties.GetOrCreateSingletonProperty(() => new EditorConfigValidator(document));
         }
 
-        private void DocumentParsed(object sender, EventArgs e)
+        private async void DocumentParsedAsync(object sender, EventArgs e)
         {
             if (!EditorConfigPackage.ValidationOptions.EnableValidation)
             {
                 // Don't run the logic unless the user changed the settings since last run
                 if (_prevEnabled != EditorConfigPackage.ValidationOptions.EnableValidation)
                 {
-                    foreach (var item in _document.ParseItems.Where(i => i.Errors.Any()))
-                    {
-                        item.Errors.Clear();
-                    }
-
+                    ClearAllErrors();
                     Validated?.Invoke(this, EventArgs.Empty);
                 }
             }
             else
             {
-                _lastRequestForValidation = DateTime.Now;
-                _hasChanged = true;
-
-                if (_timer == null)
-                {
-                    _timer = new Timer(_validationDelay);
-                    _timer.Elapsed += TimerElapsed;
-                }
-
-                _timer.Enabled = true;
+                await RequestValidation(false);
             }
 
             _prevEnabled = EditorConfigPackage.ValidationOptions.EnableValidation;
         }
 
-        private void TimerElapsed(object sender, ElapsedEventArgs e)
+        public async System.Threading.Tasks.Task RequestValidation(bool force)
+        {
+            _lastRequestForValidation = DateTime.Now;
+            _hasChanged = true;
+
+            if (force)
+            {
+                _globbingCache.Clear();
+                ClearAllErrors();
+                await ValidateAsync();
+            }
+            else
+            {
+                if (_timer == null)
+                {
+                    _timer = new Timer(_validationDelay);
+                    _timer.Elapsed += TimerElapsedAsync;
+                }
+
+                _timer.Enabled = true;
+            }
+        }
+
+        private async void TimerElapsedAsync(object sender, ElapsedEventArgs e)
         {
             if (DateTime.Now.AddMilliseconds(-_validationDelay) > _lastRequestForValidation && _hasChanged && !_document.IsParsing)
             {
                 _timer.Stop();
-                Validate();
+                await ValidateAsync();
                 _hasChanged = false;
             }
         }
 
-        private void Validate()
+        private void ClearAllErrors()
         {
-            try
+            foreach (var item in _document.ParseItems.Where(i => i.Errors.Any()))
             {
-                foreach (var item in _document.ParseItems.Where(i => i.ItemType == ItemType.Unknown))
-                {
-                    ValidateUnknown(item);
-                }
-
-                ValidateSection();
-
-                foreach (var property in _document.Properties)
-                {
-                    ValidateProperty(property);
-                }
-
-                Validated?.Invoke(this, EventArgs.Empty);
+                item.Errors.Clear();
             }
-            catch (Exception ex)
+        }
+
+        private async System.Threading.Tasks.Task ValidateAsync()
+        {
+            await System.Threading.Tasks.Task.Run(() =>
             {
-                Telemetry.TrackException("Validate", ex);
-            }
+                try
+                {
+                    foreach (var item in _document.ParseItems.Where(i => i.ItemType == ItemType.Unknown))
+                    {
+                        ValidateUnknown(item);
+                    }
+
+                    ValidateSection();
+
+                    foreach (var property in _document.Properties)
+                    {
+                        ValidateProperty(property);
+                    }
+
+                    Validated?.Invoke(this, EventArgs.Empty);
+                }
+                catch (Exception ex)
+                {
+                    Telemetry.TrackException("Validate", ex);
+                }
+            });
         }
 
         private void ValidateUnknown(ParseItem item)
@@ -146,6 +170,17 @@ namespace EditorConfig
                             var fileName = PackageUtilities.MakeRelative(_document.FileName, parentProperties.First().Keyword.Document.FileName);
                             property.Keyword.AddError(104, string.Format(Resources.Text.ValidationParentPropertyDuplicate, fileName), ErrorType.Suggestion);
                         }
+                    }
+
+                    // Globbing pattern match
+                    if (!_globbingCache.ContainsKey(section.Item.Text))
+                    {
+                        _globbingCache[section.Item.Text] = DoesFilesMatch(Path.GetDirectoryName(_document.FileName), section.Item.Text);
+                    }
+
+                    if (!_globbingCache[section.Item.Text])
+                    {
+                        section.Item.AddError(113, string.Format("The globbing pattern \"{0}\" doesn't match any files. Consider removing the section", section.Item.Text), ErrorType.Suggestion);
                     }
                 }
 
@@ -209,6 +244,47 @@ namespace EditorConfig
             }
         }
 
+        public static bool DoesFilesMatch(string folder, string pattern, string root = null)
+        {
+            var ignorePaths = new[] { "\\node_modules", "\\.git", "\\packages", "\\bower_components", "\\jspm_packages", "\\testresults", "\\.vs" };
+            root = root ?? folder;
+            pattern = pattern.Trim('[', ']');
+
+            try
+            {
+                foreach (var file in Directory.EnumerateFiles(folder).Where(f => !ignorePaths.Any(p => folder.Contains(p))))
+                {
+                    string relative = file.Replace(root, "");
+
+                    if (CheckGlobbing(relative, pattern))
+                        return true;
+                }
+
+                foreach (var directory in Directory.EnumerateDirectories(folder).Where(d => !ignorePaths.Any(i => d.Contains(i))))
+                    return DoesFilesMatch(directory, pattern, root);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.Write(ex);
+            }
+
+            return false;
+        }
+
+        private static readonly Options _options = new Options { AllowWindowsPaths = true, MatchBase = true };
+
+        public static bool CheckGlobbing(string path, string pattern)
+        {
+            string p = pattern?.TrimEnd('/');
+
+            if (!string.IsNullOrWhiteSpace(p))
+            {
+                return Minimatcher.Check(path, p, _options);
+            }
+
+            return false;
+        }
+
         public void Dispose()
         {
             if (_timer != null)
@@ -219,8 +295,8 @@ namespace EditorConfig
 
             Validated = null;
 
-            _document.Parsed -= DocumentParsed;
-            ValidationOptions.Saved -= DocumentParsed;
+            _document.Parsed -= DocumentParsedAsync;
+            ValidationOptions.Saved -= DocumentParsedAsync;
         }
 
         public event EventHandler Validated;

@@ -38,14 +38,16 @@ namespace EditorConfig
         private IQuickInfoBroker QuickInfoBroker { get; set; }
 
         private ErrorListProvider _errorList;
+        private ITextBuffer _buffer;
 
         public void VsTextViewCreated(IVsTextView textViewAdapter)
         {
             Telemetry.TrackOperation("FileOpened");
             IWpfTextView view = AdaptersFactory.GetWpfTextView(textViewAdapter);
+            _buffer = view.TextBuffer;
 
-            view.TextBuffer.Properties.GetOrCreateSingletonProperty(() => view);
-            _errorList = view.TextBuffer.Properties.GetOrCreateSingletonProperty(() => new ErrorListProvider(ServiceProvider));
+            _buffer.Properties.GetOrCreateSingletonProperty(() => view);
+            _errorList = _buffer.Properties.GetOrCreateSingletonProperty(() => new ErrorListProvider(ServiceProvider));
 
             if (_errorList == null)
                 return;
@@ -59,29 +61,34 @@ namespace EditorConfig
             if (textViewAdapter is IVsTextViewEx viewEx)
                 ErrorHandler.ThrowOnFailure(viewEx.PersistOutliningState());
 
-            if (DocumentService.TryGetTextDocument(view.TextBuffer, out var document))
+            if (DocumentService.TryGetTextDocument(_buffer, out var document))
             {
-                document.FileActionOccurred += Document_FileActionOccurred;
+                document.FileActionOccurred += DocumentSavedAsync;
             }
 
             view.Closed += OnViewClosed;
         }
 
-        private void Document_FileActionOccurred(object sender, TextDocumentFileActionEventArgs e)
+        private async void DocumentSavedAsync(object sender, TextDocumentFileActionEventArgs e)
         {
-            if (e.FileActionType == FileActionTypes.ContentSavedToDisk)
-            {
-                ThreadHelper.Generic.BeginInvoke(DispatcherPriority.ApplicationIdle, () =>
-                {
-                    var statusBar = Package.GetGlobalService(typeof(SVsStatusbar)) as IVsStatusbar;
-                    statusBar.IsFrozen(out int frozen);
+            if (e.FileActionType != FileActionTypes.ContentSavedToDisk)
+                return;
 
-                    if (frozen == 0)
-                    {
-                        statusBar.SetText("Saved. Open documents must be reopened for .editorconfig changes to take effect");
-                    }
-                });
+            if (_buffer != null && _buffer.Properties.TryGetProperty(typeof(EditorConfigValidator), out EditorConfigValidator val))
+            {
+                await val.RequestValidation(true);
             }
+
+            ThreadHelper.Generic.BeginInvoke(DispatcherPriority.ApplicationIdle, () =>
+            {
+                var statusBar = Package.GetGlobalService(typeof(SVsStatusbar)) as IVsStatusbar;
+                statusBar.IsFrozen(out int frozen);
+
+                if (frozen == 0)
+                {
+                    statusBar.SetText("Saved. Open documents must be reopened for .editorconfig changes to take effect");
+                }
+            });
         }
 
         private void AddCommandFilter(IVsTextView textViewAdapter, BaseCommand command)

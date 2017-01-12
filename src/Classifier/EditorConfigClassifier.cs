@@ -12,7 +12,7 @@ namespace EditorConfig
         private EditorConfigDocument _document;
         private EditorConfigValidator _validator;
         private ITextBuffer _buffer;
-        private static IClassificationType _duplicate;
+        private static IClassificationType _duplicate, _noMatches;
 
         public EditorConfigClassifier(IClassificationTypeRegistryService registry, ITextBuffer buffer)
         {
@@ -25,6 +25,7 @@ namespace EditorConfig
             };
 
             _duplicate = _duplicate ?? registry.GetClassificationType(EditorConfigClassificationTypes.Duplicate);
+            _noMatches = _noMatches ?? registry.GetClassificationType(EditorConfigClassificationTypes.NoMatches);
 
             _buffer = buffer;
             _document = EditorConfigDocument.FromTextBuffer(buffer);
@@ -38,7 +39,7 @@ namespace EditorConfig
             if (ClassificationChanged == null)
                 return;
 
-            var duplicates = _document.ParseItems.Where(p => p.Errors.Any(err => err.ErrorCode == 103 || err.ErrorCode == 104));
+            var duplicates = _document.ParseItems.Where(p => p.Errors.Any(err => err.ErrorCode == 103 || err.ErrorCode == 104 || err.ErrorCode == 113));
 
             foreach (var item in duplicates)
             {
@@ -65,6 +66,8 @@ namespace EditorConfig
 
                     if (item.Errors.Any(e => e.ErrorCode == 103 || e.ErrorCode == 104))
                         list.Add(new ClassificationSpan(snapshotSpan, _duplicate));
+                    else if (item.Errors.Any(e => e.ErrorCode == 113))
+                        list.Add(new ClassificationSpan(snapshotSpan, _noMatches));
                     else
                         list.Add(new ClassificationSpan(snapshotSpan, _map[item.ItemType]));
                 }

@@ -2,8 +2,7 @@
 
 - [x] Updated colors to match the predefined ones
 - [x] Added folder name in navigational dropdown
-- [ ] Indication of sections not matching any files
-- [ ] Validate section syntax
+- [x] Indication of sections not matching any files
 - [ ] Swith icons to the official .editorconfig icon
 - [ ] Add item template for .editorconfig files
 

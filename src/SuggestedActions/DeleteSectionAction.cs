@@ -19,7 +19,7 @@ namespace EditorConfig
 
         public override string DisplayText
         {
-            get { return "Delete Section"; }
+            get { return "Remove Section"; }
         }
 
         public override ImageMoniker IconMoniker

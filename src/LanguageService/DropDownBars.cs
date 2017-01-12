@@ -9,6 +9,7 @@ using Microsoft.VisualStudio.TextManager.Interop;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Windows.Threading;
 
@@ -91,7 +92,8 @@ namespace EditorConfig
 
             if (dropDownTypes.Count == 0)
             {
-                dropDownTypes.Add(new DropDownMember(Constants.FileName, new TextSpan(), 0, DROPDOWNFONTATTR.FONTATTR_BOLD));
+                var type = $"{Constants.FileName} ({new FileInfo(_document.FileName).Directory.Name})";
+                dropDownTypes.Add(new DropDownMember(type, new TextSpan(), 0, DROPDOWNFONTATTR.FONTATTR_BOLD));
             }
 
             return true;

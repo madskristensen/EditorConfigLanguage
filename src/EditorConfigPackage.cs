@@ -18,7 +18,7 @@ namespace EditorConfig
     [ProvideLanguageEditorOptionPage(typeof(FormatterOptions), Constants.LanguageName, null, "Formatting", "#101", new[] { "editorconfig", "formatting" })]
     [ProvideLanguageEditorOptionPage(typeof(ValidationOptions), Constants.LanguageName, null, "Validation", "#102", new[] { "editorconfig", "validation" })]
 
-    [ProvideEditorFactory(typeof(EditorFactory), 110, CommonPhysicalViewAttributes = (int)__VSPHYSICALVIEWATTRIBUTES.PVA_None, TrustLevel = __VSEDITORTRUSTLEVEL.ETL_AlwaysTrusted)]
+    [ProvideEditorFactory(typeof(EditorFactory), 110, CommonPhysicalViewAttributes = (int)__VSPHYSICALVIEWATTRIBUTES.PVA_SupportsPreview, TrustLevel = __VSEDITORTRUSTLEVEL.ETL_AlwaysTrusted)]
     [ProvideEditorLogicalView(typeof(EditorFactory), VSConstants.LOGVIEWID.TextView_string, IsTrusted = true)]
 
     [ProvideEditorExtension(typeof(EditorFactory), Constants.FileName, 1000)]

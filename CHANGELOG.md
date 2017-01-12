@@ -4,6 +4,7 @@
 - [x] Added folder name in navigational dropdown
 - [x] Indication of sections not matching any files
 - [x] Update descriptions of C#/.NET anaylizer rules
+- [x] Preview tab support
 - [ ] Swith icons to the official .editorconfig icon
 - [ ] Add item template for .editorconfig files
 

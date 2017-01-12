@@ -22,6 +22,14 @@ namespace EditorConfig
 
         internal static DTE2 DTE { get; } = Package.GetGlobalService(typeof(DTE)) as DTE2;
 
+        public static void PreviewDocument(string file)
+        {
+            using (new NewDocumentStateScope(__VSNEWDOCUMENTSTATE2.NDS_TryProvisional, VSConstants.NewDocumentStateReason.Navigation))
+            {
+                DTE.ItemOperations.OpenFile(file);
+            }
+        }
+
         public static string GetRootFolder(this Project project)
         {
             if (project == null)

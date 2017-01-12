@@ -106,7 +106,7 @@ namespace EditorConfig
             inherits.MouseLeftButtonDown += (s, e) =>
             {
                 e.Handled = true;
-                VsHelpers.DTE.ItemOperations.OpenFile(parentFileName);
+                VsHelpers.PreviewDocument(parentFileName);
                 Telemetry.TrackUserTask("InheritanceNavigated");
             };
 

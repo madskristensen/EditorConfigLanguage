@@ -145,15 +145,15 @@
     <value>Denotes whether whitespace is allowed at the end of lines</value>
   </data>
   <data name="SeverityError" xml:space="preserve">
-    <value>Violations are marked with a red squiggle in the editor and appear under Errors in the Error List</value>
+    <value>When this style is not being followed, show a compiler error (red squiggle).</value>
   </data>
   <data name="SeverityNone" xml:space="preserve">
-    <value>Has no editor treatment and does not appear in Error List but affects code generation</value>
+    <value>Do not show anything to the user when this style is not being followed, however code generation features will generate in this style.</value>
   </data>
   <data name="SeveritySuggestion" xml:space="preserve">
-    <value>Violations are dotted in the editor and appear under Messages in Error List</value>
+    <value>When this style is not being followed, show it to the user as a suggestion (underlying dots on the first two characters).</value>
   </data>
   <data name="SeverityWarning" xml:space="preserve">
-    <value>Violations are marked with a green squiggle in the editor and appear under Warnings in the Error List</value>
+    <value>When this style is not being followed, show a compiler warning (green squiggle).</value>
   </data>
 </root>

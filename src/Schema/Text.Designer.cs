@@ -142,7 +142,7 @@ namespace EditorConfig.Schema {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Violations are marked with a red squiggle in the editor and appear under Errors in the Error List.
+        ///   Looks up a localized string similar to When this style is not being followed, show a compiler error (red squiggle)..
         /// </summary>
         internal static string SeverityError {
             get {
@@ -151,7 +151,7 @@ namespace EditorConfig.Schema {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Has no editor treatment and does not appear in Error List but affects code generation.
+        ///   Looks up a localized string similar to Do not show anything to the user when this style is not being followed, however code generation features will generate in this style..
         /// </summary>
         internal static string SeverityNone {
             get {
@@ -160,7 +160,7 @@ namespace EditorConfig.Schema {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Violations are dotted in the editor and appear under Messages in Error List.
+        ///   Looks up a localized string similar to When this style is not being followed, show it to the user as a suggestion (underlying dots on the first two characters)..
         /// </summary>
         internal static string SeveritySuggestion {
             get {
@@ -169,7 +169,7 @@ namespace EditorConfig.Schema {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Violations are marked with a green squiggle in the editor and appear under Warnings in the Error List.
+        ///   Looks up a localized string similar to When this style is not being followed, show a compiler warning (green squiggle)..
         /// </summary>
         internal static string SeverityWarning {
             get {

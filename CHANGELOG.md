@@ -5,6 +5,7 @@
 - [ ] Indication of sections not matching any files
 - [ ] Validate section syntax
 - [ ] Swith icons to the official .editorconfig icon
+- [ ] Add item template for .editorconfig files
 
 Features that have a checkmark are complete and available for
 download in the

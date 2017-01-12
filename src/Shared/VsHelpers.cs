@@ -22,11 +22,15 @@ namespace EditorConfig
 
         internal static DTE2 DTE { get; } = Package.GetGlobalService(typeof(DTE)) as DTE2;
 
+        /// <summary>
+        /// Opens a file in the Preview Tab (provisional tab) if supported by the editor factory.
+        /// </summary>
         public static void PreviewDocument(string file)
         {
             using (new NewDocumentStateScope(__VSNEWDOCUMENTSTATE2.NDS_TryProvisional, VSConstants.NewDocumentStateReason.Navigation))
             {
-                DTE.ItemOperations.OpenFile(file);
+                var provider = new ServiceProvider(DTE as Microsoft.VisualStudio.OLE.Interop.IServiceProvider);
+                VsShellUtilities.OpenDocument(provider, file);
             }
         }
 

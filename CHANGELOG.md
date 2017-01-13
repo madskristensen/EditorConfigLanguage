@@ -1,5 +1,6 @@
 # Road map
 
+- [x] Fixed issue with formatter
 - [ ] Swith icons to the official .editorconfig icon
 - [ ] Add item template for .editorconfig files
 

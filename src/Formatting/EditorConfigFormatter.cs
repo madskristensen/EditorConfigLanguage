@@ -92,7 +92,7 @@ namespace EditorConfig
 
         private void FormatSection(ITextEdit edit, int keywordLength)
         {
-            foreach (var section in _document.Sections.Reverse<Section>())
+            foreach (var section in _document.Sections.Where(s => s.Properties.Any()).Reverse())
             {
                 var length = keywordLength == int.MinValue ? section.Properties.Max(p => p.Keyword.Text.Length) : keywordLength;
 

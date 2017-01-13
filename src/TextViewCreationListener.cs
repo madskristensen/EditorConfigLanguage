@@ -76,7 +76,7 @@ namespace EditorConfig
 
             if (_buffer != null && _buffer.Properties.TryGetProperty(typeof(EditorConfigValidator), out EditorConfigValidator val))
             {
-                await val.RequestValidation(true);
+                await val.RequestValidationAsync(true);
             }
 
             ThreadHelper.Generic.BeginInvoke(DispatcherPriority.ApplicationIdle, () =>

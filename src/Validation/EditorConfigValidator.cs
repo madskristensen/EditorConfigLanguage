@@ -14,7 +14,7 @@ namespace EditorConfig
         private const int _validationDelay = 500;
         private DateTime _lastRequestForValidation;
         private Timer _timer;
-        private bool _hasChanged;
+        private bool _hasChanged, _validating;
         private bool _prevEnabled = EditorConfigPackage.ValidationOptions.EnableValidation;
         private Dictionary<string, bool> _globbingCache = new Dictionary<string, bool>();
 
@@ -47,13 +47,13 @@ namespace EditorConfig
             }
             else
             {
-                await RequestValidation(false);
+                await RequestValidationAsync(false);
             }
 
             _prevEnabled = EditorConfigPackage.ValidationOptions.EnableValidation;
         }
 
-        public async System.Threading.Tasks.Task RequestValidation(bool force)
+        public async System.Threading.Tasks.Task RequestValidationAsync(bool force)
         {
             _lastRequestForValidation = DateTime.Now;
 
@@ -95,6 +95,10 @@ namespace EditorConfig
 
         private async System.Threading.Tasks.Task ValidateAsync()
         {
+            if (_validating) return;
+
+            _validating = true;
+
             await System.Threading.Tasks.Task.Run(() =>
             {
                 try
@@ -120,6 +124,7 @@ namespace EditorConfig
                 finally
                 {
                     _hasChanged = false;
+                    _validating = false;
                 }
             });
         }

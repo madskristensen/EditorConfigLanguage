@@ -2,6 +2,7 @@
 
 - [x] Fixed issue with formatter
 - [x] Added command to navigate to parent (F12 shortcut)
+- [ ] SignatureHelp for writing sections
 - [ ] Swith icons to the official .editorconfig icon
 - [ ] Add item template for .editorconfig files
 

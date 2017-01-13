@@ -10,8 +10,9 @@ namespace EditorConfig
 {
     class EditorConfigValidator : IDisposable
     {
-        private EditorConfigDocument _document;
         private const int _validationDelay = 500;
+
+        private EditorConfigDocument _document;
         private DateTime _lastRequestForValidation;
         private Timer _timer;
         private bool _hasChanged, _validating;
@@ -196,7 +197,7 @@ namespace EditorConfig
 
                 if (!_globbingCache[section.Item.Text])
                 {
-                    section.Item.AddError(113, string.Format("The globbing pattern \"{0}\" doesn't match any files. Consider removing the section", section.Item.Text), ErrorType.Suggestion);
+                    section.Item.AddError(113, string.Format(Resources.Text.ValidationNoMatch, section.Item.Text), ErrorType.Suggestion);
                 }
             }
         }
@@ -258,11 +259,15 @@ namespace EditorConfig
             root = root ?? folder;
             pattern = pattern.Trim('[', ']');
 
+            // No reason to check file system since this will match at least the .editorconfig file itself
+            if (pattern.Equals("*"))
+                return true;
+
             try
             {
                 foreach (var file in Directory.EnumerateFiles(folder).Where(f => !ignorePaths.Any(p => folder.Contains(p))))
                 {
-                    string relative = file.Replace(root, "");
+                    string relative = file.Replace(root, string.Empty);
 
                     if (CheckGlobbing(relative, pattern))
                         return true;
@@ -270,18 +275,16 @@ namespace EditorConfig
 
                 foreach (var directory in Directory.EnumerateDirectories(folder))
                 {
-                    if (!ignorePaths.Any(i => directory.Contains(i)))
+                    if (!ignorePaths.Any(i => directory.Contains(i)) && DoesFilesMatch(directory, pattern, root))
                     {
-                        var isMatch = DoesFilesMatch(directory, pattern, root);
-
-                        if (isMatch)
-                            return true;
+                        return true;
                     }
                 }
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.Write(ex);
+                Telemetry.TrackException("GlobbingValidator", ex);
+                return true;
             }
 
             return false;

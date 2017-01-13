@@ -160,6 +160,15 @@ namespace EditorConfig.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The globbing pattern &quot;{0}&quot; doesn&apos;t match any files. Consider removing the section..
+        /// </summary>
+        internal static string ValidationNoMatch {
+            get {
+                return ResourceManager.GetString("ValidationNoMatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This property is a duplicate of one in
         ///&quot;{0}&quot; and can be safely removed.
         /// </summary>

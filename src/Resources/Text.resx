@@ -150,6 +150,9 @@
   <data name="ValidationMissingSeverity" xml:space="preserve">
     <value>A severity must be specified. Example: true:warning</value>
   </data>
+  <data name="ValidationNoMatch" xml:space="preserve">
+    <value>The globbing pattern "{0}" doesn't match any files. Consider removing the section.</value>
+  </data>
   <data name="ValidationParentPropertyDuplicate" xml:space="preserve">
     <value>This property is a duplicate of one in
 "{0}" and can be safely removed</value>

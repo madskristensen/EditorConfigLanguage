@@ -99,6 +99,8 @@ The inheritance visualizer is located at the bottom right corner of the editor w
 
 ![Inheritance visualizer](art/inheritance-visualizer.png)
 
+You can navigate to the immediate parent document by hitting **F12**. You can change the shortcut under Tools -> Options -> Environment -> Keyboard and find the command called *EditorConfig.NavigateToParent*.
+
 Note, the inheritance visualizer is only visible when the current file isn't the root of the hierarchys or by specifying the `root = true` property.
 
 ### Settings

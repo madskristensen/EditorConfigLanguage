@@ -56,7 +56,6 @@ namespace EditorConfig
         public async System.Threading.Tasks.Task RequestValidation(bool force)
         {
             _lastRequestForValidation = DateTime.Now;
-            _hasChanged = true;
 
             if (force)
             {
@@ -72,6 +71,7 @@ namespace EditorConfig
                     _timer.Elapsed += TimerElapsedAsync;
                 }
 
+                _hasChanged = true;
                 _timer.Enabled = true;
             }
         }
@@ -82,7 +82,6 @@ namespace EditorConfig
             {
                 _timer.Stop();
                 await ValidateAsync();
-                _hasChanged = false;
             }
         }
 
@@ -117,6 +116,10 @@ namespace EditorConfig
                 catch (Exception ex)
                 {
                     Telemetry.TrackException("Validate", ex);
+                }
+                finally
+                {
+                    _hasChanged = false;
                 }
             });
         }
@@ -171,17 +174,6 @@ namespace EditorConfig
                             property.Keyword.AddError(104, string.Format(Resources.Text.ValidationParentPropertyDuplicate, fileName), ErrorType.Suggestion);
                         }
                     }
-
-                    // Globbing pattern match
-                    if (!_globbingCache.ContainsKey(section.Item.Text))
-                    {
-                        _globbingCache[section.Item.Text] = DoesFilesMatch(Path.GetDirectoryName(_document.FileName), section.Item.Text);
-                    }
-
-                    if (!_globbingCache[section.Item.Text])
-                    {
-                        section.Item.AddError(113, string.Format("The globbing pattern \"{0}\" doesn't match any files. Consider removing the section", section.Item.Text), ErrorType.Suggestion);
-                    }
                 }
 
                 // Duplicate section
@@ -189,6 +181,17 @@ namespace EditorConfig
                 {
                     if (_document.Sections.First(s => s.Item.Text == section.Item.Text) != section)
                         section.Item.AddError(105, string.Format(Resources.Text.ValidationDuplicateSection, section.Item.Text), ErrorType.Suggestion);
+                }
+
+                // Globbing pattern match
+                if (!_globbingCache.ContainsKey(section.Item.Text))
+                {
+                    _globbingCache[section.Item.Text] = DoesFilesMatch(Path.GetDirectoryName(_document.FileName), section.Item.Text);
+                }
+
+                if (!_globbingCache[section.Item.Text])
+                {
+                    section.Item.AddError(113, string.Format("The globbing pattern \"{0}\" doesn't match any files. Consider removing the section", section.Item.Text), ErrorType.Suggestion);
                 }
             }
         }
@@ -260,8 +263,16 @@ namespace EditorConfig
                         return true;
                 }
 
-                foreach (var directory in Directory.EnumerateDirectories(folder).Where(d => !ignorePaths.Any(i => d.Contains(i))))
-                    return DoesFilesMatch(directory, pattern, root);
+                foreach (var directory in Directory.EnumerateDirectories(folder))
+                {
+                    if (!ignorePaths.Any(i => directory.Contains(i)))
+                    {
+                        var isMatch = DoesFilesMatch(directory, pattern, root);
+
+                        if (isMatch)
+                            return true;
+                    }
+                }
             }
             catch (Exception ex)
             {

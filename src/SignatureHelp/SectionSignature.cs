@@ -133,9 +133,7 @@ namespace EditorConfig
 
                 if (startPoint.Position + _propertyName.Length <= snapshot.Length)
                 {
-                    // Get the current text at the beginning of the tracking span.
-
-                    string text = snapshot.GetText(startPoint.Position, _propertyName.Length);
+                    string text = _trackingSpan.GetText(snapshot);
 
                     if (text.StartsWith("[", StringComparison.Ordinal))
                     {

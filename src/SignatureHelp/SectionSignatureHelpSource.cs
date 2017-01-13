@@ -1,21 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.VisualStudio.Language.Intellisense;
+﻿using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
+using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Threading;
 
 namespace EditorConfig
 {
     internal class SectionSignatureHelpSource : ISignatureHelpSource
     {
         private ITextBuffer _buffer;
-        private EditorConfigDocument _document;
 
         public SectionSignatureHelpSource(ITextBuffer textBuffer)
         {
             _buffer = textBuffer;
-            _document = EditorConfigDocument.FromTextBuffer(textBuffer);
         }
 
         public void AugmentSignatureHelpSession(ISignatureHelpSession session, IList<ISignature> signatures)
@@ -25,7 +22,7 @@ namespace EditorConfig
             if (!point.HasValue)
                 return;
 
-            var line = _buffer.CurrentSnapshot.GetLineFromPosition(point.Value);
+            var line = point.Value.GetContainingLine();
             var lineText = line.GetText().Trim();
 
             if (!lineText.StartsWith("[", StringComparison.Ordinal))

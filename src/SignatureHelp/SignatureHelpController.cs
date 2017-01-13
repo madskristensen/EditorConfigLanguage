@@ -1,9 +1,6 @@
 ﻿using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.OLE.Interop;
-using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using System;
 using System.Runtime.InteropServices;
@@ -27,7 +24,7 @@ namespace EditorConfig
 
         public override int Exec(ref Guid pguidCmdGroup, uint nCmdID, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
         {
-            if (pguidCmdGroup == _commandGroup && nCmdID == _commandId)
+            if (pguidCmdGroup == _commandGroup && nCmdID == _commandId && EditorConfigPackage.Language.Preferences.ParameterInformation)
             {
                 var typedChar = (char)(ushort)Marshal.GetObjectForNativeVariant(pvaIn);
 
@@ -35,19 +32,12 @@ namespace EditorConfig
                 {
                     DismissSession();
                 }
-                else if ((_session == null || _session.IsDismissed) && _view.Caret.Position.BufferPosition > 0)
+                else if (typedChar == '[' && (_session == null || _session.IsDismissed))
                 {
-                    SnapshotPoint point = _view.Caret.Position.BufferPosition - 1;
-                    var line = point.GetContainingLine();
-                    string lineText = line.Extent.GetText().Trim();
-
-                    if (lineText.StartsWith("[") || (lineText.Length == 0 && typedChar == '['))
+                    Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() =>
                     {
-                        Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() =>
-                        {
-                            _session = _broker.TriggerSignatureHelp(_view);
-                        }), DispatcherPriority.ApplicationIdle, null);
-                    }
+                        _session = _broker.TriggerSignatureHelp(_view);
+                    }), DispatcherPriority.ApplicationIdle, null);
                 }
             }
             else if (pguidCmdGroup == VSConstants.VSStd2K && nCmdID == (uint)VSConstants.VSStd2KCmdID.RETURN)

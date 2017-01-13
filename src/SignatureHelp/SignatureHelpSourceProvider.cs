@@ -13,7 +13,7 @@ namespace EditorConfig
     {
         public ISignatureHelpSource TryCreateSignatureHelpSource(ITextBuffer textBuffer)
         {
-            return new SectionSignatureHelpSource(textBuffer);
+            return textBuffer.Properties.GetOrCreateSingletonProperty(() => new SectionSignatureHelpSource(textBuffer));
         }
     }
 }

@@ -65,6 +65,7 @@
     <Compile Include="BraceCompletion\BraceCompletionContext.cs" />
     <Compile Include="Classifier\EditorConfigClassificationTypes.cs" />
     <Compile Include="Commands\CreateEditorConfigFileAnyCode.cs" />
+    <Compile Include="Commands\NavigateToParent.cs" />
     <Compile Include="Completion\CompletionElementProvider.cs" />
     <Compile Include="Completion\CompletionSourceProvider.cs" />
     <Compile Include="Commands\OpenSettings.cs" />

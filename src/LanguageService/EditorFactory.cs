@@ -42,7 +42,7 @@ namespace EditorConfig
     using VsServiceProviderWrapper = Microsoft.VisualStudio.Shell.VsServiceProviderWrapper;
     using VsTextBufferClass = Microsoft.VisualStudio.TextManager.Interop.VsTextBufferClass;
 
-    [Guid("13cabf99-9eae-4ecc-a6f4-89f3ad54dc83")]
+    [Guid(PackageGuids.guidEditorFactoryString)]
     public class EditorFactory : IVsEditorFactory, IDisposable
     {
         private readonly Package _package;

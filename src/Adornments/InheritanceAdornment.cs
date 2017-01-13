@@ -1,8 +1,11 @@
-﻿using Microsoft.VisualStudio.PlatformUI;
+﻿using EnvDTE;
+using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using System;
+using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -92,6 +95,11 @@ namespace EditorConfig
             if (string.IsNullOrEmpty(fileName))
                 return;
 
+            string shortcut = GetShortcut();
+
+            if (!string.IsNullOrEmpty(shortcut))
+                ToolTip = $"Navigate to immediate parent ({shortcut})";
+
             var relative = PackageUtilities.MakeRelative(fileName, parentFileName);
 
             var inherits = new ThemedTextBlock()
@@ -138,6 +146,24 @@ namespace EditorConfig
                 SetValue(TextOptions.TextFormattingModeProperty, TextFormattingMode.Ideal);
                 SetResourceReference(TextBlock.ForegroundProperty, EnvironmentColors.SystemMenuTextBrushKey);
             }
+        }
+
+        private static string GetShortcut()
+        {
+            var cmd = VsHelpers.DTE.Commands.Item("EditorConfig.NavigateToParent");
+
+            if (cmd == null || !cmd.IsAvailable)
+                return null;
+
+            var bindings = ((object[])cmd.Bindings).FirstOrDefault() as string;
+
+            if (!string.IsNullOrEmpty(bindings))
+            {
+                int index = bindings.IndexOf(':') + 2;
+                return bindings.Substring(index);
+            }
+
+            return null;
         }
 
         public static event EventHandler<EventArgs> Updated;

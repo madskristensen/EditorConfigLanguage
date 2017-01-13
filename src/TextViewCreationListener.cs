@@ -57,6 +57,7 @@ namespace EditorConfig
             AddCommandFilter(textViewAdapter, new FormatterCommand(view, undoManager));
             AddCommandFilter(textViewAdapter, new CompletionController(view, CompletionBroker, QuickInfoBroker));
             AddCommandFilter(textViewAdapter, new F1Help());
+            AddCommandFilter(textViewAdapter, new NavigateToParent(_buffer));
 
             if (textViewAdapter is IVsTextViewEx viewEx)
                 ErrorHandler.ThrowOnFailure(viewEx.PersistOutliningState());

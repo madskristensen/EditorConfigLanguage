@@ -5,7 +5,7 @@ namespace EditorConfig
 {
     public static class Telemetry
     {
-        private const string _namespace = "WebTools/EdiorConfig/";
+        private const string _namespace = "WebTools/EditorConfig/";
 
         public static void TrackUserTask(string name, TelemetryResult result = TelemetryResult.Success)
         {

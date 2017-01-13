@@ -2,7 +2,6 @@
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Utilities;
 using System.ComponentModel.Composition;
-using System.Windows.Media;
 
 namespace EditorConfig
 {
@@ -13,27 +12,13 @@ namespace EditorConfig
         public const string Keyword = PredefinedClassificationTypeNames.Identifier;
         public const string Value = PredefinedClassificationTypeNames.Keyword;
         public const string Severity = PredefinedClassificationTypeNames.SymbolDefinition;
-        public const string Duplicate = Constants.LanguageName + " Duplicate";
+        public const string Duplicate = PredefinedClassificationTypeNames.ExcludedCode;
         public const string NoMatches = Constants.LanguageName + " No Matches";
 
-        [Export, Name(Duplicate)]
-        internal static ClassificationTypeDefinition EditorConfigDuplicateClassification { get; set; }
-
-        [Export, Name(NoMatches)]
+        [Export]
+        [Name(NoMatches)]
+        [BaseDefinition(Duplicate)]
         internal static ClassificationTypeDefinition EditorConfigNoMatchesClassification { get; set; }
-    }
-
-    [Export(typeof(EditorFormatDefinition))]
-    [ClassificationType(ClassificationTypeNames = EditorConfigClassificationTypes.Duplicate)]
-    [Name(EditorConfigClassificationTypes.Duplicate)]
-    [UserVisible(true)]
-    internal sealed class DuplicateFormatDefinition : ClassificationFormatDefinition
-    {
-        public DuplicateFormatDefinition()
-        {
-            ForegroundColor = (Color)ColorConverter.ConvertFromString("#00839496"); // base0
-            DisplayName = EditorConfigClassificationTypes.Duplicate;
-        }
     }
 
     [Export(typeof(EditorFormatDefinition))]
@@ -44,7 +29,6 @@ namespace EditorConfig
     {
         public NoMatchesFormatDefinition()
         {
-            ForegroundColor = (Color)ColorConverter.ConvertFromString("#00839496"); // base0
             DisplayName = EditorConfigClassificationTypes.Duplicate;
             IsBold = true;
         }

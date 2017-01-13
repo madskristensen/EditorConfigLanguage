@@ -37,6 +37,9 @@ namespace EditorConfig
         [Import]
         private IQuickInfoBroker QuickInfoBroker { get; set; }
 
+        [Import]
+        ISignatureHelpBroker SignatureHelpBroker { get; set; }
+
         private ErrorListProvider _errorList;
         private ITextBuffer _buffer;
 
@@ -58,6 +61,7 @@ namespace EditorConfig
             AddCommandFilter(textViewAdapter, new CompletionController(view, CompletionBroker, QuickInfoBroker));
             AddCommandFilter(textViewAdapter, new F1Help());
             AddCommandFilter(textViewAdapter, new NavigateToParent(_buffer));
+            AddCommandFilter(textViewAdapter, new SignatureHelpCommand(view, SignatureHelpBroker));
 
             if (textViewAdapter is IVsTextViewEx viewEx)
                 ErrorHandler.ThrowOnFailure(viewEx.PersistOutliningState());

@@ -56,6 +56,7 @@ namespace EditorConfig
                     preferences.AutoListMembers = true;
                     preferences.EnableQuickInfo = true;
                     preferences.ParameterInformation = true;
+                    preferences.HideAdvancedMembers = false;
                 }
             }
 

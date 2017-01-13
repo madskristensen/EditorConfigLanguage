@@ -65,6 +65,7 @@
     <Compile Include="BraceCompletion\BraceCompletionContext.cs" />
     <Compile Include="Classifier\EditorConfigClassificationTypes.cs" />
     <Compile Include="Commands\CreateEditorConfigFileAnyCode.cs" />
+    <Compile Include="Commands\SignatureHelpCommand.cs" />
     <Compile Include="Commands\NavigateToParent.cs" />
     <Compile Include="Completion\CompletionElementProvider.cs" />
     <Compile Include="Completion\CompletionSourceProvider.cs" />
@@ -94,6 +95,10 @@
     <Compile Include="Parser\EditorConfigDocumentParser.cs" />
     <Compile Include="Parser\EditorConfigDocument.cs" />
     <Compile Include="Shared\Telemetry.cs" />
+    <Compile Include="SignatureHelp\GenericParameter.cs" />
+    <Compile Include="SignatureHelp\SectionSignature.cs" />
+    <Compile Include="SignatureHelp\SectionSignatureHelpSource.cs" />
+    <Compile Include="SignatureHelp\SignatureHelpSourceProvider.cs" />
     <Compile Include="SuggestedActions\RemoveDuplicatePropertiesAction.cs" />
     <Compile Include="Validation\EditorConfigValidator.cs" />
     <Compile Include="Parser\ParseItem.cs" />

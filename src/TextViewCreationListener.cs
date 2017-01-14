@@ -61,7 +61,7 @@ namespace EditorConfig
             AddCommandFilter(textViewAdapter, new CompletionController(view, CompletionBroker, QuickInfoBroker));
             AddCommandFilter(textViewAdapter, new F1Help());
             AddCommandFilter(textViewAdapter, new NavigateToParent(_buffer));
-            AddCommandFilter(textViewAdapter, new SignatureHelpCommand(view, SignatureHelpBroker));
+            AddCommandFilter(textViewAdapter, new SignatureHelpCommand(view, SignatureHelpBroker, QuickInfoBroker));
 
             if (textViewAdapter is IVsTextViewEx viewEx)
                 ErrorHandler.ThrowOnFailure(viewEx.PersistOutliningState());

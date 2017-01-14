@@ -68,11 +68,11 @@ namespace EditorConfig
                     {
                         case VSConstants.VSStd2KCmdID.TYPECHAR:
                             char ch = GetTypeChar(pvaIn);
-                            if (char.IsLetterOrDigit(ch))
+                            if (char.IsLetterOrDigit(ch) && EditorConfigPackage.Language.Preferences.AutoListMembers)
                             {
                                 StartSession();
                             }
-                            else if (ch == ':' || ch == '=' || ch == ' ')
+                            else if ((ch == ':' || ch == '=' || ch == ' ') && EditorConfigPackage.Language.Preferences.AutoListMembers)
                             {
                                 Cancel();
                                 StartSession();

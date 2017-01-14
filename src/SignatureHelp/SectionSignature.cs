@@ -139,6 +139,7 @@ namespace EditorConfig
                     {
                         // The correct property name is still in the code
                         propertyNameStillValid = true;
+                        _session.Match();
                     }
                 }
 

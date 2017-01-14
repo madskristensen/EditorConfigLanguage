@@ -61,6 +61,7 @@ namespace EditorConfig
                 Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() =>
                 {
                     _session = _signaturehelpBroker.TriggerSignatureHelp(_view);
+                    _session.Match();
                 }), DispatcherPriority.ApplicationIdle, null);
             }
         }

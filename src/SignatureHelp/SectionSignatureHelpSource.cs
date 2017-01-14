@@ -39,7 +39,21 @@ namespace EditorConfig
 
         public ISignature GetBestMatch(ISignatureHelpSession session)
         {
-            return session.Signatures.FirstOrDefault();
+            if (session.Signatures.Count != 4)
+                return session.Signatures.FirstOrDefault();
+
+            var text = _span.GetText(_buffer.CurrentSnapshot);
+
+            if (text.Contains("[{"))
+                return session.Signatures.ElementAt(3);
+
+            if (text.Contains("{"))
+                return session.Signatures.ElementAt(1);
+
+            if (text.Contains("**"))
+                return session.Signatures.ElementAt(2);
+
+            return session.Signatures.ElementAt(0);
         }
 
         public void Dispose()

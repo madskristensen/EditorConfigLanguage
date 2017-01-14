@@ -9,6 +9,7 @@ namespace EditorConfig
     internal class SectionSignatureHelpSource : ISignatureHelpSource
     {
         private ITextBuffer _buffer;
+        private ITrackingSpan _span;
 
         public SectionSignatureHelpSource(ITextBuffer textBuffer)
         {
@@ -28,12 +29,12 @@ namespace EditorConfig
             if (!lineText.StartsWith("[", StringComparison.Ordinal))
                 return;
 
-            var span = _buffer.CurrentSnapshot.CreateTrackingSpan(line.Extent, SpanTrackingMode.EdgeNegative);
+            _span = _buffer.CurrentSnapshot.CreateTrackingSpan(line.Extent, SpanTrackingMode.EdgeNegative);
 
-            signatures.Add(new SectionSignature("[*.cs]", "Matches files with a specific file extension", span, session));
-            signatures.Add(new SectionSignature("[*.{cs,vb}]", "Matches multiple files with brace expansion notation", span, session));
-            signatures.Add(new SectionSignature("[app/**.js]", "Matches all JS under lib directory", span, session));
-            signatures.Add(new SectionSignature("[{package.json,.npmrc}]", "Matches the exact files - either package.json or .npmrc", span, session));
+            signatures.Add(new SectionSignature("[*.cs]", "Matches files with a specific file extension", _span, session));
+            signatures.Add(new SectionSignature("[*.{cs,vb}]", "Matches multiple files with brace expansion notation", _span, session));
+            signatures.Add(new SectionSignature("[app/**.js]", "Matches all JS under lib directory", _span, session));
+            signatures.Add(new SectionSignature("[{package.json,.npmrc}]", "Matches the exact files - either package.json or .npmrc", _span, session));
         }
 
         public ISignature GetBestMatch(ISignatureHelpSession session)

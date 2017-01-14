@@ -62,7 +62,7 @@ namespace EditorConfig
                 {
                     _session = _signaturehelpBroker.TriggerSignatureHelp(_view);
                     _session.Match();
-                }), DispatcherPriority.ApplicationIdle, null);
+                }), DispatcherPriority.Normal, null);
             }
         }
 

@@ -13,6 +13,9 @@ namespace EditorConfig
         private EditorConfigValidator _validator;
         private ITextBuffer _buffer;
         private static IClassificationType _duplicate, _noMatches;
+        private string _dupeProp = PredefinedErrors.Codes.DuplicateProperty.Code;
+        private string _dupeParent = PredefinedErrors.Codes.ParentDuplicateProperty.Code;
+        private string _dupeSection = PredefinedErrors.Codes.DuplicateSection.Code;
 
         public EditorConfigClassifier(IClassificationTypeRegistryService registry, ITextBuffer buffer)
         {
@@ -39,7 +42,7 @@ namespace EditorConfig
             if (ClassificationChanged == null)
                 return;
 
-            var duplicates = _document.ParseItems.Where(p => p.Errors.Any(err => err.ErrorCode == 103 || err.ErrorCode == 104 || err.ErrorCode == 113));
+            var duplicates = _document.ParseItems.Where(p => p.Errors.Any(err => err.ErrorCode == _dupeProp || err.ErrorCode == _dupeParent || err.ErrorCode == _dupeSection));
 
             foreach (var item in duplicates)
             {
@@ -64,9 +67,9 @@ namespace EditorConfig
                 {
                     var snapshotSpan = new SnapshotSpan(span.Snapshot, item.Span);
 
-                    if (item.Errors.Any(e => e.ErrorCode == 103 || e.ErrorCode == 104))
+                    if (item.Errors.Any(e => e.ErrorCode == _dupeProp || e.ErrorCode == _dupeParent))
                         list.Add(new ClassificationSpan(snapshotSpan, _duplicate));
-                    else if (item.Errors.Any(e => e.ErrorCode == 113))
+                    else if (item.Errors.Any(e => e.ErrorCode == _dupeSection))
                         list.Add(new ClassificationSpan(snapshotSpan, _noMatches));
                     else
                         list.Add(new ClassificationSpan(snapshotSpan, _map[item.ItemType]));

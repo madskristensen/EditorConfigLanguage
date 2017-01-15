@@ -5,14 +5,21 @@ namespace EditorConfig
 {
     public class Error : ITooltip
     {
-        public Error(int errorCode, string description, ErrorType errorType)
+        //public Error(int errorCode, string description, ErrorType errorType)
+        //{
+        //    ErrorCode = errorCode;
+        //    Description = description;
+        //    ErrorType = errorType;
+        //}
+
+        public Error(string errorCode, ErrorType errorType, string description)
         {
             ErrorCode = errorCode;
-            Description = description;
             ErrorType = errorType;
+            Description = description;
         }
 
-        public int ErrorCode { get; set; }
+        public string ErrorCode { get; set; }
         public ErrorType ErrorType { get; set; } = ErrorType.Warning;
         public string Description { get; set; }
 
@@ -41,12 +48,5 @@ namespace EditorConfig
         }
 
         public bool IsSupported => true;
-    }
-
-    public enum ErrorType
-    {
-        Error,
-        Warning,
-        Suggestion,
     }
 }

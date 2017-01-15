@@ -29,10 +29,10 @@ namespace EditorConfig
             get { return Errors.Any(); }
         }
 
-        public void AddError(int errorCode, string errorMessage, ErrorType errorType)
+        public void AddError(Error error)
         {
-            if (!Errors.Any(e => e.ErrorCode == errorCode))
-                Errors.Add(new Error(errorCode, errorMessage, errorType));
+            if (!Errors.Any(e => e.ErrorCode == error.ErrorCode))
+                Errors.Add(error);
         }
 
         public override string ToString()

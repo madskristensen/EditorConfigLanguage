@@ -1,15 +1,14 @@
 ﻿using Microsoft.VisualStudio.Text;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace EditorConfig
 {
     partial class EditorConfigDocument
     {
-        private static Regex _property = new Regex(@"^\s*(?<keyword>[^;#:\s=]+)\s*[=:]?\s*(?<value>[^;#:\s]+)?(\s*:\s*(?<severity>[^;#:\s]+))?");
-        private static Regex _section = new Regex(@"^\s*\[([^#;]+)\]");
+        private static Regex _property = new Regex(@"^\s*(?<keyword>[^;\[#:\s=]+)\s*[=:]?\s*(?<value>[^;#:\s]+)?(\s*:\s*(?<severity>[^;#:\s]+))?");
+        private static Regex _section = new Regex(@"^\s*(?<section>\[.+)");
         private static Regex _comment = new Regex(@"^\s*[#;].+");
         private static Regex _unknown = new Regex(@"\s*(?<unknown>.+)");
 
@@ -54,7 +53,7 @@ namespace EditorConfig
                     // Section
                     else if (IsMatch(_section, text, out match))
                     {
-                        var section = CreateParseItem(ItemType.Section, line, match);
+                        var section = CreateParseItem(ItemType.Section, line, match.Groups["section"]);
                         AddToList(items, section);
 
                         var s = new Section(section);
@@ -123,11 +122,6 @@ namespace EditorConfig
         {
             if (item.Span.Length == 0)
                 return;
-
-            var existing = ParseItems.SingleOrDefault(p => p.Equals(item));
-
-            if (existing != null)
-                item = existing;
 
             items.Add(item);
         }

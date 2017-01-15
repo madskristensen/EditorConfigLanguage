@@ -129,6 +129,9 @@
   <data name="NotSupportedByVS" xml:space="preserve">
     <value>Not supported by Visual Studio</value>
   </data>
+  <data name="ValidateOnlyRootAllowed" xml:space="preserve">
+    <value>Only "root" is allowed outside a section</value>
+  </data>
   <data name="ValidateUnknownKeyword" xml:space="preserve">
     <value>The keyword "{0}" is unknown</value>
   </data>
@@ -159,6 +162,9 @@
   </data>
   <data name="ValidationRootInSection" xml:space="preserve">
     <value>"Root" is only allowed in the beginning of the document</value>
+  </data>
+  <data name="ValidationSectionSyntaxError" xml:space="preserve">
+    <value>Sections must be surrounded by "[" and "]"</value>
   </data>
   <data name="ValidationSeverityNotApplicable" xml:space="preserve">
     <value>The "{0}" property does not support a severity suffix</value>

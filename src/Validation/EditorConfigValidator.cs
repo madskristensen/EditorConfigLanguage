@@ -11,6 +11,7 @@ namespace EditorConfig
     class EditorConfigValidator : IDisposable
     {
         private const int _validationDelay = 500;
+        private static string[] _ignorePaths = { "\\node_modules", "\\.git", "\\packages", "\\bower_components", "\\jspm_packages", "\\testresults", "\\.vs" };
 
         private EditorConfigDocument _document;
         private DateTime _lastRequestForValidation;
@@ -109,7 +110,8 @@ namespace EditorConfig
                         ValidateUnknown(item);
                     }
 
-                    ValidateSection();
+                    ValidateRootProperties();
+                    ValidateSections();
 
                     foreach (var property in _document.Properties)
                     {
@@ -135,20 +137,12 @@ namespace EditorConfig
             item.AddError(101, Resources.Text.ValidationUnknownElement, ErrorType.Error);
         }
 
-        private void ValidateSection()
+        private void ValidateSections()
         {
-            var parents = new List<EditorConfigDocument>();
-            var parent = _document.Parent;
-
-            while (parent != null)
-            {
-                parents.Add(parent);
-                parent = parent.Parent;
-            }
+            List<EditorConfigDocument> parents = GetAllParentDocuments();
 
             foreach (var section in _document.Sections)
             {
-
                 var parentSections = parents.SelectMany(d => d.Sections).Where(s => s.Item.Text == section.Item.Text);
 
                 foreach (var property in section.Properties)
@@ -182,6 +176,12 @@ namespace EditorConfig
                     }
                 }
 
+                // Syntax error
+                if (!section.Item.Text.StartsWith("[") || !section.Item.Text.EndsWith("]"))
+                {
+                    section.Item.AddError(114, Resources.Text.ValidationSectionSyntaxError, ErrorType.Error);
+                }
+
                 // Duplicate section
                 if (EditorConfigPackage.ValidationOptions.EnableDuplicateSections)
                 {
@@ -205,13 +205,30 @@ namespace EditorConfig
             }
         }
 
-        private void ValidateProperties()
+        private List<EditorConfigDocument> GetAllParentDocuments()
+        {
+            var parents = new List<EditorConfigDocument>();
+
+            if (EditorConfigPackage.ValidationOptions.EnableDuplicateFoundInParent)
+            {
+                var parent = _document.Parent;
+                while (parent != null)
+                {
+                    parents.Add(parent);
+                    parent = parent.Parent;
+                }
+            }
+
+            return parents;
+        }
+
+        private void ValidateRootProperties()
         {
             foreach (var property in _document.Properties)
             {
                 // Only root property allowed
                 if (property != _document.Root)
-                    property.Keyword.AddError(106, Resources.Text.ValidationRootInSection, ErrorType.Error);
+                    property.Keyword.AddError(106, Resources.Text.ValidateOnlyRootAllowed, ErrorType.Error);
             }
         }
 
@@ -228,6 +245,7 @@ namespace EditorConfig
             {
                 property.Keyword.AddError(108, Resources.Text.ValidationMissingPropertyValue, ErrorType.Error);
             }
+
             // Value not in schema
             else if (EditorConfigPackage.ValidationOptions.EnableUnknownValues &&
                 !keyword.Values.Any(v => v.Name.Equals(property.Value?.Text, StringComparison.OrdinalIgnoreCase)) &&
@@ -258,7 +276,6 @@ namespace EditorConfig
 
         public static bool DoesFilesMatch(string folder, string pattern, string root = null)
         {
-            var ignorePaths = new[] { "\\node_modules", "\\.git", "\\packages", "\\bower_components", "\\jspm_packages", "\\testresults", "\\.vs" };
             root = root ?? folder;
             pattern = pattern.Trim('[', ']');
 
@@ -268,7 +285,7 @@ namespace EditorConfig
 
             try
             {
-                foreach (var file in Directory.EnumerateFiles(folder).Where(f => !ignorePaths.Any(p => folder.Contains(p))))
+                foreach (var file in Directory.EnumerateFiles(folder).Where(f => !_ignorePaths.Any(p => folder.Contains(p))))
                 {
                     string relative = file.Replace(root, string.Empty);
 
@@ -278,7 +295,7 @@ namespace EditorConfig
 
                 foreach (var directory in Directory.EnumerateDirectories(folder))
                 {
-                    if (!ignorePaths.Any(i => directory.Contains(i)) && DoesFilesMatch(directory, pattern, root))
+                    if (!_ignorePaths.Any(i => directory.Contains(i)) && DoesFilesMatch(directory, pattern, root))
                     {
                         return true;
                     }

@@ -31,7 +31,7 @@ namespace EditorConfig
 
         public void AddError(int errorCode, string errorMessage, ErrorType errorType)
         {
-            if (!Errors.Any(e => e.Name.Equals(errorMessage, System.StringComparison.OrdinalIgnoreCase)))
+            if (!Errors.Any(e => e.ErrorCode == errorCode))
                 Errors.Add(new Error(errorCode, errorMessage, errorType));
         }
 

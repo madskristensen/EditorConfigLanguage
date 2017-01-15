@@ -97,6 +97,15 @@ namespace EditorConfig.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Only &quot;root&quot; is allowed outside a section.
+        /// </summary>
+        internal static string ValidateOnlyRootAllowed {
+            get {
+                return ResourceManager.GetString("ValidateOnlyRootAllowed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The keyword &quot;{0}&quot; is unknown.
         /// </summary>
         internal static string ValidateUnknownKeyword {
@@ -184,6 +193,15 @@ namespace EditorConfig.Resources {
         internal static string ValidationRootInSection {
             get {
                 return ResourceManager.GetString("ValidationRootInSection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sections must be surrounded by &quot;[&quot; and &quot;]&quot;.
+        /// </summary>
+        internal static string ValidationSectionSyntaxError {
+            get {
+                return ResourceManager.GetString("ValidationSectionSyntaxError", resourceCulture);
             }
         }
         

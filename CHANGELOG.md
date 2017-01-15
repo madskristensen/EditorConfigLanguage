@@ -5,6 +5,7 @@
 - [x] SignatureHelp for writing sections
 - [x] Normalize property names in hover tooltips
 - [x] Performance improvements to validator
+- [x] Syntax validation for section strings
 - [ ] Swith icons to the official .editorconfig icon
 - [ ] Add item template for .editorconfig files
 

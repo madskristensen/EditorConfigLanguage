@@ -3,6 +3,8 @@
 - [x] Fixed issue with formatter
 - [x] Added command to navigate to parent (F12 shortcut)
 - [x] SignatureHelp for writing sections
+- [x] Normalize property names in hover tooltips
+- [x] Performance improvements to validator
 - [ ] Swith icons to the official .editorconfig icon
 - [ ] Add item template for .editorconfig files
 

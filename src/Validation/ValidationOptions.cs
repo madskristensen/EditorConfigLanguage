@@ -54,6 +54,12 @@ namespace EditorConfig
         [DefaultValue(true)]
         public bool EnableDuplicateFoundInParent { get; set; } = true;
 
+        [Category(_rules)]
+        [DisplayName("Validate globbing patterns")]
+        [Description("Show an error if a globbing pattern isn't matching any files on disk.")]
+        [DefaultValue(true)]
+        public bool EnableGlobbingMatcher { get; set; } = true;
+
         public override void SaveSettingsToStorage()
         {
             Telemetry.TrackOperation("ValidationOptionsSaved");

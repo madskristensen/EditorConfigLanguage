@@ -88,7 +88,7 @@ namespace EditorConfig.Schema {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Indentation Style.
+        ///   Looks up a localized string similar to Indentation style.
         /// </summary>
         internal static string KeywordIndentStyle {
             get {

@@ -190,14 +190,17 @@ namespace EditorConfig
                 }
 
                 // Globbing pattern match
-                if (!_globbingCache.ContainsKey(section.Item.Text))
+                if (EditorConfigPackage.ValidationOptions.EnableGlobbingMatcher && !section.Item.HasErrors)
                 {
-                    _globbingCache[section.Item.Text] = DoesFilesMatch(Path.GetDirectoryName(_document.FileName), section.Item.Text);
-                }
+                    if (!_globbingCache.ContainsKey(section.Item.Text))
+                    {
+                        _globbingCache[section.Item.Text] = DoesFilesMatch(Path.GetDirectoryName(_document.FileName), section.Item.Text);
+                    }
 
-                if (!_globbingCache[section.Item.Text])
-                {
-                    section.Item.AddError(113, string.Format(Resources.Text.ValidationNoMatch, section.Item.Text), ErrorType.Suggestion);
+                    if (!_globbingCache[section.Item.Text])
+                    {
+                        section.Item.AddError(113, string.Format(Resources.Text.ValidationNoMatch, section.Item.Text), ErrorType.Suggestion);
+                    }
                 }
             }
         }

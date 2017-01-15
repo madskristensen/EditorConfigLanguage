@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.Text;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace EditorConfig
@@ -118,10 +119,15 @@ namespace EditorConfig
             });
         }
 
-        private static void AddToList(List<ParseItem> items, ParseItem item)
+        private void AddToList(List<ParseItem> items, ParseItem item)
         {
             if (item.Span.Length == 0)
                 return;
+
+            var existing = ParseItems.SingleOrDefault(p => p.Equals(item));
+
+            if (existing != null)
+                item = existing;
 
             items.Add(item);
         }

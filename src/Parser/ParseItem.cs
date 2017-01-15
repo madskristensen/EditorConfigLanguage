@@ -39,6 +39,47 @@ namespace EditorConfig
         {
             return ItemType + ": " + Text;
         }
+
+        public override int GetHashCode()
+        {
+            int textHash = string.IsNullOrEmpty(Text) ? 1 : Text.GetHashCode();
+            return Span.GetHashCode() ^ textHash;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is ParseItem other))
+                return false;
+
+            return Equals(other);
+        }
+
+        public bool Equals(ParseItem other)
+        {
+            if (other == null)
+                return false;
+
+            if (Span != other.Span)
+                return false;
+
+            return Text.Equals(other.Text, System.StringComparison.Ordinal);
+        }
+
+        public static bool operator ==(ParseItem a, ParseItem b)
+        {
+            if (ReferenceEquals(a, b))
+                return true;
+
+            if (((object)a == null) || ((object)b == null))
+                return false;
+
+            return a.Equals(b);
+        }
+
+        public static bool operator !=(ParseItem a, ParseItem b)
+        {
+            return !(a == b);
+        }
     }
 
     public enum ItemType

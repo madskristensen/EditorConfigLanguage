@@ -127,7 +127,7 @@
     <value>A whole number defining the number of columns used for each indentation level and the width of soft tabs (when supported). When set to tab, the value of tab_width (if specified) will be used</value>
   </data>
   <data name="KeywordIndentStyle" xml:space="preserve">
-    <value>Indentation Style</value>
+    <value>Indentation style</value>
   </data>
   <data name="KeywordInsertFinalNewline" xml:space="preserve">
     <value>Denotes whether file should end with a newline</value>

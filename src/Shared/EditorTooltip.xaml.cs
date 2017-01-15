@@ -16,7 +16,7 @@ namespace EditorConfig.Shared
 
             Loaded += (s, e) =>
             {
-                ItemName.Content = item.Name;
+                ItemName.Content = PrettifyName(item);
                 ItemName.SetResourceReference(TextBlock.ForegroundProperty, EnvironmentColors.SystemMenuTextBrushKey);
 
                 var description = item.Description;
@@ -29,6 +29,19 @@ namespace EditorConfig.Shared
 
                 Glyph.Source = item.Moniker.ToBitmap(_iconSize);
             };
+        }
+
+        private static string PrettifyName(ITooltip item)
+        {
+            var text = item.Name
+                           .Replace("_", " ")
+                           .Replace("dotnet", ".NET")
+                           .Replace("csharp", "C#");
+
+            if (text.Length > 0)
+                text = text[0].ToString().ToUpperInvariant() + text.Substring(1);
+
+            return text;
         }
     }
 }

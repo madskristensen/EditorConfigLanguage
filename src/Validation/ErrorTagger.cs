@@ -41,6 +41,8 @@ namespace EditorConfig
         {
             var span = new SnapshotSpan(_view.TextBuffer.CurrentSnapshot, 0, _view.TextBuffer.CurrentSnapshot.Length);
             TagsChanged?.Invoke(this, new SnapshotSpanEventArgs(span));
+
+            UpdateErrorList();
         }
 
         public IEnumerable<ITagSpan<IErrorTag>> GetTags(NormalizedSnapshotSpanCollection spans)
@@ -53,17 +55,38 @@ namespace EditorConfig
             var line = spans[0].Start.GetContainingLine();
             var items = _document.ItemsInSpan(line.Extent);
 
+            foreach (var item in items)
+            {
+                tags.AddRange(CreateError(item));
+            }
+
+            return tags;
+        }
+
+        private void UpdateErrorList()
+        {
+            var items = _document.ParseItems.Where(p => p.HasErrors);
+
+            if (!items.Any() && _errorlist.Tasks.Count == 0)
+                return;
+
             try
             {
                 _errorlist.SuspendRefresh();
-                ClearError(line);
+                _errorlist.Tasks.Clear();
 
                 foreach (var item in items)
                 {
-                    tags.AddRange(CreateError(item));
-                }
+                    var span = new SnapshotSpan(_view.TextBuffer.CurrentSnapshot, item.Span);
 
-                return tags;
+                    foreach (var error in item.Errors)
+                    {
+                        var task = CreateErrorTask(span, error);
+
+                        if (!_errorlist.Tasks.Contains(task))
+                            _errorlist.Tasks.Add(task);
+                    }
+                }
             }
             finally
             {
@@ -77,10 +100,6 @@ namespace EditorConfig
             foreach (var error in item.Errors)
             {
                 var span = new SnapshotSpan(_view.TextBuffer.CurrentSnapshot, item.Span);
-
-                var task = CreateErrorTask(span, error);
-                _errorlist.Tasks.Add(task);
-
                 var errorType = GetErrorType(error.ErrorType);
 
                 yield return new TagSpan<ErrorTag>(span, new ErrorTag(errorType, error.Name));
@@ -97,12 +116,13 @@ namespace EditorConfig
                     return PredefinedErrorTypeNames.Warning;
             }
 
-            return PredefinedErrorTypeNames.Suggestion;
+            return ErrorFormatDefinition.Suggestion;
         }
 
         private ErrorTask CreateErrorTask(SnapshotSpan span, Error error)
         {
             var line = span.Snapshot.GetLineFromPosition(span.Start);
+            var projectItem = VsHelpers.DTE.Solution.FindProjectItem(_file);
 
             ErrorTask task = new ErrorTask
             {
@@ -112,7 +132,8 @@ namespace EditorConfig
                 Category = TaskCategory.Misc,
                 ErrorCategory = GetErrorCategory(error.ErrorType),
                 Priority = TaskPriority.Low,
-                Document = _file
+                Document = _file,
+                HierarchyItem = projectItem.ToHierarchyItem()
             };
 
             task.Navigate += Navigate;

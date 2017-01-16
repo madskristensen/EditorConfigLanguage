@@ -32,14 +32,14 @@ namespace EditorConfig
         {
             get
             {
-                return _section.Properties.Any(p => p.Keyword.Errors.Any(e => e.ErrorCode == PredefinedErrors.Codes.DuplicateProperty.Code || e.ErrorCode == PredefinedErrors.Codes.ParentDuplicateProperty.Code));
+                return _section.Properties.Any(p => p.Keyword.Errors.Any(e => e.ErrorCode == ErrorCodes.DuplicateProperty.Code || e.ErrorCode == ErrorCodes.ParentDuplicateProperty.Code));
             }
         }
 
         public override void Execute(CancellationToken cancellationToken)
         {
             var caretPost = _view.Caret.Position.BufferPosition;
-            var duplicates = _section.Properties.Where(p => p.Keyword.Errors.Any(e => e.ErrorCode == PredefinedErrors.Codes.DuplicateProperty.Code || e.ErrorCode == PredefinedErrors.Codes.ParentDuplicateProperty.Code));
+            var duplicates = _section.Properties.Where(p => p.Keyword.Errors.Any(e => e.ErrorCode == ErrorCodes.DuplicateProperty.Code || e.ErrorCode == ErrorCodes.ParentDuplicateProperty.Code));
 
             using (var edit = _view.TextBuffer.CreateEdit())
             {

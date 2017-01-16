@@ -19,6 +19,7 @@ namespace EditorConfig
     public static class VsHelpers
     {
         private static IVsUIShell5 _shell = (IVsUIShell5)Package.GetGlobalService(typeof(SVsUIShell));
+        private static IVsSolution _solution = (IVsSolution)Package.GetGlobalService(typeof(IVsSolution));
 
         internal static DTE2 DTE { get; } = Package.GetGlobalService(typeof(DTE)) as DTE2;
 
@@ -226,6 +227,16 @@ namespace EditorConfig
             result.get_Data(out object data);
 
             return data as BitmapSource;
+        }
+
+        public static IVsHierarchy ToHierarchyItem(this ProjectItem item)
+        {
+            if (item == null || item.ContainingProject == null)
+                return null;
+
+            _solution.GetProjectOfUniqueName(item.ContainingProject.UniqueName, out var hierarchyItem);
+
+            return hierarchyItem;
         }
     }
 

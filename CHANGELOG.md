@@ -8,6 +8,8 @@
 - [x] Syntax validation for section strings
 - [ ] Swith icons to the official .editorconfig icon
 - [ ] Add item template for .editorconfig files
+- [ ] Convert to use new error list API
+- [ ] Clear errors on document close
 
 Features that have a checkmark are complete and available for
 download in the

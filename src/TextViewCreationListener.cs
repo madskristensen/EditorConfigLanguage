@@ -40,7 +40,6 @@ namespace EditorConfig
         [Import]
         ISignatureHelpBroker SignatureHelpBroker { get; set; }
 
-        private ErrorListProvider _errorList;
         private ITextBuffer _buffer;
 
         public void VsTextViewCreated(IVsTextView textViewAdapter)
@@ -50,10 +49,6 @@ namespace EditorConfig
             _buffer = view.TextBuffer;
 
             _buffer.Properties.GetOrCreateSingletonProperty(() => view);
-            _errorList = _buffer.Properties.GetOrCreateSingletonProperty(() => new ErrorListProvider(ServiceProvider));
-
-            if (_errorList == null)
-                return;
 
             var undoManager = UndoProvider.GetTextBufferUndoManager(view.TextBuffer);
 
@@ -106,13 +101,6 @@ namespace EditorConfig
         {
             IWpfTextView view = (IWpfTextView)sender;
             view.Closed -= OnViewClosed;
-
-            if (_errorList != null)
-            {
-                _errorList.Tasks.Clear();
-                _errorList.Dispose();
-                _errorList = null;
-            }
 
             if (view.TextBuffer.Properties.TryGetProperty(typeof(EditorConfigDocument), out EditorConfigDocument doc))
             {

@@ -46,6 +46,10 @@ namespace EditorConfig
             return list;
         }
 
-        public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged;
+        public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged
+        {
+            add { }
+            remove { }
+        }
     }
 }

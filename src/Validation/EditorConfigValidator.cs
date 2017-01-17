@@ -134,7 +134,7 @@ namespace EditorConfig
 
         private void ValidateUnknown(ParseItem item)
         {
-            item.AddError(PredefinedErrors.UnknownElement());
+            item.AddError(PredefinedErrors.UnknownElement(item));
         }
 
         private void ValidateSections()
@@ -152,7 +152,7 @@ namespace EditorConfig
                     // Root in section
                     if (property.Keyword.Text.Equals(SchemaCatalog.Root, StringComparison.OrdinalIgnoreCase))
                     {
-                        property.Keyword.AddError(PredefinedErrors.RootInSection());
+                        PredefinedErrors.RootInSection(property.Keyword);
                     }
 
                     // Duplicate property
@@ -160,7 +160,7 @@ namespace EditorConfig
                     {
                         if (section.Properties.Last(p => p.Keyword.Text.Equals(property.Keyword.Text, StringComparison.OrdinalIgnoreCase)) != property)
                         {
-                            property.Keyword.AddError(PredefinedErrors.DuplicateProperty());
+                            PredefinedErrors.DuplicateProperty(property.Keyword);
                         }
                     }
 
@@ -171,7 +171,7 @@ namespace EditorConfig
                         if (parentProperties.Any())
                         {
                             var fileName = PackageUtilities.MakeRelative(_document.FileName, parentProperties.First().Keyword.Document.FileName);
-                            property.Keyword.AddError(PredefinedErrors.ParentDuplicateProperty(fileName));
+                            PredefinedErrors.ParentDuplicateProperty(property.Keyword, fileName);
                         }
                     }
                 }
@@ -179,14 +179,14 @@ namespace EditorConfig
                 // Syntax error
                 if (!section.Item.Text.StartsWith("[") || !section.Item.Text.EndsWith("]"))
                 {
-                    section.Item.AddError(PredefinedErrors.SectionSyntaxError());
+                    PredefinedErrors.SectionSyntaxError(section.Item);
                 }
 
                 // Duplicate section
                 if (EditorConfigPackage.ValidationOptions.EnableDuplicateSections)
                 {
                     if (_document.Sections.First(s => s.Item.Text == section.Item.Text) != section)
-                        section.Item.AddError(PredefinedErrors.DuplicateSection(section.Item.Text));
+                        PredefinedErrors.DuplicateSection(section.Item);
                 }
 
                 // Globbing pattern match
@@ -199,7 +199,7 @@ namespace EditorConfig
 
                     if (!_globbingCache[section.Item.Text])
                     {
-                        section.Item.AddError(PredefinedErrors.GlobbingNoMatch(section.Item.Text));
+                        PredefinedErrors.GlobbingNoMatch(section.Item);
                     }
                 }
             }
@@ -228,7 +228,7 @@ namespace EditorConfig
             {
                 // Only root property allowed
                 if (property != _document.Root)
-                    property.Keyword.AddError(PredefinedErrors.OnlyRootAllowed());
+                    PredefinedErrors.OnlyRootAllowed(property.Keyword);
             }
         }
 
@@ -237,13 +237,13 @@ namespace EditorConfig
             // Unknown keyword
             if (EditorConfigPackage.ValidationOptions.EnableUnknownProperties & !SchemaCatalog.TryGetProperty(property.Keyword.Text, out Keyword keyword))
             {
-                property.Keyword.AddError(PredefinedErrors.UnknownKeyword(property.Keyword.Text));
+                PredefinedErrors.UnknownKeyword(property.Keyword);
             }
 
             // Missing value
             else if (property.Value == null)
             {
-                property.Keyword.AddError(PredefinedErrors.MissingValue());
+                PredefinedErrors.MissingValue(property.Keyword);
             }
 
             // Value not in schema
@@ -251,25 +251,25 @@ namespace EditorConfig
                 !keyword.Values.Any(v => v.Name.Equals(property.Value?.Text, StringComparison.OrdinalIgnoreCase)) &&
                 !(int.TryParse(property.Value.Text, out int intValue) && intValue > 0))
             {
-                property.Value.AddError(PredefinedErrors.UnknownValue(property.Value.Text, keyword.Name));
+                PredefinedErrors.UnknownValue(property.Value, keyword.Name);
             }
 
             // Missing severity
             else if (property.Severity == null && property.Value.Text.Equals("true", StringComparison.OrdinalIgnoreCase) && keyword.SupportsSeverity)
             {
-                property.Value.AddError(PredefinedErrors.MissingSeverity());
+                PredefinedErrors.MissingSeverity(property.Value);
             }
             else if (property.Severity != null)
             {
                 // Severity not applicaple to property
                 if (!keyword.SupportsSeverity)
                 {
-                    property.Severity.AddError(PredefinedErrors.SeverityNotApplicable(keyword.Name));
+                    PredefinedErrors.SeverityNotApplicable(property.Severity, keyword.Name);
                 }
                 // Severity not in schema
                 else if (!SchemaCatalog.TryGetSeverity(property.Severity.Text, out Severity severity))
                 {
-                    property.Severity.AddError(PredefinedErrors.UnknownSeverity(property.Severity.Text));
+                    PredefinedErrors.UnknownSeverity(property.Severity);
                 }
             }
         }

@@ -21,6 +21,9 @@ namespace EditorConfig
 
         public static void TrackException(string name, Exception exception)
         {
+            if (string.IsNullOrWhiteSpace(name) || exception == null)
+                return;
+
             string actualName = name.Replace(" ", "_");
             TelemetryService.DefaultSession.PostFault(actualName, exception.Message, exception);
         }

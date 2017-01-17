@@ -6,10 +6,10 @@
 - [x] Normalize property names in hover tooltips
 - [x] Performance improvements to validator
 - [x] Syntax validation for section strings
+- [x] Convert to use new error list API
+- [x] Clear errors on document close
 - [ ] Swith icons to the official .editorconfig icon
 - [ ] Add item template for .editorconfig files
-- [ ] Convert to use new error list API
-- [ ] Clear errors on document close
 
 Features that have a checkmark are complete and available for
 download in the

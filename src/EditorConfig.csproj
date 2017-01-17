@@ -64,8 +64,11 @@
     <Compile Include="BraceCompletion\BraceCompletionContextProvider.cs" />
     <Compile Include="BraceCompletion\BraceCompletionContext.cs" />
     <Compile Include="Classifier\EditorConfigClassificationTypes.cs" />
-    <Compile Include="Classifier\ErrorFormatDefinition.cs" />
+    <Compile Include="Validation\ErrorFormatDefinition.cs" />
     <Compile Include="Commands\CreateEditorConfigFileAnyCode.cs" />
+    <Compile Include="ErrorList\SinkManager.cs" />
+    <Compile Include="ErrorList\TableDataSource.cs" />
+    <Compile Include="ErrorList\TableEntriesSnapshot.cs" />
     <Compile Include="SignatureHelp\SignatureHelpController.cs" />
     <Compile Include="Commands\NavigateToParent.cs" />
     <Compile Include="Completion\CompletionElementProvider.cs" />
@@ -131,6 +134,7 @@
     <Compile Include="Shared\VsHelpers.cs" />
     <Compile Include="Validation\Error.cs" />
     <Compile Include="Validation\ErrorCodes.cs" />
+    <Compile Include="ErrorList\ErrorList.cs" />
     <Compile Include="Validation\ErrorTagger.cs" />
     <Compile Include="Validation\ErrorTaggerProvider.cs" />
     <Compile Include="Outlining\OutliningTagger.cs" />

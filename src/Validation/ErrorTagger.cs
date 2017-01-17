@@ -12,18 +12,14 @@ namespace EditorConfig
 {
     class ErrorTagger : ITagger<IErrorTag>, IDisposable
     {
-        private ErrorListProvider _errorlist;
-        private string _file;
         private EditorConfigDocument _document;
         private IWpfTextView _view;
         private EditorConfigValidator _validator;
         private bool _hasLoaded;
 
-        public ErrorTagger(IWpfTextView view, ErrorListProvider errorlist, string file)
+        public ErrorTagger(IWpfTextView view)
         {
             _view = view;
-            _errorlist = errorlist;
-            _file = file;
 
             _document = EditorConfigDocument.FromTextBuffer(view.TextBuffer);
             _validator = EditorConfigValidator.FromDocument(_document);
@@ -41,8 +37,6 @@ namespace EditorConfig
         {
             var span = new SnapshotSpan(_view.TextBuffer.CurrentSnapshot, 0, _view.TextBuffer.CurrentSnapshot.Length);
             TagsChanged?.Invoke(this, new SnapshotSpanEventArgs(span));
-
-            UpdateErrorList();
         }
 
         public IEnumerable<ITagSpan<IErrorTag>> GetTags(NormalizedSnapshotSpanCollection spans)
@@ -61,38 +55,6 @@ namespace EditorConfig
             }
 
             return tags;
-        }
-
-        private void UpdateErrorList()
-        {
-            var items = _document.ParseItems.Where(p => p.HasErrors);
-
-            if (!items.Any() && _errorlist.Tasks.Count == 0)
-                return;
-
-            try
-            {
-                _errorlist.SuspendRefresh();
-                _errorlist.Tasks.Clear();
-
-                foreach (var item in items)
-                {
-                    var span = new SnapshotSpan(_view.TextBuffer.CurrentSnapshot, item.Span);
-
-                    foreach (var error in item.Errors)
-                    {
-                        var task = CreateErrorTask(span, error);
-
-                        if (!_errorlist.Tasks.Contains(task))
-                            _errorlist.Tasks.Add(task);
-                    }
-                }
-            }
-            finally
-            {
-                _errorlist.ResumeRefresh();
-                _errorlist.Refresh();
-            }
         }
 
         private IEnumerable<TagSpan<ErrorTag>> CreateError(ParseItem item)
@@ -117,60 +79,6 @@ namespace EditorConfig
             }
 
             return ErrorFormatDefinition.Suggestion;
-        }
-
-        private ErrorTask CreateErrorTask(SnapshotSpan span, Error error)
-        {
-            var line = span.Snapshot.GetLineFromPosition(span.Start);
-            var projectItem = VsHelpers.DTE.Solution.FindProjectItem(_file);
-
-            ErrorTask task = new ErrorTask
-            {
-                Text = error.Description,
-                Line = line.LineNumber,
-                Column = span.Start.Position - line.Start.Position,
-                Category = TaskCategory.Misc,
-                ErrorCategory = GetErrorCategory(error.ErrorType),
-                Priority = TaskPriority.Low,
-                Document = _file,
-                HierarchyItem = projectItem.ToHierarchyItem()
-            };
-
-            task.Navigate += Navigate;
-
-            return task;
-        }
-
-        private TaskErrorCategory GetErrorCategory(ErrorType errorType)
-        {
-            if (errorType == ErrorType.Suggestion)
-                return TaskErrorCategory.Message;
-
-            if (errorType == ErrorType.Warning || EditorConfigPackage.ValidationOptions.ShowErrorsAsWarnings)
-                return TaskErrorCategory.Warning;
-
-            return TaskErrorCategory.Error;
-        }
-
-        private void Navigate(object sender, EventArgs e)
-        {
-            ErrorTask task = (ErrorTask)sender;
-            _errorlist.Navigate(task, new Guid("{00000000-0000-0000-0000-000000000000}"));
-
-            var line = _view.TextBuffer.CurrentSnapshot.GetLineFromLineNumber(task.Line);
-            var point = new SnapshotPoint(line.Snapshot, line.Start.Position + task.Column);
-            _view.Caret.MoveTo(point);
-        }
-
-        private void ClearError(ITextSnapshotLine line)
-        {
-            for (int i = _errorlist.Tasks.Count - 1; i >= 0; i--)
-            {
-                var task = _errorlist.Tasks[i];
-
-                if (task.Line == line.LineNumber)
-                    _errorlist.Tasks.RemoveAt(i);
-            }
         }
 
         public void Dispose()

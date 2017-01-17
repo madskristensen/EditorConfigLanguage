@@ -3,49 +3,51 @@
     public static class PredefinedErrors
     {
         //  Root
-        public static Error OnlyRootAllowed() =>
-            Create(ErrorCodes.OnlyRootAllowd, Resources.Text.ValidateOnlyRootAllowed);
-        public static Error RootInSection() =>
-            Create(ErrorCodes.RootInSection, Resources.Text.ValidationRootInSection);
+        public static Error OnlyRootAllowed(ParseItem item) =>
+            Create(item, ErrorCodes.OnlyRootAllowd, Resources.Text.ValidateOnlyRootAllowed);
+        public static Error RootInSection(ParseItem item) =>
+            Create(item, ErrorCodes.RootInSection, Resources.Text.ValidationRootInSection);
 
         // Sections
-        public static Error DuplicateSection(string sectionText) =>
-            Create(ErrorCodes.DuplicateSection, string.Format(Resources.Text.ValidationDuplicateSection, sectionText));
-        public static Error SectionSyntaxError() =>
-            Create(ErrorCodes.SectionSyntaxError, Resources.Text.ValidationSectionSyntaxError);
+        public static Error DuplicateSection(ParseItem item) =>
+            Create(item, ErrorCodes.DuplicateSection, string.Format(Resources.Text.ValidationDuplicateSection, item.Text));
+        public static Error SectionSyntaxError(ParseItem item) =>
+            Create(item, ErrorCodes.SectionSyntaxError, Resources.Text.ValidationSectionSyntaxError);
 
-        public static Error GlobbingNoMatch(string sectionText) =>
-            Create(ErrorCodes.GlobbingNoMatch, string.Format(Resources.Text.ValidationNoMatch, sectionText));
+        public static Error GlobbingNoMatch(ParseItem item) =>
+            Create(item, ErrorCodes.GlobbingNoMatch, string.Format(Resources.Text.ValidationNoMatch, item.Text));
 
         // Properties
-        public static Error DuplicateProperty() =>
-            Create(ErrorCodes.DuplicateProperty, Resources.Text.ValidationDuplicateProperty);
-        public static Error ParentDuplicateProperty(string fileName) =>
-            Create(ErrorCodes.ParentDuplicateProperty, string.Format(Resources.Text.ValidationParentPropertyDuplicate, fileName));
-        public static Error UnknownKeyword(string keywordText) =>
-            Create(ErrorCodes.UnknownKeyword, string.Format(Resources.Text.ValidateUnknownKeyword, keywordText));
+        public static Error DuplicateProperty(ParseItem item) =>
+            Create(item, ErrorCodes.DuplicateProperty, Resources.Text.ValidationDuplicateProperty);
+        public static Error ParentDuplicateProperty(ParseItem item, string fileName) =>
+            Create(item, ErrorCodes.ParentDuplicateProperty, string.Format(Resources.Text.ValidationParentPropertyDuplicate, fileName));
+        public static Error UnknownKeyword(ParseItem item) =>
+            Create(item, ErrorCodes.UnknownKeyword, string.Format(Resources.Text.ValidateUnknownKeyword, item.Text));
 
         // Values
-        public static Error MissingValue() =>
-            Create(ErrorCodes.MissingValue, Resources.Text.ValidationMissingPropertyValue);
-        public static Error UnknownValue(string valueText, string keywordName) =>
-            Create(ErrorCodes.UnknownValue, string.Format(Resources.Text.InvalidValue, valueText, keywordName));
+        public static Error MissingValue(ParseItem item) =>
+            Create(item, ErrorCodes.MissingValue, Resources.Text.ValidationMissingPropertyValue);
+        public static Error UnknownValue(ParseItem item, string keywordName) =>
+            Create(item, ErrorCodes.UnknownValue, string.Format(Resources.Text.InvalidValue, item.Text, keywordName));
 
         // Severity
-        public static Error MissingSeverity() =>
-            Create(ErrorCodes.MissingSeverity, Resources.Text.ValidationMissingSeverity);
-        public static Error UnknownSeverity(string severityText) =>
-            Create(ErrorCodes.UnknownSeverity, string.Format(Resources.Text.ValidationInvalidSeverity, severityText));
-        public static Error SeverityNotApplicable(string keywordName) =>
-            Create(ErrorCodes.SeverityNotApplicable, string.Format(Resources.Text.ValidationSeverityNotApplicable, keywordName));
+        public static Error MissingSeverity(ParseItem item) =>
+            Create(item, ErrorCodes.MissingSeverity, Resources.Text.ValidationMissingSeverity);
+        public static Error UnknownSeverity(ParseItem item) =>
+            Create(item, ErrorCodes.UnknownSeverity, string.Format(Resources.Text.ValidationInvalidSeverity, item.Text));
+        public static Error SeverityNotApplicable(ParseItem item, string keywordName) =>
+            Create(item, ErrorCodes.SeverityNotApplicable, string.Format(Resources.Text.ValidationSeverityNotApplicable, keywordName));
 
         // Misc
-        public static Error UnknownElement() =>
-            Create(ErrorCodes.UnknownElement, Resources.Text.ValidationUnknownElement);
+        public static Error UnknownElement(ParseItem item) =>
+            Create(item, ErrorCodes.UnknownElement, Resources.Text.ValidationUnknownElement);
 
-        private static Error Create(ErrorCode errorCode, string description)
+        private static Error Create(ParseItem item, ErrorCode errorCode, string description)
         {
-            return new Error(errorCode.Code, errorCode.Type, description);
+            var error = new Error(item, errorCode.Code, errorCode.Type, description);
+            item.AddError(error);
+            return error;
         }
     }
 }

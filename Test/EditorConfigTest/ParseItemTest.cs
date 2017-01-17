@@ -14,8 +14,6 @@ namespace EditorConfigTest
             var b = new ParseItem(default(EditorConfigDocument), ItemType.Section, new Span(20, 10), "b text");
             var c = new ParseItem(default(EditorConfigDocument), ItemType.Property, new Span(10, 10), "a text");
 
-            Assert.IsTrue(a == a);
-            Assert.IsFalse(a != a);
             Assert.IsTrue(a == c);
             Assert.IsFalse(a != c);
             Assert.IsTrue(a != b);

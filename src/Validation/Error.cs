@@ -1,27 +1,29 @@
 ﻿using Microsoft.VisualStudio.Imaging;
 using Microsoft.VisualStudio.Imaging.Interop;
+using Microsoft.VisualStudio.Text;
 
 namespace EditorConfig
 {
     public class Error : ITooltip
     {
-        //public Error(int errorCode, string description, ErrorType errorType)
-        //{
-        //    ErrorCode = errorCode;
-        //    Description = description;
-        //    ErrorType = errorType;
-        //}
-
-        public Error(string errorCode, ErrorType errorType, string description)
+        public Error(ParseItem item, string errorCode, ErrorType errorType, string description)
         {
             ErrorCode = errorCode;
             ErrorType = errorType;
             Description = description;
+
+            var span = new SnapshotSpan(item.Document.TextBuffer.CurrentSnapshot, item.Span);
+            var line = span.Snapshot.GetLineFromPosition(span.Start);
+
+            Line = line.LineNumber;
+            Column = span.Start.Position - line.Start.Position;
         }
 
         public string ErrorCode { get; set; }
         public ErrorType ErrorType { get; set; } = ErrorType.Warning;
         public string Description { get; set; }
+        public int Line { get; }
+        public int Column { get; }
 
         public ImageMoniker Moniker
         {
@@ -48,5 +50,26 @@ namespace EditorConfig
         }
 
         public bool IsSupported => true;
+
+        public override int GetHashCode()
+        {
+            return ErrorCode.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Error other))
+                return false;
+
+            return Equals(other);
+        }
+
+        public bool Equals(Error other)
+        {
+            if (other == null)
+                return false;
+
+            return string.Equals(ErrorCode, other.ErrorCode, System.StringComparison.Ordinal);
+        }
     }
 }

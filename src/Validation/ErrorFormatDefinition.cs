@@ -10,7 +10,7 @@ namespace EditorConfig
 {
     public class ErrorFormatDefinition
     {
-        public const string Suggestion = Constants.LanguageName + " Message";
+        public const string Suggestion = Constants.LanguageName + " Suggestion";
 
         [Export(typeof(ErrorTypeDefinition))]
         [Name(Suggestion)]
@@ -26,7 +26,7 @@ namespace EditorConfig
             public MessageFormat()
             {
                 DisplayName = Suggestion;
-                ForegroundColor = (Color)ColorConverter.ConvertFromString("#80c0c0c0");
+                ForegroundColor = (Color)ColorConverter.ConvertFromString("#b3c0c0c0");
             }
         }
     }

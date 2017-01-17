@@ -1,6 +1,5 @@
 # Road map
 
-- [x] Stop invalidate undocumented properties
 - [ ] Swith icons to the official .editorconfig icon
 - [ ] Add item template for .editorconfig files
 
@@ -24,6 +23,7 @@ on the official Visual Studio extension gallery.
 - [x] Convert to use new error list API
 - [x] Clear errors on document close
 - [x] No custom classification definitions
+- [x] Stop invalidate undocumented properties
 
 ## 1.9
 

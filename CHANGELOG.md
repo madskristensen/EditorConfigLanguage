@@ -1,14 +1,5 @@
 # Road map
 
-- [x] Fixed issue with formatter
-- [x] Added command to navigate to parent (F12 shortcut)
-- [x] SignatureHelp for writing sections
-- [x] Normalize property names in hover tooltips
-- [x] Performance improvements to validator
-- [x] Syntax validation for section strings
-- [x] Convert to use new error list API
-- [x] Clear errors on document close
-- [x] No custom classification definitions
 - [ ] Swith icons to the official .editorconfig icon
 - [ ] Add item template for .editorconfig files
 
@@ -20,6 +11,18 @@ download in the
 
 These are the changes to each version that has been released
 on the official Visual Studio extension gallery.
+
+## 1.10
+
+- [x] Fixed issue with formatter
+- [x] Added command to navigate to parent (F12 shortcut)
+- [x] SignatureHelp for writing sections
+- [x] Normalize property names in hover tooltips
+- [x] Performance improvements to validator
+- [x] Syntax validation for section strings
+- [x] Convert to use new error list API
+- [x] Clear errors on document close
+- [x] No custom classification definitions
 
 ## 1.9
 

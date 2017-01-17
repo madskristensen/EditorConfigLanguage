@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.Text;
+﻿using Microsoft.VisualStudio.Language.StandardClassification;
+using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using System;
 using System.Collections.Generic;
@@ -14,11 +15,11 @@ namespace EditorConfig
         public EditorConfigClassifier(IClassificationTypeRegistryService registry, ITextBuffer buffer)
         {
             _map = _map ?? new Dictionary<ItemType, IClassificationType> {
-                { ItemType.Comment, registry.GetClassificationType(EditorConfigClassificationTypes.Comment)},
-                { ItemType.Section, registry.GetClassificationType(EditorConfigClassificationTypes.Section)},
-                { ItemType.Property, registry.GetClassificationType(EditorConfigClassificationTypes.Keyword)},
-                { ItemType.Value, registry.GetClassificationType(EditorConfigClassificationTypes.Value)},
-                { ItemType.Severity, registry.GetClassificationType(EditorConfigClassificationTypes.Severity)},
+                { ItemType.Comment, registry.GetClassificationType(PredefinedClassificationTypeNames.Comment)},
+                { ItemType.Section, registry.GetClassificationType(PredefinedClassificationTypeNames.String)},
+                { ItemType.Property, registry.GetClassificationType(PredefinedClassificationTypeNames.Identifier)},
+                { ItemType.Value, registry.GetClassificationType(PredefinedClassificationTypeNames.Keyword)},
+                { ItemType.Severity, registry.GetClassificationType(PredefinedClassificationTypeNames.SymbolDefinition)},
             };
 
             _buffer = buffer;

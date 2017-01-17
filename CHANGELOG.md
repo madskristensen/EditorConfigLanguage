@@ -8,6 +8,7 @@
 - [x] Syntax validation for section strings
 - [x] Convert to use new error list API
 - [x] Clear errors on document close
+- [x] No custom classification definitions
 - [ ] Swith icons to the official .editorconfig icon
 - [ ] Add item template for .editorconfig files
 

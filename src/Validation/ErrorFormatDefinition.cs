@@ -26,7 +26,7 @@ namespace EditorConfig
             public MessageFormat()
             {
                 DisplayName = Suggestion;
-                ForegroundColor = (Color)ColorConverter.ConvertFromString("#b3c0c0c0");
+                ForegroundColor = (Color)ColorConverter.ConvertFromString("#CCc0c0c0");
             }
         }
     }

@@ -20,6 +20,7 @@ namespace EditorConfig
     {
         private static IVsUIShell5 _shell = (IVsUIShell5)Package.GetGlobalService(typeof(SVsUIShell));
         private static IVsSolution _solution = (IVsSolution)Package.GetGlobalService(typeof(IVsSolution));
+        private static IComponentModel _compositionService;
 
         internal static DTE2 DTE { get; } = Package.GetGlobalService(typeof(DTE)) as DTE2;
 
@@ -174,8 +175,6 @@ namespace EditorConfig
             return new ServiceProvider(dte as Microsoft.VisualStudio.OLE.Interop.IServiceProvider);
         }
 
-        private static IComponentModel _compositionService;
-
         public static void SatisfyImportsOnce(this object o)
         {
             if (_compositionService == null)
@@ -227,16 +226,6 @@ namespace EditorConfig
             result.get_Data(out object data);
 
             return data as BitmapSource;
-        }
-
-        public static IVsHierarchy ToHierarchyItem(this ProjectItem item)
-        {
-            if (item == null || item.ContainingProject == null)
-                return null;
-
-            _solution.GetProjectOfUniqueName(item.ContainingProject.UniqueName, out var hierarchyItem);
-
-            return hierarchyItem;
         }
     }
 

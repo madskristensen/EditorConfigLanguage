@@ -63,7 +63,6 @@
     <Compile Include="Adornments\IntraTextAdornmentTagger.cs" />
     <Compile Include="BraceCompletion\BraceCompletionContextProvider.cs" />
     <Compile Include="BraceCompletion\BraceCompletionContext.cs" />
-    <Compile Include="Classifier\EditorConfigClassificationTypes.cs" />
     <Compile Include="Validation\ErrorFormatDefinition.cs" />
     <Compile Include="Commands\CreateEditorConfigFileAnyCode.cs" />
     <Compile Include="ErrorList\SinkManager.cs" />

@@ -5,12 +5,13 @@ using System.Linq;
 
 namespace EditorConfig
 {
-    public class SchemaCatalog
+    public static class SchemaCatalog
     {
         public const string Root = "root";
+        private static IEnumerable<Keyword> _unsupportedProperties = GetUnsupportedProperties();
 
-        public static IEnumerable<Keyword> Properties { get; } = GetProperties();
-        public static IEnumerable<Severity> Severities { get; } = GetSeverities();
+        public static IEnumerable<Keyword> Properties => GetProperties();
+        public static IEnumerable<Severity> Severities => GetSeverities();
 
         private static IEnumerable<Keyword> GetProperties()
         {
@@ -56,6 +57,49 @@ namespace EditorConfig
             yield return new Keyword("dotnet_style_qualification_for_property", "Prefer the all non-static properties used in non-static methods to be prefaced with 'this.' in C# or 'Me.' in Visual Basic.", category, "true", "false");
         }
 
+        private static IEnumerable<Keyword> GetUnsupportedProperties()
+        {
+            const string desc = "Undocumented property";
+
+            var category = Category.CSharp;
+            yield return new Keyword("csharp_indent_block_contents", desc, category, "true", "false");
+            yield return new Keyword("csharp_indent_braces", desc, category, "true", "false");
+            yield return new Keyword("csharp_indent_case_contents", desc, category, "true", "false");
+            yield return new Keyword("csharp_indent_labels", desc, category, "true", "false");
+            yield return new Keyword("csharp_indent_switch_labels", desc, category, "true", "false");
+            yield return new Keyword("csharp_new_line_before_catch", desc, category, "true", "false");
+            yield return new Keyword("csharp_new_line_before_else", desc, category, "true", "false");
+            yield return new Keyword("csharp_new_line_before_finally", desc, category, "true", "false");
+            yield return new Keyword("csharp_new_line_before_members_in_anonymous_types", desc, category, "true", "false");
+            yield return new Keyword("csharp_new_line_before_members_in_object_initializers", desc, category, "true", "false");
+            yield return new Keyword("csharp_new_line_before_open_brace", desc, category, "true", "false");
+            yield return new Keyword("csharp_new_line_between_query_expression_clauses", desc, category, "true", "false");
+            yield return new Keyword("csharp_preserve_single_line_blocks", desc, category, "true", "false");
+            yield return new Keyword("csharp_preserve_single_line_statements", desc, category, "true", "false");
+            yield return new Keyword("csharp_space_after_cast", desc, category, "true", "false");
+            yield return new Keyword("csharp_space_after_colon_in_inheritance_clause", desc, category, "true", "false");
+            yield return new Keyword("csharp_space_after_comma", desc, category, "true", "false");
+            yield return new Keyword("csharp_space_after_dot", desc, category, "true", "false");
+            yield return new Keyword("csharp_space_after_keywords_in_control_flow_statements", desc, category, "true", "false");
+            yield return new Keyword("csharp_space_after_semicolon_in_for_statement", desc, category, "true", "false");
+            yield return new Keyword("csharp_space_around_binary_operators ", desc, category, "true", "false");
+            yield return new Keyword("csharp_space_around_declaration_statements", desc, category, "true", "false");
+            yield return new Keyword("csharp_space_before_colon_in_inheritance_clause", desc, category, "true", "false");
+            yield return new Keyword("csharp_space_before_comma", desc, category, "true", "false");
+            yield return new Keyword("csharp_space_before_dot", desc, category, "true", "false");
+            yield return new Keyword("csharp_space_before_open_square_brackets", desc, category, "true", "false");
+            yield return new Keyword("csharp_space_before_semicolon_in_for_statement", desc, category, "true", "false");
+            yield return new Keyword("csharp_space_between_empty_square_brackets", desc, category, "true", "false");
+            yield return new Keyword("csharp_space_between_method_call_empty_parameter_list_parentheses", desc, category, "true", "false");
+            yield return new Keyword("csharp_space_between_method_call_name_and_opening_parenthesis", desc, category, "true", "false");
+            yield return new Keyword("csharp_space_between_method_call_parameter_list_parentheses", desc, category, "true", "false");
+            yield return new Keyword("csharp_space_between_method_declaration_empty_parameter_list_parentheses", desc, category, "true", "false");
+            yield return new Keyword("csharp_space_between_method_declaration_name_and_open_parenthesis", desc, category, "true", "false");
+            yield return new Keyword("csharp_space_between_method_declaration_parameter_list_parentheses", desc, category, "true", "false");
+            yield return new Keyword("csharp_space_between_parentheses", desc, category, "true", "false");
+            yield return new Keyword("csharp_space_between_square_brackets", desc, category, "true", "false");
+        }
+
         private static IEnumerable<Severity> GetSeverities()
         {
             yield return new Severity("none", Schema.Text.SeverityNone, KnownMonikers.None);
@@ -67,6 +111,10 @@ namespace EditorConfig
         public static bool TryGetProperty(string name, out Keyword property)
         {
             property = Properties.FirstOrDefault(c => c.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+
+            if (property == null)
+                property = _unsupportedProperties.FirstOrDefault(c => c.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+
             return property != null;
         }
 

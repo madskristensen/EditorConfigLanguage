@@ -1,5 +1,6 @@
 # Road map
 
+- [x] Stop invalidate undocumented properties
 - [ ] Swith icons to the official .editorconfig icon
 - [ ] Add item template for .editorconfig files
 

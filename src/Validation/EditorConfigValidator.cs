@@ -287,7 +287,7 @@ namespace EditorConfig
             {
                 foreach (var file in Directory.EnumerateFiles(folder).Where(f => !_ignorePaths.Any(p => folder.Contains(p))))
                 {
-                    string relative = file.Replace(root, string.Empty);
+                    string relative = file.Replace(root, string.Empty).TrimStart('\\');
 
                     if (CheckGlobbing(relative, pattern))
                         return true;

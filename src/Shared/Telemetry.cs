@@ -25,7 +25,7 @@ namespace EditorConfig
                 return;
 
             string actualName = name.Replace(" ", "_");
-            TelemetryService.DefaultSession.PostFault(actualName, exception.Message, exception);
+            TelemetryService.DefaultSession.PostFault(_namespace + actualName, exception.Message, exception);
         }
     }
 }

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using EnvDTE;
+﻿using EnvDTE;
 using EnvDTE80;
-using Microsoft.VisualStudio.Imaging;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.TableManager;
 using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.Shell.TableManager;
+using System.Collections.Generic;
 
 namespace EditorConfig
 {

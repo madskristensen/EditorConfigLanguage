@@ -1,9 +1,9 @@
 # Road map
 
 - [x] Error codes should be clickable
+- [x] Add description to each error code on the [wiki](https://github.com/madskristensen/EditorConfigLanguage/wiki/Error-codes)
 - [ ] Swith icons to the official .editorconfig icon
 - [ ] Add item template for .editorconfig files
-- [ ] Add description to each error code on the [wiki](https://github.com/madskristensen/EditorConfigLanguage/wiki/Error-codes)
 
 Features that have a checkmark are complete and available for
 download in the

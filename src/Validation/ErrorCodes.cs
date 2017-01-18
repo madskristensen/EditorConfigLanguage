@@ -2,7 +2,7 @@
 {
     public class ErrorCodes
     {
-        public static ErrorCode OnlyRootAllowd = new ErrorCode("EC115", ErrorType.Error);
+        public static ErrorCode OnlyRootAllowd = new ErrorCode("EC106", ErrorType.Error);
         public static ErrorCode RootInSection = new ErrorCode("EC108", ErrorType.Warning);
         public static ErrorCode DuplicateSection = new ErrorCode("EC102", ErrorType.Warning);
         public static ErrorCode SectionSyntaxError = new ErrorCode("EC109", ErrorType.Error);

@@ -24,6 +24,7 @@ namespace EditorConfig
         public string Description { get; set; }
         public int Line { get; }
         public int Column { get; }
+        public string HelpLink => string.Format(Constants.HelpLink, ErrorCode?.ToLowerInvariant());
 
         public ImageMoniker Moniker
         {

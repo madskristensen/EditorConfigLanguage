@@ -92,6 +92,10 @@ namespace EditorConfig
                 {
                     content = _projectName;
                 }
+                else if (columnName == StandardTableKeyNames.HelpLink)
+                {
+                    content = Errors[index].HelpLink;
+                }
             }
 
             return content != null;

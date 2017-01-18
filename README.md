@@ -71,6 +71,8 @@ If a parent document contains the exact same property and value in a section wit
 
 ![Validate parent](art/validation-duplicates-parent.png)
 
+See the [complete list of error codes](https://github.com/madskristensen/EditorConfigLanguage/wiki/Error-codes).
+
 ### Hover tooltips
 Hover the mouse over any keyword to see a full description.
 

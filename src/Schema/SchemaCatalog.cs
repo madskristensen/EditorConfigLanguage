@@ -60,7 +60,7 @@ namespace EditorConfig
         private static IEnumerable<Keyword> GetUnsupportedProperties()
         {
             const string desc = "Undocumented property";
-
+            // Defined here: http://source.roslyn.io/#Microsoft.CodeAnalysis.CSharp.Workspaces/Formatting/CSharpFormattingOptions.cs
             var category = Category.CSharp;
             yield return new Keyword("csharp_indent_block_contents", desc, category, "true", "false");
             yield return new Keyword("csharp_indent_braces", desc, category, "true", "false");

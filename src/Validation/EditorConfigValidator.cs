@@ -249,7 +249,8 @@ namespace EditorConfig
             // Value not in schema
             else if (EditorConfigPackage.ValidationOptions.EnableUnknownValues &&
                 !keyword.Values.Any(v => v.Name.Equals(property.Value?.Text, StringComparison.OrdinalIgnoreCase)) &&
-                !(int.TryParse(property.Value.Text, out int intValue) && intValue > 0))
+                !(int.TryParse(property.Value.Text, out int intValue) && intValue > 0) &&
+                !(keyword.Category == Category.Standard && property.Value?.Text == "unset"))
             {
                 PredefinedErrors.UnknownValue(property.Value, keyword.Name);
             }

@@ -37,11 +37,11 @@ namespace EditorConfig
             }
         }
 
-        public bool SupportsSeverity
+        public bool RequiresSeverity
         {
             get
             {
-                return Category == Category.CSharp || Category == Category.DotNet;
+                return Name.StartsWith("csharp_style") || Name.StartsWith("dotnet_style");
             }
         }
     }

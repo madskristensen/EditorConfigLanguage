@@ -2,8 +2,11 @@
 
 - [x] Error codes should be clickable
 - [x] Add description to each error code on the [wiki](https://github.com/madskristensen/EditorConfigLanguage/wiki/Error-codes)
+- [x] Updated severity requirements
+- [x] Added "all" to values for C# new-line properties
 - [ ] Swith icons to the official .editorconfig icon
 - [ ] Add item template for .editorconfig files
+- [ ] Move schema into JSON file
 
 Features that have a checkmark are complete and available for
 download in the

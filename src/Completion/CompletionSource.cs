@@ -70,7 +70,7 @@ namespace EditorConfig
                 else
                 {
                     var prop = _document.PropertyAtPosition(position);
-                    if (SchemaCatalog.TryGetProperty(prop?.Keyword?.Text, out Keyword key) && key.SupportsSeverity)
+                    if (SchemaCatalog.TryGetProperty(prop?.Keyword?.Text, out Keyword key) && key.RequiresSeverity)
                         AddSeverity(list);
                 }
             }

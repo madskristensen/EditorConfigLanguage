@@ -255,14 +255,14 @@ namespace EditorConfig
             }
 
             // Missing severity
-            else if (property.Severity == null && property.Value.Text.Equals("true", StringComparison.OrdinalIgnoreCase) && keyword.SupportsSeverity)
+            else if (property.Severity == null && property.Value.Text.Equals("true", StringComparison.OrdinalIgnoreCase) && keyword.RequiresSeverity)
             {
                 PredefinedErrors.MissingSeverity(property.Value);
             }
             else if (property.Severity != null)
             {
                 // Severity not applicaple to property
-                if (!keyword.SupportsSeverity)
+                if (!keyword.RequiresSeverity)
                 {
                     PredefinedErrors.SeverityNotApplicable(property.Severity, keyword.Name);
                 }

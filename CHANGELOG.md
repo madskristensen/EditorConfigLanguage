@@ -7,6 +7,7 @@
 - [ ] Swith icons to the official .editorconfig icon
 - [ ] Add item template for .editorconfig files
 - [ ] Move schema into JSON file
+- [ ] Don't invalidate the new "unset" value on standard properties
 
 Features that have a checkmark are complete and available for
 download in the

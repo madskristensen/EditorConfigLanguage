@@ -11,7 +11,10 @@ or get the [CI build](http://vsixgallery.com/extension/1209461d-57f8-46a4-814a-d
 consistent coding styles between different editors and IDEs.
 
 Visual Studio 2017 natively supports .editorconfig files, but it doesn't give
-language support for editing those files. This extension provides that.
+language support for editing those files. This extension provides that
+
+For Visual Studio version 2010 to 2015, get the
+[EditorConfig extension](https://marketplace.visualstudio.com/items?itemName=EditorConfigTeam.EditorConfig) instead.
 
 See the [change log](CHANGELOG.md) for changes and road map.
 

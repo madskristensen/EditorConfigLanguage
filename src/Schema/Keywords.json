@@ -2,50 +2,50 @@
   // Standard properties
   {
     "name": "root",
-    "description": "Special property that should be specified at the top of the file outside of any sections. Set to “true” to stop .editorconfig files search on current file.",
-    "values": [ true, false ]
+    "description": "Special property that should be specified at the top of the file outside of any sections. Set to \"true\" to stop .editorconfig files search on current file.",
+    "values": [ true, false, "unset" ]
   },
   {
     "name": "charset",
     "description": "File character encoding",
-    "values": [ "latin1", "utf-8", "utf-8-bom", "utf-16be", "utf-16le" ]
+    "values": [ "latin1", "utf-8", "utf-8-bom", "utf-16be", "utf-16le", "unset" ]
   },
   {
     "name": "end_of_line",
     "description": "Line ending file format (Unix, DOS, Mac)",
-    "values": [ "lf", "crlf", "cr" ]
+    "values": [ "lf", "crlf", "cr", "unset" ]
   },
   {
     "name": "indent_style",
     "description": "Indentation style",
-    "values": [ "tab", "space" ]
+    "values": [ "tab", "space", "unset" ]
   },
   {
     "name": "indent_size",
     "description": "A whole number defining the number of columns used for each indentation level and the width of soft tabs (when supported). When set to tab, the value of tab_width (if specified) will be used.",
-    "values": [ 2, "tab" ]
+    "values": [ 2, "tab", "unset" ]
   },
   {
     "name": "tab_width",
     "description": "A whole number defining the number of columns used to represent a tab character. This defaults to the value of indent_size and doesn't usually need to be specified.",
-    "values": []
+    "values": [ 2, "unset" ]
   },
   {
     "name": "trim_trailing_whitespace",
     "description": "Denotes whether whitespace is allowed at the end of lines",
-    "values": [ true, false ],
+    "values": [ true, false, "unset" ],
     "unsupported": true
   },
   {
     "name": "insert_final_newline",
     "description": "Denotes whether file should end with a newline",
-    "values": [ true, false ],
+    "values": [ true, false, "unset" ],
     "unsupported": true
   },
   {
     "name": "max_line_length",
     "description": "Forces hard line wrapping after the amount of characters specified",
-    "values": [],
+    "values": [ 80, "unset" ],
     "unsupported": true
   },
 

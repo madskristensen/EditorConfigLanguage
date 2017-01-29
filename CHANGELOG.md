@@ -5,9 +5,9 @@
 - [x] Updated severity requirements
 - [x] Added "all" to values for C# new-line properties
 - [x] Don't invalidate the new "unset" value on standard properties
+- [x] Move schema into JSON file
 - [ ] Swith icons to the official .editorconfig icon
 - [ ] Add item template for .editorconfig files
-- [ ] Move schema into JSON file
 
 Features that have a checkmark are complete and available for
 download in the

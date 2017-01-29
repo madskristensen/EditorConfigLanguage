@@ -97,6 +97,42 @@ namespace EditorConfig.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to When this style is not being followed, show a compiler error (red squiggle)..
+        /// </summary>
+        internal static string SeverityError {
+            get {
+                return ResourceManager.GetString("SeverityError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do not show anything to the user when this style is not being followed, however code generation features will generate in this style..
+        /// </summary>
+        internal static string SeverityNone {
+            get {
+                return ResourceManager.GetString("SeverityNone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to When this style is not being followed, show it to the user as a suggestion (underlying dots on the first two characters)..
+        /// </summary>
+        internal static string SeveritySuggestion {
+            get {
+                return ResourceManager.GetString("SeveritySuggestion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to When this style is not being followed, show a compiler warning (green squiggle)..
+        /// </summary>
+        internal static string SeverityWarning {
+            get {
+                return ResourceManager.GetString("SeverityWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Only &quot;root&quot; is allowed outside a section.
         /// </summary>
         internal static string ValidateOnlyRootAllowed {

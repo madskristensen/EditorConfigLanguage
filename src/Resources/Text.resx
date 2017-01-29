@@ -129,6 +129,18 @@
   <data name="NotSupportedByVS" xml:space="preserve">
     <value>Not supported by Visual Studio</value>
   </data>
+  <data name="SeverityError" xml:space="preserve">
+    <value>When this style is not being followed, show a compiler error (red squiggle).</value>
+  </data>
+  <data name="SeverityNone" xml:space="preserve">
+    <value>Do not show anything to the user when this style is not being followed, however code generation features will generate in this style.</value>
+  </data>
+  <data name="SeveritySuggestion" xml:space="preserve">
+    <value>When this style is not being followed, show it to the user as a suggestion (underlying dots on the first two characters).</value>
+  </data>
+  <data name="SeverityWarning" xml:space="preserve">
+    <value>When this style is not being followed, show a compiler warning (green squiggle).</value>
+  </data>
   <data name="ValidateOnlyRootAllowed" xml:space="preserve">
     <value>Only "root" is allowed outside a section</value>
   </data>

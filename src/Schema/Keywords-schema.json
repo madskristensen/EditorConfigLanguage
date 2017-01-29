@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "type": "array",
+
+  "definitions": {
+    "keyword": {
+      "type": "object",
+      "required": [ "name", "description", "values" ],
+      "additionalProperties": false,
+
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "values": {
+          "type": "array"
+        },
+        "unsupported": {
+          "enum": [ true ]
+        },
+        "hidden": {
+          "enum": [ true ]
+        }
+      }
+    }
+  },
+
+  "items": {
+    "$ref": "#/definitions/keyword"
+  }
+}

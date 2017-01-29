@@ -81,11 +81,6 @@
     <Compile Include="Parser\Property.cs" />
     <Compile Include="Parser\Section.cs" />
     <Compile Include="Shared\ITooltip.cs" />
-    <Compile Include="Schema\Text.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Text.resx</DependentUpon>
-    </Compile>
     <Compile Include="Schema\SchemaCatalog.cs" />
     <Compile Include="Schema\Severity.cs" />
     <Compile Include="Schema\Value.cs" />
@@ -185,6 +180,10 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Schema\Keywords-schema.json" />
+    <Content Include="Schema\Keywords.json">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
       <Generator>VsixManifestGenerator</Generator>
@@ -354,6 +353,9 @@
     <Reference Include="Minimatch, Version=1.1.0.0, Culture=neutral, PublicKeyToken=0cadeb0b849c27c0, processorArchitecture=MSIL">
       <HintPath>..\packages\Minimatch.1.1.0.0\lib\portable-net40+sl50+win+wp80\Minimatch.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="stdole, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -384,10 +386,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Text.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Schema\Text.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Text.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <EmbeddedResource Include="source.extension.resx">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -412,6 +410,11 @@
     <Error Condition="!Exists('..\packages\Microsoft.VSSDK.BuildTools.15.0.25929-RC2\build\Microsoft.VSSDK.BuildTools.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.VSSDK.BuildTools.15.0.25929-RC2\build\Microsoft.VSSDK.BuildTools.targets'))" />
   </Target>
   <Import Project="..\packages\Microsoft.VSSDK.BuildTools.15.0.25929-RC2\build\Microsoft.VSSDK.BuildTools.targets" Condition="Exists('..\packages\Microsoft.VSSDK.BuildTools.15.0.25929-RC2\build\Microsoft.VSSDK.BuildTools.targets')" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties Schema_4Keywords_1json__JSONSchema="Keywords-schema.json" Schema_4Keywords-schema_1json__JSONSchema="http://json-schema.org/draft-04/schema" />
+    </VisualStudio>
+  </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

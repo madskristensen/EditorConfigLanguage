@@ -7,7 +7,7 @@
 - [x] Don't invalidate the new "unset" value on standard properties
 - [x] Move schema into JSON file
 - [x] Mark "unset" value as unsupported
-- [ ] Show hover tooltip for values 
+- [x] Show hover tooltip for values
 - [ ] Swith icons to the official .editorconfig icon
 - [ ] Add item template for .editorconfig files
 

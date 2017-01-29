@@ -42,6 +42,21 @@ namespace EditorConfig
             {
                 qiContent.Add(new Shared.EditorTooltip(property));
             }
+            else if (item.ItemType == ItemType.Value)
+            {
+                var index = _document.ParseItems.IndexOf(item);
+
+                if (index > 0)
+                {
+                    var prev = _document.ParseItems.ElementAt(index - 1);
+                    if (prev.ItemType == ItemType.Property && SchemaCatalog.TryGetProperty(prev.Text, out Keyword keyword))
+                    {
+                        var value = keyword.Values.FirstOrDefault(v => v.Name == item.Text && !string.IsNullOrEmpty(v.Description));
+                        if (value != null)
+                            qiContent.Add(new Shared.EditorTooltip(value));
+                    }
+                }
+            }
             else if (item.ItemType == ItemType.Severity && SchemaCatalog.TryGetSeverity(item.Text, out Severity severity))
             {
                 qiContent.Add(new Shared.EditorTooltip(severity));

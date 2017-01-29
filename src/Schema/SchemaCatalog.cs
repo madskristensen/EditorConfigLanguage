@@ -23,7 +23,7 @@ namespace EditorConfig
         public static IEnumerable<Severity> Severities { get; private set; }
 
         public static bool TryGetProperty(string name, out Keyword property)
-        {
+        {   
             property = _allProperties.FirstOrDefault(c => c.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
 
             return property != null;

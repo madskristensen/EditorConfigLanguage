@@ -1,10 +1,7 @@
-﻿using Microsoft.VisualStudio.Imaging.Interop;
-using Microsoft.VisualStudio.Language.Intellisense;
-using Microsoft.VisualStudio.PlatformUI;
+﻿using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Utilities;
 using System.ComponentModel.Composition;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace EditorConfig
 {

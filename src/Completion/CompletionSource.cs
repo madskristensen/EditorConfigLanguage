@@ -69,18 +69,12 @@ namespace EditorConfig
             // Severity
             else if ((position > 0 && snapshot.Length > 1 && snapshot.GetText(position - 1, 1) == ":") || parseItem?.ItemType == ItemType.Severity)
             {
-                //if (parseItem?.ItemType == ItemType.Unknown) // Colon was typed
-                //{
-                //    AddSeverity(list);
-                //}
-                //else
-                //{
-                if (prev?.ItemType == ItemType.Value && prev.Text.Is("true"))
+                if (prev?.ItemType == ItemType.Value && (prev.Text.Is("true") || parseItem?.ItemType == ItemType.Severity))
                 {
                     var prop = _document.PropertyAtPosition(prev.Span.Start);
                     if (SchemaCatalog.TryGetKeyword(prop?.Keyword?.Text, out Keyword key) && key.RequiresSeverity)
                         AddSeverity(list);
-                    //}
+
                     moniker = "severity";
                 }
             }

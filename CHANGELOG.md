@@ -1,5 +1,19 @@
 # Road map
 
+- [ ] Switch icons to the official .editorconfig icon
+- [ ] Add item template for .editorconfig files
+
+Features that have a checkmark are complete and available for
+download in the
+[CI build](http://vsixgallery.com/extension/1209461d-57f8-46a4-814a-dbe5fecef941/).
+
+# Change log
+
+These are the changes to each version that has been released
+on the official Visual Studio extension gallery.
+
+## 1.11
+
 - [x] Error codes should be clickable
 - [x] Add description to each error code on the [wiki](https://github.com/madskristensen/EditorConfigLanguage/wiki/Error-codes)
 - [x] Updated severity requirements
@@ -12,17 +26,6 @@
 - [x] Add validation for unneeded properties
 - [x] Insert "=" and ":" on Intellisense commit
 - [x] Added Intellisense options
-- [ ] Switch icons to the official .editorconfig icon
-- [ ] Add item template for .editorconfig files
-
-Features that have a checkmark are complete and available for
-download in the
-[CI build](http://vsixgallery.com/extension/1209461d-57f8-46a4-814a-dbe5fecef941/).
-
-# Change log
-
-These are the changes to each version that has been released
-on the official Visual Studio extension gallery.
 
 ## 1.10
 

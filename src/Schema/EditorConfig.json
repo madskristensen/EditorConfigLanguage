@@ -64,7 +64,7 @@
     {
       "name": "max_line_length",
       "description": "Forces hard line wrapping after the amount of characters specified",
-      "values": [ 80, "unset" ],
+      "values": [ 80, "off", "unset" ],
       "unsupported": true
     },
 

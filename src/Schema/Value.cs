@@ -14,7 +14,7 @@ namespace EditorConfig
             _isUnset = string.Equals(name, "unset", StringComparison.OrdinalIgnoreCase);
 
             Name = name;
-            Description = _isUnset ? Resources.Text.ValueUnset : null;
+            Description = GetDescription();
             IsSupported = !_isUnset;
             Moniker = KnownMonikers.EnumerationItemPublic;
         }
@@ -30,5 +30,13 @@ namespace EditorConfig
 
         /// <summary>True if the value is supported by Visual Studio.</summary>
         public bool IsSupported { get; }
+
+        private string GetDescription()
+        {
+            if (_isUnset)
+                return Resources.Text.ValueUnset;
+
+            return null;
+        }
     }
 }

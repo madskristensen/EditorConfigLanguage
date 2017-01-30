@@ -130,47 +130,53 @@
     <value>Not supported by Visual Studio</value>
   </data>
   <data name="ValidateOnlyRootAllowed" xml:space="preserve">
-    <value>Only "root" is allowed outside a section</value>
+    <value>Only "root" is allowed outside a section.</value>
   </data>
   <data name="ValidateUnknownKeyword" xml:space="preserve">
-    <value>The keyword "{0}" is unknown</value>
+    <value>The keyword "{0}" is unknown.</value>
   </data>
   <data name="ValidationDuplicateProperty" xml:space="preserve">
-    <value>The property is overridden by a property by the same name in this section</value>
+    <value>The property is overridden by a property by the same name in this section.</value>
   </data>
   <data name="ValidationDuplicateSection" xml:space="preserve">
-    <value>A section with the value "{0}" has already been defined</value>
+    <value>A section with the value "{0}" has already been defined.</value>
+  </data>
+  <data name="ValidationIndentSizeUnneeded" xml:space="preserve">
+    <value>When "indent_style" is set to tab, it may be desirable to leave indent_size unspecified so readers may view the file using their preferred indentation width.</value>
   </data>
   <data name="ValidationInvalidEndChar" xml:space="preserve">
-    <value>Values must not end with a {0}</value>
+    <value>Values must not end with a {0}.</value>
   </data>
   <data name="ValidationInvalidSeverity" xml:space="preserve">
-    <value>"{0}" is not a valid value for severity</value>
+    <value>"{0}" is not a valid value for severity.</value>
   </data>
   <data name="ValidationMissingPropertyValue" xml:space="preserve">
-    <value>A value must be specified</value>
+    <value>A value must be specified.</value>
   </data>
   <data name="ValidationMissingSeverity" xml:space="preserve">
-    <value>A severity must be specified. Example: true:warning</value>
+    <value>A severity must be specified. Example: true:warning.</value>
   </data>
   <data name="ValidationNoMatch" xml:space="preserve">
     <value>The globbing pattern "{0}" doesn't match any files. Consider removing the section.</value>
   </data>
   <data name="ValidationParentPropertyDuplicate" xml:space="preserve">
     <value>This property is a duplicate of one in
-"{0}" and can be safely removed</value>
+"{0}" and can be safely removed.</value>
   </data>
   <data name="ValidationRootInSection" xml:space="preserve">
-    <value>"Root" is only allowed in the beginning of the document</value>
+    <value>"Root" is only allowed in the beginning of the document.</value>
   </data>
   <data name="ValidationSectionSyntaxError" xml:space="preserve">
-    <value>Sections must be surrounded by "[" and "]"</value>
+    <value>Sections must be surrounded by "[" and "]".</value>
   </data>
   <data name="ValidationSeverityNotApplicable" xml:space="preserve">
-    <value>The "{0}" property does not support a severity suffix</value>
+    <value>The "{0}" property does not support a severity suffix.</value>
+  </data>
+  <data name="ValidationTabWidthUnneeded" xml:space="preserve">
+    <value>There is no need to specify "tab_width" unless it differs from the value of "indent_size".</value>
   </data>
   <data name="ValidationUnknownElement" xml:space="preserve">
-    <value>Syntax error. Element not valid at current location</value>
+    <value>Syntax error. Element not valid at current location.</value>
   </data>
   <data name="ValueUnset" xml:space="preserve">
     <value>For any standard property, a value of "unset" is to remove the effect of that property, even if it has been set before.</value>

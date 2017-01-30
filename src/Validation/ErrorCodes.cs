@@ -16,6 +16,8 @@
         public static ErrorCode UnknownKeyword = new ErrorCode("EC112", ErrorType.Warning);
         public static ErrorCode UnknownSeverity = new ErrorCode("EC113", ErrorType.Warning);
         public static ErrorCode UnknownValue = new ErrorCode("EC114", ErrorType.Warning);
+        public static ErrorCode TabWidthUnneeded = new ErrorCode("EC115", ErrorType.Suggestion);
+        public static ErrorCode IndentSizeUnneeded = new ErrorCode("EC116", ErrorType.Suggestion);
     }
 
     public struct ErrorCode

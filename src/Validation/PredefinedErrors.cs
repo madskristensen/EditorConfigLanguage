@@ -24,6 +24,10 @@
             Create(item, ErrorCodes.ParentDuplicateProperty, string.Format(Resources.Text.ValidationParentPropertyDuplicate, fileName));
         public static Error UnknownKeyword(ParseItem item) =>
             Create(item, ErrorCodes.UnknownKeyword, string.Format(Resources.Text.ValidateUnknownKeyword, item.Text));
+        public static Error TabWidthUnneeded(ParseItem item) =>
+            Create(item, ErrorCodes.TabWidthUnneeded, Resources.Text.ValidationTabWidthUnneeded);
+        public static Error IndentSizeUnneeded(ParseItem item) =>
+            Create(item, ErrorCodes.IndentSizeUnneeded, Resources.Text.ValidationIndentSizeUnneeded);
 
         // Values
         public static Error MissingValue(ParseItem item) =>

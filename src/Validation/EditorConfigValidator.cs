@@ -152,29 +152,51 @@ namespace EditorConfig
                 {
                     ValidateProperty(property);
 
+                    if (!property.IsValid)
+                        continue;
+
                     // Root in section
-                    if (property.Keyword.Text.Equals(SchemaCatalog.Root, StringComparison.OrdinalIgnoreCase))
+                    if (property.Keyword.Text.Is(SchemaCatalog.Root))
                     {
                         PredefinedErrors.RootInSection(property.Keyword);
                     }
 
                     // Duplicate property
-                    if (EditorConfigPackage.ValidationOptions.EnableDuplicateProperties && property.IsValid)
+                    if (EditorConfigPackage.ValidationOptions.EnableDuplicateProperties)
                     {
-                        if (section.Properties.Last(p => p.Keyword.Text.Equals(property.Keyword.Text, StringComparison.OrdinalIgnoreCase)) != property)
+                        if (section.Properties.Last(p => p.Keyword.Text.Is(property.Keyword.Text)) != property)
                         {
                             PredefinedErrors.DuplicateProperty(property.Keyword);
                         }
                     }
 
                     // Parent duplicate
-                    if (EditorConfigPackage.ValidationOptions.EnableDuplicateFoundInParent && property.IsValid && !property.Keyword.Errors.Any() && parentSections.Any())
+                    if (EditorConfigPackage.ValidationOptions.EnableDuplicateFoundInParent && !property.Keyword.Errors.Any() && parentSections.Any())
                     {
                         var parentProperties = parentSections.SelectMany(s => s.Properties.Where(p => p.ToString() == property.ToString()));
                         if (parentProperties.Any())
                         {
                             var fileName = PackageUtilities.MakeRelative(_document.FileName, parentProperties.First().Keyword.Document.FileName);
                             PredefinedErrors.ParentDuplicateProperty(property.Keyword, fileName);
+                        }
+                    }
+
+                    // tab_width should be different than indent_size
+                    if (property.Keyword.Text.Is("tab_width"))
+                    {
+                        var hasIndentSize = section.Properties.Any(p => p.IsValid && p.Keyword.Text.Is("indent_size") && p.Value.Text.Is(property.Value.Text));
+                        if (hasIndentSize)
+                            PredefinedErrors.TabWidthUnneeded(property.Keyword);
+                    }
+
+                    // Don't set indent_size when indent_style is set to tab
+                    if (property.Keyword.Text.Is("indent_style") && property.Value.Text.Is("tab"))
+                    {
+                        var indentSizes = section.Properties.Where(p => p.IsValid && p.Keyword.Text.Is("indent_size"));
+
+                        foreach (var indentSize in indentSizes)
+                        {
+                            PredefinedErrors.IndentSizeUnneeded(indentSize.Keyword);
                         }
                     }
                 }
@@ -251,14 +273,14 @@ namespace EditorConfig
 
             // Value not in schema
             else if (EditorConfigPackage.ValidationOptions.EnableUnknownValues &&
-                !keyword.Values.Any(v => v.Name.Equals(property.Value?.Text, StringComparison.OrdinalIgnoreCase)) &&
+                !keyword.Values.Any(v => v.Name.Is(property.Value?.Text)) &&
                 !(int.TryParse(property.Value.Text, out int intValue) && intValue > 0))
             {
                 PredefinedErrors.UnknownValue(property.Value, keyword.Name);
             }
 
             // Missing severity
-            else if (property.Severity == null && property.Value.Text.Equals("true", StringComparison.OrdinalIgnoreCase) && keyword.RequiresSeverity)
+            else if (property.Severity == null && property.Value.Text.Is("true") && keyword.RequiresSeverity)
             {
                 PredefinedErrors.MissingSeverity(property.Value);
             }

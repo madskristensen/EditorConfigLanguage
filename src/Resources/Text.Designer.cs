@@ -97,7 +97,7 @@ namespace EditorConfig.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Only &quot;root&quot; is allowed outside a section.
+        ///   Looks up a localized string similar to Only &quot;root&quot; is allowed outside a section..
         /// </summary>
         internal static string ValidateOnlyRootAllowed {
             get {
@@ -106,7 +106,7 @@ namespace EditorConfig.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The keyword &quot;{0}&quot; is unknown.
+        ///   Looks up a localized string similar to The keyword &quot;{0}&quot; is unknown..
         /// </summary>
         internal static string ValidateUnknownKeyword {
             get {
@@ -115,7 +115,7 @@ namespace EditorConfig.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The property is overridden by a property by the same name in this section.
+        ///   Looks up a localized string similar to The property is overridden by a property by the same name in this section..
         /// </summary>
         internal static string ValidationDuplicateProperty {
             get {
@@ -124,7 +124,7 @@ namespace EditorConfig.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A section with the value &quot;{0}&quot; has already been defined.
+        ///   Looks up a localized string similar to A section with the value &quot;{0}&quot; has already been defined..
         /// </summary>
         internal static string ValidationDuplicateSection {
             get {
@@ -133,7 +133,16 @@ namespace EditorConfig.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Values must not end with a {0}.
+        ///   Looks up a localized string similar to When &quot;indent_style&quot; is set to tab, it may be desirable to leave indent_size unspecified so readers may view the file using their preferred indentation width..
+        /// </summary>
+        internal static string ValidationIndentSizeUnneeded {
+            get {
+                return ResourceManager.GetString("ValidationIndentSizeUnneeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Values must not end with a {0}..
         /// </summary>
         internal static string ValidationInvalidEndChar {
             get {
@@ -142,7 +151,7 @@ namespace EditorConfig.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &quot;{0}&quot; is not a valid value for severity.
+        ///   Looks up a localized string similar to &quot;{0}&quot; is not a valid value for severity..
         /// </summary>
         internal static string ValidationInvalidSeverity {
             get {
@@ -151,7 +160,7 @@ namespace EditorConfig.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A value must be specified.
+        ///   Looks up a localized string similar to A value must be specified..
         /// </summary>
         internal static string ValidationMissingPropertyValue {
             get {
@@ -160,7 +169,7 @@ namespace EditorConfig.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A severity must be specified. Example: true:warning.
+        ///   Looks up a localized string similar to A severity must be specified. Example: true:warning..
         /// </summary>
         internal static string ValidationMissingSeverity {
             get {
@@ -179,7 +188,7 @@ namespace EditorConfig.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to This property is a duplicate of one in
-        ///&quot;{0}&quot; and can be safely removed.
+        ///&quot;{0}&quot; and can be safely removed..
         /// </summary>
         internal static string ValidationParentPropertyDuplicate {
             get {
@@ -188,7 +197,7 @@ namespace EditorConfig.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &quot;Root&quot; is only allowed in the beginning of the document.
+        ///   Looks up a localized string similar to &quot;Root&quot; is only allowed in the beginning of the document..
         /// </summary>
         internal static string ValidationRootInSection {
             get {
@@ -197,7 +206,7 @@ namespace EditorConfig.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sections must be surrounded by &quot;[&quot; and &quot;]&quot;.
+        ///   Looks up a localized string similar to Sections must be surrounded by &quot;[&quot; and &quot;]&quot;..
         /// </summary>
         internal static string ValidationSectionSyntaxError {
             get {
@@ -206,7 +215,7 @@ namespace EditorConfig.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The &quot;{0}&quot; property does not support a severity suffix.
+        ///   Looks up a localized string similar to The &quot;{0}&quot; property does not support a severity suffix..
         /// </summary>
         internal static string ValidationSeverityNotApplicable {
             get {
@@ -215,7 +224,16 @@ namespace EditorConfig.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Syntax error. Element not valid at current location.
+        ///   Looks up a localized string similar to There is no need to specify &quot;tab_width&quot; unless it differs from the value of &quot;indent_size&quot;..
+        /// </summary>
+        internal static string ValidationTabWidthUnneeded {
+            get {
+                return ResourceManager.GetString("ValidationTabWidthUnneeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Syntax error. Element not valid at current location..
         /// </summary>
         internal static string ValidationUnknownElement {
             get {

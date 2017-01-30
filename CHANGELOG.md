@@ -9,6 +9,7 @@
 - [x] Move schema into JSON file
 - [x] Show hover tooltip for values
 - [x] Add XMLDoc comments
+- [x] Add validation for unneeded properties
 - [ ] Swith icons to the official .editorconfig icon
 - [ ] Add item template for .editorconfig files
 

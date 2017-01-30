@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace EditorConfig
 {
+    /// <summary>A section is a globbing pattern matching one or more files.</summary>
     public class Section
     {
         public Section(ParseItem section)

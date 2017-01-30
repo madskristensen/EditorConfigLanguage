@@ -5,6 +5,7 @@ using System.Linq;
 
 namespace EditorConfig
 {
+    /// <summary>A representation of the .editorconfig document.</summary>
     sealed partial class EditorConfigDocument : IDisposable
     {
         private EditorConfigDocument(ITextBuffer buffer)

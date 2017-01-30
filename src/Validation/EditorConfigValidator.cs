@@ -19,6 +19,7 @@ namespace EditorConfig
         private bool _hasChanged, _validating;
         private bool _prevEnabled = EditorConfigPackage.ValidationOptions.EnableValidation;
         private Dictionary<string, bool> _globbingCache = new Dictionary<string, bool>();
+        private static readonly Options _options = new Options { AllowWindowsPaths = true, MatchBase = true };
 
         private EditorConfigValidator(EditorConfigDocument document)
         {
@@ -31,6 +32,7 @@ namespace EditorConfig
             ValidationOptions.Saved += DocumentParsedAsync;
         }
 
+        /// <summary>Gets or creates an instace of the validator and stores it in the text buffer properties.</summary>
         public static EditorConfigValidator FromDocument(EditorConfigDocument document)
         {
             return document.TextBuffer.Properties.GetOrCreateSingletonProperty(() => new EditorConfigValidator(document));
@@ -55,6 +57,7 @@ namespace EditorConfig
             _prevEnabled = EditorConfigPackage.ValidationOptions.EnableValidation;
         }
 
+        /// <summary>Schedules an async validation run.</summary>
         public async System.Threading.Tasks.Task RequestValidationAsync(bool force)
         {
             _lastRequestForValidation = DateTime.Now;
@@ -274,7 +277,7 @@ namespace EditorConfig
             }
         }
 
-        public static bool DoesFilesMatch(string folder, string pattern, string root = null)
+        private static bool DoesFilesMatch(string folder, string pattern, string root = null)
         {
             root = root ?? folder;
             pattern = pattern.Trim('[', ']');
@@ -310,9 +313,7 @@ namespace EditorConfig
             return false;
         }
 
-        private static readonly Options _options = new Options { AllowWindowsPaths = true, MatchBase = true };
-
-        public static bool CheckGlobbing(string path, string pattern)
+        private static bool CheckGlobbing(string path, string pattern)
         {
             string p = pattern?.TrimEnd('/');
 

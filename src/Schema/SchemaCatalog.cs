@@ -8,9 +8,12 @@ using System.Reflection;
 
 namespace EditorConfig
 {
+    /// <summary>Contains all the information about the properties of EditorConfig.</summary>
     public static class SchemaCatalog
     {
+        /// <summary>The name of the root keyword.</summary>
         public const string Root = "root";
+
         private static IEnumerable<Keyword> _allKeywords;
 
         static SchemaCatalog()
@@ -18,9 +21,13 @@ namespace EditorConfig
             ParseJson();
         }
 
+        /// <summary>A list of all visible keywords.</summary>
         public static IEnumerable<Keyword> Keywords { get; private set; }
+
+        /// <summary>A list of all severities.</summary>
         public static IEnumerable<Severity> Severities { get; private set; }
 
+        /// <summary>Tries to get a keyword by name.</summary>
         public static bool TryGetKeyword(string name, out Keyword keyword)
         {
             keyword = _allKeywords.FirstOrDefault(c => c.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
@@ -28,6 +35,7 @@ namespace EditorConfig
             return keyword != null;
         }
 
+        /// <summary>Tries to get a severity by name.</summary>
         public static bool TryGetSeverity(string name, out Severity severity)
         {
             severity = Severities.FirstOrDefault(s => s.Name.Equals(name, StringComparison.OrdinalIgnoreCase));

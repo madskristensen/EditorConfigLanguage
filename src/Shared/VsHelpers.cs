@@ -36,6 +36,7 @@ namespace EditorConfig
             }
         }
 
+        /// <summary>Gets the root folder of any Visual Studio project.</summary>
         public static string GetRootFolder(this Project project)
         {
             if (project == null)

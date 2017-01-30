@@ -4,6 +4,7 @@ using System;
 
 namespace EditorConfig
 {
+    /// <summary>The value of a property.</summary>
     public class Value : ITooltip
     {
         private bool _isUnset;
@@ -18,9 +19,16 @@ namespace EditorConfig
             Moniker = KnownMonikers.EnumerationItemPublic;
         }
 
+        /// <summary>The value text.</summary>
         public string Name { get; }
+
+        /// <summary>The value description.</summary>
         public string Description { get; }
+
+        /// <summary>The image moniker shown in Intellisense and QuickInfo.</summary>
         public ImageMoniker Moniker { get; }
+
+        /// <summary>True if the value is supported by Visual Studio.</summary>
         public bool IsSupported { get; }
     }
 }

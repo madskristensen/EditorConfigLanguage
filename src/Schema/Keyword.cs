@@ -6,6 +6,7 @@ using System.Linq;
 
 namespace EditorConfig
 {
+    /// <summary>The keyword is the name-part of a property.</summary>
     public class Keyword : ITooltip
     {
         public Keyword(string name, string description, IEnumerable<string> values, bool unsupported, bool hidden)
@@ -17,12 +18,22 @@ namespace EditorConfig
             IsVisible = !hidden;
         }
 
+        /// <summary>The keyword of the property.</summary>
         public string Name { get; }
+
+        /// <summary>The description of the property.</summary>
         public string Description { get; }
+
+        /// <summary>A list of values applicable to the property.</summary>
         public IEnumerable<Value> Values { get; }
+
+        /// <summary>True if the property is supported by Visual Studio.</summary>
         public bool IsSupported { get; }
+
+        /// <summary>True if the property shows up in Intellisense.</summary>
         public bool IsVisible { get; }
 
+        /// <summary>The category is used in the Intellisense filters.</summary>
         public Category Category
         {
             get
@@ -41,6 +52,7 @@ namespace EditorConfig
             }
         }
 
+        /// <summary>The image moniker that represents the property.</summary>
         public ImageMoniker Moniker
         {
             get

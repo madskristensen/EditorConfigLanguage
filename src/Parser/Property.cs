@@ -2,6 +2,7 @@
 
 namespace EditorConfig
 {
+    /// <summary>A property is a keyword/value pair with an optional severity.</summary>
     public class Property
     {
         public Property(ParseItem keyword)

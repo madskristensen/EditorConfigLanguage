@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace EditorConfig
 {
+    /// <summary>A building block of the document.</summary>
     public class ParseItem
     {
         public ParseItem(EditorConfigDocument document, ItemType type, Span span, string text)
@@ -14,21 +15,28 @@ namespace EditorConfig
             Text = text;
         }
 
+        /// <summary>The document this item belongs to.</summary>
         public EditorConfigDocument Document { get; set; }
 
+        /// <summary>The span of this item in the text buffer.</summary>
         public Span Span { get; set; }
 
+        /// <summary>The type of item.</summary>
         public ItemType ItemType { get; set; }
 
+        /// <summary>The text of this item in the text buffer.</summary>
         public string Text { get; set; }
 
+        /// <summary>A list of validation errors.</summary>
         public List<Error> Errors { get; } = new List<Error>();
 
+        /// <summary>True if the item contains errors; otherwise false.</summary>
         public bool HasErrors
         {
             get { return Errors.Any(); }
         }
 
+        /// <summary>Adds an error to the Errors list if it doesn't already contain it.</summary>
         public void AddError(Error error)
         {
             if (!Errors.Any(e => e.ErrorCode == error.ErrorCode))

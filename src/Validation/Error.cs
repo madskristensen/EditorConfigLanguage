@@ -19,13 +19,23 @@ namespace EditorConfig
             Column = span.Start.Position - line.Start.Position;
         }
 
+        /// <summary>The error code is displayed in the Error List.</summary>
         public string ErrorCode { get; set; }
+
+        /// <summary>The error type determines how to display the error in the Error List.</summary>
         public ErrorType ErrorType { get; set; } = ErrorType.Warning;
+
+        /// <summary>A clear description of the error.</summary>
         public string Description { get; set; }
+
+        /// <summary>The line number containing the error.</summary>
         public int Line { get; }
+
+        /// <summary>The column number containing the error.</summary>
         public int Column { get; }
         public string HelpLink => string.Format(Constants.HelpLink, ErrorCode?.ToLowerInvariant());
 
+        /// <summary>The image moniker that represents the error.</summary>
         public ImageMoniker Moniker
         {
             get
@@ -42,6 +52,7 @@ namespace EditorConfig
             }
         }
 
+        /// <summary>The name of the error which is always the error type.</summary>
         public string Name
         {
             get
@@ -50,6 +61,7 @@ namespace EditorConfig
             }
         }
 
+        /// <summary>Always returns true.</summary>
         public bool IsSupported => true;
 
         public override int GetHashCode()

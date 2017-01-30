@@ -16,8 +16,10 @@ namespace EditorConfig
         [Import]
         private ITextDocumentFactoryService DocumentService { get; set; }
 
+        /// <summary>The absolute file path to the .editorconfig document.</summary>
         public string FileName { get; private set; }
 
+        /// <summary>Returns a parent document if one exist.</summary>
         public EditorConfigDocument Parent
         {
             get

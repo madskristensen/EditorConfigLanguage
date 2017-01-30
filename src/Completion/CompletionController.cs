@@ -124,7 +124,31 @@ namespace EditorConfig
             }
             else
             {
+                string moniker = _currentSession.SelectedCompletionSet.Moniker;
                 _currentSession.Commit();
+
+                var position = TextView.Caret.Position.BufferPosition;
+
+                if (moniker == "keyword")
+                {
+                    TextView.TextBuffer.Insert(position, " = ");
+                    StartSession();
+                }
+                else if (moniker == "value")
+                {
+                    var document = EditorConfigDocument.FromTextBuffer(TextView.TextBuffer);
+                    var prop = document.PropertyAtPosition(position - 1);
+
+                    if (SchemaCatalog.TryGetKeyword(prop.Keyword.Text, out Keyword keyword) && prop.Value != null)
+                    {
+                        if (keyword.RequiresSeverity && prop.Value.Text.Is("true"))
+                        {
+                            TextView.TextBuffer.Insert(position, ":");
+                            StartSession();
+                        }
+                    }
+                }
+
                 return true;
             }
         }

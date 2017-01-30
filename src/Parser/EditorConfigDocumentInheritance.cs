@@ -24,7 +24,7 @@ namespace EditorConfig
         {
             get
             {
-                if (Root != null && Root.IsValid && Root.Value.Text.Equals("true", StringComparison.OrdinalIgnoreCase) && Root.Severity == null)
+                if (Root != null && Root.IsValid && Root.Value.Text.Is("true") && Root.Severity == null)
                     return null;
 
                 if (_parent == null)

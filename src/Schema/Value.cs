@@ -11,7 +11,7 @@ namespace EditorConfig
 
         public Value(string name)
         {
-            _isUnset = string.Equals(name, "unset", StringComparison.OrdinalIgnoreCase);
+            _isUnset = name.Is("unset");
 
             Name = name;
             Description = GetDescription();

@@ -53,7 +53,7 @@ namespace EditorConfig
             }
             else if (item.ItemType == ItemType.Value)
             {
-                var value = keyword.Values.FirstOrDefault(v => v.Name.Equals(item.Text, StringComparison.OrdinalIgnoreCase));
+                var value = keyword.Values.FirstOrDefault(v => v.Name.Is(item.Text));
 
                 if (value != null && !string.IsNullOrEmpty(value.Description))
                     qiContent.Add(new Shared.EditorTooltip(value));

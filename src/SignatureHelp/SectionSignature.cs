@@ -87,9 +87,7 @@ namespace EditorConfig
         {
             get
             {
-                IList<IParameter> parameters = new List<IParameter>();
-                parameters.Add(_nameParam);
-
+                var parameters = new List<IParameter> { _nameParam };
                 return new ReadOnlyCollection<IParameter>(parameters);
             }
         }

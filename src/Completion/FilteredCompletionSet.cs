@@ -14,8 +14,8 @@ namespace EditorConfig
         private string _typed;
         private static List<Span> _defaultEmptyList = new List<Span>();
 
-        public FilteredCompletionSet(ITrackingSpan applicableTo, IEnumerable<Completion> completions, IEnumerable<Completion> completionBuilders, IReadOnlyList<IIntellisenseFilter> filters)
-            : base("All", "All", applicableTo, completions, completionBuilders, filters)
+        public FilteredCompletionSet(string moniker, ITrackingSpan applicableTo, IEnumerable<Completion> completions, IEnumerable<Completion> completionBuilders, IReadOnlyList<IIntellisenseFilter> filters)
+            : base(moniker, "All", applicableTo, completions, completionBuilders, filters)
         {
             _completions.AddRange(completions);
             currentCompletions = new FilteredObservableCollection<Completion>(_completions);

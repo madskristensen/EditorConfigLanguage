@@ -70,7 +70,7 @@ namespace EditorConfig
             if (Span != other.Span)
                 return false;
 
-            return Text.Equals(other.Text, System.StringComparison.Ordinal);
+            return Text.Is(other.Text);
         }
 
         public static bool operator ==(ParseItem a, ParseItem b)

@@ -39,6 +39,7 @@ namespace EditorConfig
 
             var prev = _document.ParseItems.LastOrDefault(p => p.Span.Start < position && !p.Span.Contains(position - 1));
             var parseItem = _document.ItemAtPosition(position);
+            string moniker = null;
 
             // Property
             if (string.IsNullOrWhiteSpace(line.GetText()) || parseItem?.ItemType == ItemType.Keyword)
@@ -48,6 +49,8 @@ namespace EditorConfig
 
                 foreach (var property in items)
                     list.Add(CreateCompletion(property, property.Category));
+
+                moniker = "keyword";
             }
 
             // Value
@@ -56,8 +59,10 @@ namespace EditorConfig
                 if (SchemaCatalog.TryGetKeyword(prev.Text, out Keyword item))
                 {
                     foreach (var value in item.Values)
-                        list.Add(CreateCompletion(value));
+                        list.Add(CreateCompletion(value, iconAutomation: "value"));
                 }
+
+                moniker = "value";
             }
 
             // Severity
@@ -73,6 +78,8 @@ namespace EditorConfig
                     if (SchemaCatalog.TryGetKeyword(prop?.Keyword?.Text, out Keyword key) && key.RequiresSeverity)
                         AddSeverity(list);
                 }
+                moniker = "severity";
+
             }
 
             if (!list.Any())
@@ -89,6 +96,8 @@ namespace EditorConfig
                             foreach (var value in property.Values)
                                 list.Add(CreateCompletion(value));
                     }
+
+                    moniker = "value";
                 }
             }
             else
@@ -103,18 +112,14 @@ namespace EditorConfig
                     applicableTo = trackingSpan;
             }
 
-            CreateCompletionSet(completionSets, list, applicableTo);
+            CreateCompletionSet(moniker, completionSets, list, applicableTo);
         }
 
-        private static void CreateCompletionSet(IList<CompletionSet> completionSets, List<Completion4> list, ITrackingSpan applicableTo)
+        private static void CreateCompletionSet(string moniker, IList<CompletionSet> completionSets, List<Completion4> list, ITrackingSpan applicableTo)
         {
             if (list.Any())
             {
-                if (list.All(c => string.IsNullOrEmpty(c.IconAutomationText)))
-                {
-                    completionSets.Add(new FilteredCompletionSet(applicableTo, list, Enumerable.Empty<Completion4>(), null));
-                }
-                else
+                if (moniker == "keyword")
                 {
                     var filters = new[] {
                         new IntellisenseFilter(KnownMonikers.Property, "Standard rules (Alt + S)", "s", Category.Standard.ToString()),
@@ -122,7 +127,11 @@ namespace EditorConfig
                         new IntellisenseFilter(KnownMonikers.DotNET, "C# analysis rules (Alt + D)", "d", Category.DotNet.ToString()),
                     };
 
-                    completionSets.Add(new FilteredCompletionSet(applicableTo, list, Enumerable.Empty<Completion4>(), filters));
+                    completionSets.Add(new FilteredCompletionSet(moniker, applicableTo, list, Enumerable.Empty<Completion4>(), filters));
+                }
+                else
+                {
+                    completionSets.Add(new FilteredCompletionSet(moniker, applicableTo, list, Enumerable.Empty<Completion4>(), null));
                 }
             }
         }
@@ -135,10 +144,10 @@ namespace EditorConfig
             }
         }
 
-        private Completion4 CreateCompletion(ITooltip item, Category category = Category.None)
+        private Completion4 CreateCompletion(ITooltip item, Category category = Category.None, string iconAutomation = null)
         {
             IEnumerable<CompletionIcon2> icon = null;
-            string automationText = null;
+            string automationText = iconAutomation;
             string text = item.Name;
 
             if (int.TryParse(item.Name, out int integer))

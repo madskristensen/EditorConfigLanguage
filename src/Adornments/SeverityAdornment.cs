@@ -38,7 +38,7 @@ namespace EditorConfig
                 return;
 
             string text = tag.ParseItem.Text.ToLowerInvariant();
-            var severity = SchemaCatalog.Severities.SingleOrDefault(s => s.Name.Equals(text, StringComparison.OrdinalIgnoreCase));
+            var severity = SchemaCatalog.Severities.SingleOrDefault(s => s.Name.Is(text));
             if (severity != null)
             {
                 Source = GetBitmapSource(severity);

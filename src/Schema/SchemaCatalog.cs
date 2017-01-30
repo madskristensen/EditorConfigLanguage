@@ -30,7 +30,7 @@ namespace EditorConfig
         /// <summary>Tries to get a keyword by name.</summary>
         public static bool TryGetKeyword(string name, out Keyword keyword)
         {
-            keyword = _allKeywords.FirstOrDefault(c => c.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            keyword = _allKeywords.FirstOrDefault(c => c.Name.Is(name));
 
             return keyword != null;
         }
@@ -38,7 +38,7 @@ namespace EditorConfig
         /// <summary>Tries to get a severity by name.</summary>
         public static bool TryGetSeverity(string name, out Severity severity)
         {
-            severity = Severities.FirstOrDefault(s => s.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            severity = Severities.FirstOrDefault(s => s.Name.Is(name));
             return severity != null;
         }
 

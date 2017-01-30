@@ -10,6 +10,7 @@
 - [x] Show hover tooltip for values
 - [x] Add XMLDoc comments
 - [x] Add validation for unneeded properties
+- [x] Insert "=" and ":" on Intellisense commit
 - [ ] Swith icons to the official .editorconfig icon
 - [ ] Add item template for .editorconfig files
 

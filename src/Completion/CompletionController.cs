@@ -127,6 +127,9 @@ namespace EditorConfig
                 string moniker = _currentSession.SelectedCompletionSet.Moniker;
                 _currentSession.Commit();
 
+                if (!EditorConfigPackage.CompletionOptions.AutoInsertDelimiters)
+                    return true;
+
                 var position = TextView.Caret.Position.BufferPosition;
 
                 if (moniker == "keyword")

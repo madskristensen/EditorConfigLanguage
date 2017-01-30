@@ -17,6 +17,7 @@ namespace EditorConfig
     [ProvideLanguageExtension(typeof(EditorConfigLanguage), Constants.FileName)]
     [ProvideLanguageEditorOptionPage(typeof(FormatterOptions), Constants.LanguageName, null, "Formatting", "#101", new[] { "editorconfig", "formatting" })]
     [ProvideLanguageEditorOptionPage(typeof(ValidationOptions), Constants.LanguageName, null, "Validation", "#102", new[] { "editorconfig", "validation" })]
+    [ProvideLanguageEditorOptionPage(typeof(CompletionOptions), Constants.LanguageName, null, "Intellisense", "#103", new[] { "editorconfig", "intellisenes", "completion" })]
 
     [ProvideEditorFactory(typeof(EditorFactory), 110, CommonPhysicalViewAttributes = (int)__VSPHYSICALVIEWATTRIBUTES.PVA_SupportsPreview, TrustLevel = __VSEDITORTRUSTLEVEL.ETL_AlwaysTrusted)]
     [ProvideEditorLogicalView(typeof(EditorFactory), VSConstants.LOGVIEWID.TextView_string, IsTrusted = true)]
@@ -44,11 +45,18 @@ namespace EditorConfig
             private set;
         }
 
+        public static CompletionOptions CompletionOptions
+        {
+            get;
+            private set;
+        }
+
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
             Language = new EditorConfigLanguage(this);
             FormatterOptions = (FormatterOptions)GetDialogPage(typeof(FormatterOptions));
             ValidationOptions = (ValidationOptions)GetDialogPage(typeof(ValidationOptions));
+            CompletionOptions = (CompletionOptions)GetDialogPage(typeof(CompletionOptions));
 
             var serviceContainer = this as IServiceContainer;
             serviceContainer.AddService(typeof(EditorConfigLanguage), Language, true);

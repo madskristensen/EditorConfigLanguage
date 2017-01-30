@@ -45,7 +45,8 @@ namespace EditorConfig
             if (string.IsNullOrWhiteSpace(line.GetText()) || parseItem?.ItemType == ItemType.Keyword)
             {
                 var isInRoot = !_document.ParseItems.Exists(p => p.ItemType == ItemType.Section && p.Span.Start < position);
-                var items = isInRoot ? SchemaCatalog.Keywords : SchemaCatalog.Keywords.Where(i => i.Name != SchemaCatalog.Root);
+                var properties = EditorConfigPackage.CompletionOptions.ShowHiddenKeywords ? SchemaCatalog.AllKeywords : SchemaCatalog.VisibleKeywords;
+                var items = isInRoot ? SchemaCatalog.VisibleKeywords : properties.Where(i => i.Name != SchemaCatalog.Root);
 
                 foreach (var property in items)
                     list.Add(CreateCompletion(property, property.Category));
@@ -68,18 +69,20 @@ namespace EditorConfig
             // Severity
             else if ((position > 0 && snapshot.Length > 1 && snapshot.GetText(position - 1, 1) == ":") || parseItem?.ItemType == ItemType.Severity)
             {
-                if (parseItem?.ItemType == ItemType.Unknown) // Colon was typed
+                //if (parseItem?.ItemType == ItemType.Unknown) // Colon was typed
+                //{
+                //    AddSeverity(list);
+                //}
+                //else
+                //{
+                if (prev?.ItemType == ItemType.Value && prev.Text.Is("true"))
                 {
-                    AddSeverity(list);
-                }
-                else
-                {
-                    var prop = _document.PropertyAtPosition(position);
+                    var prop = _document.PropertyAtPosition(prev.Span.Start);
                     if (SchemaCatalog.TryGetKeyword(prop?.Keyword?.Text, out Keyword key) && key.RequiresSeverity)
                         AddSeverity(list);
+                    //}
+                    moniker = "severity";
                 }
-                moniker = "severity";
-
             }
 
             if (!list.Any())

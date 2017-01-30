@@ -11,6 +11,7 @@
 - [x] Add XMLDoc comments
 - [x] Add validation for unneeded properties
 - [x] Insert "=" and ":" on Intellisense commit
+- [x] Added Intellisense options
 - [ ] Switch icons to the official .editorconfig icon
 - [ ] Add item template for .editorconfig files
 

@@ -64,7 +64,7 @@ namespace EditorConfig
 
         private bool DoesCompletionMatchAutomationText(Completion completion)
         {
-            return _activeFilters.Exists(x => x.Equals(completion.IconAutomationText, StringComparison.OrdinalIgnoreCase)) &&
+            return _activeFilters.Exists(x => x.Is(completion.IconAutomationText)) &&
                   (_typed.Length == 0 || GetHighlightedSpansInDisplayText(completion.DisplayText).Count > 0);
         }
 
@@ -75,13 +75,14 @@ namespace EditorConfig
 
         public static List<Span> GetHighlightedSpans(string displayText, string typed)
         {
+            string typedLower = typed.ToLowerInvariant();
             var matches = new SortedList<int, Span>();
             string match = string.Empty;
             int startIndex = 0;
 
-            for (int i = 0; i < typed.Length; i++)
+            for (int i = 0; i < typedLower.Length; i++)
             {
-                char c = typed[i];
+                char c = typedLower[i];
 
                 if (!displayText.Contains(match + c))
                 {

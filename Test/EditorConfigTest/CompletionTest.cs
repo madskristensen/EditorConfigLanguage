@@ -27,6 +27,9 @@ namespace EditorConfigTest
 
             var nonMatch = FilteredCompletionSet.GetHighlightedSpans("test", "l");
             Assert.AreEqual(0, nonMatch.Count);
+
+            var cha = FilteredCompletionSet.GetHighlightedSpans("charset", "CHAR");
+            Assert.AreEqual(1, cha.Count);
         }
     }
 }

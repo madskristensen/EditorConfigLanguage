@@ -41,10 +41,10 @@ namespace EditorConfig
             var parseItem = _document.ItemAtPosition(position);
 
             // Property
-            if (string.IsNullOrWhiteSpace(line.GetText()) || parseItem?.ItemType == ItemType.Property)
+            if (string.IsNullOrWhiteSpace(line.GetText()) || parseItem?.ItemType == ItemType.Keyword)
             {
                 var isInRoot = !_document.ParseItems.Exists(p => p.ItemType == ItemType.Section && p.Span.Start < position);
-                var items = isInRoot ? SchemaCatalog.Properties : SchemaCatalog.Properties.Where(i => i.Name != SchemaCatalog.Root);
+                var items = isInRoot ? SchemaCatalog.Keywords : SchemaCatalog.Keywords.Where(i => i.Name != SchemaCatalog.Root);
 
                 foreach (var property in items)
                     list.Add(CreateCompletion(property, property.Category));
@@ -53,7 +53,7 @@ namespace EditorConfig
             // Value
             else if (parseItem?.ItemType == ItemType.Value)
             {
-                if (SchemaCatalog.TryGetProperty(prev.Text, out Keyword item))
+                if (SchemaCatalog.TryGetKeyword(prev.Text, out Keyword item))
                 {
                     foreach (var value in item.Values)
                         list.Add(CreateCompletion(value));
@@ -70,14 +70,14 @@ namespace EditorConfig
                 else
                 {
                     var prop = _document.PropertyAtPosition(position);
-                    if (SchemaCatalog.TryGetProperty(prop?.Keyword?.Text, out Keyword key) && key.RequiresSeverity)
+                    if (SchemaCatalog.TryGetKeyword(prop?.Keyword?.Text, out Keyword key) && key.RequiresSeverity)
                         AddSeverity(list);
                 }
             }
 
             if (!list.Any())
             {
-                if (SchemaCatalog.TryGetProperty(prev?.Text, out Keyword property))
+                if (SchemaCatalog.TryGetKeyword(prev?.Text, out Keyword property))
                 {
                     var eq = line.GetText().IndexOf("=");
 
@@ -85,7 +85,7 @@ namespace EditorConfig
                     {
                         var eqPos = eq + line.Start.Position;
 
-                        if (triggerPoint.Value.Position > eqPos)
+                        if (position > eqPos)
                             foreach (var value in property.Values)
                                 list.Add(CreateCompletion(value));
                     }
@@ -154,7 +154,10 @@ namespace EditorConfig
                 automationText = category.ToString();
             }
 
-            return new Completion4(text, item.Name, item.Description, item.Moniker, automationText, icon);
+            var completion = new Completion4(text, item.Name, item.Description, item.Moniker, automationText, icon);
+            completion.Properties.AddProperty("item", item);
+
+            return completion;
         }
 
         private ITrackingSpan FindTokenSpanAtPosition(ICompletionSession session)

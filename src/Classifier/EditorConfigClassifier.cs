@@ -17,7 +17,7 @@ namespace EditorConfig
             _map = _map ?? new Dictionary<ItemType, IClassificationType> {
                 { ItemType.Comment, registry.GetClassificationType(PredefinedClassificationTypeNames.Comment)},
                 { ItemType.Section, registry.GetClassificationType(PredefinedClassificationTypeNames.String)},
-                { ItemType.Property, registry.GetClassificationType(PredefinedClassificationTypeNames.Identifier)},
+                { ItemType.Keyword, registry.GetClassificationType(PredefinedClassificationTypeNames.Identifier)},
                 { ItemType.Value, registry.GetClassificationType(PredefinedClassificationTypeNames.Keyword)},
                 { ItemType.Severity, registry.GetClassificationType(PredefinedClassificationTypeNames.SymbolDefinition)},
             };

@@ -10,28 +10,17 @@ namespace EditorConfig
 
         public Value(string name)
         {
-            Name = name;
             _isUnset = string.Equals(name, "unset", StringComparison.OrdinalIgnoreCase);
+
+            Name = name;
+            Description = _isUnset ? Resources.Text.ValueUnset : null;
+            IsSupported = !_isUnset;
+            Moniker = KnownMonikers.EnumerationItemPublic;
         }
 
         public string Name { get; }
-
-        public string Description
-        {
-            get
-            {
-                if (_isUnset)
-                    return "For any standard property, a value of \"unset\" is to remove the effect of that property, even if it has been set before.";
-
-                return null;
-            }
-        }
-
-        public ImageMoniker Moniker => KnownMonikers.EnumerationItemPublic;
-
-        public bool IsSupported
-        {
-            get { return !_isUnset; }
-        }
+        public string Description { get; }
+        public ImageMoniker Moniker { get; }
+        public bool IsSupported { get; }
     }
 }

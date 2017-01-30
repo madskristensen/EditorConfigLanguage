@@ -8,6 +8,7 @@
 - [x] Mark "unset" value as unsupported
 - [x] Move schema into JSON file
 - [x] Show hover tooltip for values
+- [ ] Add XMLDoc comments
 - [ ] Swith icons to the official .editorconfig icon
 - [ ] Add item template for .editorconfig files
 

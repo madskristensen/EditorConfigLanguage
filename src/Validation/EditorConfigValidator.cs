@@ -235,7 +235,7 @@ namespace EditorConfig
         private void ValidateProperty(Property property)
         {
             // Unknown keyword
-            if (EditorConfigPackage.ValidationOptions.EnableUnknownProperties & !SchemaCatalog.TryGetProperty(property.Keyword.Text, out Keyword keyword))
+            if (EditorConfigPackage.ValidationOptions.EnableUnknownProperties & !SchemaCatalog.TryGetKeyword(property.Keyword.Text, out Keyword keyword))
             {
                 PredefinedErrors.UnknownKeyword(property.Keyword);
             }
@@ -249,8 +249,7 @@ namespace EditorConfig
             // Value not in schema
             else if (EditorConfigPackage.ValidationOptions.EnableUnknownValues &&
                 !keyword.Values.Any(v => v.Name.Equals(property.Value?.Text, StringComparison.OrdinalIgnoreCase)) &&
-                !(int.TryParse(property.Value.Text, out int intValue) && intValue > 0) &&
-                !(keyword.Category == Category.Standard && property.Value?.Text == "unset"))
+                !(int.TryParse(property.Value.Text, out int intValue) && intValue > 0))
             {
                 PredefinedErrors.UnknownValue(property.Value, keyword.Name);
             }

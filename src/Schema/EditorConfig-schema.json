@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema",
-  "type": "array",
+  "type": "object",
 
   "definitions": {
     "keyword": {
@@ -25,10 +25,35 @@
           "enum": [ true ]
         }
       }
+    },
+    "severities": {
+      "type": "object",
+      "required": ["name", "description"],
+      "additionalProperties": false,
+
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
     }
   },
 
-  "items": {
-    "$ref": "#/definitions/keyword"
+  "properties": {
+    "properties": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/keyword"
+      }
+    },
+    "severities": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/severities"
+      }
+    }
   }
 }

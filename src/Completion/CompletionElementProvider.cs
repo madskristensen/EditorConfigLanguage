@@ -12,13 +12,11 @@ namespace EditorConfig
     {
         public UIElement GetUIElement(Completion itemToRender, ICompletionSession context, UIElementType elementType)
         {
-            if (elementType == UIElementType.Tooltip)
+            if (elementType == UIElementType.Tooltip &&
+                itemToRender.Properties.TryGetProperty("item", out ITooltip item) &&
+                !string.IsNullOrEmpty(item.Description))
             {
-                if (SchemaCatalog.TryGetProperty(itemToRender.DisplayText, out Keyword prop))
-                    return new Shared.EditorTooltip(prop);
-
-                if (SchemaCatalog.TryGetSeverity(itemToRender.DisplayText, out Severity severity))
-                    return new Shared.EditorTooltip(severity);
+                return new Shared.EditorTooltip(item);
             }
 
             return null;

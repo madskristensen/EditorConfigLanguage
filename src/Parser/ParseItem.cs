@@ -86,7 +86,7 @@ namespace EditorConfig
     {
         Comment,
         Section,
-        Property,
+        Keyword,
         Value,
         Severity,
         Unknown

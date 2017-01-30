@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -30,39 +31,37 @@ namespace EditorConfig
             if (item == null)
                 return;
 
+            applicableToSpan = point.Value.Snapshot.CreateTrackingSpan(item.Span, SpanTrackingMode.EdgeNegative);
+
             if (item.Errors.Any())
             {
                 foreach (var error in item.Errors)
                 {
                     qiContent.Add(new Shared.EditorTooltip(error));
-                    break;
+                    return;
                 }
             }
-            else if (item.ItemType == ItemType.Property && SchemaCatalog.TryGetProperty(item.Text, out Keyword property))
+
+            var property = _document.PropertyAtPosition(point.Value);
+
+            if (!SchemaCatalog.TryGetKeyword(property?.Keyword?.Text, out Keyword keyword))
+                return;
+
+            if (item.ItemType == ItemType.Keyword)
             {
-                qiContent.Add(new Shared.EditorTooltip(property));
+                qiContent.Add(new Shared.EditorTooltip(keyword));
             }
             else if (item.ItemType == ItemType.Value)
             {
-                var index = _document.ParseItems.IndexOf(item);
+                var value = keyword.Values.FirstOrDefault(v => v.Name.Equals(item.Text, StringComparison.OrdinalIgnoreCase));
 
-                if (index > 0)
-                {
-                    var prev = _document.ParseItems.ElementAt(index - 1);
-                    if (prev.ItemType == ItemType.Property && SchemaCatalog.TryGetProperty(prev.Text, out Keyword keyword))
-                    {
-                        var value = keyword.Values.FirstOrDefault(v => v.Name == item.Text && !string.IsNullOrEmpty(v.Description));
-                        if (value != null)
-                            qiContent.Add(new Shared.EditorTooltip(value));
-                    }
-                }
+                if (value != null && !string.IsNullOrEmpty(value.Description))
+                    qiContent.Add(new Shared.EditorTooltip(value));
             }
             else if (item.ItemType == ItemType.Severity && SchemaCatalog.TryGetSeverity(item.Text, out Severity severity))
             {
                 qiContent.Add(new Shared.EditorTooltip(severity));
             }
-
-            applicableToSpan = point.Value.Snapshot.CreateTrackingSpan(item.Span, SpanTrackingMode.EdgeNegative);
         }
 
         public void Dispose()

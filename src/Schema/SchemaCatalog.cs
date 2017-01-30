@@ -1,5 +1,5 @@
-﻿using Microsoft.VisualStudio.Imaging;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,22 +11,21 @@ namespace EditorConfig
     public static class SchemaCatalog
     {
         public const string Root = "root";
-        private static IEnumerable<Keyword> _allProperties;
+        private static IEnumerable<Keyword> _allKeywords;
 
         static SchemaCatalog()
         {
-            PopulateKeywords();
-            PopulateSeverities();
+            ParseJson();
         }
 
-        public static IEnumerable<Keyword> Properties { get; private set; }
+        public static IEnumerable<Keyword> Keywords { get; private set; }
         public static IEnumerable<Severity> Severities { get; private set; }
 
-        public static bool TryGetProperty(string name, out Keyword property)
-        {   
-            property = _allProperties.FirstOrDefault(c => c.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+        public static bool TryGetKeyword(string name, out Keyword keyword)
+        {
+            keyword = _allKeywords.FirstOrDefault(c => c.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
 
-            return property != null;
+            return keyword != null;
         }
 
         public static bool TryGetSeverity(string name, out Severity severity)
@@ -35,24 +34,17 @@ namespace EditorConfig
             return severity != null;
         }
 
-        private static void PopulateKeywords()
+        private static void ParseJson()
         {
             string assembly = Assembly.GetExecutingAssembly().Location;
             string folder = Path.GetDirectoryName(assembly);
-            string file = Path.Combine(folder, "schema\\Keywords.json");
+            string file = Path.Combine(folder, "schema\\EditorConfig.json");
 
-            _allProperties = JsonConvert.DeserializeObject<IEnumerable<Keyword>>(File.ReadAllText(file));
-            Properties = _allProperties.Where(p => p.IsVisible);
-        }
+            var obj = JObject.Parse(File.ReadAllText(file));
 
-        private static void PopulateSeverities()
-        {
-            Severities = new[] {
-                new Severity("none", Resources.Text.SeverityNone, KnownMonikers.None),
-                new Severity("suggestion", Resources.Text.SeveritySuggestion, KnownMonikers.StatusInformation),
-                new Severity("warning", Resources.Text.SeverityWarning, KnownMonikers.StatusWarning),
-                new Severity("error", Resources.Text.SeverityError, KnownMonikers.StatusError)
-            };
+            Severities = JsonConvert.DeserializeObject<IEnumerable<Severity>>(obj["severities"].ToString());
+            _allKeywords = JsonConvert.DeserializeObject<IEnumerable<Keyword>>(obj["properties"].ToString());
+            Keywords = _allKeywords.Where(p => p.IsVisible);
         }
     }
 }

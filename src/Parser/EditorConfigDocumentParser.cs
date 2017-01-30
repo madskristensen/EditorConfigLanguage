@@ -63,7 +63,7 @@ namespace EditorConfig
                     // Property
                     else if (IsMatch(_property, text, out match))
                     {
-                        var keyword = CreateParseItem(ItemType.Property, line, match.Groups["keyword"]);
+                        var keyword = CreateParseItem(ItemType.Keyword, line, match.Groups["keyword"]);
                         AddToList(items, keyword);
 
                         var property = new Property(keyword);

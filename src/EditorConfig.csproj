@@ -175,17 +175,21 @@
       <LastGenOutput>CommandTable.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </VSCTCompile>
-    <Content Include="FileIcons\icons.pkgdef">
+    <Content Include="icons.pkgdef">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="..\LICENSE">
       <Link>Resources\LICENSE</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Content Include="Monikers.imagemanifest">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
     <None Include="Schema\EditorConfig-schema.json" />
+    <Resource Include="Resources\ButtonIcon.png" />
     <Content Include="Schema\EditorConfig.json">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
@@ -360,6 +364,7 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.8.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />

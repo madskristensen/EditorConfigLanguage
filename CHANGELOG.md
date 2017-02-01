@@ -5,7 +5,7 @@
 - [x] Intellisenes triggers on `,` for supported properties
 - [x] Made new line rules visible
 - [x] Source code adhering to Roslyn coding standards
-- [ ] Switch icons to the official .editorconfig icon
+- [x] Switch icons to the official .editorconfig icon
 - [ ] Add item template for .editorconfig files
 
 Features that have a checkmark are complete and available for

@@ -16,10 +16,12 @@ namespace EditorConfig
         public const string guidEditorFactoryString = "13cabf99-9eae-4ecc-a6f4-89f3ad54dc83";
         public const string guidEditorConfigPackageCmdSetString = "13cabf99-9eae-4ecc-a6f4-89f3ad54dc83";
         public const string guidWorkspaceExplorerToolWindowPackageCmdSetString = "cfb400f1-5c60-4f3c-856e-180d28def0b7";
+        public const string iconsString = "666770e6-562f-46d7-a555-3a0cdffe94d2";
         public static Guid guidEditorConfigPackage = new Guid(guidEditorConfigPackageString);
         public static Guid guidEditorFactory = new Guid(guidEditorFactoryString);
         public static Guid guidEditorConfigPackageCmdSet = new Guid(guidEditorConfigPackageCmdSetString);
         public static Guid guidWorkspaceExplorerToolWindowPackageCmdSet = new Guid(guidWorkspaceExplorerToolWindowPackageCmdSetString);
+        public static Guid icons = new Guid(iconsString);
     }
     /// <summary>
     /// Helper class that encapsulates all CommandIDs uses across VS Package.
@@ -34,5 +36,6 @@ namespace EditorConfig
         public const int OpenSettingsId = 0x0300;
         public const int NavigateToParentId = 0x0400;
         public const int idmAddNew = 0x2200;
+        public const int logo = 0x0001;
     }
 }

@@ -14,7 +14,7 @@
 
     <Buttons>
       <Button guid="guidEditorConfigPackageCmdSet" id="CreateEditorConfigFileId" priority="0x0500" type="Button">
-        <Icon guid="ImageCatalogGuid" id="VisualStudioSettingsFile" />
+        <Icon guid="icons" id="logo" />
         <CommandFlag>IconIsMoniker</CommandFlag>
         <Strings>
           <ButtonText>.editorconfig File</ButtonText>
@@ -22,7 +22,7 @@
         </Strings>
       </Button>
       <Button guid="guidEditorConfigPackageCmdSet" id="CreateEditorConfigFileAnyCodeId" priority="0x0500" type="Button">
-        <Icon guid="ImageCatalogGuid" id="VisualStudioSettingsFile" />
+        <Icon guid="icons" id="logo" />
         <CommandFlag>IconIsMoniker</CommandFlag>
         <Strings>
           <ButtonText>.editorconfig File</ButtonText>
@@ -108,6 +108,10 @@
     <!-- The AnyCode AddNewItem menu -->
     <GuidSymbol name="guidWorkspaceExplorerToolWindowPackageCmdSet" value="{cfb400f1-5c60-4f3c-856e-180d28def0b7}">
       <IDSymbol name="idmAddNew" value="0x2200"/>
+    </GuidSymbol>
+
+    <GuidSymbol name="icons" value="{666770e6-562f-46d7-a555-3a0cdffe94d2}">
+      <IDSymbol name="logo" value="1" />
     </GuidSymbol>
   </Symbols>
 </CommandTable>

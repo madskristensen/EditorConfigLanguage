@@ -17,10 +17,11 @@ namespace EditorConfigTest
 
         public Mef()
         {
-            var folder = new DirectoryInfo(@"..\..\..\..\lib\").FullName;
-            var editor = Assembly.LoadFrom(folder + "Microsoft.VisualStudio.Platform.VSEditor.dll");
-            var interop = Assembly.LoadFrom(folder + "Microsoft.VisualStudio.Platform.VSEditor.interop.dll");
-            var text = Assembly.LoadFrom(folder + "Microsoft.VisualStudio.Text.Internal.dll");
+            var lib = new DirectoryInfo(@"..\..\..\..\lib\").FullName;
+
+            var editor = Assembly.LoadFrom(lib + "Microsoft.VisualStudio.Platform.VSEditor.dll");
+            var interop = Assembly.LoadFrom(lib + "Microsoft.VisualStudio.Platform.VSEditor.interop.dll");
+            var text = Assembly.LoadFrom(lib + "Microsoft.VisualStudio.Text.Internal.dll");
 
             AggregateCatalog catalog = new AggregateCatalog();
             catalog.Catalogs.Add(new AssemblyCatalog(editor));
@@ -34,7 +35,7 @@ namespace EditorConfigTest
             container.SatisfyImportsOnce(this);
         }
 
-        public static ITextBuffer CreateTextbuffer(string text)
+        public static ITextBuffer CreateTextBuffer(string text)
         {
             var mef =  new Mef();
             return mef.TextBufferService.CreateTextBuffer(text, mef.ContentTypeService.UnknownContentType);

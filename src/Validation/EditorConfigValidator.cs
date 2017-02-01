@@ -92,7 +92,7 @@ namespace EditorConfig
 
         private void ClearAllErrors()
         {
-            foreach (var item in _document.ParseItems.Where(i => i.Errors.Any()))
+            foreach (ParseItem item in _document.ParseItems.Where(i => i.Errors.Any()))
             {
                 item.Errors.Clear();
             }
@@ -108,7 +108,7 @@ namespace EditorConfig
             {
                 try
                 {
-                    foreach (var item in _document.ParseItems.Where(i => i.ItemType == ItemType.Unknown))
+                    foreach (ParseItem item in _document.ParseItems.Where(i => i.ItemType == ItemType.Unknown))
                     {
                         ValidateUnknown(item);
                     }
@@ -116,7 +116,7 @@ namespace EditorConfig
                     ValidateRootProperties();
                     ValidateSections();
 
-                    foreach (var property in _document.Properties)
+                    foreach (Property property in _document.Properties)
                     {
                         ValidateProperty(property);
                     }
@@ -144,11 +144,11 @@ namespace EditorConfig
         {
             List<EditorConfigDocument> parents = GetAllParentDocuments();
 
-            foreach (var section in _document.Sections)
+            foreach (Section section in _document.Sections)
             {
-                var parentSections = parents.SelectMany(d => d.Sections).Where(s => s.Item.Text == section.Item.Text);
+                IEnumerable<Section> parentSections = parents.SelectMany(d => d.Sections).Where(s => s.Item.Text == section.Item.Text);
 
-                foreach (var property in section.Properties)
+                foreach (Property property in section.Properties)
                 {
                     ValidateProperty(property);
 
@@ -173,10 +173,10 @@ namespace EditorConfig
                     // Parent duplicate
                     if (EditorConfigPackage.ValidationOptions.EnableDuplicateFoundInParent && !property.Keyword.Errors.Any() && parentSections.Any())
                     {
-                        var parentProperties = parentSections.SelectMany(s => s.Properties.Where(p => p.ToString() == property.ToString()));
+                        IEnumerable<Property> parentProperties = parentSections.SelectMany(s => s.Properties.Where(p => p.ToString() == property.ToString()));
                         if (parentProperties.Any())
                         {
-                            var fileName = PackageUtilities.MakeRelative(_document.FileName, parentProperties.First().Keyword.Document.FileName);
+                            string fileName = PackageUtilities.MakeRelative(_document.FileName, parentProperties.First().Keyword.Document.FileName);
                             PredefinedErrors.ParentDuplicateProperty(property.Keyword, fileName);
                         }
                     }
@@ -184,7 +184,7 @@ namespace EditorConfig
                     // tab_width should be different than indent_size
                     if (property.Keyword.Text.Is("tab_width"))
                     {
-                        var hasIndentSize = section.Properties.Any(p => p.IsValid && p.Keyword.Text.Is("indent_size") && p.Value.Text.Is(property.Value.Text));
+                        bool hasIndentSize = section.Properties.Any(p => p.IsValid && p.Keyword.Text.Is("indent_size") && p.Value.Text.Is(property.Value.Text));
                         if (hasIndentSize)
                             PredefinedErrors.TabWidthUnneeded(property.Keyword);
                     }
@@ -192,9 +192,9 @@ namespace EditorConfig
                     // Don't set indent_size when indent_style is set to tab
                     if (property.Keyword.Text.Is("indent_style") && property.Value.Text.Is("tab"))
                     {
-                        var indentSizes = section.Properties.Where(p => p.IsValid && p.Keyword.Text.Is("indent_size"));
+                        IEnumerable<Property> indentSizes = section.Properties.Where(p => p.IsValid && p.Keyword.Text.Is("indent_size"));
 
-                        foreach (var indentSize in indentSizes)
+                        foreach (Property indentSize in indentSizes)
                         {
                             PredefinedErrors.IndentSizeUnneeded(indentSize.Keyword);
                         }
@@ -236,7 +236,7 @@ namespace EditorConfig
 
             if (EditorConfigPackage.ValidationOptions.EnableDuplicateFoundInParent)
             {
-                var parent = _document.Parent;
+                EditorConfigDocument parent = _document.Parent;
                 while (parent != null)
                 {
                     parents.Add(parent);
@@ -249,7 +249,7 @@ namespace EditorConfig
 
         private void ValidateRootProperties()
         {
-            foreach (var property in _document.Properties)
+            foreach (Property property in _document.Properties)
             {
                 // Only root property allowed
                 if (property != _document.Root)
@@ -272,11 +272,13 @@ namespace EditorConfig
             }
 
             // Value not in schema
-            else if (EditorConfigPackage.ValidationOptions.EnableUnknownValues &&
-                !keyword.Values.Any(v => v.Name.Is(property.Value?.Text)) &&
-                !(int.TryParse(property.Value.Text, out int intValue) && intValue > 0))
+            else if (EditorConfigPackage.ValidationOptions.EnableUnknownValues && !(int.TryParse(property.Value.Text, out int intValue) && intValue > 0))
             {
-                PredefinedErrors.UnknownValue(property.Value, keyword.Name);
+                foreach (string value in property.Value.Text?.Split(','))
+                {
+                    if (!keyword.Values.Any(v => v.Name.Is(value)))
+                        PredefinedErrors.UnknownValue(property.Value, keyword.Name);
+                }
             }
 
             // Missing severity
@@ -310,7 +312,7 @@ namespace EditorConfig
 
             try
             {
-                foreach (var file in Directory.EnumerateFiles(folder).Where(f => !_ignorePaths.Any(p => folder.Contains(p))))
+                foreach (string file in Directory.EnumerateFiles(folder).Where(f => !_ignorePaths.Any(p => folder.Contains(p))))
                 {
                     string relative = file.Replace(root, string.Empty).TrimStart('\\');
 
@@ -318,7 +320,7 @@ namespace EditorConfig
                         return true;
                 }
 
-                foreach (var directory in Directory.EnumerateDirectories(folder))
+                foreach (string directory in Directory.EnumerateDirectories(folder))
                 {
                     if (!_ignorePaths.Any(i => directory.Contains(i)) && DoesFilesMatch(directory, pattern, root))
                     {

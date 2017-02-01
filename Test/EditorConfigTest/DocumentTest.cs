@@ -1,51 +1,44 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Linq;
+using EditorConfig;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.VisualStudio.Text;
-using Microsoft.VisualStudio.Utilities;
-using System.ComponentModel.Composition;
-using System.ComponentModel.Composition.Hosting;
-using System.IO;
-using System.Reflection;
 
 namespace EditorConfigTest
 {
     [TestClass]
     public class DocumentTest
     {
-        [Import]
-        private ITextBufferFactoryService TextBufferService { get; set; }
-
-        [Import]
-        private IContentTypeRegistryService ContentTypeService { get; set; }
-
-        [TestInitialize]
-        public void Initialize()
-        {
-            var folder = new DirectoryInfo(@"..\..\..\..\lib\").FullName;
-            var editor = Assembly.LoadFrom(folder + "Microsoft.VisualStudio.Platform.VSEditor.dll");
-            var interop = Assembly.LoadFrom(folder + "Microsoft.VisualStudio.Platform.VSEditor.interop.dll");
-            var text = Assembly.LoadFrom(folder + "Microsoft.VisualStudio.Text.Internal.dll");
-
-            AggregateCatalog catalog = new AggregateCatalog();
-            catalog.Catalogs.Add(new AssemblyCatalog(editor));
-            catalog.Catalogs.Add(new AssemblyCatalog(interop));
-            catalog.Catalogs.Add(new AssemblyCatalog(text));
-
-            catalog.Catalogs.Add(new AssemblyCatalog(typeof(DocumentTest).Assembly));
-            catalog.Catalogs.Add(new AssemblyCatalog(typeof(EditorConfig.EditorConfigDocument).Assembly));
-
-            CompositionContainer container = new CompositionContainer(catalog);
-            container.SatisfyImportsOnce(this);
-        }
-
         [TestMethod]
-        public void GetHighlightedSpans()
+        public void Parse()
         {
-            var textbuffer = Mef.CreateTextbuffer("test"); //TextBufferService.CreateTextBuffer("test", ContentTypeService.UnknownContentType);
+            ITextBuffer buffer = Mef.CreateTextBuffer(_text);
+            var doc = EditorConfigDocument.FromTextBuffer(buffer);
 
-            Assert.AreEqual("test", textbuffer.CurrentSnapshot.GetText());
+            Assert.AreEqual(12, doc.ParseItems.Count);
+            Assert.AreEqual(ItemType.Keyword, doc.ParseItems[0].ItemType);
+            Assert.AreEqual(ItemType.Comment, doc.ParseItems[2].ItemType);
 
-            Assert.IsNotNull(TextBufferService);
-            Assert.IsNotNull(ContentTypeService);
+            Property root = doc.Properties[0];
+            Assert.AreEqual(1, doc.Properties.Count);
+            Assert.IsTrue(root.IsValid);
+            Assert.AreEqual(SchemaCatalog.Root, root.Keyword.Text);
+
+            Section section = doc.Sections[0];
+            Assert.AreEqual("[*.cs]", section.Item.Text);
+            Assert.AreEqual(4, section.Properties.Count);
+            Assert.IsTrue(section.Properties.All(p => p.IsValid));
+
+            bool hasUnknown = doc.ParseItems.Any(p => p.ItemType == ItemType.Unknown);
+            Assert.IsFalse(hasUnknown);
         }
+
+        private const string _text = @"root = true
+
+# comment
+[*.cs]
+indent_style = space
+indent_size = 4
+end_of_line = crlf
+insert_final_newline = true";
     }
 }

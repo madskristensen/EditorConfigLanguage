@@ -224,7 +224,7 @@
     {
       "name": "csharp_indent_labels",
       "description": "Undocumented property",
-      "values": [ true, false ],
+      "values": [ "flush_left", "no_change", "one_less_than_current" ],
       "hidden": true
     },
     {
@@ -265,7 +265,7 @@
     {
       "name": "csharp_new_line_before_open_brace",
       "description": "Undocumented property",
-      "values": [ "all", true, false ],
+      "values": [ "none", "all", "accessors", "anonymous_methods", "anonymous_types", "control_blocks", "events", "indexers", "lambdas", "local_functions", "methods", "object_collection", "properties", "types" ],
       "hidden": true
     },
     {
@@ -325,13 +325,13 @@
     {
       "name": "csharp_space_around_binary_operators",
       "description": "Undocumented property",
-      "values": [ true, false ],
+      "values": [ "none", "before_and_after", "ignore" ],
       "hidden": true
     },
     {
       "name": "csharp_space_around_declaration_statements",
       "description": "Undocumented property",
-      "values": [ true, false ],
+      "values": [ "ignore", "do_not_ignore" ],
       "hidden": true
     },
     {
@@ -409,7 +409,7 @@
     {
       "name": "csharp_space_between_parentheses",
       "description": "Undocumented property",
-      "values": [ true, false ],
+      "values": [ "expressions", "type_casts", "control_flow_statements" ],
       "hidden": true
     },
     {

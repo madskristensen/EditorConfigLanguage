@@ -39,6 +39,10 @@ namespace EditorConfig
             VsHelpers.SatisfyImportsOnce(this);
 
             var componentModel = (IComponentModel)Package.GetGlobalService(typeof(SComponentModel));
+
+            if (componentModel == null)
+                return;
+
             var contentTypeRegistry = componentModel.DefaultExportProvider.GetExportedValue<IContentTypeRegistryService>();
             _contentType = contentTypeRegistry.GetContentType(Constants.LanguageName);
 

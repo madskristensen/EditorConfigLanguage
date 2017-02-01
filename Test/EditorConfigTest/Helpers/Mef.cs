@@ -17,21 +17,23 @@ namespace EditorConfigTest
 
         public Mef()
         {
-            var lib = new DirectoryInfo(@"..\..\..\..\lib\").FullName;
+            string lib = new DirectoryInfo(@"..\..\..\..\lib\").FullName;
 
             var editor = Assembly.LoadFrom(lib + "Microsoft.VisualStudio.Platform.VSEditor.dll");
             var interop = Assembly.LoadFrom(lib + "Microsoft.VisualStudio.Platform.VSEditor.interop.dll");
             var text = Assembly.LoadFrom(lib + "Microsoft.VisualStudio.Text.Internal.dll");
+            var telemetry = Assembly.LoadFrom(lib + "Microsoft.VisualStudio.Telemetry.dll");
 
-            AggregateCatalog catalog = new AggregateCatalog();
+            var catalog = new AggregateCatalog();
             catalog.Catalogs.Add(new AssemblyCatalog(editor));
             catalog.Catalogs.Add(new AssemblyCatalog(interop));
             catalog.Catalogs.Add(new AssemblyCatalog(text));
+            catalog.Catalogs.Add(new AssemblyCatalog(telemetry));
 
             catalog.Catalogs.Add(new AssemblyCatalog(typeof(DocumentTest).Assembly));
             catalog.Catalogs.Add(new AssemblyCatalog(typeof(EditorConfig.EditorConfigDocument).Assembly));
 
-            CompositionContainer container = new CompositionContainer(catalog);
+            var container = new CompositionContainer(catalog);
             container.SatisfyImportsOnce(this);
         }
 

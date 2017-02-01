@@ -8,7 +8,7 @@ namespace EditorConfigTest
     [TestClass]
     public class DocumentTest
     {
-        [TestMethod]
+        [TestMethod, TestCategory("MEF")]
         public void Parse()
         {
             ITextBuffer buffer = Mef.CreateTextBuffer(_text);

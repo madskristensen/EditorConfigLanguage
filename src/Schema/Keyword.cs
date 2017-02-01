@@ -9,13 +9,14 @@ namespace EditorConfig
     /// <summary>The keyword is the name-part of a property.</summary>
     public class Keyword : ITooltip
     {
-        public Keyword(string name, string description, IEnumerable<string> values, bool unsupported, bool hidden)
+        public Keyword(string name, string description, IEnumerable<string> values, bool unsupported, bool hidden, bool multiple)
         {
             Name = name;
             Description = description;
             Values = values.Select(v => new Value(v));
             IsSupported = !unsupported;
             IsVisible = !hidden;
+            SupportsMultipleValues = multiple;
         }
 
         /// <summary>The keyword of the property.</summary>
@@ -32,6 +33,9 @@ namespace EditorConfig
 
         /// <summary>True if the property shows up in Intellisense.</summary>
         public bool IsVisible { get; }
+
+        /// <summary>True if the value can be a comman separated list.</summary>
+        public bool SupportsMultipleValues { get; }
 
         /// <summary>The category is used in the Intellisense filters.</summary>
         public Category Category

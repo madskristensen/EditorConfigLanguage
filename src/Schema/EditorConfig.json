@@ -266,6 +266,7 @@
       "name": "csharp_new_line_before_open_brace",
       "description": "Undocumented property",
       "values": [ "none", "all", "accessors", "anonymous_methods", "anonymous_types", "control_blocks", "events", "indexers", "lambdas", "local_functions", "methods", "object_collection", "properties", "types" ],
+      "multiple": true,
       "hidden": true
     },
     {

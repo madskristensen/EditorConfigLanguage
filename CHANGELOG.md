@@ -1,8 +1,8 @@
 # Road map
 
-- [x] Updated schema
+- [x] Updated schema to allow multple values
 - [x] Validator allows for comma separated values
-- [x] Intellisenes triggers on `,`
+- [x] Intellisenes triggers on `,` for supported properties
 - [ ] Switch icons to the official .editorconfig icon
 - [ ] Add item template for .editorconfig files
 

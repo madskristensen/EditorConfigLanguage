@@ -274,9 +274,17 @@ namespace EditorConfig
             // Value not in schema
             else if (EditorConfigPackage.ValidationOptions.EnableUnknownValues && !(int.TryParse(property.Value.Text, out int intValue) && intValue > 0))
             {
-                foreach (string value in property.Value.Text?.Split(','))
+                if (keyword.SupportsMultipleValues)
                 {
-                    if (!keyword.Values.Any(v => v.Name.Is(value)))
+                    foreach (string value in property.Value.Text?.Split(','))
+                    {
+                        if (!keyword.Values.Any(v => v.Name.Is(value.Trim())))
+                            PredefinedErrors.UnknownValue(property.Value, keyword.Name);
+                    }
+                }
+                else
+                {
+                    if (!keyword.Values.Any(v => v.Name.Is(property.Value.Text)))
                         PredefinedErrors.UnknownValue(property.Value, keyword.Name);
                 }
             }

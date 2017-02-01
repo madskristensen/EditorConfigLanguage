@@ -59,6 +59,11 @@ namespace EditorConfig
             {
                 if (SchemaCatalog.TryGetKeyword(prev.Text, out Keyword item))
                 {
+                    if (!item.SupportsMultipleValues && parseItem.Text.Contains(","))
+                    {
+                        return;
+                    }
+
                     foreach (Value value in item.Values)
                         list.Add(CreateCompletion(value, iconAutomation: "value"));
                 }

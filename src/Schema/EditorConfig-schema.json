@@ -9,20 +9,23 @@
       "additionalProperties": false,
 
       "properties": {
-        "name": {
-          "type": "string"
-        },
         "description": {
           "type": "string"
         },
-        "values": {
-          "type": "array"
+        "hidden": {
+          "enum": [ true ]
+        },
+        "multiple": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
         },
         "unsupported": {
           "enum": [ true ]
         },
-        "hidden": {
-          "enum": [ true ]
+        "values": {
+          "type": "array"
         }
       }
     },

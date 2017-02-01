@@ -139,6 +139,42 @@
       "description": "Prefer 'var' when the type is already mentioned on the right-hand side of a declaration expression.",
       "values": [ true, false ]
     },
+    {
+      "name": "csharp_new_line_before_catch",
+      "description": "Place catch on new line.",
+      "values": [ true, false ]
+    },
+    {
+      "name": "csharp_new_line_before_else",
+      "description": "Place else on new line.",
+      "values": [ true, false ]
+    },
+    {
+      "name": "csharp_new_line_before_finally",
+      "description": "Place finally on new line.",
+      "values": [ true, false ]
+    },
+    {
+      "name": "csharp_new_line_before_members_in_anonymous_types",
+      "description": "Place members in anonymous types on new line.",
+      "values": [ true, false ]
+    },
+    {
+      "name": "csharp_new_line_before_members_in_object_initializers",
+      "description": "Plece members in object initializers on new line.",
+      "values": [ true, false ]
+    },
+    {
+      "name": "csharp_new_line_before_open_brace",
+      "description": "Place new line before open brace",
+      "values": [ "none", "all", "accessors", "anonymous_methods", "anonymous_types", "control_blocks", "events", "indexers", "lambdas", "local_functions", "methods", "object_collection", "properties", "types" ],
+      "multiple": true
+    },
+    {
+      "name": "csharp_new_line_between_query_expression_clauses",
+      "description": "Place query expression clauses on new line.",
+      "values": [ true, false ]
+    },
 
     // .NET properties
     {
@@ -231,49 +267,6 @@
       "name": "csharp_indent_switch_labels",
       "description": "Undocumented property",
       "values": [ true, false ]
-    },
-    {
-      "name": "csharp_new_line_before_catch",
-      "description": "Undocumented property",
-      "values": [ true, false ],
-      "hidden": true
-    },
-    {
-      "name": "csharp_new_line_before_else",
-      "description": "Undocumented property",
-      "values": [ true, false ],
-      "hidden": true
-    },
-    {
-      "name": "csharp_new_line_before_finally",
-      "description": "Undocumented property",
-      "values": [ true, false ],
-      "hidden": true
-    },
-    {
-      "name": "csharp_new_line_before_members_in_anonymous_types",
-      "description": "Undocumented property",
-      "values": [ true, false ],
-      "hidden": true
-    },
-    {
-      "name": "csharp_new_line_before_members_in_object_initializers",
-      "description": "Undocumented property",
-      "values": [ true, false ],
-      "hidden": true
-    },
-    {
-      "name": "csharp_new_line_before_open_brace",
-      "description": "Undocumented property",
-      "values": [ "none", "all", "accessors", "anonymous_methods", "anonymous_types", "control_blocks", "events", "indexers", "lambdas", "local_functions", "methods", "object_collection", "properties", "types" ],
-      "multiple": true,
-      "hidden": true
-    },
-    {
-      "name": "csharp_new_line_between_query_expression_clauses",
-      "description": "Undocumented property",
-      "values": [ true, false ],
-      "hidden": true
     },
     {
       "name": "csharp_preserve_single_line_blocks",

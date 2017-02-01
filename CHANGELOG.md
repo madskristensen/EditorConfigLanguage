@@ -3,6 +3,7 @@
 - [x] Updated schema to allow multple values
 - [x] Validator allows for comma separated values
 - [x] Intellisenes triggers on `,` for supported properties
+- [x] Made new line rules visible
 - [ ] Switch icons to the official .editorconfig icon
 - [ ] Add item template for .editorconfig files
 

@@ -11,7 +11,7 @@ namespace EditorConfigTest
         [TestMethod, TestCategory("MEF")]
         public void Parse()
         {
-            ITextBuffer buffer = Mef.CreateTextBuffer(_text);
+            ITextBuffer buffer = Mef.CreateTextBuffer(Samples.OneSectionStandard);
             var doc = EditorConfigDocument.FromTextBuffer(buffer);
 
             Assert.AreEqual(12, doc.ParseItems.Count);
@@ -32,13 +32,14 @@ namespace EditorConfigTest
             Assert.IsFalse(hasUnknown);
         }
 
-        private const string _text = @"root = true
+        [TestMethod, TestCategory("MEF")]
+        public void MultipleValues()
+        {
+            ITextBuffer buffer = Mef.CreateTextBuffer(Samples.MultipleValuesSection);
+            var doc = EditorConfigDocument.FromTextBuffer(buffer);
 
-# comment
-[*.cs]
-indent_style = space
-indent_size = 4
-end_of_line = crlf
-insert_final_newline = true";
+            Assert.AreEqual(3, doc.ParseItems.Count);
+            Assert.AreEqual("accessors, indexers", doc.ParseItems.Last().Text);
+        }
     }
 }

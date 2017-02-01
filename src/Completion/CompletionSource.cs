@@ -27,28 +27,28 @@ namespace EditorConfig
                 return;
 
             ITextSnapshot snapshot = _buffer.CurrentSnapshot;
-            var triggerPoint = session.GetTriggerPoint(snapshot);
+            SnapshotPoint? triggerPoint = session.GetTriggerPoint(snapshot);
 
             if (triggerPoint == null || !triggerPoint.HasValue)
                 return;
 
-            var line = triggerPoint.Value.GetContainingLine().Extent;
+            SnapshotSpan line = triggerPoint.Value.GetContainingLine().Extent;
             var list = new List<Completion4>();
-            var position = triggerPoint.Value.Position;
-            var applicableTo = snapshot.CreateTrackingSpan(position, 0, SpanTrackingMode.EdgeInclusive);
+            int position = triggerPoint.Value.Position;
+            ITrackingSpan applicableTo = snapshot.CreateTrackingSpan(position, 0, SpanTrackingMode.EdgeInclusive);
 
-            var prev = _document.ParseItems.LastOrDefault(p => p.Span.Start < position && !p.Span.Contains(position - 1));
-            var parseItem = _document.ItemAtPosition(position);
+            ParseItem prev = _document.ParseItems.LastOrDefault(p => p.Span.Start < position && !p.Span.Contains(position - 1));
+            ParseItem parseItem = _document.ItemAtPosition(position);
             string moniker = null;
 
             // Property
             if (string.IsNullOrWhiteSpace(line.GetText()) || parseItem?.ItemType == ItemType.Keyword)
             {
-                var isInRoot = !_document.ParseItems.Exists(p => p.ItemType == ItemType.Section && p.Span.Start < position);
-                var properties = EditorConfigPackage.CompletionOptions.ShowHiddenKeywords ? SchemaCatalog.AllKeywords : SchemaCatalog.VisibleKeywords;
-                var items = isInRoot ? SchemaCatalog.VisibleKeywords : properties.Where(i => i.Name != SchemaCatalog.Root);
+                bool isInRoot = !_document.ParseItems.Exists(p => p.ItemType == ItemType.Section && p.Span.Start < position);
+                IEnumerable<Keyword> properties = EditorConfigPackage.CompletionOptions.ShowHiddenKeywords ? SchemaCatalog.AllKeywords : SchemaCatalog.VisibleKeywords;
+                IEnumerable<Keyword> items = isInRoot ? SchemaCatalog.VisibleKeywords : properties.Where(i => i.Name != SchemaCatalog.Root);
 
-                foreach (var property in items)
+                foreach (Keyword property in items)
                     list.Add(CreateCompletion(property, property.Category));
 
                 moniker = "keyword";
@@ -59,7 +59,7 @@ namespace EditorConfig
             {
                 if (SchemaCatalog.TryGetKeyword(prev.Text, out Keyword item))
                 {
-                    foreach (var value in item.Values)
+                    foreach (Value value in item.Values)
                         list.Add(CreateCompletion(value, iconAutomation: "value"));
                 }
 
@@ -71,7 +71,7 @@ namespace EditorConfig
             {
                 if (prev?.ItemType == ItemType.Value && (prev.Text.Is("true") || parseItem?.ItemType == ItemType.Severity))
                 {
-                    var prop = _document.PropertyAtPosition(prev.Span.Start);
+                    Property prop = _document.PropertyAtPosition(prev.Span.Start);
                     if (SchemaCatalog.TryGetKeyword(prop?.Keyword?.Text, out Keyword key) && key.RequiresSeverity)
                         AddSeverity(list);
 
@@ -83,14 +83,14 @@ namespace EditorConfig
             {
                 if (SchemaCatalog.TryGetKeyword(prev?.Text, out Keyword property))
                 {
-                    var eq = line.GetText().IndexOf("=");
+                    int eq = line.GetText().IndexOf("=");
 
                     if (eq != -1)
                     {
-                        var eqPos = eq + line.Start.Position;
+                        int eqPos = eq + line.Start.Position;
 
                         if (position > eqPos)
-                            foreach (var value in property.Values)
+                            foreach (Value value in property.Values)
                                 list.Add(CreateCompletion(value));
                     }
 
@@ -99,11 +99,11 @@ namespace EditorConfig
             }
             else
             {
-                var trackingSpan = FindTokenSpanAtPosition(session);
-                var span = trackingSpan.GetSpan(snapshot);
-                var text = span.GetText();
+                ITrackingSpan trackingSpan = FindTokenSpanAtPosition(session);
+                SnapshotSpan span = trackingSpan.GetSpan(snapshot);
+                string text = span.GetText();
 
-                if (text == ":")
+                if (text == ":" || text == ",")
                     applicableTo = snapshot.CreateTrackingSpan(new Span(span.Start + 1, 0), SpanTrackingMode.EdgeInclusive);
                 else if (!string.IsNullOrWhiteSpace(text))
                     applicableTo = trackingSpan;
@@ -118,7 +118,7 @@ namespace EditorConfig
             {
                 if (moniker == "keyword")
                 {
-                    var filters = new[] {
+                    IntellisenseFilter[] filters = new[] {
                         new IntellisenseFilter(KnownMonikers.Property, "Standard rules (Alt + S)", "s", Category.Standard.ToString()),
                         new IntellisenseFilter(KnownMonikers.CSFileNode, ".NET analysis rules (Alt + C)", "c", Category.CSharp.ToString()),
                         new IntellisenseFilter(KnownMonikers.DotNET, "C# analysis rules (Alt + D)", "d", Category.DotNet.ToString()),
@@ -135,7 +135,7 @@ namespace EditorConfig
 
         private void AddSeverity(List<Completion4> list)
         {
-            foreach (var severity in SchemaCatalog.Severities)
+            foreach (Severity severity in SchemaCatalog.Severities)
             {
                 list.Add(CreateCompletion(severity));
             }

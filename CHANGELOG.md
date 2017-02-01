@@ -2,6 +2,7 @@
 
 - [x] Updated schema
 - [x] Validator allows for comma separated values
+- [x] Intellisenes triggers on `,`
 - [ ] Switch icons to the official .editorconfig icon
 - [ ] Add item template for .editorconfig files
 

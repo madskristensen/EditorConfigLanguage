@@ -72,7 +72,7 @@ namespace EditorConfig
                             {
                                 StartSession();
                             }
-                            else if ((ch == ':' || ch == '=' || ch == ' ') && EditorConfigPackage.Language.Preferences.AutoListMembers)
+                            else if ((ch == ':' || ch == '=' || ch == ' ' || ch == ',') && EditorConfigPackage.Language.Preferences.AutoListMembers)
                             {
                                 Cancel();
                                 StartSession();
@@ -130,7 +130,7 @@ namespace EditorConfig
                 if (!EditorConfigPackage.CompletionOptions.AutoInsertDelimiters)
                     return true;
 
-                var position = TextView.Caret.Position.BufferPosition;
+                SnapshotPoint position = TextView.Caret.Position.BufferPosition;
 
                 if (moniker == "keyword")
                 {
@@ -140,7 +140,7 @@ namespace EditorConfig
                 else if (moniker == "value")
                 {
                     var document = EditorConfigDocument.FromTextBuffer(TextView.TextBuffer);
-                    var prop = document.PropertyAtPosition(position - 1);
+                    Property prop = document.PropertyAtPosition(position - 1);
 
                     if (SchemaCatalog.TryGetKeyword(prop.Keyword.Text, out Keyword keyword) && prop.Value != null)
                     {

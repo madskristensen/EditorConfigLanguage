@@ -105,12 +105,9 @@ namespace EditorConfig
                     }
                 }
 
-                ParseItems.Clear();
-                ParseItems.AddRange(items);
-                Sections.Clear();
-                Sections.AddRange(sections);
-                Properties.Clear();
-                Properties.AddRange(properties);
+                ParseItems = items;
+                Sections = sections;
+                Properties = properties;
 
                 IsParsing = false;
 

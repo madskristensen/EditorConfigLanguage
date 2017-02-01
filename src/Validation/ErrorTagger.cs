@@ -46,10 +46,10 @@ namespace EditorConfig
             if (_document.IsParsing || !_hasLoaded || !spans.Any() || spans[0].IsEmpty)
                 return tags;
 
-            var line = spans[0].Start.GetContainingLine();
-            var items = _document.ItemsInSpan(line.Extent);
+            ITextSnapshotLine line = spans[0].Start.GetContainingLine();
+            IEnumerable<ParseItem> items = _document.ItemsInSpan(line.Extent);
 
-            foreach (var item in items)
+            foreach (ParseItem item in items)
             {
                 tags.AddRange(CreateError(item));
             }
@@ -59,10 +59,10 @@ namespace EditorConfig
 
         private IEnumerable<TagSpan<ErrorTag>> CreateError(ParseItem item)
         {
-            foreach (var error in item.Errors)
+            foreach (Error error in item.Errors)
             {
                 var span = new SnapshotSpan(_view.TextBuffer.CurrentSnapshot, item.Span);
-                var errorType = GetErrorType(error.ErrorType);
+                string errorType = GetErrorType(error.ErrorType);
 
                 yield return new TagSpan<ErrorTag>(span, new ErrorTag(errorType, error.Name));
             }

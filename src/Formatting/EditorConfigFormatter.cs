@@ -24,10 +24,10 @@ namespace EditorConfig
             _spaceAfterColon = EditorConfigPackage.FormatterOptions.SpacesAfterColon;
 
             // Trim lines
-            var changed = TrimLines();
+            bool changed = TrimLines();
 
             // Format properties
-            using (var edit = _document.TextBuffer.CreateEdit())
+            using (ITextEdit edit = _document.TextBuffer.CreateEdit())
             {
                 int keywordLength = GetKeywordLength();
 
@@ -48,12 +48,12 @@ namespace EditorConfig
         {
             bool changed = false;
 
-            using (var edit = _document.TextBuffer.CreateEdit())
+            using (ITextEdit edit = _document.TextBuffer.CreateEdit())
             {
-                foreach (var line in _document.TextBuffer.CurrentSnapshot.Lines)
+                foreach (ITextSnapshotLine line in _document.TextBuffer.CurrentSnapshot.Lines)
                 {
-                    var originalText = line.GetText();
-                    var newText = line.Extent.IsEmpty ? string.Empty : originalText.Trim();
+                    string originalText = line.GetText();
+                    string newText = line.Extent.IsEmpty ? string.Empty : originalText.Trim();
 
                     if (originalText != newText)
                         edit.Replace(line.Start, line.Length, newText);
@@ -92,11 +92,11 @@ namespace EditorConfig
 
         private void FormatSection(ITextEdit edit, int keywordLength)
         {
-            foreach (var section in _document.Sections.Where(s => s.Properties.Any()).Reverse())
+            foreach (Section section in _document.Sections.Where(s => s.Properties.Any()).Reverse())
             {
-                var length = keywordLength == int.MinValue ? section.Properties.Max(p => p.Keyword.Text.Length) : keywordLength;
+                int length = keywordLength == int.MinValue ? section.Properties.Max(p => p.Keyword.Text.Length) : keywordLength;
 
-                foreach (var property in section.Properties.Where(p => p.IsValid).Reverse())
+                foreach (Property property in section.Properties.Where(p => p.IsValid).Reverse())
                 {
                     FormatProperty(property, length, edit);
                 }
@@ -105,13 +105,13 @@ namespace EditorConfig
 
         private void FormatProperty(Property property, int keywordLength, ITextEdit edit)
         {
-            var originalText = edit.Snapshot.GetText(property.Span);
-            var newText = property.Keyword.Text.PadRight(keywordLength);
+            string originalText = edit.Snapshot.GetText(property.Span);
+            string newText = property.Keyword.Text.PadRight(keywordLength);
 
-            var spaceBeforeEquals = string.Empty.PadRight(_spaceBeforeEquals);
-            var spaceAfterEquals = string.Empty.PadRight(_spaceAfterEquals);
-            var spaceBeforeColon = string.Empty.PadRight(_spaceBeforeColon);
-            var spaceAfterColon = string.Empty.PadRight(_spaceAfterColon);
+            string spaceBeforeEquals = string.Empty.PadRight(_spaceBeforeEquals);
+            string spaceAfterEquals = string.Empty.PadRight(_spaceAfterEquals);
+            string spaceBeforeColon = string.Empty.PadRight(_spaceBeforeColon);
+            string spaceAfterColon = string.Empty.PadRight(_spaceAfterColon);
 
             if (property.Value != null)
                 newText += $"{spaceBeforeEquals}={spaceAfterEquals}{property.Value.Text}";

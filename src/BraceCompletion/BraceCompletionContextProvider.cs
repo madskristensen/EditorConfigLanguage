@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Utilities;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Language.StandardClassification;
+using System.Collections.Generic;
 
 namespace EditorConfig
 {
@@ -39,10 +40,10 @@ namespace EditorConfig
 
             if (openingPoint.Position > 0)
             {
-                var classificationSpans = ClassifierService.GetClassifier(openingPoint.Snapshot.TextBuffer)
+                IList<ClassificationSpan> classificationSpans = ClassifierService.GetClassifier(openingPoint.Snapshot.TextBuffer)
                                                            .GetClassificationSpans(new SnapshotSpan(openingPoint - 1, 1));
 
-                foreach (var span in classificationSpans)
+                foreach (ClassificationSpan span in classificationSpans)
                 {
                     if (span.ClassificationType.IsOfType(PredefinedClassificationTypeNames.Comment))
                     {

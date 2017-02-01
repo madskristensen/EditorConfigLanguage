@@ -28,7 +28,7 @@ namespace EditorConfig
         {
             if (pguidCmdGroup == _commandGroup && nCmdID == _commandId && EditorConfigPackage.Language.Preferences.ParameterInformation)
             {
-                var typedChar = (char)(ushort)Marshal.GetObjectForNativeVariant(pvaIn);
+                char typedChar = (char)(ushort)Marshal.GetObjectForNativeVariant(pvaIn);
 
                 if (typedChar == 27 && _session != null)
                 {

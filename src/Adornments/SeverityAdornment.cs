@@ -38,7 +38,7 @@ namespace EditorConfig
                 return;
 
             string text = tag.ParseItem.Text.ToLowerInvariant();
-            var severity = SchemaCatalog.Severities.SingleOrDefault(s => s.Name.Is(text));
+            Severity severity = SchemaCatalog.Severities.SingleOrDefault(s => s.Name.Is(text));
             if (severity != null)
             {
                 Source = GetBitmapSource(severity);
@@ -49,7 +49,7 @@ namespace EditorConfig
         {
             if (!_imageCache.ContainsKey(severity.Name))
             {
-                var bitmap = severity.Moniker.ToBitmap(_size);
+                BitmapSource bitmap = severity.Moniker.ToBitmap(_size);
                 _imageCache.Add(severity.Name, bitmap);
             }
 

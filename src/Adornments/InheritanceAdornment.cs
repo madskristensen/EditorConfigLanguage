@@ -59,8 +59,8 @@ namespace EditorConfig
         {
             Children.Clear();
 
-            var parent = _document.Parent;
-            var parentsCount = 0;
+            EditorConfigDocument parent = _document.Parent;
+            int parentsCount = 0;
 
             if (parent != null)
             {
@@ -90,7 +90,7 @@ namespace EditorConfig
 
         private void CreateInheritance(string parentFileName, int padding)
         {
-            var fileName = _adornmentLayer.TextView.TextBuffer.GetFileName();
+            string fileName = _adornmentLayer.TextView.TextBuffer.GetFileName();
 
             if (string.IsNullOrEmpty(fileName))
                 return;
@@ -100,7 +100,7 @@ namespace EditorConfig
             if (!string.IsNullOrEmpty(shortcut))
                 ToolTip = $"Navigate to immediate parent ({shortcut})";
 
-            var relative = PackageUtilities.MakeRelative(fileName, parentFileName);
+            string relative = PackageUtilities.MakeRelative(fileName, parentFileName);
 
             var inherits = new ThemedTextBlock()
             {
@@ -150,12 +150,12 @@ namespace EditorConfig
 
         private static string GetShortcut()
         {
-            var cmd = VsHelpers.DTE.Commands.Item("EditorConfig.NavigateToParent");
+            Command cmd = VsHelpers.DTE.Commands.Item("EditorConfig.NavigateToParent");
 
             if (cmd == null || !cmd.IsAvailable)
                 return null;
 
-            var bindings = ((object[])cmd.Bindings).FirstOrDefault() as string;
+            string bindings = ((object[])cmd.Bindings).FirstOrDefault() as string;
 
             if (!string.IsNullOrEmpty(bindings))
             {

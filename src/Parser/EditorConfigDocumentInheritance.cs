@@ -43,7 +43,7 @@ namespace EditorConfig
             if (componentModel == null)
                 return;
 
-            var contentTypeRegistry = componentModel.DefaultExportProvider.GetExportedValue<IContentTypeRegistryService>();
+            IContentTypeRegistryService contentTypeRegistry = componentModel.DefaultExportProvider.GetExportedValue<IContentTypeRegistryService>();
             _contentType = contentTypeRegistry.GetContentType(Constants.LanguageName);
 
             if (DocumentService.TryGetTextDocument(TextBuffer, out ITextDocument doc))
@@ -55,7 +55,7 @@ namespace EditorConfig
         private EditorConfigDocument InheritsFrom()
         {
             var file = new FileInfo(FileName);
-            var parent = file.Directory.Parent;
+            DirectoryInfo parent = file.Directory.Parent;
 
             while (parent != null)
             {
@@ -63,7 +63,7 @@ namespace EditorConfig
 
                 if (File.Exists(parentFileName))
                 {
-                    var doc = DocumentService.CreateAndLoadTextDocument(parentFileName, _contentType);
+                    ITextDocument doc = DocumentService.CreateAndLoadTextDocument(parentFileName, _contentType);
                     return new EditorConfigDocument(doc.TextBuffer) { FileName = parentFileName };
                 }
 

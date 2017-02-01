@@ -23,7 +23,7 @@ namespace EditorConfig
             if (pguidCmdGroup == _commandGroup && nCmdID == _commandId)
             {
                 var document = EditorConfigDocument.FromTextBuffer(_buffer);
-                var parent = document?.Parent;
+                EditorConfigDocument parent = document?.Parent;
 
                 if (parent != null)
                 {

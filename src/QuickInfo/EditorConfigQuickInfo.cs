@@ -26,7 +26,7 @@ namespace EditorConfig
             if (session == null || qiContent == null || !point.HasValue || point.Value.Position >= point.Value.Snapshot.Length)
                 return;
 
-            var item = _document.ItemAtPosition(point.Value);
+            ParseItem item = _document.ItemAtPosition(point.Value);
 
             if (item == null)
                 return;
@@ -35,14 +35,14 @@ namespace EditorConfig
 
             if (item.Errors.Any())
             {
-                foreach (var error in item.Errors)
+                foreach (Error error in item.Errors)
                 {
                     qiContent.Add(new Shared.EditorTooltip(error));
                     return;
                 }
             }
 
-            var property = _document.PropertyAtPosition(point.Value);
+            Property property = _document.PropertyAtPosition(point.Value);
 
             if (!SchemaCatalog.TryGetKeyword(property?.Keyword?.Text, out Keyword keyword))
                 return;
@@ -53,7 +53,7 @@ namespace EditorConfig
             }
             else if (item.ItemType == ItemType.Value)
             {
-                var value = keyword.Values.FirstOrDefault(v => v.Name.Is(item.Text));
+                Value value = keyword.Values.FirstOrDefault(v => v.Name.Is(item.Text));
 
                 if (value != null && !string.IsNullOrEmpty(value.Description))
                     qiContent.Add(new Shared.EditorTooltip(value));

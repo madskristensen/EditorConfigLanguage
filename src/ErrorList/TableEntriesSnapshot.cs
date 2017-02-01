@@ -17,7 +17,7 @@ namespace EditorConfig
             _dte = (DTE2)Package.GetGlobalService(typeof(DTE));
             _projectName = projectName;
 
-            foreach (var item in result)
+            foreach (ParseItem item in result)
             {
                 Errors.AddRange(item.Errors);
             }

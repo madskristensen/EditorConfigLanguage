@@ -34,11 +34,11 @@ namespace EditorConfig
         public override void SelectBestMatch()
         {
             _typed = ApplicableTo.GetText(ApplicableTo.TextBuffer.CurrentSnapshot);
-            var currentActiveFilters = Filters;
+            IReadOnlyList<IIntellisenseFilter> currentActiveFilters = Filters;
 
             if (currentActiveFilters != null && currentActiveFilters.Count > 0)
             {
-                var activeFilters = currentActiveFilters.Where(f => f.IsChecked).Select(f => f.AutomationText);
+                IEnumerable<string> activeFilters = currentActiveFilters.Where(f => f.IsChecked).Select(f => f.AutomationText);
 
                 if (!activeFilters.Any())
                     activeFilters = currentActiveFilters.Select(f => f.AutomationText);
@@ -49,11 +49,11 @@ namespace EditorConfig
                 currentCompletions.Filter(new Predicate<Completion>(DoesCompletionMatchAutomationText));
             }
 
-            var ordered = currentCompletions.OrderByDescending(c => GetHighlightedSpansInDisplayText(c.DisplayText).Sum(s => s.Length));
+            IOrderedEnumerable<Completion> ordered = currentCompletions.OrderByDescending(c => GetHighlightedSpansInDisplayText(c.DisplayText).Sum(s => s.Length));
 
             if (ordered.Any())
             {
-                var count = ordered.Count();
+                int count = ordered.Count();
                 SelectionStatus = new CompletionSelectionStatus(ordered.First(), count == 1, count == 1);
             }
             else
@@ -93,9 +93,9 @@ namespace EditorConfig
                     startIndex = matches.Last().Value.End;
                 }
 
-                var current = match + c;
-                var index = displayText.IndexOf(current, startIndex);
-                var offset = 0;
+                string current = match + c;
+                int index = displayText.IndexOf(current, startIndex);
+                int offset = 0;
 
                 if (index == -1)
                     return _defaultEmptyList;

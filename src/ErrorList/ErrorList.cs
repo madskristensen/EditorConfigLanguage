@@ -47,7 +47,7 @@ namespace EditorConfig
             if (_document.IsParsing)
                 return;
 
-            var items = _document.ParseItems.Where(p => p.HasErrors).ToArray();
+            ParseItem[] items = _document.ParseItems.Where(p => p.HasErrors).ToArray();
 
             TableDataSource.Instance.CleanErrors(_file);
             TableDataSource.Instance.AddErrors(items, _project?.Name, _file);

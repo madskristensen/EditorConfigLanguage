@@ -50,7 +50,7 @@ namespace EditorConfig
 
             _buffer.Properties.GetOrCreateSingletonProperty(() => view);
 
-            var undoManager = UndoProvider.GetTextBufferUndoManager(view.TextBuffer);
+            ITextBufferUndoManager undoManager = UndoProvider.GetTextBufferUndoManager(view.TextBuffer);
 
             AddCommandFilter(textViewAdapter, new FormatterCommand(view, undoManager));
             AddCommandFilter(textViewAdapter, new CompletionController(view, CompletionBroker, QuickInfoBroker));
@@ -99,7 +99,7 @@ namespace EditorConfig
 
         private void OnViewClosed(object sender, EventArgs e)
         {
-            IWpfTextView view = (IWpfTextView)sender;
+            var view = (IWpfTextView)sender;
             view.Closed -= OnViewClosed;
 
             if (view.TextBuffer.Properties.TryGetProperty(typeof(EditorConfigDocument), out EditorConfigDocument doc))

@@ -110,6 +110,7 @@
   <ItemGroup>
     <Compile Include="CompletionTest.cs" />
     <Compile Include="DocumentTest.cs" />
+    <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Helpers\Mef.cs" />
     <Compile Include="Helpers\Samples.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

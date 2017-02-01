@@ -13,7 +13,7 @@ namespace EditorConfig
             Description = description;
 
             var span = new SnapshotSpan(item.Document.TextBuffer.CurrentSnapshot, item.Span);
-            var line = span.Snapshot.GetLineFromPosition(span.Start);
+            ITextSnapshotLine line = span.Snapshot.GetLineFromPosition(span.Start);
 
             Line = line.LineNumber;
             Column = span.Start.Position - line.Start.Position;

@@ -249,7 +249,7 @@ namespace EditorConfig
             else
             {
                 // Use the existing text buffer
-                Object dataObject = Marshal.GetObjectForIUnknown(docDataExisting);
+                object dataObject = Marshal.GetObjectForIUnknown(docDataExisting);
                 textLines = dataObject as IVsTextLines;
                 if (textLines == null)
                 {
@@ -292,9 +292,9 @@ namespace EditorConfig
             Guid riid = codeWindowType.GUID;
             Guid clsid = typeof(VsCodeWindowClass).GUID;
             var compModel = (IComponentModel)new VsServiceProviderWrapper(_package).GetService(typeof(SComponentModel));
-            var adapterService = compModel.GetService<IVsEditorAdaptersFactoryService>();
+            IVsEditorAdaptersFactoryService adapterService = compModel.GetService<IVsEditorAdaptersFactoryService>();
 
-            var window = adapterService.CreateVsCodeWindowAdapter((IOleServiceProvider)_serviceProvider.GetService(typeof(IOleServiceProvider)));
+            IVsCodeWindow window = adapterService.CreateVsCodeWindowAdapter((IOleServiceProvider)_serviceProvider.GetService(typeof(IOleServiceProvider)));
             ErrorHandler.ThrowOnFailure(window.SetBuffer(textLines));
             ErrorHandler.ThrowOnFailure(window.SetBaseEditorCaption(null));
             ErrorHandler.ThrowOnFailure(window.GetEditorCaption(READONLYSTATUS.ROSTATUS_Unknown, out editorCaption));
@@ -303,7 +303,7 @@ namespace EditorConfig
             {
                 if (PromptEncodingOnLoad)
                 {
-                    var guid = VSConstants.VsTextBufferUserDataGuid.VsBufferEncodingPromptOnLoad_guid;
+                    Guid guid = VSConstants.VsTextBufferUserDataGuid.VsBufferEncodingPromptOnLoad_guid;
                     userData.SetData(ref guid, (uint)1);
                 }
             }
@@ -356,7 +356,7 @@ namespace EditorConfig
                 _languageServiceId = languageServiceId;
 
                 var connectionPointContainer = textLines as IConnectionPointContainer;
-                var bufferEventsGuid = typeof(IVsTextBufferDataEvents).GUID;
+                Guid bufferEventsGuid = typeof(IVsTextBufferDataEvents).GUID;
                 connectionPointContainer.FindConnectionPoint(ref bufferEventsGuid, out _connectionPoint);
                 _connectionPoint.Advise(this, out _cookie);
             }

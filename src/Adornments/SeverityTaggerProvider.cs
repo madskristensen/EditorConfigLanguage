@@ -12,7 +12,6 @@ namespace EditorConfig
     {
         public ITagger<T> CreateTagger<T>(ITextBuffer buffer) where T : ITag
         {
-            //return new SeverityTagger(buffer) as ITagger<T>;
             return buffer.Properties.GetOrCreateSingletonProperty(() => new SeverityTagger(buffer)) as ITagger<T>;
         }
     }

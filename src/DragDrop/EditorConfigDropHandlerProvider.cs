@@ -19,7 +19,7 @@ namespace EditorConfig
 
         public IDropHandler GetAssociatedDropHandler(IWpfTextView view)
         {
-            var undoManager = UndoProvider.GetTextBufferUndoManager(view.TextBuffer);
+            ITextBufferUndoManager undoManager = UndoProvider.GetTextBufferUndoManager(view.TextBuffer);
 
             return view.Properties.GetOrCreateSingletonProperty(() => new EditorConfigDropHandler(view, undoManager));
         }

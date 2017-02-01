@@ -24,7 +24,7 @@ namespace EditorConfig
         {
             get
             {
-                var last = Severity ?? Value ?? Keyword;
+                ParseItem last = Severity ?? Value ?? Keyword;
                 return Span.FromBounds(Keyword.Span.Start, last.Span.End);
             }
         }
@@ -40,7 +40,7 @@ namespace EditorConfig
 
         public override string ToString()
         {
-            var text = Keyword.Text;
+            string text = Keyword.Text;
 
             if (Value != null)
                 text += $" = {Value.Text}";

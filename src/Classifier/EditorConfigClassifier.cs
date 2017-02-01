@@ -33,9 +33,9 @@ namespace EditorConfig
             if (_document.IsParsing)
                 return list;
 
-            var parseItems = _document.ItemsInSpan(span);
+            IEnumerable<ParseItem> parseItems = _document.ItemsInSpan(span);
 
-            foreach (var item in parseItems)
+            foreach (ParseItem item in parseItems)
             {
                 if (_map.ContainsKey(item.ItemType))
                 {

@@ -96,11 +96,11 @@ namespace EditorConfig
             {
                 Snapshot = view.TextBuffer.CurrentSnapshot;
 
-                Dictionary<SnapshotSpan, TAdornment> translatedAdornmentCache = new Dictionary<SnapshotSpan, TAdornment>();
+                var translatedAdornmentCache = new Dictionary<SnapshotSpan, TAdornment>();
 
-                foreach (var keyValuePair in adornmentCache)
+                foreach (KeyValuePair<SnapshotSpan, TAdornment> keyValuePair in adornmentCache)
                 {
-                    var translated = keyValuePair.Key.TranslateTo(Snapshot, SpanTrackingMode.EdgeExclusive);
+                    SnapshotSpan translated = keyValuePair.Key.TranslateTo(Snapshot, SpanTrackingMode.EdgeExclusive);
                     if (!translatedAdornmentCache.ContainsKey(translated))
                         translatedAdornmentCache.Add(translated, keyValuePair.Value);
                 }
@@ -118,8 +118,8 @@ namespace EditorConfig
             if (translatedSpans.Count == 0)
                 return;
 
-            var start = translatedSpans.Select(span => span.Start).Min();
-            var end = translatedSpans.Select(span => span.End).Max();
+            SnapshotPoint start = translatedSpans.Select(span => span.Start).Min();
+            SnapshotPoint end = translatedSpans.Select(span => span.End).Max();
 
             RaiseTagsChanged(new SnapshotSpan(start, end));
         }
@@ -137,13 +137,13 @@ namespace EditorConfig
             SnapshotSpan visibleSpan = view.TextViewLines.FormattedSpan;
 
             // Filter out the adornments that are no longer visible.
-            List<SnapshotSpan> toRemove = new List<SnapshotSpan>(
+            var toRemove = new List<SnapshotSpan>(
                 from keyValuePair
                 in adornmentCache
                 where !keyValuePair.Key.TranslateTo(visibleSpan.Snapshot, SpanTrackingMode.EdgeExclusive).IntersectsWith(visibleSpan)
                 select keyValuePair.Key);
 
-            foreach (var span in toRemove)
+            foreach (SnapshotSpan span in toRemove)
                 adornmentCache.Remove(span);
         }
 
@@ -169,12 +169,12 @@ namespace EditorConfig
             }
 
             // Grab the adornments.
-            foreach (var tagSpan in GetAdornmentTagsOnSnapshot(translatedSpans))
+            foreach (TagSpan<IntraTextAdornmentTag> tagSpan in GetAdornmentTagsOnSnapshot(translatedSpans))
             {
                 // Translate each adornment to the snapshot that the tagger was asked about.
                 SnapshotSpan span = tagSpan.Span.TranslateTo(requestedSnapshot, SpanTrackingMode.EdgeExclusive);
 
-                IntraTextAdornmentTag tag = new IntraTextAdornmentTag(tagSpan.Tag.Adornment, tagSpan.Tag.RemovalCallback, tagSpan.Tag.Affinity);
+                var tag = new IntraTextAdornmentTag(tagSpan.Tag.Adornment, tagSpan.Tag.RemovalCallback, tagSpan.Tag.Affinity);
                 yield return new TagSpan<IntraTextAdornmentTag>(span, tag);
             }
         }
@@ -187,7 +187,7 @@ namespace EditorConfig
 
             ITextSnapshot snapshot = spans[0].Snapshot;
 
-            System.Diagnostics.Debug.Assert(snapshot == this.Snapshot);
+            System.Diagnostics.Debug.Assert(snapshot == Snapshot);
 
             // Since WPF UI objects have state (like mouse hover or animation) and are relatively expensive to create and lay out,
             // this code tries to reuse controls as much as possible.
@@ -195,12 +195,12 @@ namespace EditorConfig
 
             // Mark which adornments fall inside the requested spans with Keep=false
             // so that they can be removed from the cache if they no longer correspond to data tags.
-            HashSet<SnapshotSpan> toRemove = new HashSet<SnapshotSpan>();
-            foreach (var ar in adornmentCache)
+            var toRemove = new HashSet<SnapshotSpan>();
+            foreach (KeyValuePair<SnapshotSpan, TAdornment> ar in adornmentCache)
                 if (spans.IntersectsWith(new NormalizedSnapshotSpanCollection(ar.Key)))
                     toRemove.Add(ar.Key);
 
-            foreach (var spanDataPair in GetAdornmentData(spans).Distinct(new Comparer()))
+            foreach (Tuple<SnapshotSpan, PositionAffinity?, TData> spanDataPair in GetAdornmentData(spans).Distinct(new Comparer()))
             {
                 SnapshotSpan snapshotSpan = spanDataPair.Item1;
                 PositionAffinity? affinity = spanDataPair.Item2;
@@ -234,7 +234,7 @@ namespace EditorConfig
                 yield return new TagSpan<IntraTextAdornmentTag>(snapshotSpan, new IntraTextAdornmentTag(adornment, null, affinity));
             }
 
-            foreach (var snapshotSpan in toRemove)
+            foreach (SnapshotSpan snapshotSpan in toRemove)
                 adornmentCache.Remove(snapshotSpan);
         }
 

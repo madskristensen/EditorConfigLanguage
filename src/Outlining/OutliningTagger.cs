@@ -37,11 +37,11 @@ namespace EditorConfig
             int startLineNumber = entire.Start.GetContainingLine().LineNumber;
             int endLineNumber = entire.End.GetContainingLine().LineNumber;
 
-            foreach (var region in currentRegions)
+            foreach (Region region in currentRegions)
             {
                 if (region.StartLine <= endLineNumber && region.EndLine >= startLineNumber)
                 {
-                    var startLine = currentSnapshot.GetLineFromLineNumber(region.StartLine);
+                    ITextSnapshotLine startLine = currentSnapshot.GetLineFromLineNumber(region.StartLine);
                     string text = startLine.GetText();
                     string hover = entire.Snapshot.GetText(region.StartOffset, region.EndOffset - region.StartOffset);
 
@@ -75,12 +75,12 @@ namespace EditorConfig
         void ReParse()
         {
             ITextSnapshot newSnapshot = _buffer.CurrentSnapshot;
-            List<Region> newRegions = new List<Region>();
+            var newRegions = new List<Region>();
 
-            foreach (var section in _document.Sections)
+            foreach (Section section in _document.Sections)
             {
-                var startLine = newSnapshot.GetLineFromPosition(section.Span.Start);
-                var endLine = newSnapshot.GetLineFromPosition(section.Span.End);
+                ITextSnapshotLine startLine = newSnapshot.GetLineFromPosition(section.Span.Start);
+                ITextSnapshotLine endLine = newSnapshot.GetLineFromPosition(section.Span.End);
 
                 var region = new Region
                 {

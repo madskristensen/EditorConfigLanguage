@@ -38,18 +38,18 @@ namespace EditorConfig
 
             ITextSnapshot snapshot = spans[0].Snapshot;
 
-            var tags = _tagger.GetTags(spans);
+            IEnumerable<IMappingTagSpan<SeverityTag>> tags = _tagger.GetTags(spans);
 
             foreach (IMappingTagSpan<SeverityTag> dataTagSpan in tags)
             {
-                var tagSpans = dataTagSpan.Span.GetSpans(snapshot);
+                NormalizedSnapshotSpanCollection tagSpans = dataTagSpan.Span.GetSpans(snapshot);
 
                 // Ignore data tags that are split by projection.
                 // This is theoretically possible but unlikely in current scenarios.
                 if (tagSpans.Count != 1)
                     continue;
 
-                SnapshotSpan adornmentSpan = new SnapshotSpan(tagSpans[0].End, 0);
+                var adornmentSpan = new SnapshotSpan(tagSpans[0].End, 0);
 
                 yield return Tuple.Create(adornmentSpan, (PositionAffinity?)PositionAffinity.Successor, dataTagSpan.Tag);
             }

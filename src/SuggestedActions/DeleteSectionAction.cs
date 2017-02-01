@@ -29,17 +29,17 @@ namespace EditorConfig
 
         public override void Execute(CancellationToken cancellationToken)
         {
-            var first = _buffer.CurrentSnapshot.GetLineFromPosition(_section.Span.Start);
-            var last = _buffer.CurrentSnapshot.GetLineFromPosition(_section.Span.End);
+            ITextSnapshotLine first = _buffer.CurrentSnapshot.GetLineFromPosition(_section.Span.Start);
+            ITextSnapshotLine last = _buffer.CurrentSnapshot.GetLineFromPosition(_section.Span.End);
 
             if (_buffer.CurrentSnapshot.LineCount > last.LineNumber + 1)
             {
-                var nextLine = _buffer.CurrentSnapshot.GetLineFromLineNumber(last.LineNumber + 1);
+                ITextSnapshotLine nextLine = _buffer.CurrentSnapshot.GetLineFromLineNumber(last.LineNumber + 1);
                 if (nextLine.Extent.IsEmpty)
                     last = nextLine;
             }
 
-            using (var edit = _buffer.CreateEdit())
+            using (ITextEdit edit = _buffer.CreateEdit())
             {
                 edit.Delete(Span.FromBounds(first.Start, last.EndIncludingLineBreak));
                 edit.Apply();

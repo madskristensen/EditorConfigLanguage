@@ -85,7 +85,7 @@ namespace EditorConfig
             if (project.IsKind(ProjectTypes.ASPNET_5, ProjectTypes.SSDT))
                 return DTE.Solution.FindProjectItem(file);
 
-            var root = project.GetRootFolder();
+            string root = project.GetRootFolder();
 
             if (string.IsNullOrEmpty(root) || !file.StartsWith(root, StringComparison.OrdinalIgnoreCase))
                 return null;
@@ -115,7 +115,7 @@ namespace EditorConfig
 
         public static bool IsKind(this Project project, params string[] kindGuids)
         {
-            foreach (var guid in kindGuids)
+            foreach (string guid in kindGuids)
             {
                 if (project.Kind.Equals(guid, StringComparison.OrdinalIgnoreCase))
                     return true;
@@ -198,7 +198,7 @@ namespace EditorConfig
 
         public static void ExecuteCommandSafe(this DTE2 dte, string commandName)
         {
-            var command = dte.Commands.Item(commandName);
+            Command command = dte.Commands.Item(commandName);
             if (command.IsAvailable)
             {
                 dte.Commands.Raise(command.Guid, command.ID, null, null);

@@ -23,8 +23,8 @@ namespace EditorConfig
             if (!point.HasValue)
                 return;
 
-            var line = point.Value.GetContainingLine();
-            var lineText = line.GetText().Trim();
+            ITextSnapshotLine line = point.Value.GetContainingLine();
+            string lineText = line.GetText().Trim();
 
             if (!lineText.StartsWith("[", StringComparison.Ordinal))
                 return;
@@ -42,7 +42,7 @@ namespace EditorConfig
             if (session.Signatures.Count != 4)
                 return session.Signatures.FirstOrDefault();
 
-            var text = _span.GetText(_buffer.CurrentSnapshot);
+            string text = _span.GetText(_buffer.CurrentSnapshot);
 
             if (text.Contains("[{"))
                 return session.Signatures.ElementAt(3);

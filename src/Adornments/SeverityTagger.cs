@@ -25,7 +25,7 @@ namespace EditorConfig
         private void FormatterOptions_Saved(object sender, EventArgs e)
         {
             // HACK: This triggers reparsing of the document. Otherwise GetTags never gets called
-            var text = _buffer.CurrentSnapshot.GetText();
+            string text = _buffer.CurrentSnapshot.GetText();
             _buffer.Replace(new Span(0, _buffer.CurrentSnapshot.Length), text);
         }
 
@@ -43,7 +43,7 @@ namespace EditorConfig
 
             var items = _document.ItemsInSpan(spans[0]).Where(p => p.ItemType == ItemType.Severity && !p.HasErrors).ToList();
 
-            foreach (var item in items)
+            foreach (ParseItem item in items)
             {
                 var span = new SnapshotSpan(_buffer.CurrentSnapshot, item.Span);
                 yield return new TagSpan<SeverityTag>(span, new SeverityTag(item));

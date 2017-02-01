@@ -4,6 +4,8 @@ using Microsoft.VisualStudio.Text.Operations;
 using System;
 using System.IO;
 using System.Windows;
+using Microsoft.VisualStudio.Text;
+using System.Collections.Specialized;
 
 namespace EditorConfig
 {
@@ -26,16 +28,16 @@ namespace EditorConfig
             try
             {
 
-                var position = dragDropInfo.VirtualBufferPosition.Position;
+                SnapshotPoint position = dragDropInfo.VirtualBufferPosition.Position;
                 string header = string.Format(_template, _ext);
 
-                var line = _view.TextBuffer.CurrentSnapshot.GetLineFromPosition(position);
+                ITextSnapshotLine line = _view.TextBuffer.CurrentSnapshot.GetLineFromPosition(position);
 
                 if (!line.Extent.IsEmpty)
                     header = Environment.NewLine + header;
 
-                using (var transaction = _undoManager.TextBufferUndoHistory.CreateTransaction($"Dragged {_ext}"))
-                using (var edit = _view.TextBuffer.CreateEdit())
+                using (ITextUndoTransaction transaction = _undoManager.TextBufferUndoHistory.CreateTransaction($"Dragged {_ext}"))
+                using (ITextEdit edit = _view.TextBuffer.CreateEdit())
                 {
                     edit.Insert(position, header);
                     edit.Apply();
@@ -67,7 +69,7 @@ namespace EditorConfig
 
         public bool IsDropEnabled(DragDropInfo dragDropInfo)
         {
-            var draggedFileName = GetDraggedFilename(dragDropInfo);
+            string draggedFileName = GetDraggedFilename(dragDropInfo);
             _ext = Path.GetExtension(draggedFileName);
 
             return !string.IsNullOrWhiteSpace(_ext);
@@ -80,7 +82,7 @@ namespace EditorConfig
             if (info.Data.GetDataPresent("FileDrop"))
             {
                 // The drag and drop operation came from the file system
-                var files = data.GetFileDropList();
+                StringCollection files = data.GetFileDropList();
 
                 if (files != null && files.Count == 1)
                 {

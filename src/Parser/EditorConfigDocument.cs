@@ -20,13 +20,13 @@ namespace EditorConfig
         public ITextBuffer TextBuffer { get; }
 
         /// <summary>A list of all the parse items in the document.</summary>
-        public List<ParseItem> ParseItems { get; } = new List<ParseItem>();
+        public List<ParseItem> ParseItems { get; private set; } = new List<ParseItem>();
 
         /// <summary>A list of all the sections in the document.</summary>
-        public List<Section> Sections { get; } = new List<Section>();
+        public List<Section> Sections { get; private set; } = new List<Section>();
 
         /// <summary>A list of all the properties in the root of the document.</summary>
-        public List<Property> Properties { get; } = new List<Property>();
+        public List<Property> Properties { get; private set; } = new List<Property>();
 
         /// <summary>The root property of the document if one is specified</summary>
         public Property Root
@@ -58,13 +58,13 @@ namespace EditorConfig
         /// <summary>Returns the Property located at the specified position.</summary>
         public Property PropertyAtPosition(int position)
         {
-            foreach (var property in Properties)
+            foreach (Property property in Properties)
             {
                 if (property.Span.Contains(position - 1))
                     return property;
             }
 
-            foreach (var property in Sections.SelectMany(s => s.Properties))
+            foreach (Property property in Sections.SelectMany(s => s.Properties))
             {
                 if (property.Span.Contains(position - 1))
                     return property;

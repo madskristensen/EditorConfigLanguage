@@ -17,7 +17,7 @@ namespace EditorConfig
             m_subjectBuffers = subjectBuffers;
             m_provider = provider;
 
-            m_textView.MouseHover += this.OnTextViewMouseHover;
+            m_textView.MouseHover += OnTextViewMouseHover;
         }
 
         private void OnTextViewMouseHover(object sender, MouseHoverEventArgs e)
@@ -44,7 +44,7 @@ namespace EditorConfig
         {
             if (m_textView == textView)
             {
-                m_textView.MouseHover -= this.OnTextViewMouseHover;
+                m_textView.MouseHover -= OnTextViewMouseHover;
                 m_textView = null;
             }
         }

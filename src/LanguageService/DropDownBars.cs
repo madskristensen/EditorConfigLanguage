@@ -28,8 +28,8 @@ namespace EditorConfig
             _languageService = languageService;
 
             var componentModel = (IComponentModel)languageService.GetService(typeof(SComponentModel));
-            var editorAdapterFactoryService = componentModel.GetService<IVsEditorAdaptersFactoryService>();
-            var textView = editorAdapterFactoryService.GetWpfTextView(view);
+            IVsEditorAdaptersFactoryService editorAdapterFactoryService = componentModel.GetService<IVsEditorAdaptersFactoryService>();
+            IWpfTextView textView = editorAdapterFactoryService.GetWpfTextView(view);
             textView.Caret.PositionChanged += CaretPositionChanged;
 
             _buffer = textView.TextBuffer;
@@ -76,14 +76,14 @@ namespace EditorConfig
             selectedMember = 0;
             dropDownMembers.Clear();
 
-            var localMembers = _members;
+            List<DropDownItem> localMembers = _members;
 
-            foreach (var item in localMembers)
+            foreach (DropDownItem item in localMembers)
             {
                 dropDownMembers.Add(new DropDownMember(item.Name, item.Span, 0, DROPDOWNFONTATTR.FONTATTR_PLAIN));
             }
 
-            var currentMember = localMembers.LastOrDefault(m => m.Span.iStartLine <= line);
+            DropDownItem currentMember = localMembers.LastOrDefault(m => m.Span.iStartLine <= line);
 
             if (currentMember != null)
             {
@@ -92,7 +92,7 @@ namespace EditorConfig
 
             if (dropDownTypes.Count == 0)
             {
-                var type = $"{Constants.FileName} ({new FileInfo(_document.FileName).Directory.Name})";
+                string type = $"{Constants.FileName} ({new FileInfo(_document.FileName).Directory.Name})";
                 dropDownTypes.Add(new DropDownMember(type, new TextSpan(), 0, DROPDOWNFONTATTR.FONTATTR_BOLD));
             }
 
@@ -103,7 +103,7 @@ namespace EditorConfig
         {
             var list = new List<DropDownItem>();
 
-            foreach (var section in _document.Sections)
+            foreach (Section section in _document.Sections)
             {
                 int lineNumber = _buffer.CurrentSnapshot.GetLineNumberFromPosition(section.Span.Start);
 

@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using System.Linq;
 using System.Threading;
+using System.Collections.Generic;
 
 namespace EditorConfig
 {
@@ -38,14 +39,14 @@ namespace EditorConfig
 
         public override void Execute(CancellationToken cancellationToken)
         {
-            var caretPost = _view.Caret.Position.BufferPosition;
-            var duplicates = _section.Properties.Where(p => p.Keyword.Errors.Any(e => e.ErrorCode == ErrorCodes.DuplicateProperty.Code || e.ErrorCode == ErrorCodes.ParentDuplicateProperty.Code));
+            SnapshotPoint caretPost = _view.Caret.Position.BufferPosition;
+            IEnumerable<Property> duplicates = _section.Properties.Where(p => p.Keyword.Errors.Any(e => e.ErrorCode == ErrorCodes.DuplicateProperty.Code || e.ErrorCode == ErrorCodes.ParentDuplicateProperty.Code));
 
-            using (var edit = _view.TextBuffer.CreateEdit())
+            using (ITextEdit edit = _view.TextBuffer.CreateEdit())
             {
-                foreach (var dupe in duplicates.Reverse())
+                foreach (Property dupe in duplicates.Reverse())
                 {
-                    var line = _view.TextBuffer.CurrentSnapshot.GetLineFromPosition(dupe.Span.Start);
+                    ITextSnapshotLine line = _view.TextBuffer.CurrentSnapshot.GetLineFromPosition(dupe.Span.Start);
                     edit.Delete(line.ExtentIncludingLineBreak);
                 }
 

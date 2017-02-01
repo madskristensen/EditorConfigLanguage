@@ -26,9 +26,9 @@ namespace EditorConfig
 
         internal void UpdateSink(IEnumerable<TableEntriesSnapshot> snapshots)
         {
-            foreach (var snapshot in snapshots)
+            foreach (TableEntriesSnapshot snapshot in snapshots)
             {
-                var existing = _snapshots.FirstOrDefault(s => s.Url == snapshot.Url);
+                TableEntriesSnapshot existing = _snapshots.FirstOrDefault(s => s.Url == snapshot.Url);
 
                 if (existing != null)
                 {
@@ -48,7 +48,7 @@ namespace EditorConfig
         {
             foreach (string url in urls)
             {
-                var existing = _snapshots.FirstOrDefault(s => s.Url == url);
+                TableEntriesSnapshot existing = _snapshots.FirstOrDefault(s => s.Url == url);
 
                 if (existing != null)
                 {

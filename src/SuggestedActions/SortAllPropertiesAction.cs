@@ -29,11 +29,11 @@ namespace EditorConfig
 
         public override void Execute(CancellationToken cancellationToken)
         {
-            var caretPost = _view.Caret.Position.BufferPosition;
+            SnapshotPoint caretPost = _view.Caret.Position.BufferPosition;
 
-            using (var edit = _document.TextBuffer.CreateEdit())
+            using (ITextEdit edit = _document.TextBuffer.CreateEdit())
             {
-                foreach (var section in _document.Sections)
+                foreach (Section section in _document.Sections)
                 {
                     SortPropertiesAction.SortSection(section, edit);
                 }

@@ -19,7 +19,7 @@ namespace EditorConfig.Shared
                 ItemName.Content = PrettifyName(item);
                 ItemName.SetResourceReference(TextBlock.ForegroundProperty, EnvironmentColors.SystemMenuTextBrushKey);
 
-                var description = item.Description;
+                string description = item.Description;
 
                 if (!item.IsSupported)
                     description += $"\r\n\r\n{EditorConfig.Resources.Text.NotSupportedByVS}";
@@ -33,7 +33,7 @@ namespace EditorConfig.Shared
 
         private static string PrettifyName(ITooltip item)
         {
-            var text = item.Name
+            string text = item.Name
                            .Replace("_", " ")
                            .Replace("dotnet", ".NET")
                            .Replace("csharp", "C#");

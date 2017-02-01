@@ -45,7 +45,7 @@ namespace EditorConfig
         {
             if (ServiceProvider.GetService(typeof(IMenuCommandService)) is MenuCommandService mcs)
             {
-                var cmdGroup = typeof(VSConstants.VSStd97CmdID).GUID;
+                Guid cmdGroup = typeof(VSConstants.VSStd97CmdID).GUID;
                 var cmd = new CommandID(cmdGroup, VSConstants.cmdidToolsOptions);
                 mcs.GlobalInvoke(cmd, typeof(FormatterOptions).GUID.ToString());
             }

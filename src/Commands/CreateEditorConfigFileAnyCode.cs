@@ -42,7 +42,7 @@ namespace EditorConfig.Commands
 
                     if (File.Exists(fileName))
                     {
-                        MessageBox.Show(Resources.Text.EditorConfigFileAlreadyExist, Vsix.Name, MessageBoxButton.OK, MessageBoxImage.Information);                        
+                        MessageBox.Show(Resources.Text.EditorConfigFileAlreadyExist, Vsix.Name, MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                     else
                     {

@@ -23,7 +23,7 @@ namespace EditorConfig
             var compositionService = ServiceProvider.GlobalProvider.GetService(typeof(SComponentModel)) as IComponentModel;
             compositionService.DefaultCompositionService.SatisfyImportsOnce(this);
 
-            var manager = TableManagerProvider.GetTableManager(StandardTables.ErrorsTable);
+            ITableManager manager = TableManagerProvider.GetTableManager(StandardTables.ErrorsTable);
             manager.AddSource(this, StandardTableColumnDefinitions.DetailsExpander,
                                                    StandardTableColumnDefinitions.ErrorSeverity, StandardTableColumnDefinitions.ErrorCode,
                                                    StandardTableColumnDefinitions.ErrorSource, StandardTableColumnDefinitions.BuildTool,
@@ -93,7 +93,7 @@ namespace EditorConfig
         {
             lock (_managers)
             {
-                foreach (var manager in _managers)
+                foreach (SinkManager manager in _managers)
                 {
                     manager.UpdateSink(_snapshots.Values);
                 }
@@ -121,7 +121,7 @@ namespace EditorConfig
 
             lock (_managers)
             {
-                foreach (var manager in _managers)
+                foreach (SinkManager manager in _managers)
                 {
                     manager.RemoveSnapshots(urls);
                 }
@@ -134,7 +134,7 @@ namespace EditorConfig
         {
             foreach (string url in _snapshots.Keys)
             {
-                var snapshot = _snapshots[url];
+                TableEntriesSnapshot snapshot = _snapshots[url];
                 if (snapshot != null)
                 {
                     snapshot.Dispose();
@@ -145,7 +145,7 @@ namespace EditorConfig
 
             lock (_managers)
             {
-                foreach (var manager in _managers)
+                foreach (SinkManager manager in _managers)
                 {
                     manager.Clear();
                 }

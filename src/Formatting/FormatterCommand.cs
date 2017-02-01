@@ -30,10 +30,10 @@ namespace EditorConfig
 
         private void FormatDocument()
         {
-            using (var transaction = _undoManager.TextBufferUndoHistory.CreateTransaction(Resources.Text.FormatDocument))
+            using (ITextUndoTransaction transaction = _undoManager.TextBufferUndoHistory.CreateTransaction(Resources.Text.FormatDocument))
             {
-                var formatter = _view.Properties.GetOrCreateSingletonProperty(() => new EditorConfigFormatter(_view.TextBuffer));
-                var changed = formatter.Format();
+                EditorConfigFormatter formatter = _view.Properties.GetOrCreateSingletonProperty(() => new EditorConfigFormatter(_view.TextBuffer));
+                bool changed = formatter.Format();
 
                 if (changed)
                     transaction.Complete();

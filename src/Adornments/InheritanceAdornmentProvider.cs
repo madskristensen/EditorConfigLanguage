@@ -17,7 +17,7 @@ namespace EditorConfig
         {
             if (DocumentService.TryGetTextDocument(textView.TextBuffer, out ITextDocument doc))
             {
-                InheritanceAdornment generated = new InheritanceAdornment(textView, doc);
+                var generated = new InheritanceAdornment(textView, doc);
             }
         }
     }

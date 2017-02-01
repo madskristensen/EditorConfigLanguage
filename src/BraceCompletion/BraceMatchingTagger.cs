@@ -66,7 +66,7 @@ namespace EditorConfig
 
             SnapshotPoint lastChar = currentChar == 0 ? currentChar : currentChar - 1; //if currentChar is 0 (beginning of buffer), don't move it back
             char lastText = lastChar.GetChar();
-            SnapshotSpan pairSpan = new SnapshotSpan();
+            var pairSpan = new SnapshotSpan();
 
             if (_braceList.ContainsKey(currentText))   //the key is the open brace
             {
@@ -79,9 +79,9 @@ namespace EditorConfig
             }
             else if (_braceList.ContainsValue(lastText))    //the value is the close brace, which is the *previous* character
             {
-                var open = from n in _braceList
-                           where n.Value.Equals(lastText)
-                           select n.Key;
+                IEnumerable<char> open = from n in _braceList
+                                         where n.Value.Equals(lastText)
+                                         select n.Key;
                 if (FindMatchingOpenChar(lastChar, open.ElementAt(0), lastText, View.TextViewLines.Count, out pairSpan))
                 {
                     yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(lastChar, 1), new TextMarkerTag("MarkerFormatDefinition/HighlightWordFormatDefinition"));

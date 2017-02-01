@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.Text.Editor;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Collections.Generic;
 
 namespace EditorConfig
 {
@@ -31,9 +32,9 @@ namespace EditorConfig
 
         public override void Execute(CancellationToken cancellationToken)
         {
-            var caretPost = _view.Caret.Position.BufferPosition;
+            SnapshotPoint caretPost = _view.Caret.Position.BufferPosition;
 
-            using (var edit = _view.TextBuffer.CreateEdit())
+            using (ITextEdit edit = _view.TextBuffer.CreateEdit())
             {
                 SortSection(_section, edit);
 
@@ -46,22 +47,22 @@ namespace EditorConfig
 
         public static void SortSection(Section section, ITextEdit edit)
         {
-            var first = section.Properties.FirstOrDefault();
-            var last = section.Properties.LastOrDefault();
+            Property first = section.Properties.FirstOrDefault();
+            Property last = section.Properties.LastOrDefault();
 
             if (first == null)
                 return;
 
-            var bufferLines = edit.Snapshot.Lines.Where(l => l.Start >= first.Span.Start && l.End <= last.Span.End);
-            var lines = bufferLines.Select(b => b.GetText());
+            IEnumerable<ITextSnapshotLine> bufferLines = edit.Snapshot.Lines.Where(l => l.Start >= first.Span.Start && l.End <= last.Span.End);
+            IEnumerable<string> lines = bufferLines.Select(b => b.GetText());
 
-            var properties = lines.OrderBy(l => l.IndexOf("csharp_") + l.IndexOf("dotnet_"))
+            IOrderedEnumerable<string> properties = lines.OrderBy(l => l.IndexOf("csharp_") + l.IndexOf("dotnet_"))
                                   .ThenBy(p => p);
 
             var sb = new StringBuilder();
             sb.AppendLine(section.Item.Text);
 
-            foreach (var property in properties.Where(p => !string.IsNullOrWhiteSpace(p)))
+            foreach (string property in properties.Where(p => !string.IsNullOrWhiteSpace(p)))
             {
                 sb.AppendLine(property);
             }

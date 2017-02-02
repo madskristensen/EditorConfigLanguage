@@ -151,7 +151,7 @@
     <Compile Include="Adornments\SeverityTag.cs" />
     <Compile Include="Adornments\SeverityTagger.cs" />
     <Compile Include="Adornments\SeverityTaggerProvider.cs" />
-    <Compile Include="TextViewCreationListener.cs" />
+    <Compile Include="Shared\TextViewCreationListener.cs" />
     <Compile Include="LanguageService\ContentTypes.cs" />
     <Compile Include="EditorConfigPackage.cs" />
     <Compile Include="LanguageService\EditorFactory.cs" />

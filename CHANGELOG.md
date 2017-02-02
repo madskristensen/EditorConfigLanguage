@@ -1,11 +1,5 @@
 # Road map
 
-- [x] Updated schema to allow multple values
-- [x] Validator allows for comma separated values
-- [x] Intellisenes triggers on `,` for supported properties
-- [x] Made new line rules visible
-- [x] Source code adhering to Roslyn coding standards
-- [x] Switch icons to the official .editorconfig icon
 - [ ] Add item template for .editorconfig files
 
 Features that have a checkmark are complete and available for
@@ -16,6 +10,15 @@ download in the
 
 These are the changes to each version that has been released
 on the official Visual Studio extension gallery.
+
+## 1,12
+
+- [x] Updated schema to allow multple values
+- [x] Validator allows for comma separated values
+- [x] Intellisenes triggers on `,` for supported properties
+- [x] Made new line rules visible
+- [x] Source code adhering to Roslyn coding standards
+- [x] Switch icons to the official .editorconfig icon
 
 ## 1.11
 

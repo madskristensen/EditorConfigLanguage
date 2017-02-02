@@ -9,7 +9,7 @@ namespace EditorConfig
     /// <summary>The keyword is the name-part of a property.</summary>
     public class Keyword : ITooltip
     {
-        public Keyword(string name, string description, IEnumerable<string> values, bool unsupported, bool hidden, bool multiple)
+        public Keyword(string name, string description, IEnumerable<string> values, bool unsupported, bool hidden, bool multiple, bool severity)
         {
             Name = name;
             Description = description;
@@ -17,6 +17,7 @@ namespace EditorConfig
             IsSupported = !unsupported;
             IsVisible = !hidden;
             SupportsMultipleValues = multiple;
+            RequiresSeverity = severity;
         }
 
         /// <summary>The keyword of the property.</summary>
@@ -36,6 +37,8 @@ namespace EditorConfig
 
         /// <summary>True if the value can be a comman separated list.</summary>
         public bool SupportsMultipleValues { get; }
+
+        public bool RequiresSeverity { get; }
 
         /// <summary>The category is used in the Intellisense filters.</summary>
         public Category Category
@@ -70,14 +73,6 @@ namespace EditorConfig
                 }
 
                 return KnownMonikers.Property;
-            }
-        }
-
-        public bool RequiresSeverity
-        {
-            get
-            {
-                return Name.StartsWith("csharp_style") || Name.StartsWith("dotnet_style");
             }
         }
     }

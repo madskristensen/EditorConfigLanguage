@@ -12,6 +12,7 @@ namespace EditorConfig
     {
         private ICompletionSession _currentSession;
         private IQuickInfoBroker _quickInfoBroker;
+        private ITextView textView;
 
         public CompletionController(IWpfTextView textView, ICompletionBroker broker, IQuickInfoBroker quickInfoBroker)
         {
@@ -172,13 +173,16 @@ namespace EditorConfig
             {
                 _currentSession = Broker.GetSessions(TextView)[0];
             }
-            _currentSession.Dismissed += (sender, args) => _currentSession = null;
 
+            _currentSession.Dismissed += (sender, args) => _currentSession = null;
             _currentSession.Start();
 
             if (_quickInfoBroker.IsQuickInfoActive(TextView))
             {
-                _quickInfoBroker.GetSessions(TextView)[0].Dismiss();
+                foreach (IQuickInfoSession session in _quickInfoBroker.GetSessions(textView))
+                {
+                    session.Dismiss();
+                }
             }
 
             return true;

@@ -12,7 +12,6 @@ namespace EditorConfig
     {
         private ICompletionSession _currentSession;
         private IQuickInfoBroker _quickInfoBroker;
-        private ITextView textView;
 
         public CompletionController(IWpfTextView textView, ICompletionBroker broker, IQuickInfoBroker quickInfoBroker)
         {
@@ -25,11 +24,6 @@ namespace EditorConfig
 
         public IWpfTextView TextView { get; }
         public ICompletionBroker Broker { get; }
-
-        private static char GetTypeChar(IntPtr pvaIn)
-        {
-            return (char)(ushort)Marshal.GetObjectForNativeVariant(pvaIn);
-        }
 
         public override int Exec(ref Guid pguidCmdGroup, uint nCmdID, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
         {
@@ -68,20 +62,7 @@ namespace EditorConfig
                     switch ((VSConstants.VSStd2KCmdID)nCmdID)
                     {
                         case VSConstants.VSStd2KCmdID.TYPECHAR:
-                            char ch = GetTypeChar(pvaIn);
-                            if (char.IsLetterOrDigit(ch) && EditorConfigPackage.Language.Preferences.AutoListMembers)
-                            {
-                                StartSession();
-                            }
-                            else if ((ch == ':' || ch == '=' || ch == ' ' || ch == ',') && EditorConfigPackage.Language.Preferences.AutoListMembers)
-                            {
-                                Cancel();
-                                StartSession();
-                            }
-                            else if (_currentSession != null)
-                            {
-                                Filter();
-                            }
+                            HandleTypeChar(pvaIn);
                             break;
                         case VSConstants.VSStd2KCmdID.BACKSPACE:
                         case VSConstants.VSStd2KCmdID.DELETE:
@@ -92,6 +73,33 @@ namespace EditorConfig
             }
 
             return hresult;
+        }
+
+        private void HandleTypeChar(IntPtr pvaIn)
+        {
+            bool handled = false;
+
+            if (EditorConfigPackage.Language.Preferences.AutoListMembers)
+            {
+                char ch = (char)(ushort)Marshal.GetObjectForNativeVariant(pvaIn);
+
+                if (char.IsLetterOrDigit(ch) && EditorConfigPackage.Language.Preferences.AutoListMembers)
+                {
+                    StartSession();
+                    handled = true;
+                }
+                else if ((ch == ':' || ch == '=' || ch == ' ' || ch == ',') && EditorConfigPackage.Language.Preferences.AutoListMembers)
+                {
+                    Cancel();
+                    StartSession();
+                    handled = true;
+                }
+            }
+
+            if (!handled && _currentSession != null)
+            {
+                Filter();
+            }
         }
 
         private void Filter()
@@ -136,7 +144,9 @@ namespace EditorConfig
                 if (moniker == "keyword")
                 {
                     TextView.TextBuffer.Insert(position, " = ");
-                    StartSession();
+
+                    if (EditorConfigPackage.Language.Preferences.AutoListMembers)
+                        StartSession();
                 }
                 else if (moniker == "value")
                 {
@@ -148,7 +158,9 @@ namespace EditorConfig
                         if (keyword.RequiresSeverity && prop.Value.Text.Is("true"))
                         {
                             TextView.TextBuffer.Insert(position, ":");
-                            StartSession();
+
+                            if (EditorConfigPackage.Language.Preferences.AutoListMembers)
+                                StartSession();
                         }
                     }
                 }
@@ -179,7 +191,7 @@ namespace EditorConfig
 
             if (_quickInfoBroker.IsQuickInfoActive(TextView))
             {
-                foreach (IQuickInfoSession session in _quickInfoBroker.GetSessions(textView))
+                foreach (IQuickInfoSession session in _quickInfoBroker.GetSessions(TextView))
                 {
                     session.Dismiss();
                 }

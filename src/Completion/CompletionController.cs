@@ -142,15 +142,16 @@ namespace EditorConfig
                     return true;
 
                 SnapshotPoint position = TextView.Caret.Position.BufferPosition;
+                ITextSnapshotLine line = TextView.TextBuffer.CurrentSnapshot.GetLineFromPosition(position);
 
-                if (moniker == "keyword")
+                if (moniker == "keyword" && !line.GetText().Contains("="))
                 {
                     TextView.TextBuffer.Insert(position, " = ");
 
                     if (EditorConfigPackage.Language.Preferences.AutoListMembers)
                         StartSession();
                 }
-                else if (moniker == "value")
+                else if (moniker == "value" && !line.GetText().Contains(":"))
                 {
                     var document = EditorConfigDocument.FromTextBuffer(TextView.TextBuffer);
                     Property prop = document.PropertyAtPosition(position - 1);

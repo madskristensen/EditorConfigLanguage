@@ -6,6 +6,7 @@
 - [x] Remove *Code Navigation* group from context menu
 - [x] Only show completion for `root` at top of document
 - [x] Support *CompleteWord* command
+- [x] Stop auto-injecting `=` and `:` if they exist
 - [ ] Add item template for .editorconfig files
 
 Features that have a checkmark are complete and available for

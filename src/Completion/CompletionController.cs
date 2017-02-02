@@ -35,8 +35,10 @@ namespace EditorConfig
             {
                 switch ((VSConstants.VSStd2KCmdID)nCmdID)
                 {
-                    case VSConstants.VSStd2KCmdID.AUTOCOMPLETE:
                     case VSConstants.VSStd2KCmdID.COMPLETEWORD:
+                        handled = CompleteWord();
+                        break;
+                    case VSConstants.VSStd2KCmdID.AUTOCOMPLETE:
                     case VSConstants.VSStd2KCmdID.SHOWMEMBERLIST:
                         handled = StartSession();
                         break;
@@ -198,6 +200,24 @@ namespace EditorConfig
             }
 
             return true;
+        }
+
+        private bool CompleteWord()
+        {
+            StartSession();
+
+            if (_currentSession == null || _currentSession.CompletionSets.Count == 0)
+                return false;
+
+            if (_currentSession.CompletionSets[0].Completions.Count == 1)
+            {
+                return Complete(true);
+            }
+            else
+            {
+                Filter();
+                return true;
+            }
         }
 
         public override int QueryStatus(ref Guid pguidCmdGroup, uint cCmds, OLECMD[] prgCmds, IntPtr pCmdText)

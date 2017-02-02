@@ -4,7 +4,8 @@
 - [x] Add *Navigate To Parent* to context menu
 - [x] Enable async completion
 - [x] Remove *Code Navigation* group from context menu
-- [ ] Only show completion for `root` at top of document
+- [x] Only show completion for `root` at top of document
+- [ ] Filter completion items already set in same section
 - [ ] Add item template for .editorconfig files
 
 Features that have a checkmark are complete and available for

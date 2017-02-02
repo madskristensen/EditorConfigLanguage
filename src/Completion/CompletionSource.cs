@@ -45,11 +45,19 @@ namespace EditorConfig
             if (string.IsNullOrWhiteSpace(line.GetText()) || parseItem?.ItemType == ItemType.Keyword)
             {
                 bool isInRoot = !_document.ParseItems.Exists(p => p.ItemType == ItemType.Section && p.Span.Start < position);
-                IEnumerable<Keyword> properties = EditorConfigPackage.CompletionOptions.ShowHiddenKeywords ? SchemaCatalog.AllKeywords : SchemaCatalog.VisibleKeywords;
-                IEnumerable<Keyword> items = isInRoot ? SchemaCatalog.VisibleKeywords : properties.Where(i => i.Name != SchemaCatalog.Root);
+                if (isInRoot)
+                {
+                    if (SchemaCatalog.TryGetKeyword(SchemaCatalog.Root, out Keyword root))
+                        list.Add(CreateCompletion(root, root.Category));
+                }
+                else
+                {
+                    IEnumerable<Keyword> properties = EditorConfigPackage.CompletionOptions.ShowHiddenKeywords ? SchemaCatalog.AllKeywords : SchemaCatalog.VisibleKeywords;
+                    IEnumerable<Keyword> items = properties.Where(i => i.Name != SchemaCatalog.Root);
 
-                foreach (Keyword property in items)
-                    list.Add(CreateCompletion(property, property.Category));
+                    foreach (Keyword property in items)
+                        list.Add(CreateCompletion(property, property.Category));
+                }
 
                 moniker = "keyword";
             }

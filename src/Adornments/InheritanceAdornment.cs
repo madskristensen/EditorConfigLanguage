@@ -150,7 +150,7 @@ namespace EditorConfig
 
         private static string GetShortcut()
         {
-            Command cmd = VsHelpers.DTE.Commands.Item("EditorConfig.NavigateToParent");
+            Command cmd = VsHelpers.DTE.Commands.Item("EditorContextMenus.CodeWindow.EditorConfig.NavigateToParent");
 
             if (cmd == null || !cmd.IsAvailable)
                 return null;

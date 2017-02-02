@@ -52,6 +52,7 @@ namespace EditorConfig
                     preferences.InsertTabs = false;
                     preferences.IndentSize = 2;
                     preferences.ShowNavigationBar = true;
+                    preferences.EnableAsyncCompletion = true;
 
                     preferences.WordWrap = false;
                     preferences.WordWrapGlyphs = true;

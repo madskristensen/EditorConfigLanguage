@@ -13,7 +13,7 @@ namespace EditorConfig
     [PackageRegistration(UseManagedResourcesOnly = true)]
     [InstalledProductRegistration("#110", "#112", Vsix.Version, IconResourceID = 400)]
 
-    [ProvideLanguageService(typeof(EditorConfigLanguage), Constants.LanguageName, 101, ShowCompletion = true, EnableAdvancedMembersOption = true, HideAdvancedMembersByDefault = false, QuickInfo = true, ShowDropDownOptions = true, DefaultToInsertSpaces = true, EnableCommenting = true, AutoOutlining = true, EnableLineNumbers = true, MatchBraces = true, MatchBracesAtCaret = true, ShowMatchingBrace = true)]
+    [ProvideLanguageService(typeof(EditorConfigLanguage), Constants.LanguageName, 101, ShowCompletion = true, EnableAsyncCompletion = true, EnableAdvancedMembersOption = true, HideAdvancedMembersByDefault = false, QuickInfo = true, ShowDropDownOptions = true, DefaultToInsertSpaces = true, EnableCommenting = true, AutoOutlining = true, EnableLineNumbers = true, MatchBraces = true, MatchBracesAtCaret = true, ShowMatchingBrace = true)]
     [ProvideLanguageExtension(typeof(EditorConfigLanguage), Constants.FileName)]
     [ProvideLanguageEditorOptionPage(typeof(FormatterOptions), Constants.LanguageName, null, "Formatting", "#101", new[] { "editorconfig", "formatting" })]
     [ProvideLanguageEditorOptionPage(typeof(ValidationOptions), Constants.LanguageName, null, "Validation", "#102", new[] { "editorconfig", "validation" })]

@@ -3,7 +3,6 @@
 
   <Extern href="stdidcmd.h"/>
   <Extern href="vsshlids.h"/>
-  <Include href="KnownImageIds.vsct"/>
 
   <Commands package="guidEditorConfigPackage">
     <Groups>
@@ -30,18 +29,18 @@
         </Strings>
       </Button>
       <Button guid="guidEditorConfigPackageCmdSet" id="OpenSettingsId" priority="0x0200" type="Button">
-        <Icon guid="ImageCatalogGuid" id="Settings" />
+        <Icon guid="icons" id="logo" />
         <CommandFlag>IconIsMoniker</CommandFlag>
         <CommandFlag>DynamicVisibility</CommandFlag>
         <CommandFlag>DefaultInvisible</CommandFlag>
         <CommandFlag>DefaultDisabled</CommandFlag>
         <Strings>
-          <ButtonText>EditorConfig Options...</ButtonText>
+          <ButtonText>Formatting and Validation...</ButtonText>
           <LocCanonicalName>EditorConfig.Options</LocCanonicalName>
         </Strings>
       </Button>
       <Button guid="guidEditorConfigPackageCmdSet" id="NavigateToParentId" priority="0x0200" type="Button">
-        <CommandFlag>CommandWellOnly</CommandFlag>
+        <CommandFlag>DefaultDisabled</CommandFlag>
         <Strings>
           <ButtonText>Navigate To Parent</ButtonText>
           <LocCanonicalName>EditorConfig.NavigateToParent</LocCanonicalName>
@@ -80,7 +79,10 @@
     <CommandPlacement guid="guidEditorConfigPackageCmdSet" id="EditorContextMenu" priority="0x0900">
       <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_CODEWIN" />
     </CommandPlacement>
-    <CommandPlacement guid="guidEditorConfigPackageCmdSet" id="OpenSettingsId" priority="0x0100">
+    <CommandPlacement guid="guidEditorConfigPackageCmdSet" id="NavigateToParentId" priority="0x0100">
+      <Parent guid="guidEditorConfigPackageCmdSet" id="EditorContextMenu" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidEditorConfigPackageCmdSet" id="OpenSettingsId" priority="0x0200">
       <Parent guid="guidEditorConfigPackageCmdSet" id="EditorContextMenu" />
     </CommandPlacement>
   </CommandPlacements>
@@ -110,6 +112,7 @@
       <IDSymbol name="idmAddNew" value="0x2200"/>
     </GuidSymbol>
 
+    <!-- Image monikers -->
     <GuidSymbol name="icons" value="{666770e6-562f-46d7-a555-3a0cdffe94d2}">
       <IDSymbol name="logo" value="1" />
     </GuidSymbol>

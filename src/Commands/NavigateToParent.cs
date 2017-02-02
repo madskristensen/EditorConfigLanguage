@@ -51,7 +51,15 @@ namespace EditorConfig
         {
             if (pguidCmdGroup == _commandGroup && prgCmds[0].cmdID == _commandId)
             {
-                prgCmds[0].cmdf = (uint)OLECMDF.OLECMDF_ENABLED | (uint)OLECMDF.OLECMDF_SUPPORTED;
+                var document = EditorConfigDocument.FromTextBuffer(_buffer);
+                EditorConfigDocument parent = document?.Parent;
+
+                if (parent != null)
+                {
+                    prgCmds[0].cmdf = (uint)OLECMDF.OLECMDF_ENABLED | (uint)OLECMDF.OLECMDF_SUPPORTED;
+                    return VSConstants.S_OK;
+                }
+
                 return VSConstants.S_OK;
             }
 

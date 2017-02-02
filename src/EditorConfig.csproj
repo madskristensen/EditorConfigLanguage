@@ -63,6 +63,7 @@
     <Compile Include="Adornments\IntraTextAdornmentTagger.cs" />
     <Compile Include="BraceCompletion\BraceCompletionContextProvider.cs" />
     <Compile Include="BraceCompletion\BraceCompletionContext.cs" />
+    <Compile Include="Commands\HideDefaultCommands.cs" />
     <Compile Include="Completion\CompletionOptions.cs">
       <SubType>Component</SubType>
     </Compile>

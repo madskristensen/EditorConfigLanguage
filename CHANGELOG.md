@@ -3,7 +3,7 @@
 - [x] Fixed issue with auto-list members
 - [x] Add *Navigate To Parent* to context menu
 - [x] Enable async completion
-- [ ] Remove *Code Navigation* group from context menu
+- [x] Remove *Code Navigation* group from context menu
 - [ ] Only show completion for `root` at top of document
 - [ ] Add item template for .editorconfig files
 

@@ -48,6 +48,10 @@ namespace EditorConfig
 
                 currentCompletions.Filter(new Predicate<Completion>(DoesCompletionMatchAutomationText));
             }
+            else
+            {
+                currentCompletions.Filter(new Predicate<Completion>(DoesCompletionMatchDisplayText));
+            }
 
             IOrderedEnumerable<Completion> ordered = currentCompletions.OrderByDescending(c => GetHighlightedSpansInDisplayText(c.DisplayText).Sum(s => s.Length));
 
@@ -60,6 +64,11 @@ namespace EditorConfig
             {
                 SelectBestMatch(CompletionMatchType.MatchDisplayText, false);
             }
+        }
+
+        private bool DoesCompletionMatchDisplayText(Completion completion)
+        {
+            return _typed.Length == 0 || completion.DisplayText.IndexOf(_typed, StringComparison.OrdinalIgnoreCase) > -1;
         }
 
         private bool DoesCompletionMatchAutomationText(Completion completion)

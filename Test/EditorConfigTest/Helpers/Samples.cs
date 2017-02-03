@@ -13,5 +13,8 @@ insert_final_newline = true";
 
         public const string MultipleValuesSection = @"[*.cs]
 csharp_new_line_before_open_brace = accessors, indexers";
+
+        public const string SeveritySimple = @"[*.cs]
+dotnet_style_qualification_for_event = true";
     }
 }

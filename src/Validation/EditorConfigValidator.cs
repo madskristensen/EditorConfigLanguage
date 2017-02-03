@@ -17,7 +17,7 @@ namespace EditorConfig
         private DateTime _lastRequestForValidation;
         private Timer _timer;
         private bool _hasChanged, _validating;
-        private bool _prevEnabled = EditorConfigPackage.ValidationOptions.EnableValidation;
+        private bool _prevEnabled = EditorConfigPackage.ValidationOptions != null ? EditorConfigPackage.ValidationOptions.EnableValidation : true;
         private Dictionary<string, bool> _globbingCache = new Dictionary<string, bool>();
         private static readonly Options _options = new Options { AllowWindowsPaths = true, MatchBase = true };
 
@@ -271,6 +271,12 @@ namespace EditorConfig
                 PredefinedErrors.MissingValue(property.Keyword);
             }
 
+            // Missing severity
+            else if (property.Severity == null && keyword.RequiresSeverity)
+            {
+                PredefinedErrors.MissingSeverity(property.Value);
+            }
+
             // Value not in schema
             else if (EditorConfigPackage.ValidationOptions.EnableUnknownValues && !(int.TryParse(property.Value.Text, out int intValue) && intValue > 0))
             {
@@ -284,16 +290,11 @@ namespace EditorConfig
                 }
                 else
                 {
-                    if (!keyword.Values.Any(v => v.Name.Is(property.Value.Text)))
+                    if (!keyword.Values.Any(v => v.Name.Is(property.Value.Text.Trim())))
                         PredefinedErrors.UnknownValue(property.Value, keyword.Name);
                 }
             }
 
-            // Missing severity
-            else if (property.Severity == null && property.Value.Text.Is("true") && keyword.RequiresSeverity)
-            {
-                PredefinedErrors.MissingSeverity(property.Value);
-            }
             else if (property.Severity != null)
             {
                 // Severity not applicaple to property

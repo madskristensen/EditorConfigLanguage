@@ -1,5 +1,7 @@
 # Road map
 
+- [x] Always require severity for supporting properties
+- [x] Fixed issue with whitespace validation
 - [ ] Add item template for .editorconfig files
 
 Features that have a checkmark are complete and available for

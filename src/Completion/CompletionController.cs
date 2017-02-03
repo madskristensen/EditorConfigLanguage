@@ -161,7 +161,7 @@ namespace EditorConfig
 
                     if (SchemaCatalog.TryGetKeyword(prop.Keyword.Text, out Keyword keyword) && prop.Value != null)
                     {
-                        if (keyword.RequiresSeverity && prop.Value.Text.Is("true"))
+                        if (keyword.RequiresSeverity)
                         {
                             TextView.TextBuffer.Insert(position, ":");
 

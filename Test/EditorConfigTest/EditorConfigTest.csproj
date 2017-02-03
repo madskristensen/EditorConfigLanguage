@@ -109,6 +109,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CompletionTest.cs" />
+    <Compile Include="ValidationTest.cs" />
     <Compile Include="DocumentTest.cs" />
     <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Helpers\Mef.cs" />

@@ -290,7 +290,7 @@ namespace EditorConfig
                 }
                 else
                 {
-                    if (!keyword.Values.Any(v => v.Name.Is(property.Value.Text.Trim())))
+                    if (!keyword.Values.Any(v => v.Name.Is(property.Value.Text)))
                         PredefinedErrors.UnknownValue(property.Value, keyword.Name);
                 }
             }

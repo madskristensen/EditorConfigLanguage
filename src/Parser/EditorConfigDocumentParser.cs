@@ -131,10 +131,10 @@ namespace EditorConfig
 
         private ParseItem CreateParseItem(ItemType type, ITextSnapshotLine line, Capture match)
         {
-            var matchSpan = new SnapshotSpan(line.Snapshot, line.Start.Position + match.Index, match.Length);
+            string trimmed = match.Value.TrimEnd();
+            var matchSpan = new SnapshotSpan(line.Snapshot, line.Start.Position + match.Index, trimmed.Length);
 
-            string textValue = matchSpan.GetText();
-            var item = new ParseItem(this, type, matchSpan, textValue);
+            var item = new ParseItem(this, type, matchSpan, trimmed);
 
             return item;
         }

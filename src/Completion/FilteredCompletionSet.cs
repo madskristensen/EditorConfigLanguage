@@ -68,15 +68,13 @@ namespace EditorConfig
             }
             else
             {
-                currentCompletions.Filter(new Predicate<Completion>(DoesCompletionMatchDisplayText));
+                if (!CompletionController.ShowAllMembers)
+                    currentCompletions.Filter(new Predicate<Completion>(DoesCompletionMatchDisplayText));
             }
         }
 
         private bool DoesCompletionMatchDisplayText(Completion completion)
         {
-            if (CompletionController.ShowAllMembers)
-                return true;
-
             return _typed.Length == 0 || completion.DisplayText.IndexOf(_typed, StringComparison.OrdinalIgnoreCase) > -1;
         }
 

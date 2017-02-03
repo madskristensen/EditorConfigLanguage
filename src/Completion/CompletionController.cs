@@ -46,13 +46,13 @@ namespace EditorConfig
                         handled = StartSession();
                         break;
                     case VSConstants.VSStd2KCmdID.RETURN:
-                        handled = Complete(false);
+                        handled = Commit(false);
                         break;
                     case VSConstants.VSStd2KCmdID.TAB:
-                        handled = Complete(true);
+                        handled = Commit(true);
                         break;
                     case VSConstants.VSStd2KCmdID.CANCEL:
-                        handled = Cancel();
+                        handled = Dismiss();
                         break;
                 }
             }
@@ -96,7 +96,7 @@ namespace EditorConfig
                 }
                 else if ((ch == ':' || ch == '=' || ch == ' ' || ch == ',') && EditorConfigPackage.Language.Preferences.AutoListMembers)
                 {
-                    Cancel();
+                    Dismiss();
                     StartSession();
                     handled = true;
                 }
@@ -110,14 +110,13 @@ namespace EditorConfig
 
         private void Filter()
         {
-            if (_currentSession == null)
-                return;
-
-            _currentSession.SelectedCompletionSet.SelectBestMatch();
-            _currentSession.SelectedCompletionSet.Recalculate();
+            if (_currentSession != null)
+            {
+                _currentSession.SelectedCompletionSet.SelectBestMatch();
+            }
         }
 
-        bool Cancel()
+        bool Dismiss()
         {
             if (_currentSession == null)
                 return false;
@@ -127,7 +126,7 @@ namespace EditorConfig
             return true;
         }
 
-        bool Complete(bool force)
+        bool Commit(bool force)
         {
             if (_currentSession == null)
                 return false;
@@ -216,13 +215,21 @@ namespace EditorConfig
 
             if (_currentSession.CompletionSets[0].Completions.Count == 1)
             {
-                return Complete(true);
+                string text = _currentSession.CompletionSets[0].ApplicableTo.GetText(TextView.TextSnapshot);
+
+                if (!text.Equals(_currentSession.CompletionSets[0].Completions[0].DisplayText, StringComparison.OrdinalIgnoreCase))
+                    return Commit(true);
+
+                ShowAllMembers = true;
+                Dismiss();
+                StartSession();
             }
             else
             {
                 Filter();
-                return true;
             }
+
+            return false;
         }
 
         public override int QueryStatus(ref Guid pguidCmdGroup, uint cCmds, OLECMD[] prgCmds, IntPtr pCmdText)

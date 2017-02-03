@@ -5,7 +5,8 @@
 - [x] Enable async completion
 - [x] Remove *Code Navigation* group from context menu
 - [x] Only show completion for `root` at top of document
-- [x] Support *CompleteWord* command
+- [x] Support *Complete Word* command properly
+- [x] Support *Show Member List* command properly
 - [x] Stop auto-injecting `=` and `:` if they exist
 - [ ] Add item template for .editorconfig files
 
@@ -18,7 +19,7 @@ download in the
 These are the changes to each version that has been released
 on the official Visual Studio extension gallery.
 
-## 1,12
+## 1.12
 
 - [x] Updated schema to allow multiple values
 - [x] Validator allows for comma separated values

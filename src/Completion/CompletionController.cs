@@ -24,6 +24,7 @@ namespace EditorConfig
 
         public IWpfTextView TextView { get; }
         public ICompletionBroker Broker { get; }
+        public static bool ShowAllMembers { get; private set; }
 
         public override int Exec(ref Guid pguidCmdGroup, uint nCmdID, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
         {
@@ -36,10 +37,12 @@ namespace EditorConfig
                 switch ((VSConstants.VSStd2KCmdID)nCmdID)
                 {
                     case VSConstants.VSStd2KCmdID.COMPLETEWORD:
+                        ShowAllMembers = false;
                         handled = CompleteWord();
                         break;
                     case VSConstants.VSStd2KCmdID.AUTOCOMPLETE:
                     case VSConstants.VSStd2KCmdID.SHOWMEMBERLIST:
+                        ShowAllMembers = true;
                         handled = StartSession();
                         break;
                     case VSConstants.VSStd2KCmdID.RETURN:
@@ -64,6 +67,7 @@ namespace EditorConfig
                     switch ((VSConstants.VSStd2KCmdID)nCmdID)
                     {
                         case VSConstants.VSStd2KCmdID.TYPECHAR:
+                            ShowAllMembers = false;
                             HandleTypeChar(pvaIn);
                             break;
                         case VSConstants.VSStd2KCmdID.BACKSPACE:

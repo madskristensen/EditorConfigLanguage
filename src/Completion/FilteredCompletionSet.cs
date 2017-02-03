@@ -34,6 +34,24 @@ namespace EditorConfig
         public override void SelectBestMatch()
         {
             _typed = ApplicableTo.GetText(ApplicableTo.TextBuffer.CurrentSnapshot);
+
+            CustomFilter();
+
+            IOrderedEnumerable<Completion> ordered = currentCompletions.OrderByDescending(c => GetHighlightedSpansInDisplayText(c.DisplayText).Sum(s => s.Length));
+
+            if (ordered.Any())
+            {
+                int count = ordered.Count();
+                SelectionStatus = new CompletionSelectionStatus(ordered.First(), count == 1, count == 1);
+            }
+            else
+            {
+                SelectBestMatch(CompletionMatchType.MatchDisplayText, false);
+            }
+        }
+
+        private void CustomFilter()
+        {
             IReadOnlyList<IIntellisenseFilter> currentActiveFilters = Filters;
 
             if (currentActiveFilters != null && currentActiveFilters.Count > 0)
@@ -52,29 +70,20 @@ namespace EditorConfig
             {
                 currentCompletions.Filter(new Predicate<Completion>(DoesCompletionMatchDisplayText));
             }
-
-            IOrderedEnumerable<Completion> ordered = currentCompletions.OrderByDescending(c => GetHighlightedSpansInDisplayText(c.DisplayText).Sum(s => s.Length));
-
-            if (ordered.Any())
-            {
-                int count = ordered.Count();
-                SelectionStatus = new CompletionSelectionStatus(ordered.First(), count == 1, count == 1);
-            }
-            else
-            {
-                SelectBestMatch(CompletionMatchType.MatchDisplayText, false);
-            }
         }
 
         private bool DoesCompletionMatchDisplayText(Completion completion)
         {
+            if (CompletionController.ShowAllMembers)
+                return true;
+
             return _typed.Length == 0 || completion.DisplayText.IndexOf(_typed, StringComparison.OrdinalIgnoreCase) > -1;
         }
 
         private bool DoesCompletionMatchAutomationText(Completion completion)
         {
             return _activeFilters.Exists(x => x.Is(completion.IconAutomationText)) &&
-                  (_typed.Length == 0 || GetHighlightedSpansInDisplayText(completion.DisplayText).Count > 0);
+                  (CompletionController.ShowAllMembers || _typed.Length == 0 || GetHighlightedSpansInDisplayText(completion.DisplayText).Count > 0);
         }
 
         public override IReadOnlyList<Span> GetHighlightedSpansInDisplayText(string displayText)

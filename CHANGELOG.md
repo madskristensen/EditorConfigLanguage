@@ -1,13 +1,5 @@
 # Road map
 
-- [x] Fixed issue with auto-list members
-- [x] Add *Navigate To Parent* to context menu
-- [x] Enable async completion
-- [x] Remove *Code Navigation* group from context menu
-- [x] Only show completion for `root` at top of document
-- [x] Support *Complete Word* command properly
-- [x] Support *Show Member List* command properly
-- [x] Stop auto-injecting `=` and `:` if they exist
 - [ ] Add item template for .editorconfig files
 
 Features that have a checkmark are complete and available for
@@ -18,6 +10,17 @@ download in the
 
 These are the changes to each version that has been released
 on the official Visual Studio extension gallery.
+
+## 1.13
+
+- [x] Fixed issue with auto-list members
+- [x] Add *Navigate To Parent* to context menu
+- [x] Enable async completion
+- [x] Remove *Code Navigation* group from context menu
+- [x] Only show completion for `root` at top of document
+- [x] Support *Complete Word* command properly
+- [x] Support *Show Member List* command properly
+- [x] Stop auto-injecting `=` and `:` if they exist
 
 ## 1.12
 

@@ -5,9 +5,10 @@ using System.Runtime.InteropServices;
 
 namespace EditorConfig
 {
-    [Guid("f99a05b5-311b-4772-92fc-6441a78ca26f")]
+    [Guid(LanguageGuid)]
     public class EditorConfigLanguage : LanguageService
     {
+        public const string LanguageGuid = "f99a05b5-311b-4772-92fc-6441a78ca26f";
         private LanguagePreferences preferences = null;
 
         public EditorConfigLanguage(object site)

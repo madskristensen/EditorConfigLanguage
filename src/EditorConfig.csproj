@@ -158,7 +158,7 @@
     <Compile Include="EditorConfigPackage.cs" />
     <Compile Include="LanguageService\EditorFactory.cs" />
     <Compile Include="LanguageService\Colorizer.cs" />
-    <Compile Include="LanguageService\Language.cs" />
+    <Compile Include="LanguageService\LanguageService.cs" />
     <Compile Include="LanguageService\Source.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="source.extension.cs">

@@ -215,8 +215,10 @@ namespace EditorConfig
                         new Guid(_guid),
                         0,
                        out _session);
+
                     if (VSConstants.S_OK == hr)
                     {
+                        Telemetry.TrackUserTask("SnippetInserted");
                         return true;
                     }
                 }

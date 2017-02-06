@@ -24,6 +24,7 @@ See the [change log](CHANGELOG.md) for changes and road map.
 - Syntax highlighting
 - C# and .NET style analyzers
 - Intellisense
+- Code snippets
 - Validation
 - Brace completion
 - Brace matching
@@ -60,6 +61,17 @@ The extension provides Intellisense for both keywords and values.
 ![Classification](art/keyword-intellisense.png)  
 
 ![Classification](art/value-intellisense.png)
+
+### Code snippets
+Various code snippets have been added to make it easier to work with .editorconfig files.
+
+To insert a snippet, right-click inside the editor or hit *Ctrl+K,Ctrl+X*.
+
+![Snippets](art/snippets-context-menu.png)
+
+This will show a list of available snippets to insert.
+
+![Snippets](art/snippets-expansion.png)
 
 ### Validation
 Red squiggles are shown for invalid values.
@@ -111,7 +123,7 @@ Note, the inheritance visualizer is only visible when the current file isn't the
 ### Settings
 Change the behavior of the editor from **Tools -> Options** or simply by right-clicking in the editor.
 
-![Open EditorConfig settings](art%2Feditor-context-menu.png)
+![Open EditorConfig settings](art/editor-context-menu.png)
 
 ![Settings](art/settings.png)
 

@@ -2,6 +2,8 @@
 
 - [x] Always require severity for supporting properties
 - [x] Fixed issue with whitespace validation
+- [x] Support for code snippets
+- [x] Fix order of completion items
 - [ ] Add item template for .editorconfig files
 
 Features that have a checkmark are complete and available for

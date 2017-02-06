@@ -18,7 +18,7 @@ namespace EditorConfig
     [ProvideLanguageEditorOptionPage(typeof(FormatterOptions), Constants.LanguageName, null, "Formatting", "#101", new[] { "editorconfig", "formatting" })]
     [ProvideLanguageEditorOptionPage(typeof(ValidationOptions), Constants.LanguageName, null, "Validation", "#102", new[] { "editorconfig", "validation" })]
     [ProvideLanguageEditorOptionPage(typeof(CompletionOptions), Constants.LanguageName, null, "Intellisense", "#103", new[] { "editorconfig", "intellisenes", "completion" })]
-
+    [ProvideLanguageCodeExpansion(typeof(EditorConfigLanguage), Constants.LanguageName, 0, Constants.LanguageName, null, SearchPaths = @"$PackageFolder$\CodeExpansions\Snippets")]
     [ProvideEditorFactory(typeof(EditorFactory), 110, CommonPhysicalViewAttributes = (int)__VSPHYSICALVIEWATTRIBUTES.PVA_SupportsPreview, TrustLevel = __VSEDITORTRUSTLEVEL.ETL_AlwaysTrusted)]
     [ProvideEditorLogicalView(typeof(EditorFactory), VSConstants.LOGVIEWID.TextView_string, IsTrusted = true)]
 

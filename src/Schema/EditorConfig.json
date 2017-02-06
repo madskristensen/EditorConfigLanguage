@@ -291,7 +291,8 @@
     {
       "name": "csharp_indent_switch_labels",
       "description": "Undocumented property",
-      "values": [ true, false ]
+      "values": [ true, false ],
+      "hidden": true
     },
     {
       "name": "csharp_preserve_single_line_blocks",

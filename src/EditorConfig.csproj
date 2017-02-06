@@ -63,6 +63,7 @@
     <Compile Include="Adornments\IntraTextAdornmentTagger.cs" />
     <Compile Include="BraceCompletion\BraceCompletionContextProvider.cs" />
     <Compile Include="BraceCompletion\BraceCompletionContext.cs" />
+    <Compile Include="CodeExpansions\EnableSnippetsCommand.cs" />
     <Compile Include="Commands\HideDefaultCommands.cs" />
     <Compile Include="Completion\CompletionOptions.cs">
       <SubType>Component</SubType>
@@ -186,12 +187,21 @@
     <Content Include="Monikers.imagemanifest">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Content Include="CodeExpansions\Snippets\csharpstyle.snippet">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="CodeExpansions\Snippets\basicdocument.snippet">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
     <None Include="Schema\EditorConfig-schema.json" />
     <Resource Include="Resources\ButtonIcon.png" />
     <Content Include="Schema\EditorConfig.json">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="CodeExpansions\Snippets\dotnetstyle.snippet">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <None Include="source.extension.vsixmanifest">
@@ -218,6 +228,9 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.MSXML, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.CommandBars, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
       <Private>False</Private>

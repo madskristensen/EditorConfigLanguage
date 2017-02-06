@@ -40,6 +40,9 @@ namespace EditorConfig
         [Import]
         ISignatureHelpBroker SignatureHelpBroker { get; set; }
 
+        [Import]
+        internal ITextStructureNavigatorSelectorService NavigatorService { get; set; }
+
         private ITextBuffer _buffer;
 
         public void VsTextViewCreated(IVsTextView textViewAdapter)
@@ -58,6 +61,7 @@ namespace EditorConfig
             AddCommandFilter(textViewAdapter, new NavigateToParent(_buffer));
             AddCommandFilter(textViewAdapter, new SignatureHelpCommand(view, SignatureHelpBroker, QuickInfoBroker));
             AddCommandFilter(textViewAdapter, new HideDefaultCommands());
+            AddCommandFilter(textViewAdapter, new EnableSnippetsCommand(textViewAdapter, view, NavigatorService));
 
             if (textViewAdapter is IVsTextViewEx viewEx)
                 ErrorHandler.ThrowOnFailure(viewEx.PersistOutliningState());

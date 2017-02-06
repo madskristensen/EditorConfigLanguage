@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CodeSnippets  xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+    <CodeSnippet Format="1.0.0">
+        <Header>
+            <Title>Dotnet code style settings</Title>
+            <Description>Code snippet for default .NET code style settings</Description>
+            <Author>Mads Kristensen</Author>
+            <SnippetTypes>
+                <SnippetType>Expansion</SnippetType>
+            </SnippetTypes>
+        </Header>
+        <Snippet>
+            <Code Language="EditorConfig">
+                <![CDATA[# Dotnet code style settings:
+[*.{cs, vb}]
+# Sort using and Import directives with System.* appearing first
+dotnet_sort_system_directives_first                        = true
+# Avoid "this." and "Me." if not necessary
+dotnet_style_qualification_for_field                       = false : suggestion
+dotnet_style_qualification_for_property                    = false : suggestion
+dotnet_style_qualification_for_method                      = false : suggestion
+dotnet_style_qualification_for_event                       = false : suggestion
+
+# Use language keywords instead of framework type names for type references
+dotnet_style_predefined_type_for_locals_parameters_members = true : suggestion
+dotnet_style_predefined_type_for_member_access             = true : suggestion
+
+# Suggest more modern language features when available
+dotnet_style_object_initializer                            = true : suggestion
+dotnet_style_collection_initializer                        = true : suggestion
+dotnet_style_coalesce_expression                           = true : suggestion
+dotnet_style_null_propagation                              = true : suggestion
+dotnet_style_explicit_tuple_names                          = true : suggestion$end$]]>
+            </Code>
+        </Snippet>
+    </CodeSnippet>
+</CodeSnippets>

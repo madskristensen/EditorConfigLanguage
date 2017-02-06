@@ -43,7 +43,9 @@ namespace EditorConfig
 
         private void Execute(object sender, EventArgs e)
         {
-            if (ServiceProvider.GetService(typeof(IMenuCommandService)) is MenuCommandService mcs)
+            MenuCommandService mcs = VsHelpers.GetService<IMenuCommandService, MenuCommandService>();
+
+            if (mcs != null)
             {
                 Guid cmdGroup = typeof(VSConstants.VSStd97CmdID).GUID;
                 var cmd = new CommandID(cmdGroup, VSConstants.cmdidToolsOptions);

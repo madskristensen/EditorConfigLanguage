@@ -23,7 +23,6 @@ namespace EditorConfig
             _view = textView;
             _navigator = navigator;
 
-            //get the text manager from the service provider
             var textManager = (IVsTextManager2)Package.GetGlobalService(typeof(SVsTextManager));
             ErrorHandler.ThrowOnFailure(textManager.GetExpansionManager(out _manager));
 
@@ -35,10 +34,6 @@ namespace EditorConfig
             //the snippet picker code starts here
             if (nCmdID == (uint)VSConstants.VSStd2KCmdID.INSERTSNIPPET)
             {
-                var textManager = (IVsTextManager2)Package.GetGlobalService(typeof(SVsTextManager));
-
-                textManager.GetExpansionManager(out _manager);
-
                 _manager.InvokeInsertionUI(
                     _vsTextView,
                     this,      //the expansion client
@@ -157,6 +152,7 @@ namespace EditorConfig
             {
                 EndSession();
             }
+
             return VSConstants.S_OK;
         }
 
@@ -171,8 +167,6 @@ namespace EditorConfig
 
         private bool InsertAnyExpansion(string shortcut, string title, string path)
         {
-            //first get the location of the caret, and set up a TextSpan
-            //get the column number from  the IVsTextView, not the ITextView
             _vsTextView.GetCaretPos(out int startLine, out int endColumn);
 
             var addSpan = new TextSpan()
@@ -183,10 +177,8 @@ namespace EditorConfig
                 iEndLine = startLine
             };
 
-            if (shortcut != null) //get the expansion from the shortcut
+            if (shortcut != null)
             {
-                //reset the TextSpan to the width of the shortcut,
-                //because we're going to replace the shortcut with the expansion
                 addSpan.iStartIndex = addSpan.iEndIndex - shortcut.Length;
 
                 _manager.GetExpansionByShortcut(

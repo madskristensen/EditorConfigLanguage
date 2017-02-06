@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.OLE.Interop;
 using System;
+using Microsoft.VisualStudio.Shell;
 
 namespace EditorConfig
 {
@@ -13,7 +14,7 @@ namespace EditorConfig
         {
             if (pguidCmdGroup == _commandGroup && nCmdID == _commandId)
             {
-                System.Diagnostics.Process.Start(Constants.Homepage);
+                VsShellUtilities.OpenSystemBrowser(Constants.Homepage);
                 return VSConstants.S_OK;
             }
 

@@ -18,11 +18,16 @@ namespace EditorConfig
 {
     public static class VsHelpers
     {
-        private static IVsUIShell5 _shell = (IVsUIShell5)Package.GetGlobalService(typeof(SVsUIShell));
-        private static IVsSolution _solution = (IVsSolution)Package.GetGlobalService(typeof(IVsSolution));
+        private static IVsUIShell5 _shell = GetService<SVsUIShell, IVsUIShell5>();
+        private static IVsSolution5 _solution = GetService<IVsSolution, IVsSolution5>();
         private static IComponentModel _compositionService;
 
-        internal static DTE2 DTE { get; } = Package.GetGlobalService(typeof(DTE)) as DTE2;
+        internal static DTE2 DTE { get; } = GetService<DTE, DTE2>();
+
+        public static TReturnType GetService<TServiceType, TReturnType>()
+        {
+            return (TReturnType)ServiceProvider.GlobalProvider.GetService(typeof(TServiceType));
+        }
 
         /// <summary>
         /// Opens a file in the Preview Tab (provisional tab) if supported by the editor factory.
@@ -180,7 +185,7 @@ namespace EditorConfig
         {
             if (_compositionService == null)
             {
-                _compositionService = ServiceProvider.GlobalProvider.GetService(typeof(SComponentModel)) as IComponentModel;
+                _compositionService = GetService<SComponentModel, IComponentModel>();
             }
 
             if (_compositionService != null)

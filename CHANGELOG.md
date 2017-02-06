@@ -1,9 +1,5 @@
 # Road map
 
-- [x] Always require severity for supporting properties
-- [x] Fixed issue with whitespace validation
-- [x] Support for code snippets
-- [x] Fix order of completion items
 - [ ] Add item template for .editorconfig files
 
 Features that have a checkmark are complete and available for
@@ -14,6 +10,13 @@ download in the
 
 These are the changes to each version that has been released
 on the official Visual Studio extension gallery.
+
+## 1.14
+
+- [x] Always require severity for supporting properties
+- [x] Fixed issue with whitespace validation
+- [x] Support for code snippets
+- [x] Fix order of completion items
 
 ## 1.13
 

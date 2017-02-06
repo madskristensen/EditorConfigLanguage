@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.Shell;
-using System;
 using System.ComponentModel;
 
 namespace EditorConfig
@@ -20,5 +19,11 @@ namespace EditorConfig
         [Description("This will show undocumented properties in Intellisense.")]
         [DefaultValue(false)]
         public bool ShowHiddenKeywords { get; set; }
+
+        public override void SaveSettingsToStorage()
+        {
+            Telemetry.TrackOperation("CompletionOptionsSaved");
+            base.SaveSettingsToStorage();
+        }
     }
 }

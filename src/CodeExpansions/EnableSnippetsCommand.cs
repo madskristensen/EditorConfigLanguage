@@ -79,13 +79,15 @@ namespace EditorConfig
 
             if (_session == null && nCmdID == (uint)VSConstants.VSStd2KCmdID.TAB)
             {
-                //get the word that was just added
                 CaretPosition pos = _view.Caret.Position;
-                TextExtent word = _navigator.GetTextStructureNavigator(_view.TextBuffer).GetExtentOfWord(pos.BufferPosition - 1); //use the position 1 space back
-                string textString = word.Span.GetText(); //the word that was just added
-                //if it is a code snippet, insert it, otherwise carry on
+                TextExtent word = _navigator.GetTextStructureNavigator(_view.TextBuffer).GetExtentOfWord(pos.BufferPosition - 1);
+                string textString = word.Span.GetText();
+
                 if (InsertAnyExpansion(textString, null, null))
+                {
+                    EndSession();
                     return VSConstants.S_OK;
+                }
             }
 
             return Next.Exec(pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
@@ -151,8 +153,20 @@ namespace EditorConfig
 
         public int OnItemChosen(string pszTitle, string pszPath)
         {
-            InsertAnyExpansion(null, pszTitle, pszPath);
+            if (InsertAnyExpansion(null, pszTitle, pszPath))
+            {
+                EndSession();
+            }
             return VSConstants.S_OK;
+        }
+
+        private void EndSession()
+        {
+            if (_session != null)
+            {
+                _session.EndCurrentExpansion(0);
+                _session = null;
+            }
         }
 
         private bool InsertAnyExpansion(string shortcut, string title, string path)

@@ -1,17 +1,30 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <CodeSnippets  xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
-    <CodeSnippet Format="1.0.0">
-        <Header>
-            <Title>Dotnet code style settings</Title>
-            <Description>Code snippet for default .NET code style settings</Description>
-            <Author>Mads Kristensen</Author>
-            <SnippetTypes>
-                <SnippetType>Expansion</SnippetType>
-            </SnippetTypes>
-        </Header>
-        <Snippet>
-            <Code Language="EditorConfig">
-                <![CDATA[# Dotnet code style settings:
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>Dotnet code style settings</Title>
+      <Shortcut>netstyle</Shortcut>
+      <Description>Code snippet for default .NET code style settings</Description>
+      <Author>Mads Kristensen</Author>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Declarations>
+        <Literal>
+          <ID>param1</ID>
+          <ToolTip>First field</ToolTip>
+          <Default>first</Default>
+        </Literal>
+        <Literal>
+          <ID>param2</ID>
+          <ToolTip>Second field</ToolTip>
+          <Default>second</Default>
+        </Literal>
+      </Declarations>
+      <Code Language="EditorConfig">
+        <![CDATA[# Dotnet code style settings:
 [*.{cs, vb}]
 # Sort using and Import directives with System.* appearing first
 dotnet_sort_system_directives_first                        = true
@@ -31,7 +44,7 @@ dotnet_style_collection_initializer                        = true : suggestion
 dotnet_style_coalesce_expression                           = true : suggestion
 dotnet_style_null_propagation                              = true : suggestion
 dotnet_style_explicit_tuple_names                          = true : suggestion$end$]]>
-            </Code>
-        </Snippet>
-    </CodeSnippet>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
 </CodeSnippets>

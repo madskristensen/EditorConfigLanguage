@@ -1,17 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <CodeSnippets  xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
-    <CodeSnippet Format="1.0.0">
-        <Header>
-            <Title>C# code style settings</Title>
-            <Description>Code snippet for default C# code style settings</Description>
-            <Author>Mads Kristensen</Author>
-            <SnippetTypes>
-                <SnippetType>Expansion</SnippetType>
-            </SnippetTypes>
-        </Header>
-        <Snippet>
-            <Code Language="EditorConfig">
-                <![CDATA[# CSharp code style settings:
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>C# code style settings</Title>
+      <Shortcut>csharpstyle</Shortcut>
+      <Description>Code snippet for default C# code style settings</Description>
+      <Author>Mads Kristensen</Author>
+      <SnippetTypes>
+        <SnippetType>Expansion</SnippetType>
+      </SnippetTypes>
+    </Header>
+    <Snippet>
+      <Code Language="EditorConfig">
+        <![CDATA[# CSharp code style settings:
 [*.cs]
 # Prefer "var" everywhere
 csharp_style_var_for_built_in_types                   = true : suggestion
@@ -42,7 +43,7 @@ csharp_new_line_before_catch                          = true
 csharp_new_line_before_finally                        = true
 csharp_new_line_before_members_in_object_initializers = true
 csharp_new_line_before_members_in_anonymous_types     = true$end$]]>
-            </Code>
-        </Snippet>
-    </CodeSnippet>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
 </CodeSnippets>

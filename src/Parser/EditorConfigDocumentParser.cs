@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace EditorConfig
 {
@@ -11,7 +12,7 @@ namespace EditorConfig
         private static Regex _section = new Regex(@"^\s*(?<section>\[.+)");
         private static Regex _comment = new Regex(@"^\s*[#;].+");
         private static Regex _unknown = new Regex(@"\s*(?<unknown>.+)");
-        private static Regex _suppress = new Regex(@"^(#\s*suppress\s*:?\s*)(?<errors>(EC\d\d\d\s*)+)$", RegexOptions.IgnoreCase);
+        private static Regex _suppress = new Regex(@"^(?<comment>#\s*suppress\s*):?\s*(?<errors>(\w{0,5}\s*)+)$", RegexOptions.IgnoreCase);
 
         /// <summary>Returns true if the document is currently being parsed.</summary>
         public bool IsParsing { get; private set; }
@@ -36,6 +37,8 @@ namespace EditorConfig
                 var items = new List<ParseItem>();
                 var sections = new List<Section>();
                 var properties = new List<Property>();
+
+                Suppressions = new List<string>();
                 Section parentSection = null;
 
                 foreach (ITextSnapshotLine line in TextBuffer.CurrentSnapshot.Lines)
@@ -45,17 +48,33 @@ namespace EditorConfig
                     if (string.IsNullOrWhiteSpace(text))
                         continue;
 
+                    // Suppression
+                    if (IsMatch(_suppress, text, out var match))
+                    {
+                        ParseItem comment = CreateParseItem(ItemType.Comment, line, match.Groups["comment"]);
+                        AddToList(items, comment);
+
+                        Group errorsGroup = match.Groups["errors"];
+                        string value = errorsGroup.Value;
+
+                        var c = new Regex(@"\w+");
+                        foreach (Match code in c.Matches(match.Value, errorsGroup.Index))
+                        {
+                            ParseItem errors = CreateParseItem(ItemType.Suppression, line, code);
+                            AddToList(items, errors);
+
+                            if (!Suppressions.Contains(code.Value) && ErrorCodes.All.Any(ec => ec.Code == code.Value))
+                                Suppressions.Add(code.Value);
+                        }
+
+                        //string[] codes = errorsGroup.Value.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                        //Suppressions.AddRange(codes.Where(code => !Suppressions.Contains(code)));
+                    }
                     // Comment
-                    if (IsMatch(_comment, text, out var match))
+                    else if (IsMatch(_comment, text, out match))
                     {
                         ParseItem comment = CreateParseItem(ItemType.Comment, line, match);
                         AddToList(items, comment);
-
-                        // If can contain suppressions
-                        if (items.Count == 1 && IsMatch(_suppress, comment.Text, out var suppressMatch))
-                        {
-                            Suppressions = suppressMatch.Groups["errors"].Value.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                        }
                     }
                     // Section
                     else if (IsMatch(_section, text, out match))

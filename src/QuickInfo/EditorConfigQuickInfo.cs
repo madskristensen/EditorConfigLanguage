@@ -44,23 +44,33 @@ namespace EditorConfig
 
             Property property = _document.PropertyAtPosition(point.Value);
 
-            if (!SchemaCatalog.TryGetKeyword(property?.Keyword?.Text, out Keyword keyword))
-                return;
+            SchemaCatalog.TryGetKeyword(property?.Keyword?.Text, out Keyword keyword);
 
-            if (item.ItemType == ItemType.Keyword)
+            // Keyword
+            if (keyword != null && item.ItemType == ItemType.Keyword)
             {
                 qiContent.Add(new Shared.EditorTooltip(keyword));
             }
-            else if (item.ItemType == ItemType.Value)
+
+            // Value
+            else if (keyword != null && item.ItemType == ItemType.Value)
             {
                 Value value = keyword.Values.FirstOrDefault(v => v.Name.Is(item.Text));
 
                 if (value != null && !string.IsNullOrEmpty(value.Description))
                     qiContent.Add(new Shared.EditorTooltip(value));
             }
+
+            // Severity
             else if (item.ItemType == ItemType.Severity && SchemaCatalog.TryGetSeverity(item.Text, out Severity severity))
             {
                 qiContent.Add(new Shared.EditorTooltip(severity));
+            }
+
+            // Suppression
+            else if (item.ItemType == ItemType.Suppression && ErrorCodes.TryGetErrorCode(item.Text, out var code))
+            {
+                qiContent.Add(new Shared.EditorTooltip(code));
             }
         }
 

@@ -20,6 +20,7 @@ namespace EditorConfig
                 { ItemType.Keyword, registry.GetClassificationType(PredefinedClassificationTypeNames.Identifier)},
                 { ItemType.Value, registry.GetClassificationType(PredefinedClassificationTypeNames.Keyword)},
                 { ItemType.Severity, registry.GetClassificationType(PredefinedClassificationTypeNames.SymbolDefinition)},
+                { ItemType.Suppression, registry.GetClassificationType(PredefinedClassificationTypeNames.ExcludedCode)},
             };
 
             _buffer = buffer;

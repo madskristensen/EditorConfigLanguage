@@ -93,14 +93,4 @@ namespace EditorConfig
             return !(a == b);
         }
     }
-
-    public enum ItemType
-    {
-        Comment,
-        Section,
-        Keyword,
-        Value,
-        Severity,
-        Unknown
-    }
 }

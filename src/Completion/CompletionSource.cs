@@ -92,6 +92,15 @@ namespace EditorConfig
                 }
             }
 
+            // Suppression
+            else if (parseItem?.ItemType == ItemType.Suppression)
+            {
+                foreach (ErrorCode code in ErrorCodes.All)
+                    list.Add(CreateCompletion(code));
+
+                moniker = "suppression";
+            }
+
             if (!list.Any())
             {
                 if (SchemaCatalog.TryGetKeyword(prev?.Text, out Keyword property))

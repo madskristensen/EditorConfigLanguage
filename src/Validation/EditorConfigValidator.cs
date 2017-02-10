@@ -140,6 +140,11 @@ namespace EditorConfig
             item.AddError(PredefinedErrors.UnknownElement(item));
         }
 
+        private void ValidateSuppressions()
+        {
+
+        }
+
         private void ValidateSections()
         {
             List<EditorConfigDocument> parents = GetAllParentDocuments();

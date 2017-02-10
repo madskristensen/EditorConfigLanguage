@@ -68,6 +68,7 @@
     <Compile Include="Completion\CompletionOptions.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Parser\ItemType.cs" />
     <Compile Include="Schema\Category.cs" />
     <Compile Include="Shared\Extensions.cs" />
     <Compile Include="SuggestedActions\SuppressErrorAction.cs" />

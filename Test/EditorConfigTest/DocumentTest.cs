@@ -43,5 +43,19 @@ namespace EditorConfigTest
             Assert.AreEqual(3, doc.ParseItems.Count);
             Assert.AreEqual("accessors, indexers", doc.ParseItems.Last().Text);
         }
+
+        [TestMethod, TestCategory("MEF")]
+        public async Task Suppressions()
+        {
+            ITextBuffer buffer = Mef.CreateTextBuffer(Samples.Suppression);
+            var doc = EditorConfigDocument.FromTextBuffer(buffer);
+
+            await doc.WaitForParsingComplete();
+
+            Assert.AreEqual(3, doc.ParseItems.Count);
+            Assert.AreEqual("EC101", doc.ParseItems[1].Text);
+            Assert.AreEqual(12, doc.ParseItems[1].Span.Start);
+            Assert.AreEqual(5, doc.ParseItems[1].Span.Length);
+        }
     }
 }

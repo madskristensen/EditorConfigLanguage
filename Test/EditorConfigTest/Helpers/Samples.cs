@@ -16,5 +16,7 @@ csharp_new_line_before_open_brace = accessors, indexers";
 
         public const string SeveritySimple = @"[*.cs]
 dotnet_style_qualification_for_event = true";
+
+        public const string Suppression = @"# Suppress: EC101 EC102";
     }
 }

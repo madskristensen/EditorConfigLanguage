@@ -6,7 +6,7 @@ namespace EditorConfig
 {
     public class Error : ITooltip
     {
-        public Error(ParseItem item, string errorCode, ErrorType errorType, string description)
+        public Error(ParseItem item, string errorCode, ErrorCategory errorType, string description)
         {
             ErrorCode = errorCode;
             ErrorType = errorType;
@@ -23,7 +23,7 @@ namespace EditorConfig
         public string ErrorCode { get; set; }
 
         /// <summary>The error type determines how to display the error in the Error List.</summary>
-        public ErrorType ErrorType { get; set; } = ErrorType.Warning;
+        public ErrorCategory ErrorType { get; set; } = ErrorCategory.Warning;
 
         /// <summary>A clear description of the error.</summary>
         public string Description { get; set; }
@@ -42,9 +42,9 @@ namespace EditorConfig
             {
                 switch (ErrorType)
                 {
-                    case ErrorType.Error:
+                    case ErrorCategory.Error:
                         return KnownMonikers.StatusError;
-                    case ErrorType.Warning:
+                    case ErrorCategory.Warning:
                         return KnownMonikers.StatusWarning;
                 }
 

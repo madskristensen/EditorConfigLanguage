@@ -5,7 +5,6 @@
 - [x] Add suppressions from light bulbs
 - [x] Intellisense for error codes in suppression
 - [x] Hover tooltips for suppressions
-- [ ] Validate error codes in suppression comment
 - [ ] Add item template for .editorconfig files
 
 Features that have a checkmark are complete and available for

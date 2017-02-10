@@ -90,9 +90,9 @@ namespace EditorConfig
         {
             switch (error.ErrorType)
             {
-                case ErrorType.Error:
+                case ErrorCategory.Error:
                     return __VSERRORCATEGORY.EC_ERROR;
-                case ErrorType.Warning:
+                case ErrorCategory.Warning:
                     return __VSERRORCATEGORY.EC_WARNING;
                 default:
                     return __VSERRORCATEGORY.EC_MESSAGE;

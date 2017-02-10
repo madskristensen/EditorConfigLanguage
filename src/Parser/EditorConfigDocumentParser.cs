@@ -63,12 +63,9 @@ namespace EditorConfig
                             ParseItem errors = CreateParseItem(ItemType.Suppression, line, code);
                             AddToList(items, errors);
 
-                            if (!Suppressions.Contains(code.Value) && ErrorCodes.All.Any(ec => ec.Code == code.Value))
+                            if (!Suppressions.Contains(code.Value) && ErrorCatalog.All.Any(ec => ec.Code == code.Value))
                                 Suppressions.Add(code.Value);
                         }
-
-                        //string[] codes = errorsGroup.Value.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                        //Suppressions.AddRange(codes.Where(code => !Suppressions.Contains(code)));
                     }
                     // Comment
                     else if (IsMatch(_comment, text, out match))

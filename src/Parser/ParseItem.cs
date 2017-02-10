@@ -40,9 +40,6 @@ namespace EditorConfig
         /// <summary>Adds an error to the Errors list if it doesn't already contain it.</summary>
         public void AddError(Error error)
         {
-            if (Document.Suppressions.Contains(error.ErrorCode, StringComparer.OrdinalIgnoreCase))
-                return;
-
             if (!Errors.Any(e => e.ErrorCode == error.ErrorCode))
                 Errors.Add(error);
         }
@@ -92,5 +89,16 @@ namespace EditorConfig
         {
             return !(a == b);
         }
+    }
+
+    public enum ItemType
+    {
+        Comment,
+        Section,
+        Keyword,
+        Value,
+        Severity,
+        Suppression,
+        Unknown
     }
 }

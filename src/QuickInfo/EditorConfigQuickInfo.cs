@@ -68,7 +68,7 @@ namespace EditorConfig
             }
 
             // Suppression
-            else if (item.ItemType == ItemType.Suppression && ErrorCodes.TryGetErrorCode(item.Text, out var code))
+            else if (item.ItemType == ItemType.Suppression && ErrorCatalog.TryGetErrorCode(item.Text, out var code))
             {
                 qiContent.Add(new Shared.EditorTooltip(code));
             }

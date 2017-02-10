@@ -68,10 +68,10 @@
     <Compile Include="Completion\CompletionOptions.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Parser\ItemType.cs" />
     <Compile Include="Schema\Category.cs" />
     <Compile Include="Shared\Extensions.cs" />
     <Compile Include="SuggestedActions\SuppressErrorAction.cs" />
+    <Compile Include="Validation\ErrorCode.cs" />
     <Compile Include="Validation\ErrorFormatDefinition.cs" />
     <Compile Include="Commands\CreateEditorConfigFileAnyCode.cs" />
     <Compile Include="ErrorList\SinkManager.cs" />
@@ -136,7 +136,7 @@
     </Compile>
     <Compile Include="Shared\VsHelpers.cs" />
     <Compile Include="Validation\Error.cs" />
-    <Compile Include="Validation\ErrorCodes.cs" />
+    <Compile Include="Validation\ErrorCatalog.cs" />
     <Compile Include="ErrorList\ErrorList.cs" />
     <Compile Include="Validation\ErrorTagger.cs" />
     <Compile Include="Validation\ErrorTaggerProvider.cs" />
@@ -166,7 +166,7 @@
     <Compile Include="source.extension.cs">
       <DependentUpon>source.extension.vsixmanifest</DependentUpon>
     </Compile>
-    <Compile Include="Validation\ErrorType.cs" />
+    <Compile Include="Validation\ErrorCategory.cs" />
     <Compile Include="Validation\PredefinedErrors.cs" />
     <Compile Include="Validation\ValidationOptions.cs">
       <SubType>Component</SubType>

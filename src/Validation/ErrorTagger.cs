@@ -68,13 +68,13 @@ namespace EditorConfig
             }
         }
 
-        public static string GetErrorType(ErrorType errorType)
+        public static string GetErrorType(ErrorCategory errorType)
         {
             switch (errorType)
             {
-                case ErrorType.Error:
+                case ErrorCategory.Error:
                     return PredefinedErrorTypeNames.SyntaxError;
-                case ErrorType.Warning:
+                case ErrorCategory.Warning:
                     return PredefinedErrorTypeNames.Warning;
             }
 

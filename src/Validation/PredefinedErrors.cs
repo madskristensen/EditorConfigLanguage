@@ -14,6 +14,9 @@
         public static Error SectionSyntaxError(ParseItem item) =>
             Create(item, ErrorCodes.SectionSyntaxError, Resources.Text.ValidationSectionSyntaxError);
 
+        public static Error SpaceInSection(ParseItem item) =>
+            Create(item, ErrorCodes.SpaceInSection, Resources.Text.ValidationSpaceInSection);
+
         public static Error GlobbingNoMatch(ParseItem item) =>
             Create(item, ErrorCodes.GlobbingNoMatch, string.Format(Resources.Text.ValidationNoMatch, item.Text));
 

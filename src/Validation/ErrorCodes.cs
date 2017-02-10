@@ -18,6 +18,7 @@
         public static ErrorCode UnknownValue = new ErrorCode("EC114", ErrorType.Warning);
         public static ErrorCode TabWidthUnneeded = new ErrorCode("EC115", ErrorType.Suggestion);
         public static ErrorCode IndentSizeUnneeded = new ErrorCode("EC116", ErrorType.Suggestion);
+        public static ErrorCode SpaceInSection = new ErrorCode("EC117", ErrorType.Suggestion);
     }
 
     public struct ErrorCode

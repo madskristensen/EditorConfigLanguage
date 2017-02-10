@@ -1,5 +1,7 @@
 # Road map
 
+- [x] Validate spaces in globbing patterns
+- [ ] Implement error suppresion
 - [ ] Add item template for .editorconfig files
 
 Features that have a checkmark are complete and available for

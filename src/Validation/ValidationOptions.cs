@@ -54,11 +54,20 @@ namespace EditorConfig
         [DefaultValue(true)]
         public bool EnableDuplicateFoundInParent { get; set; } = true;
 
-        [Category(_rules)]
+        // Sections
+        private const string _sections = "Sections";
+
+        [Category(_sections)]
         [DisplayName("Validate globbing patterns")]
         [Description("Show an error if a globbing pattern isn't matching any files on disk.")]
         [DefaultValue(true)]
         public bool EnableGlobbingMatcher { get; set; } = true;
+
+        [Category(_sections)]
+        [DisplayName("Allow spaces in sections")]
+        [Description("Spces in globbing patterns are allowed, but are often the result of a type.")]
+        [DefaultValue(false)]
+        public bool AllowSpacesInSections { get; set; }
 
         public override void SaveSettingsToStorage()
         {

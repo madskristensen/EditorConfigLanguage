@@ -224,6 +224,15 @@ namespace EditorConfig.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Spces in globbing patterns are allowed, but are often the result of a typo..
+        /// </summary>
+        internal static string ValidationSpaceInSection {
+            get {
+                return ResourceManager.GetString("ValidationSpaceInSection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to There is no need to specify &quot;tab_width&quot; unless it differs from the value of &quot;indent_size&quot;..
         /// </summary>
         internal static string ValidationTabWidthUnneeded {

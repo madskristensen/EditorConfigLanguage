@@ -207,15 +207,21 @@ namespace EditorConfig
                     PredefinedErrors.SectionSyntaxError(section.Item);
                 }
 
+                // Space in pattern
+                else if (!EditorConfigPackage.ValidationOptions.AllowSpacesInSections && section.Item.Text.Contains(" "))
+                {
+                    PredefinedErrors.SpaceInSection(section.Item);
+                }
+
                 // Duplicate section
-                if (EditorConfigPackage.ValidationOptions.EnableDuplicateSections)
+                else if (EditorConfigPackage.ValidationOptions.EnableDuplicateSections)
                 {
                     if (_document.Sections.First(s => s.Item.Text == section.Item.Text) != section)
                         PredefinedErrors.DuplicateSection(section.Item);
                 }
 
                 // Globbing pattern match
-                if (EditorConfigPackage.ValidationOptions.EnableGlobbingMatcher && !section.Item.HasErrors)
+                else if (EditorConfigPackage.ValidationOptions.EnableGlobbingMatcher && !section.Item.HasErrors)
                 {
                     if (!_globbingCache.ContainsKey(section.Item.Text))
                     {

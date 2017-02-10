@@ -4,28 +4,23 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell.TableManager;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace EditorConfig
 {
     class TableEntriesSnapshot : TableEntriesSnapshotBase
     {
         private string _projectName;
-        private DTE2 _dte;
 
         internal TableEntriesSnapshot(IEnumerable<ParseItem> result, string projectName, string fileName)
         {
-            _dte = (DTE2)Package.GetGlobalService(typeof(DTE));
             _projectName = projectName;
 
-            foreach (ParseItem item in result)
-            {
-                Errors.AddRange(item.Errors);
-            }
-
+            Errors = result.SelectMany(p => p.Errors).ToList();
             Url = fileName;
         }
 
-        public List<Error> Errors { get; } = new List<Error>();
+        public List<Error> Errors { get; private set; }
 
         public override int VersionNumber { get; } = 1;
 
@@ -34,69 +29,61 @@ namespace EditorConfig
             get { return Errors.Count; }
         }
 
-        public string Url { get; set; }
+        public string Url { get; private set; }
 
         public override bool TryGetValue(int index, string columnName, out object content)
         {
-            content = null;
-
-            if ((index >= 0) && (index < Errors.Count))
+            if (index < 0 || index >= Errors.Count)
             {
-                if (columnName == StandardTableKeyNames.DocumentName)
-                {
-                    content = Url;
-                }
-                else if (columnName == StandardTableKeyNames.ErrorCategory)
-                {
-                    content = Vsix.Name;
-                }
-                else if (columnName == StandardTableKeyNames.ErrorSource)
-                {
-                    content = Vsix.Name;
-                }
-                else if (columnName == StandardTableKeyNames.Line)
-                {
-                    content = Errors[index].Line;
-                }
-                else if (columnName == StandardTableKeyNames.Column)
-                {
-                    content = Errors[index].Column;
-                }
-                else if (columnName == StandardTableKeyNames.FullText || columnName == StandardTableKeyNames.Text)
-                {
-                    content = Errors[index].Description;
-                }
-                else if (columnName == StandardTableKeyNames.ErrorSeverity)
-                {
-                    content = GetSeverity(Errors[index]);
-                }
-                else if (columnName == StandardTableKeyNames.Priority)
-                {
-                    content = vsTaskPriority.vsTaskPriorityMedium;
-                }
-                else if (columnName == StandardTableKeyNames.ErrorSource)
-                {
-                    content = ErrorSource.Other;
-                }
-                else if (columnName == StandardTableKeyNames.BuildTool)
-                {
-                    content = Vsix.Name;
-                }
-                else if (columnName == StandardTableKeyNames.ErrorCode)
-                {
-                    content = Errors[index].ErrorCode;
-                }
-                else if (columnName == StandardTableKeyNames.ProjectName)
-                {
-                    content = _projectName;
-                }
-                else if (columnName == StandardTableKeyNames.HelpLink)
-                {
-                    content = Errors[index].HelpLink;
-                }
+                content = null;
+                return false;
             }
 
-            return content != null;
+            Error error = Errors[index];
+
+            switch (columnName)
+            {
+                case StandardTableKeyNames.DocumentName:
+                    content = Url;
+                    return true;
+                case StandardTableKeyNames.ErrorCategory:
+                    content = vsTaskCategories.vsTaskCategoryMisc;
+                    return true;
+                case StandardTableKeyNames.Line:
+                    content = error.Line;
+                    return true;
+                case StandardTableKeyNames.Column:
+                    content = error.Column;
+                    return true;
+                case StandardTableKeyNames.FullText:
+                case StandardTableKeyNames.Text:
+                    content = error.Description;
+                    return true;
+                case StandardTableKeyNames.ErrorSeverity:
+                    content = GetSeverity(error);
+                    return true;
+                case StandardTableKeyNames.Priority:
+                    content = vsTaskPriority.vsTaskPriorityMedium;
+                    return true;
+                case StandardTableKeyNames.ErrorSource:
+                    content = ErrorSource.Other;
+                    return true;
+                case StandardTableKeyNames.BuildTool:
+                    content = Vsix.Name;
+                    return true;
+                case StandardTableKeyNames.ErrorCode:
+                    content = error.ErrorCode;
+                    return true;
+                case StandardTableKeyNames.ProjectName:
+                    content = _projectName;
+                    return true;
+                case StandardTableKeyNames.HelpLink:
+                    content = error.HelpLink;
+                    return true;
+                default:
+                    content = null;
+                    return false;
+            }
         }
 
         private __VSERRORCATEGORY GetSeverity(Error error)
@@ -107,9 +94,9 @@ namespace EditorConfig
                     return __VSERRORCATEGORY.EC_ERROR;
                 case ErrorType.Warning:
                     return __VSERRORCATEGORY.EC_WARNING;
+                default:
+                    return __VSERRORCATEGORY.EC_MESSAGE;
             }
-
-            return __VSERRORCATEGORY.EC_MESSAGE;
         }
     }
 }

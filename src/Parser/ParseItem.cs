@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.Text;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace EditorConfig
 {
@@ -39,6 +40,9 @@ namespace EditorConfig
         /// <summary>Adds an error to the Errors list if it doesn't already contain it.</summary>
         public void AddError(Error error)
         {
+            if (Document.Suppressions.Contains(error.ErrorCode, StringComparer.OrdinalIgnoreCase))
+                return;
+
             if (!Errors.Any(e => e.ErrorCode == error.ErrorCode))
                 Errors.Add(error);
         }

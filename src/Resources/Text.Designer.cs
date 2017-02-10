@@ -224,7 +224,7 @@ namespace EditorConfig.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Spces in globbing patterns are allowed, but are often the result of a typo..
+        ///   Looks up a localized string similar to Spces in globbing patterns are allowed, but are often the result of a typo. Make sure the globbing pattern is accurate..
         /// </summary>
         internal static string ValidationSpaceInSection {
             get {

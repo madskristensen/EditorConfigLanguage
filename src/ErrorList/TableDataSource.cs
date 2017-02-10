@@ -28,7 +28,8 @@ namespace EditorConfig
                                                    StandardTableColumnDefinitions.ErrorSeverity, StandardTableColumnDefinitions.ErrorCode,
                                                    StandardTableColumnDefinitions.ErrorSource, StandardTableColumnDefinitions.BuildTool,
                                                    StandardTableColumnDefinitions.ErrorSource, StandardTableColumnDefinitions.ErrorCategory,
-                                                   StandardTableColumnDefinitions.Text, StandardTableColumnDefinitions.DocumentName, StandardTableColumnDefinitions.Line, StandardTableColumnDefinitions.Column);
+                                                   StandardTableColumnDefinitions.Text, StandardTableColumnDefinitions.DocumentName,
+                                                   StandardTableColumnDefinitions.Line, StandardTableColumnDefinitions.Column);
         }
 
         public static TableDataSource Instance

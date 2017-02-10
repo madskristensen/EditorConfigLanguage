@@ -28,6 +28,9 @@ namespace EditorConfig
         /// <summary>A list of all the properties in the root of the document.</summary>
         public List<Property> Properties { get; private set; } = new List<Property>();
 
+        /// <summary>A list of all the error suppressions in the document.</summary>
+        public IEnumerable<string> Suppressions { get; private set; } = new List<string>();
+
         /// <summary>The root property of the document if one is specified</summary>
         public Property Root
         {

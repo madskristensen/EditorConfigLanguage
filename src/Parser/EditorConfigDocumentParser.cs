@@ -11,6 +11,7 @@ namespace EditorConfig
         private static Regex _section = new Regex(@"^\s*(?<section>\[.+)");
         private static Regex _comment = new Regex(@"^\s*[#;].+");
         private static Regex _unknown = new Regex(@"\s*(?<unknown>.+)");
+        private static Regex _suppress = new Regex(@"^(#\s*suppress\s*:?\s*)(?<errors>(EC\d\d\d\s*)+)$", RegexOptions.IgnoreCase);
 
         /// <summary>Returns true if the document is currently being parsed.</summary>
         public bool IsParsing { get; private set; }
@@ -49,6 +50,12 @@ namespace EditorConfig
                     {
                         ParseItem comment = CreateParseItem(ItemType.Comment, line, match);
                         AddToList(items, comment);
+
+                        // If can contain suppressions
+                        if (items.Count == 1 && IsMatch(_suppress, comment.Text, out var suppressMatch))
+                        {
+                            Suppressions = suppressMatch.Groups["errors"].Value.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                        }
                     }
                     // Section
                     else if (IsMatch(_section, text, out match))

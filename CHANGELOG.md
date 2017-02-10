@@ -3,6 +3,7 @@
 - [x] Validate spaces in globbing patterns
 - [x] Implement error suppression
 - [x] Add suppressions from light bulbs
+- [ ] Validate suppression syntax
 - [ ] Add item template for .editorconfig files
 
 Features that have a checkmark are complete and available for

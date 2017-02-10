@@ -47,6 +47,24 @@ namespace EditorConfig
 
                 var deleteSection = new DeleteSectionAction(range.Snapshot.TextBuffer, _section);
                 list.AddRange(CreateActionSet(deleteSection));
+
+                // Suppressions
+                IEnumerable<ParseItem> items = _document.ItemsInSpan(range).Where(p => p.HasErrors);
+                if (items.Any())
+                {
+                    IEnumerable<Error> errors = items.SelectMany(i => i.Errors);
+                    var actions = new List<SuppressErrorAction>();
+
+                    foreach (Error error in errors)
+                    {
+                        var action = new SuppressErrorAction(_document, error.ErrorCode);
+
+                        if (action.IsEnabled)
+                            actions.Add(action);
+                    }
+
+                    list.AddRange(CreateActionSet(actions.ToArray()));
+                }
             }
 
             return list;

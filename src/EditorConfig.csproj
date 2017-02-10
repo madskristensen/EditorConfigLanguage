@@ -70,6 +70,7 @@
     </Compile>
     <Compile Include="Schema\Category.cs" />
     <Compile Include="Shared\Extensions.cs" />
+    <Compile Include="SuggestedActions\SuppressErrorAction.cs" />
     <Compile Include="Validation\ErrorFormatDefinition.cs" />
     <Compile Include="Commands\CreateEditorConfigFileAnyCode.cs" />
     <Compile Include="ErrorList\SinkManager.cs" />

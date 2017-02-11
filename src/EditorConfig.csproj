@@ -71,7 +71,8 @@
     <Compile Include="Schema\Category.cs" />
     <Compile Include="Shared\Extensions.cs" />
     <Compile Include="SuggestedActions\SuppressErrorAction.cs" />
-    <Compile Include="Validation\ErrorCode.cs" />
+    <Compile Include="Validation\EditorConfigValidatorRules.cs" />
+    <Compile Include="Validation\Error.cs" />
     <Compile Include="Validation\ErrorFormatDefinition.cs" />
     <Compile Include="Commands\CreateEditorConfigFileAnyCode.cs" />
     <Compile Include="ErrorList\SinkManager.cs" />
@@ -135,7 +136,6 @@
       <DependentUpon>CommandTable.vsct</DependentUpon>
     </Compile>
     <Compile Include="Shared\VsHelpers.cs" />
-    <Compile Include="Validation\Error.cs" />
     <Compile Include="Validation\ErrorCatalog.cs" />
     <Compile Include="ErrorList\ErrorList.cs" />
     <Compile Include="Validation\ErrorTagger.cs" />
@@ -167,7 +167,6 @@
       <DependentUpon>source.extension.vsixmanifest</DependentUpon>
     </Compile>
     <Compile Include="Validation\ErrorCategory.cs" />
-    <Compile Include="Validation\PredefinedErrors.cs" />
     <Compile Include="Validation\ValidationOptions.cs">
       <SubType>Component</SubType>
     </Compile>

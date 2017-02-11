@@ -40,7 +40,7 @@ namespace EditorConfig
         /// <summary>Adds an error to the Errors list if it doesn't already contain it.</summary>
         public void AddError(Error error)
         {
-            if (!Errors.Any(e => e.ErrorCode == error.ErrorCode))
+            if (!Errors.Any(e => e.Code == error.Code))
                 Errors.Add(error);
         }
 

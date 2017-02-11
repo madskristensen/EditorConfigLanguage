@@ -25,7 +25,7 @@ namespace EditorConfig
             get
             {
                 Property last = Properties.LastOrDefault();
-                return last != null ? Span.FromBounds(Item.Span.Start, last.Span.End) : Item.Span;
+                return last != null ? new Span(Item.Span.Start, last.Span.End - Item.Span.Start) : Item.Span;
             }
         }
     }

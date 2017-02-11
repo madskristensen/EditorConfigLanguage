@@ -25,7 +25,7 @@ namespace EditorConfig
         {
             return await Task.Factory.StartNew(() =>
             {
-                _section = _document.Sections.FirstOrDefault(s => s.Span.Contains(range));
+                _section = _document.Sections.FirstOrDefault(s => s.Span.Contains(range.Start));
 
                 return _section != null;
             });
@@ -57,7 +57,7 @@ namespace EditorConfig
 
                     foreach (Error error in errors)
                     {
-                        var action = new SuppressErrorAction(_document, error.ErrorCode);
+                        var action = new SuppressErrorAction(_document, error.Code);
 
                         if (action.IsEnabled)
                             actions.Add(action);

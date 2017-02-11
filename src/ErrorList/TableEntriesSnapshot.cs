@@ -72,7 +72,7 @@ namespace EditorConfig
                     content = Vsix.Name;
                     return true;
                 case StandardTableKeyNames.ErrorCode:
-                    content = error.ErrorCode;
+                    content = error.Code;
                     return true;
                 case StandardTableKeyNames.ProjectName:
                     content = _projectName;
@@ -88,7 +88,7 @@ namespace EditorConfig
 
         private __VSERRORCATEGORY GetSeverity(Error error)
         {
-            switch (error.ErrorType)
+            switch (error.Category)
             {
                 case ErrorCategory.Error:
                     return __VSERRORCATEGORY.EC_ERROR;

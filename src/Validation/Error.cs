@@ -1,88 +1,61 @@
 ﻿using Microsoft.VisualStudio.Imaging;
 using Microsoft.VisualStudio.Imaging.Interop;
 using Microsoft.VisualStudio.Text;
+using System;
+using System.Linq;
 
 namespace EditorConfig
 {
     public class Error : ITooltip
     {
-        public Error(ParseItem item, string errorCode, ErrorCategory errorType, string description)
+        private string _format;
+
+        public Error(string code, ErrorCategory type, string format)
         {
-            ErrorCode = errorCode;
-            ErrorType = errorType;
-            Description = description;
+            Code = code;
+            Category = type;
+            Description = string.Format(format, "x", "y", "z", "a", "b", "c");
+
+            _format = format;
+        }
+
+        /// <summary>The error code is displayed in the Error List.</summary>
+        public string Code { get; }
+
+        /// <summary>A short description of the error.</summary>
+        public string Description { get; set; }
+
+        /// <summary>The error category determines how to display the error in the Error List.</summary>
+        public ErrorCategory Category { get; }
+
+        /// <summary>A URL pointing to documentation about the error.</summary>
+        public string HelpLink => string.Format(Constants.HelpLink, Code.ToLowerInvariant());
+
+        /// <summary>The line number containing the error.</summary>
+        public int Line { get; private set; }
+
+        /// <summary>The column number containing the error.</summary>
+        public int Column { get; private set; }
+
+        /// <summary>Register the error on the specified ParseItem.</summary>
+        public void Register(ParseItem item, params string[] tokens)
+        {
+            if (item.Document.Suppressions.Contains(Code, StringComparer.OrdinalIgnoreCase))
+                return;
 
             var span = new SnapshotSpan(item.Document.TextBuffer.CurrentSnapshot, item.Span);
             ITextSnapshotLine line = span.Snapshot.GetLineFromPosition(span.Start);
 
             Line = line.LineNumber;
             Column = span.Start.Position - line.Start.Position;
+
+            Description = string.Format(_format, tokens);
+
+            item.AddError(this);
         }
 
-        /// <summary>The error code is displayed in the Error List.</summary>
-        public string ErrorCode { get; set; }
-
-        /// <summary>The error type determines how to display the error in the Error List.</summary>
-        public ErrorCategory ErrorType { get; set; } = ErrorCategory.Warning;
-
-        /// <summary>A clear description of the error.</summary>
-        public string Description { get; set; }
-
-        /// <summary>The line number containing the error.</summary>
-        public int Line { get; }
-
-        /// <summary>The column number containing the error.</summary>
-        public int Column { get; }
-        public string HelpLink => string.Format(Constants.HelpLink, ErrorCode?.ToLowerInvariant());
-
-        /// <summary>The image moniker that represents the error.</summary>
-        public ImageMoniker Moniker
-        {
-            get
-            {
-                switch (ErrorType)
-                {
-                    case ErrorCategory.Error:
-                        return KnownMonikers.StatusError;
-                    case ErrorCategory.Warning:
-                        return KnownMonikers.StatusWarning;
-                }
-
-                return KnownMonikers.StatusInformation;
-            }
-        }
-
-        /// <summary>The name of the error which is always the error type.</summary>
-        public string Name
-        {
-            get
-            {
-                return ErrorType.ToString();
-            }
-        }
-
-        /// <summary>Always returns true.</summary>
-        public bool IsSupported => true;
-
-        public override int GetHashCode()
-        {
-            return ErrorCode.GetHashCode();
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (!(obj is Error other))
-                return false;
-
-            return Equals(other);
-        }
-
-        public bool Equals(Error other)
-        {
-            if (other == null)
-                return false;
-
-            return string.Equals(ErrorCode, other.ErrorCode, System.StringComparison.Ordinal);
-        }
+        string ITooltip.Name => Code;
+        ImageMoniker ITooltip.Moniker => KnownMonikers.ValidationRule;
+        bool ITooltip.IsSupported => true;
     }
 }

@@ -88,6 +88,14 @@ If a parent document contains the exact same property and value in a section wit
 
 See the [complete list of error codes](https://github.com/madskristensen/EditorConfigLanguage/wiki/Error-codes).
 
+To suppress any error in the .editorconfig document, use the light bulb feature:
+
+![Suppress error](art/suppress_error.png)
+
+That will add a special comment at the top of the file to let the validator know what error messages to suppress.
+
+![Suppress Comment](art/suppress-comment.png)
+
 ### Hover tooltips
 Hover the mouse over any keyword to see a full description.
 

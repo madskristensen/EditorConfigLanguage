@@ -52,12 +52,12 @@ namespace EditorConfig
                 IEnumerable<ParseItem> items = _document.ItemsInSpan(range).Where(p => p.HasErrors);
                 if (items.Any())
                 {
-                    IEnumerable<Error> errors = items.SelectMany(i => i.Errors);
+                    IEnumerable<DisplayError> errors = items.SelectMany(i => i.Errors);
                     var actions = new List<SuppressErrorAction>();
 
-                    foreach (Error error in errors)
+                    foreach (DisplayError error in errors)
                     {
-                        var action = new SuppressErrorAction(_document, error.Code);
+                        var action = new SuppressErrorAction(_document, error.Name);
 
                         if (action.IsEnabled)
                             actions.Add(action);

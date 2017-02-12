@@ -29,7 +29,7 @@ namespace EditorConfig
         public string Text { get; set; }
 
         /// <summary>A list of validation errors.</summary>
-        public List<Error> Errors { get; } = new List<Error>();
+        public List<DisplayError> Errors { get; } = new List<DisplayError>();
 
         /// <summary>True if the item contains errors; otherwise false.</summary>
         public bool HasErrors
@@ -38,9 +38,9 @@ namespace EditorConfig
         }
 
         /// <summary>Adds an error to the Errors list if it doesn't already contain it.</summary>
-        public void AddError(Error error)
+        public void AddError(DisplayError error)
         {
-            if (!Errors.Any(e => e.Code == error.Code))
+            if (!Errors.Any(e => e.Name == error.Name))
                 Errors.Add(error);
         }
 

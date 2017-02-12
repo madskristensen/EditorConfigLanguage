@@ -59,12 +59,12 @@ namespace EditorConfig
 
         private IEnumerable<TagSpan<ErrorTag>> CreateError(ParseItem item)
         {
-            foreach (Error error in item.Errors)
+            foreach (DisplayError error in item.Errors)
             {
                 var span = new SnapshotSpan(_view.TextBuffer.CurrentSnapshot, item.Span);
                 string errorType = GetErrorType(error.Category);
 
-                yield return new TagSpan<ErrorTag>(span, new ErrorTag(errorType, error.Code));
+                yield return new TagSpan<ErrorTag>(span, new ErrorTag(errorType, error.Name));
             }
         }
 

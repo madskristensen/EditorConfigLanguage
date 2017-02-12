@@ -72,12 +72,13 @@
     <Compile Include="Shared\Extensions.cs" />
     <Compile Include="SuggestedActions\SuppressErrorAction.cs" />
     <Compile Include="Validation\EditorConfigValidatorRules.cs" />
+    <Compile Include="Validation\ErrorList\DisplayError.cs" />
     <Compile Include="Validation\Error.cs" />
-    <Compile Include="Validation\ErrorFormatDefinition.cs" />
+    <Compile Include="Validation\Tagger\ErrorFormatDefinition.cs" />
     <Compile Include="Commands\CreateEditorConfigFileAnyCode.cs" />
-    <Compile Include="ErrorList\SinkManager.cs" />
-    <Compile Include="ErrorList\TableDataSource.cs" />
-    <Compile Include="ErrorList\TableEntriesSnapshot.cs" />
+    <Compile Include="Validation\ErrorList\SinkManager.cs" />
+    <Compile Include="Validation\ErrorList\TableDataSource.cs" />
+    <Compile Include="Validation\ErrorList\TableEntriesSnapshot.cs" />
     <Compile Include="SignatureHelp\SignatureHelpController.cs" />
     <Compile Include="Commands\NavigateToParent.cs" />
     <Compile Include="Completion\CompletionElementProvider.cs" />
@@ -137,9 +138,9 @@
     </Compile>
     <Compile Include="Shared\VsHelpers.cs" />
     <Compile Include="Validation\ErrorCatalog.cs" />
-    <Compile Include="ErrorList\ErrorList.cs" />
-    <Compile Include="Validation\ErrorTagger.cs" />
-    <Compile Include="Validation\ErrorTaggerProvider.cs" />
+    <Compile Include="Validation\ErrorList\ErrorList.cs" />
+    <Compile Include="Validation\Tagger\ErrorTagger.cs" />
+    <Compile Include="Validation\Tagger\ErrorTaggerProvider.cs" />
     <Compile Include="Outlining\OutliningTagger.cs" />
     <Compile Include="Outlining\OutliningTaggerProvider.cs" />
     <Compile Include="ProvideBraceCompletionAttribute.cs" />

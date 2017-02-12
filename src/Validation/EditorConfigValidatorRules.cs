@@ -13,13 +13,16 @@ namespace EditorConfig
         {
             foreach (ParseItem item in _document.ParseItems.Where(i => i.ItemType == ItemType.Unknown))
             {
-                ErrorCatalog.UnknownElement.Register(item);
+                ErrorCatalog.UnknownElement.Run(item, (e) =>
+                {
+                    e.Register();
+                });
             }
         }
 
         private void ValidateSections()
         {
-            List<EditorConfigDocument> parents = GetAllParentDocuments();
+            IEnumerable<EditorConfigDocument> parents = GetAllParentDocuments();
 
             foreach (Section section in _document.Sections)
             {
@@ -32,77 +35,83 @@ namespace EditorConfig
                     if (!property.IsValid)
                         continue;
 
-                    // Root in section
-                    if (property.Keyword.Text.Is(SchemaCatalog.Root))
+                    ErrorCatalog.RootInSection.Run(property.Keyword, (e) =>
                     {
-                        ErrorCatalog.RootInSection.Register(property.Keyword);
-                    }
+                        if (property.Keyword.Text.Is(SchemaCatalog.Root))
+                        {
+                            e.Register();
+                        }
+                    });
 
-                    // Duplicate property
-                    if (EditorConfigPackage.ValidationOptions.EnableDuplicateProperties)
+                    ErrorCatalog.DuplicateProperty.Run(property.Keyword, (e) =>
                     {
                         if (section.Properties.Last(p => p.Keyword.Text.Is(property.Keyword.Text)) != property)
                         {
-                            ErrorCatalog.DuplicateProperty.Register(property.Keyword);
+                            e.Register();
                         }
-                    }
+                    });
 
-                    // Parent duplicate
-                    if (EditorConfigPackage.ValidationOptions.EnableDuplicateFoundInParent && !property.Keyword.Errors.Any() && parentSections.Any())
+                    ErrorCatalog.ParentDuplicateProperty.Run(property.Keyword, (e) =>
                     {
-                        IEnumerable<Property> parentProperties = parentSections.SelectMany(s => s.Properties.Where(p => p.ToString() == property.ToString()));
-                        if (parentProperties.Any())
+                        if (!property.Keyword.Errors.Any() && parentSections.Any())
                         {
-                            string fileName = PackageUtilities.MakeRelative(_document.FileName, parentProperties.First().Keyword.Document.FileName);
-                            ErrorCatalog.ParentDuplicateProperty.Register(property.Keyword, fileName);
+                            IEnumerable<Property> parentProperties = parentSections.SelectMany(s => s.Properties.Where(p => p.ToString() == property.ToString()));
+                            if (parentProperties.Any())
+                            {
+                                string fileName = PackageUtilities.MakeRelative(_document.FileName, parentProperties.First().Keyword.Document.FileName);
+                                e.Register(fileName);
+                            }
                         }
-                    }
+                    });
 
-                    // tab_width should be different than indent_size
-                    if (property.Keyword.Text.Is("tab_width"))
+                    ErrorCatalog.TabWidthUnneeded.Run(property.Keyword, property.Keyword.Text.Is("tab_width"), (e) =>
                     {
                         bool hasIndentSize = section.Properties.Any(p => p.IsValid && p.Keyword.Text.Is("indent_size") && p.Value.Text.Is(property.Value.Text));
                         if (hasIndentSize)
                         {
-                            ErrorCatalog.TabWidthUnneeded.Register(property.Keyword);
+                            e.Register();
                         }
-                    }
+                    });
 
-                    // Don't set indent_size when indent_style is set to tab
-                    if (property.Keyword.Text.Is("indent_style") && property.Value.Text.Is("tab"))
+                    ErrorCatalog.IndentSizeUnneeded.Run(property.Keyword, (e) =>
                     {
-                        IEnumerable<Property> indentSizes = section.Properties.Where(p => p.IsValid && p.Keyword.Text.Is("indent_size"));
-
-                        foreach (Property indentSize in indentSizes)
+                        if (property.Keyword.Text.Is("indent_style") && property.Value.Text.Is("tab"))
                         {
-                            ErrorCatalog.IndentSizeUnneeded.Register(indentSize.Keyword);
+                            IEnumerable<Property> indentSizes = section.Properties.Where(p => p.IsValid && p.Keyword.Text.Is("indent_size"));
+
+                            foreach (Property indentSize in indentSizes)
+                            {
+                                e.Register(indentSize.Keyword);
+                            }
                         }
+                    });
+                }
+
+                ErrorCatalog.SectionSyntaxError.Run(section.Item, (e) =>
+                {
+                    if (!section.Item.Text.StartsWith("[") || !section.Item.Text.EndsWith("]"))
+                    {
+                        e.Register();
                     }
-                }
+                });
 
-                // Syntax error
-                if (!section.Item.Text.StartsWith("[") || !section.Item.Text.EndsWith("]"))
+                ErrorCatalog.SpaceInSection.Run(section.Item, (e) =>
                 {
-                    ErrorCatalog.SectionSyntaxError.Register(section.Item);
-                }
+                    if (section.Item.Text.Contains(" "))
+                    {
+                        e.Register();
+                    }
+                });
 
-                // Space in pattern
-                else if (!EditorConfigPackage.ValidationOptions.AllowSpacesInSections && section.Item.Text.Contains(" "))
-                {
-                    ErrorCatalog.SpaceInSection.Register(section.Item);
-                }
-
-                // Duplicate section
-                else if (EditorConfigPackage.ValidationOptions.EnableDuplicateSections)
+                ErrorCatalog.DuplicateSection.Run(section.Item, (e) =>
                 {
                     if (_document.Sections.First(s => s.Item.Text == section.Item.Text) != section)
                     {
-                        ErrorCatalog.DuplicateSection.Register(section.Item, section.Item.Text);
+                        e.Register(section.Item.Text);
                     }
-                }
+                });
 
-                // Globbing pattern match
-                else if (EditorConfigPackage.ValidationOptions.EnableGlobbingMatcher && !section.Item.HasErrors)
+                ErrorCatalog.GlobbingNoMatch.Run(section.Item, !section.Item.HasErrors, (e) =>
                 {
                     if (!_globbingCache.ContainsKey(section.Item.Text))
                     {
@@ -111,96 +120,105 @@ namespace EditorConfig
 
                     if (!_globbingCache[section.Item.Text])
                     {
-                        ErrorCatalog.GlobbingNoMatch.Register(section.Item);
+                        e.Register(section.Item.Text);
                     }
-                }
+                });
             }
         }
 
-        private List<EditorConfigDocument> GetAllParentDocuments()
+        private IEnumerable<EditorConfigDocument> GetAllParentDocuments()
         {
-            var parents = new List<EditorConfigDocument>();
-
             if (EditorConfigPackage.ValidationOptions.EnableDuplicateFoundInParent)
             {
                 EditorConfigDocument parent = _document.Parent;
+
                 while (parent != null)
                 {
-                    parents.Add(parent);
+                    yield return parent;
                     parent = parent.Parent;
                 }
             }
-
-            return parents;
         }
 
         private void ValidateRootProperties()
         {
             foreach (Property property in _document.Properties)
             {
-                // Only "root" property allowed
-                if (property != _document.Root)
+                ErrorCatalog.OnlyRootAllowd.Run(property.Keyword, (e) =>
                 {
-                    ErrorCatalog.OnlyRootAllowd.Register(property.Keyword);
-                }
+                    if (property != _document.Root)
+                    {
+                        e.Register();
+                    }
+                });
             }
         }
 
         private void ValidateProperty(Property property)
         {
+            bool hasKeyword = SchemaCatalog.TryGetKeyword(property.Keyword.Text, out Keyword keyword);
+
             // Unknown keyword
-            if (EditorConfigPackage.ValidationOptions.EnableUnknownProperties & !SchemaCatalog.TryGetKeyword(property.Keyword.Text, out Keyword keyword))
+            ErrorCatalog.UnknownKeyword.Run(property.Keyword, (e) =>
             {
-                ErrorCatalog.UnknownKeyword.Register(property.Keyword, property.Keyword.Text);
-            }
-
-            // Missing value
-            else if (property.Value == null)
-            {
-                ErrorCatalog.MissingValue.Register(property.Keyword);
-            }
-
-            // Missing severity
-            else if (property.Severity == null && keyword.RequiresSeverity)
-            {
-                ErrorCatalog.MissingSeverity.Register(property.Value);
-            }
-
-            // Value not in schema
-            else if (EditorConfigPackage.ValidationOptions.EnableUnknownValues && !(int.TryParse(property.Value.Text, out int intValue) && intValue > 0))
-            {
-                if (keyword.SupportsMultipleValues)
+                if (!hasKeyword)
                 {
-                    foreach (string value in property.Value.Text?.Split(','))
+                    e.Register(property.Keyword.Text);
+                }
+            });
+
+            ErrorCatalog.MissingValue.Run(property.Keyword, property.Value == null, (e) =>
+            {
+                e.Register();
+            });
+
+            ErrorCatalog.MissingSeverity.Run(property.Value, hasKeyword, (e) =>
+            {
+                if (property.Severity == null && keyword.RequiresSeverity)
+                {
+                    e.Register();
+                }
+            });
+
+            ErrorCatalog.UnknownValue.Run(property.Value, (e) =>
+            {
+                if (!(int.TryParse(property.Value.Text, out int intValue) && intValue > 0))
+                {
+                    if (keyword.SupportsMultipleValues)
                     {
-                        if (!keyword.Values.Any(v => v.Name.Is(value.Trim())))
+                        foreach (string value in property.Value.Text?.Split(','))
                         {
-                            ErrorCatalog.UnknownValue.Register(property.Value, keyword.Name);
+                            if (!keyword.Values.Any(v => v.Name.Is(value.Trim())))
+                            {
+                                e.Register(keyword.Name);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (!keyword.Values.Any(v => v.Name.Is(property.Value.Text)))
+                        {
+                            e.Register(property.Value.Text, keyword.Name);
                         }
                     }
                 }
-                else
-                {
-                    if (!keyword.Values.Any(v => v.Name.Is(property.Value.Text)))
-                    {
-                        ErrorCatalog.UnknownValue.Register(property.Value, property.Value.Text, keyword.Name);
-                    }
-                }
-            }
+            });
 
-            if (property.Severity != null)
+            ErrorCatalog.SeverityNotApplicable.Run(property.Severity, property.Severity != null, (e) =>
             {
-                // Severity not applicaple to property
-                if (keyword == null || !keyword.RequiresSeverity)
+                if (!hasKeyword || !keyword.RequiresSeverity)
                 {
-                    ErrorCatalog.SeverityNotApplicable.Register(property.Severity, property.Keyword.Text);
+                    e.Register(property.Keyword.Text);
                 }
-                // Severity not in schema
-                else if (!SchemaCatalog.TryGetSeverity(property.Severity.Text, out Severity severity))
+            });
+
+            ErrorCatalog.UnknownSeverity.Run(property.Severity, property.Severity != null, (e) =>
+            {
+                if (!SchemaCatalog.TryGetSeverity(property.Severity.Text, out Severity severity))
                 {
-                    ErrorCatalog.UnknownSeverity.Register(property.Severity, property.Severity.Text);
+                    e.Register(property.Severity.Text);
                 }
-            }
+            });
         }
 
         private static bool DoesFilesMatch(string folder, string pattern, string root = null)
@@ -245,7 +263,7 @@ namespace EditorConfig
 
             if (!string.IsNullOrWhiteSpace(p))
             {
-                return Minimatcher.Check(path, p, _options);
+                return Minimatcher.Check(path, p, _miniMatchOptions);
             }
 
             return false;

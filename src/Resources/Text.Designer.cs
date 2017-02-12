@@ -79,7 +79,7 @@ namespace EditorConfig.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &quot;{0}&quot; is not a valid value for the &quot;{1}&quot; property&quot;.
+        ///   Looks up a localized string similar to &quot;{0}&quot; is not a valid value for the &quot;{1}&quot; property.
         /// </summary>
         internal static string InvalidValue {
             get {

@@ -35,7 +35,7 @@ namespace EditorConfig
 
             if (item.Errors.Any())
             {
-                foreach (Error error in item.Errors)
+                foreach (DisplayError error in item.Errors)
                 {
                     qiContent.Add(new Shared.EditorTooltip(error));
                     return;

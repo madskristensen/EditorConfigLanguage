@@ -20,7 +20,7 @@ namespace EditorConfig
             Url = fileName;
         }
 
-        public List<Error> Errors { get; private set; }
+        public List<DisplayError> Errors { get; private set; }
 
         public override int VersionNumber { get; } = 1;
 
@@ -39,7 +39,7 @@ namespace EditorConfig
                 return false;
             }
 
-            Error error = Errors[index];
+            DisplayError error = Errors[index];
 
             switch (columnName)
             {
@@ -72,7 +72,7 @@ namespace EditorConfig
                     content = Vsix.Name;
                     return true;
                 case StandardTableKeyNames.ErrorCode:
-                    content = error.Code;
+                    content = error.Name;
                     return true;
                 case StandardTableKeyNames.ProjectName:
                     content = _projectName;
@@ -86,7 +86,7 @@ namespace EditorConfig
             }
         }
 
-        private __VSERRORCATEGORY GetSeverity(Error error)
+        private __VSERRORCATEGORY GetSeverity(DisplayError error)
         {
             switch (error.Category)
             {

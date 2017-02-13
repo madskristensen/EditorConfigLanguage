@@ -159,12 +159,9 @@ namespace EditorConfig
             bool hasKeyword = SchemaCatalog.TryGetKeyword(property.Keyword.Text, out Keyword keyword);
 
             // Unknown keyword
-            ErrorCatalog.UnknownKeyword.Run(property.Keyword, (e) =>
+            ErrorCatalog.UnknownKeyword.Run(property.Keyword, !hasKeyword, (e) =>
             {
-                if (!hasKeyword)
-                {
-                    e.Register(property.Keyword.Text);
-                }
+                e.Register(property.Keyword.Text);
             });
 
             ErrorCatalog.MissingValue.Run(property.Keyword, property.Value == null, (e) =>
@@ -180,7 +177,7 @@ namespace EditorConfig
                 }
             });
 
-            ErrorCatalog.UnknownValue.Run(property.Value, (e) =>
+            ErrorCatalog.UnknownValue.Run(property.Value, hasKeyword, (e) =>
             {
                 if (!(int.TryParse(property.Value.Text, out int intValue) && intValue > 0))
                 {
@@ -204,9 +201,9 @@ namespace EditorConfig
                 }
             });
 
-            ErrorCatalog.SeverityNotApplicable.Run(property.Severity, property.Severity != null, (e) =>
+            ErrorCatalog.SeverityNotApplicable.Run(property.Severity, !hasKeyword, (e) =>
             {
-                if (!hasKeyword || !keyword.RequiresSeverity)
+                if (property.Severity != null && !keyword.RequiresSeverity)
                 {
                     e.Register(property.Keyword.Text);
                 }

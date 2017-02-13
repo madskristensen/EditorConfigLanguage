@@ -40,7 +40,7 @@ namespace EditorConfig
 
         public void Run(ParseItem item, bool enabled, Action<DisplayError> action)
         {
-            if (enabled && !item.HasErrors && IsSupported && !item.Document.Suppressions.Contains(Code, StringComparer.OrdinalIgnoreCase))
+            if (enabled && item != null && !item.HasErrors && IsSupported && !item.Document.Suppressions.Contains(Code, StringComparer.OrdinalIgnoreCase))
             {
                 action.Invoke(new DisplayError(this, item));
             }

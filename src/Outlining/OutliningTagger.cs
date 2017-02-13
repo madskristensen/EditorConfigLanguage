@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.Text.Tagging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Threading;
 
 namespace EditorConfig
 {
@@ -19,7 +20,7 @@ namespace EditorConfig
             _snapshot = buffer.CurrentSnapshot;
 
             _document = EditorConfigDocument.FromTextBuffer(buffer);
-            _document.Parsed += BufferChanged;
+            _document.Parsed += DocumentChanged;
 
             StartParsing();
         }
@@ -28,7 +29,7 @@ namespace EditorConfig
 
         public IEnumerable<ITagSpan<IOutliningRegionTag>> GetTags(NormalizedSnapshotSpanCollection spans)
         {
-            if (_document.IsParsing || spans.Count == 0 || !Regions.Any())
+            if (spans.Count == 0 || !Regions.Any())
                 yield break;
 
             IEnumerable<Region> currentRegions = Regions;
@@ -54,18 +55,18 @@ namespace EditorConfig
 
         public event EventHandler<SnapshotSpanEventArgs> TagsChanged;
 
-        void BufferChanged(object sender, EventArgs e)
+        void DocumentChanged(object sender, EventArgs e)
         {
             StartParsing();
         }
 
         private void StartParsing()
         {
-            if (TagsChanged == null)
-                return;
-
-            ThreadHelper.Generic.BeginInvoke(() =>
+            ThreadHelper.Generic.BeginInvoke(DispatcherPriority.ApplicationIdle, () =>
             {
+                if (TagsChanged == null || _document.IsParsing)
+                    return;
+
                 Regions.Clear();
                 ReParse();
                 TagsChanged?.Invoke(this, new SnapshotSpanEventArgs(new SnapshotSpan(_snapshot, 0, _snapshot.Length)));

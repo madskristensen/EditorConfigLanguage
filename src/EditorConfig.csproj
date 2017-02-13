@@ -57,9 +57,6 @@
   <ItemGroup>
     <Compile Include="Adornments\InheritanceAdornmentProvider.cs" />
     <Compile Include="Adornments\InheritanceAdornment.cs" />
-    <Compile Include="Adornments\SeverityAdornment.cs" />
-    <Compile Include="Adornments\SeverityAdornmentTagger.cs" />
-    <Compile Include="Adornments\SeverityAdornmentTaggerProvider.cs" />
     <Compile Include="Adornments\IntraTextAdornmentTagger.cs" />
     <Compile Include="BraceCompletion\BraceCompletionContextProvider.cs" />
     <Compile Include="BraceCompletion\BraceCompletionContext.cs" />
@@ -155,9 +152,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Text.resx</DependentUpon>
     </Compile>
-    <Compile Include="Adornments\SeverityTag.cs" />
-    <Compile Include="Adornments\SeverityTagger.cs" />
-    <Compile Include="Adornments\SeverityTaggerProvider.cs" />
     <Compile Include="Shared\TextViewCreationListener.cs" />
     <Compile Include="LanguageService\ContentTypes.cs" />
     <Compile Include="EditorConfigPackage.cs" />

@@ -43,12 +43,6 @@ namespace EditorConfig
         [DefaultValue(1)]
         public int SpacesAfterColon { get; set; } = 1;
 
-        [Category(_severity)]
-        [DisplayName("Show icons")]
-        [Description("[C# only] Show icons next to the severity value for easy identification. Reopen document required")]
-        [DefaultValue(true)]
-        public bool ShowSeverityIcons { get; set; } = true;
-
         public override void SaveSettingsToStorage()
         {
             Telemetry.TrackOperation("FormattingOptionsSaved");

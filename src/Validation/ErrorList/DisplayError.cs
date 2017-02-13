@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.Imaging.Interop;
+﻿using Microsoft.VisualStudio.Imaging;
+using Microsoft.VisualStudio.Imaging.Interop;
 using Microsoft.VisualStudio.Text;
 
 namespace EditorConfig
@@ -33,7 +34,21 @@ namespace EditorConfig
         /// <summary>The column number containing the error.</summary>
         public int Column { get; private set; } = 0;
 
-        public ImageMoniker Moniker => _error.Moniker;
+        public ImageMoniker Moniker
+        {
+            get
+            {
+                switch (_error.Category)
+                {
+                    case ErrorCategory.Error:
+                        return KnownMonikers.StatusError;
+                    case ErrorCategory.Warning:
+                        return KnownMonikers.StatusWarning;
+                    default:
+                        return KnownMonikers.StatusInformation;
+                }
+            }
+        }
 
         public bool IsSupported => _error.IsSupported;
 

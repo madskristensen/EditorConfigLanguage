@@ -95,7 +95,7 @@ namespace EditorConfig
             // Suppression
             else if (parseItem?.ItemType == ItemType.Suppression)
             {
-                foreach (Error code in ErrorCatalog.All)
+                foreach (Error code in ErrorCatalog.All.OrderBy(e => e.Code))
                     list.Add(CreateCompletion(code));
 
                 moniker = "suppression";

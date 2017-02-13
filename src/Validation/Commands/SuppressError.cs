@@ -16,6 +16,7 @@ namespace EditorConfig
     {
         private readonly Package _package;
         private Error _selectedError;
+        private string _filePath;
 
         private SuppressError(Package package, OleMenuCommandService commandService)
         {
@@ -57,10 +58,7 @@ namespace EditorConfig
             if (!ErrorCatalog.TryGetErrorCode(content, out _selectedError))
                 return;
 
-            if (entry == null || !entry.TryGetValue(StandardTableKeyNames.DocumentName, out string document))
-                return;
-
-            if (document != VsHelpers.DTE.ActiveDocument.FullName)
+            if (entry == null || !entry.TryGetValue(StandardTableKeyNames.DocumentName, out _filePath))
                 return;
 
             button.Visible = button.Enabled = true;
@@ -71,16 +69,12 @@ namespace EditorConfig
         {
             try
             {
-                var componentModel = (IComponentModel)Package.GetGlobalService(typeof(SComponentModel));
-                var textManager = (IVsTextManager)Package.GetGlobalService(typeof(SVsTextManager));
-                ErrorHandler.ThrowOnFailure(textManager.GetActiveView(1, null, out IVsTextView activeView));
-                IVsEditorAdaptersFactoryService editorAdapter = componentModel.GetService<IVsEditorAdaptersFactoryService>();
-                IWpfTextView wpfTextView = editorAdapter.GetWpfTextView(activeView);
-                ITextBuffer buffer = wpfTextView.TextBuffer;
-
-                var document = EditorConfigDocument.FromTextBuffer(buffer);
-                var validator = EditorConfigValidator.FromDocument(document);
-                validator.SuppressError(_selectedError.Code);
+                if (TextViewUtil.TryGetWpfTextView(_filePath, out var view))
+                {
+                    var document = EditorConfigDocument.FromTextBuffer(view.TextBuffer);
+                    var validator = EditorConfigValidator.FromDocument(document);
+                    validator.SuppressError(_selectedError.Code);
+                }
             }
             catch (Exception ex)
             {

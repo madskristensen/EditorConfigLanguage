@@ -57,7 +57,6 @@
   <ItemGroup>
     <Compile Include="Adornments\InheritanceAdornmentProvider.cs" />
     <Compile Include="Adornments\InheritanceAdornment.cs" />
-    <Compile Include="Adornments\IntraTextAdornmentTagger.cs" />
     <Compile Include="BraceCompletion\BraceCompletionContextProvider.cs" />
     <Compile Include="BraceCompletion\BraceCompletionContext.cs" />
     <Compile Include="CodeExpansions\EnableSnippetsCommand.cs" />

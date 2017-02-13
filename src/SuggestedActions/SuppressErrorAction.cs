@@ -1,6 +1,8 @@
 using System;
 using System.Linq;
 using System.Threading;
+using Microsoft.VisualStudio.Imaging;
+using Microsoft.VisualStudio.Imaging.Interop;
 
 namespace EditorConfig
 {
@@ -20,6 +22,8 @@ namespace EditorConfig
         {
             get { return $"Suppress {_errorCode}"; }
         }
+
+        public override ImageMoniker IconMoniker => KnownMonikers.ValidationRule;
 
         public override bool IsEnabled
         {

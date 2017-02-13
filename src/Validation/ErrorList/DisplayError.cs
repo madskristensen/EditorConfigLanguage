@@ -34,21 +34,7 @@ namespace EditorConfig
         /// <summary>The column number containing the error.</summary>
         public int Column { get; private set; } = 0;
 
-        public ImageMoniker Moniker
-        {
-            get
-            {
-                switch (_error.Category)
-                {
-                    case ErrorCategory.Error:
-                        return KnownMonikers.StatusError;
-                    case ErrorCategory.Warning:
-                        return KnownMonikers.StatusWarning;
-                    default:
-                        return KnownMonikers.StatusInformation;
-                }
-            }
-        }
+        public ImageMoniker Moniker => _error.Moniker;
 
         public bool IsSupported => _error.IsSupported;
 

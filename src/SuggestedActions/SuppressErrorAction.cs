@@ -33,23 +33,8 @@ namespace EditorConfig
 
         public override void Execute(CancellationToken cancellationToken)
         {
-            var range = new Span(0, 0);
-            IEnumerable<string> errorCodes = _document.Suppressions.Union(new[] { _errorCode }).OrderBy(c => c);
-
-            if (_document.Suppressions.Any())
-            {
-                int position = _document.ParseItems.First().Span.Start;
-                ITextSnapshotLine line = _document.TextBuffer.CurrentSnapshot.GetLineFromPosition(position);
-                range = Span.FromBounds(line.Start, line.EndIncludingLineBreak);
-            }
-
-            string text = string.Format(_suppressFormat, string.Join(" ", errorCodes)) + Environment.NewLine;
-
-            using (ITextEdit edit = _document.TextBuffer.CreateEdit())
-            {
-                edit.Replace(range, text);
-                edit.Apply();
-            }
+            var validator = EditorConfigValidator.FromDocument(_document);
+            validator.SuppressError(_errorCode);
         }
     }
 }

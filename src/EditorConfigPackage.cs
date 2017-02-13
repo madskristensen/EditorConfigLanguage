@@ -68,6 +68,7 @@ namespace EditorConfig
             {
                 CreateEditorConfigFile.Initialize(this, commandService);
                 OpenSettings.Initialize(this, commandService);
+                SuppressError.Initialize(this, commandService);
             }
         }
     }

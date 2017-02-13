@@ -31,10 +31,12 @@ namespace EditorConfig
         public const int AddGroup = 0x0001;
         public const int AddGroupAnyCode = 0x0002;
         public const int EditorContextMenu = 0x0003;
+        public const int ErrorListGroup = 0x0004;
         public const int CreateEditorConfigFileId = 0x0100;
         public const int CreateEditorConfigFileAnyCodeId = 0x0200;
         public const int OpenSettingsId = 0x0300;
         public const int NavigateToParentId = 0x0400;
+        public const int SuppressErrorId = 0x0500;
         public const int idmAddNew = 0x2200;
         public const int logo = 0x0001;
     }

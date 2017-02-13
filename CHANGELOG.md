@@ -6,6 +6,7 @@
 - [x] Intellisense for error codes in suppression
 - [x] Hover tooltips for suppressions
 - [x] Document suppression feature in [readme.md](README.md)
+- [x] Suppress errors from Error List context menu
 - [ ] Add item template for .editorconfig files
 
 Features that have a checkmark are complete and available for

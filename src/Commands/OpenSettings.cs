@@ -8,10 +8,12 @@ namespace EditorConfig
     internal sealed class OpenSettings
     {
         private readonly Package _package;
+        private readonly OleMenuCommandService _commandService;
 
         private OpenSettings(Package package, OleMenuCommandService commandService)
         {
             _package = package ?? throw new ArgumentNullException(nameof(package));
+            _commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
 
             var cmdId = new CommandID(PackageGuids.guidEditorConfigPackageCmdSet, PackageIds.OpenSettingsId);
             var menuItem = new OleMenuCommand(Execute, cmdId);
@@ -43,14 +45,9 @@ namespace EditorConfig
 
         private void Execute(object sender, EventArgs e)
         {
-            MenuCommandService mcs = VsHelpers.GetService<IMenuCommandService, MenuCommandService>();
-
-            if (mcs != null)
-            {
-                Guid cmdGroup = typeof(VSConstants.VSStd97CmdID).GUID;
-                var cmd = new CommandID(cmdGroup, VSConstants.cmdidToolsOptions);
-                mcs.GlobalInvoke(cmd, typeof(FormatterOptions).GUID.ToString());
-            }
+            Guid cmdGroup = typeof(VSConstants.VSStd97CmdID).GUID;
+            var cmd = new CommandID(cmdGroup, VSConstants.cmdidToolsOptions);
+            _commandService.GlobalInvoke(cmd, typeof(FormatterOptions).GUID.ToString());
         }
     }
 }

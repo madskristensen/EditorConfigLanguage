@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Timers;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.Text;
 
 namespace EditorConfig
 {
@@ -125,6 +126,30 @@ namespace EditorConfig
                     IsValidating = false;
                 }
             });
+        }
+
+        public void SuppressError(string errorCode)
+        {
+            if (string.IsNullOrEmpty(errorCode) || _document.Suppressions.Contains(errorCode))
+                return;
+
+            var range = new Span(0, 0);
+            IEnumerable<string> errorCodes = _document.Suppressions.Union(new[] { errorCode }).OrderBy(c => c);
+
+            if (_document.Suppressions.Any())
+            {
+                int position = _document.ParseItems.First().Span.Start;
+                ITextSnapshotLine line = _document.TextBuffer.CurrentSnapshot.GetLineFromPosition(position);
+                range = Span.FromBounds(line.Start, line.EndIncludingLineBreak);
+            }
+
+            string text = string.Format("# Suppress: {0}", string.Join(" ", errorCodes)) + Environment.NewLine;
+
+            using (ITextEdit edit = _document.TextBuffer.CreateEdit())
+            {
+                edit.Replace(range, text);
+                edit.Apply();
+            }
         }
 
         public void Dispose()

@@ -9,6 +9,7 @@
       <Group guid="guidEditorConfigPackageCmdSet" id="AddGroup" priority="0x0002" />
       <Group guid="guidEditorConfigPackageCmdSet" id="AddGroupAnyCode" priority="0x0002" />
       <Group guid="guidEditorConfigPackageCmdSet" id="EditorContextMenu" priority="0x0500" />
+      <Group guid="guidEditorConfigPackageCmdSet" id="ErrorListGroup" priority="0x0500" />
     </Groups>
 
     <Buttons>
@@ -44,6 +45,18 @@
         <Strings>
           <ButtonText>Navigate To Parent</ButtonText>
           <LocCanonicalName>EditorConfig.NavigateToParent</LocCanonicalName>
+        </Strings>
+      </Button>
+      <Button guid="guidEditorConfigPackageCmdSet" id="SuppressErrorId" priority="0x0200" type="Button">
+        <Icon guid="icons" id="logo" />
+        <CommandFlag>IconIsMoniker</CommandFlag>
+        <CommandFlag>DefaultDisabled</CommandFlag>
+        <CommandFlag>DefaultInvisible</CommandFlag>
+        <CommandFlag>DynamicVisibility</CommandFlag>
+        <CommandFlag>TextChanges</CommandFlag>
+        <Strings>
+          <ButtonText>Suppress Error</ButtonText>
+          <LocCanonicalName>EditorConfig.SuppressError</LocCanonicalName>
         </Strings>
       </Button>
     </Buttons>
@@ -85,6 +98,14 @@
     <CommandPlacement guid="guidEditorConfigPackageCmdSet" id="OpenSettingsId" priority="0x0200">
       <Parent guid="guidEditorConfigPackageCmdSet" id="EditorContextMenu" />
     </CommandPlacement>
+
+    <!-- Error List -->
+    <CommandPlacement guid="guidEditorConfigPackageCmdSet" id="ErrorListGroup" priority="0x0900">
+      <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_ERRORLIST" />
+    </CommandPlacement>
+    <CommandPlacement guid="guidEditorConfigPackageCmdSet" id="SuppressErrorId" priority="0x0100">
+      <Parent guid="guidEditorConfigPackageCmdSet" id="ErrorListGroup" />
+    </CommandPlacement>
   </CommandPlacements>
 
   <KeyBindings>
@@ -101,10 +122,12 @@
       <IDSymbol name="AddGroup" value="0x0001" />
       <IDSymbol name="AddGroupAnyCode" value="0x0002" />
       <IDSymbol name="EditorContextMenu" value="0x0003" />
+      <IDSymbol name="ErrorListGroup" value="0x0004" />
       <IDSymbol name="CreateEditorConfigFileId" value="0x0100" />
       <IDSymbol name="CreateEditorConfigFileAnyCodeId" value="0x0200" />
       <IDSymbol name="OpenSettingsId" value="0x0300" />
       <IDSymbol name="NavigateToParentId" value="0x0400" />
+      <IDSymbol name="SuppressErrorId" value="0x0500" />
     </GuidSymbol>
 
     <!-- The AnyCode AddNewItem menu -->

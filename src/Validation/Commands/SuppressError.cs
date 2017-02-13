@@ -1,14 +1,14 @@
 ﻿using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.Shell;
-using System;
-using System.ComponentModel.Design;
-using Microsoft.VisualStudio.Shell.TableControl;
-using Microsoft.VisualStudio.Shell.TableManager;
-using Microsoft.VisualStudio.TextManager.Interop;
-using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Editor;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.TableControl;
+using Microsoft.VisualStudio.Shell.TableManager;
 using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text.Editor;
+using Microsoft.VisualStudio.TextManager.Interop;
+using System;
+using System.ComponentModel.Design;
 
 namespace EditorConfig
 {
@@ -69,16 +69,23 @@ namespace EditorConfig
 
         private void Execute(object sender, EventArgs e)
         {
-            var componentModel = (IComponentModel)Package.GetGlobalService(typeof(SComponentModel));
-            var textManager = (IVsTextManager)Package.GetGlobalService(typeof(SVsTextManager));
-            ErrorHandler.ThrowOnFailure(textManager.GetActiveView(1, null, out IVsTextView activeView));
-            IVsEditorAdaptersFactoryService editorAdapter = componentModel.GetService<IVsEditorAdaptersFactoryService>();
-            IWpfTextView wpfTextView = editorAdapter.GetWpfTextView(activeView);
-            ITextBuffer buffer = wpfTextView.TextBuffer;
+            try
+            {
+                var componentModel = (IComponentModel)Package.GetGlobalService(typeof(SComponentModel));
+                var textManager = (IVsTextManager)Package.GetGlobalService(typeof(SVsTextManager));
+                ErrorHandler.ThrowOnFailure(textManager.GetActiveView(1, null, out IVsTextView activeView));
+                IVsEditorAdaptersFactoryService editorAdapter = componentModel.GetService<IVsEditorAdaptersFactoryService>();
+                IWpfTextView wpfTextView = editorAdapter.GetWpfTextView(activeView);
+                ITextBuffer buffer = wpfTextView.TextBuffer;
 
-            var document = EditorConfigDocument.FromTextBuffer(buffer);
-            var validator = EditorConfigValidator.FromDocument(document);
-            validator.SuppressError(_selectedError.Code);
+                var document = EditorConfigDocument.FromTextBuffer(buffer);
+                var validator = EditorConfigValidator.FromDocument(document);
+                validator.SuppressError(_selectedError.Code);
+            }
+            catch (Exception ex)
+            {
+                Telemetry.TrackException("SuppressError", ex);
+            }
         }
     }
 }

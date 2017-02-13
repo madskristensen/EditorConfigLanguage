@@ -96,6 +96,10 @@ That will add a special comment at the top of the file to let the validator know
 
 ![Suppress Comment](art/suppress-comment.png)
 
+Another way to suppress the error is by right-clicking the error in the Error List.
+
+![Suppress from Error list](art/suppress-errorlist.png)
+
 ### Hover tooltips
 Hover the mouse over any keyword to see a full description.
 

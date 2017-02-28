@@ -1,144 +1,146 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
-  <Extern href="stdidcmd.h"/>
-  <Extern href="vsshlids.h"/>
+    <Extern href="stdidcmd.h"/>
+    <Extern href="vsshlids.h"/>
 
-  <Commands package="guidEditorConfigPackage">
-    <Groups>
-      <Group guid="guidEditorConfigPackageCmdSet" id="AddGroup" priority="0x0002" />
-      <Group guid="guidEditorConfigPackageCmdSet" id="AddGroupAnyCode" priority="0x0002" />
-      <Group guid="guidEditorConfigPackageCmdSet" id="EditorContextMenu" priority="0x0500" />
-      <Group guid="guidEditorConfigPackageCmdSet" id="ErrorListGroup" priority="0x0500" />
-    </Groups>
+    <Commands package="guidEditorConfigPackage">
+        <Groups>
+            <Group guid="guidEditorConfigPackageCmdSet" id="AddGroup" priority="0x0002" />
+            <Group guid="guidEditorConfigPackageCmdSet" id="AddGroupAnyCode" priority="0x0002" />
+            <Group guid="guidEditorConfigPackageCmdSet" id="EditorContextMenu" priority="0x0500" />
+            <Group guid="guidEditorConfigPackageCmdSet" id="ErrorListGroup" priority="0x0500" />
+        </Groups>
 
-    <Buttons>
-      <Button guid="guidEditorConfigPackageCmdSet" id="CreateEditorConfigFileId" priority="0x0500" type="Button">
-        <Icon guid="icons" id="logo" />
-        <CommandFlag>IconIsMoniker</CommandFlag>
-        <Strings>
-          <ButtonText>.editorconfig File</ButtonText>
-          <LocCanonicalName>EditorConfig.AddFile</LocCanonicalName>
-        </Strings>
-      </Button>
-      <Button guid="guidEditorConfigPackageCmdSet" id="CreateEditorConfigFileAnyCodeId" priority="0x0500" type="Button">
-        <Icon guid="icons" id="logo" />
-        <CommandFlag>IconIsMoniker</CommandFlag>
-        <Strings>
-          <ButtonText>.editorconfig File</ButtonText>
-          <LocCanonicalName>EditorConfig.AddFileToFolderView</LocCanonicalName>
-        </Strings>
-      </Button>
-      <Button guid="guidEditorConfigPackageCmdSet" id="OpenSettingsId" priority="0x0200" type="Button">
-        <Icon guid="icons" id="logo" />
-        <CommandFlag>IconIsMoniker</CommandFlag>
-        <CommandFlag>DynamicVisibility</CommandFlag>
-        <CommandFlag>DefaultInvisible</CommandFlag>
-        <CommandFlag>DefaultDisabled</CommandFlag>
-        <Strings>
-          <ButtonText>Formatting and Validation...</ButtonText>
-          <LocCanonicalName>EditorConfig.Options</LocCanonicalName>
-        </Strings>
-      </Button>
-      <Button guid="guidEditorConfigPackageCmdSet" id="NavigateToParentId" priority="0x0200" type="Button">
-        <CommandFlag>DefaultDisabled</CommandFlag>
-        <Strings>
-          <ButtonText>Navigate To Parent</ButtonText>
-          <LocCanonicalName>EditorConfig.NavigateToParent</LocCanonicalName>
-        </Strings>
-      </Button>
-      <Button guid="guidEditorConfigPackageCmdSet" id="SuppressErrorId" priority="0x0200" type="Button">
-        <Icon guid="icons" id="logo" />
-        <CommandFlag>IconIsMoniker</CommandFlag>
-        <CommandFlag>DefaultDisabled</CommandFlag>
-        <CommandFlag>DefaultInvisible</CommandFlag>
-        <CommandFlag>DynamicVisibility</CommandFlag>
-        <CommandFlag>TextChanges</CommandFlag>
-        <Strings>
-          <ButtonText>Suppress Error</ButtonText>
-          <LocCanonicalName>EditorConfig.SuppressError</LocCanonicalName>
-        </Strings>
-      </Button>
-    </Buttons>
-  </Commands>
+        <Buttons>
+            <Button guid="guidEditorConfigPackageCmdSet" id="CreateEditorConfigFileId" priority="0x0500" type="Button">
+                <Icon guid="icons" id="logo" />
+                <CommandFlag>IconIsMoniker</CommandFlag>
+                <Strings>
+                    <ButtonText>.editorconfig File</ButtonText>
+                    <LocCanonicalName>EditorConfig.AddFile</LocCanonicalName>
+                </Strings>
+            </Button>
+            <Button guid="guidEditorConfigPackageCmdSet" id="CreateEditorConfigFileAnyCodeId" priority="0x0500" type="Button">
+                <Icon guid="icons" id="logo" />
+                <CommandFlag>IconIsMoniker</CommandFlag>
+                <Strings>
+                    <ButtonText>.editorconfig File</ButtonText>
+                    <LocCanonicalName>EditorConfig.AddFileToFolderView</LocCanonicalName>
+                </Strings>
+            </Button>
+            <Button guid="guidEditorConfigPackageCmdSet" id="OpenSettingsId" priority="0x0200" type="Button">
+                <Icon guid="icons" id="logo" />
+                <CommandFlag>IconIsMoniker</CommandFlag>
+                <CommandFlag>DynamicVisibility</CommandFlag>
+                <CommandFlag>DefaultInvisible</CommandFlag>
+                <CommandFlag>DefaultDisabled</CommandFlag>
+                <Strings>
+                    <ButtonText>Formatting and Validation...</ButtonText>
+                    <LocCanonicalName>EditorConfig.Options</LocCanonicalName>
+                </Strings>
+            </Button>
+            <Button guid="guidEditorConfigPackageCmdSet" id="NavigateToParentId" priority="0x0200" type="Button">
+                <CommandFlag>DefaultDisabled</CommandFlag>
+                <CommandFlag>DefaultInvisible</CommandFlag>
+                <CommandFlag>DynamicVisibility</CommandFlag>
+                <Strings>
+                    <ButtonText>Navigate To Parent</ButtonText>
+                    <LocCanonicalName>EditorConfig.NavigateToParent</LocCanonicalName>
+                </Strings>
+            </Button>
+            <Button guid="guidEditorConfigPackageCmdSet" id="SuppressErrorId" priority="0x0200" type="Button">
+                <Icon guid="icons" id="logo" />
+                <CommandFlag>IconIsMoniker</CommandFlag>
+                <CommandFlag>DefaultDisabled</CommandFlag>
+                <CommandFlag>DefaultInvisible</CommandFlag>
+                <CommandFlag>DynamicVisibility</CommandFlag>
+                <CommandFlag>TextChanges</CommandFlag>
+                <Strings>
+                    <ButtonText>Suppress Error</ButtonText>
+                    <LocCanonicalName>EditorConfig.SuppressError</LocCanonicalName>
+                </Strings>
+            </Button>
+        </Buttons>
+    </Commands>
 
-  <CommandPlacements>
-    <!-- IVsHierarchy -->
-    <CommandPlacement guid="guidEditorConfigPackageCmdSet" id="CreateEditorConfigFileId" priority="0x0100">
-      <Parent guid="guidEditorConfigPackageCmdSet" id="AddGroup" />
-    </CommandPlacement>
-    <CommandPlacement guid="guidEditorConfigPackageCmdSet" id="AddGroup" priority="0x0500">
-      <Parent guid="guidSHLMainMenu" id="IDM_VS_CSCD_SOLUTION_ADD" />
-    </CommandPlacement>
-    <CommandPlacement guid="guidEditorConfigPackageCmdSet" id="AddGroup" priority="0x0500">
-      <Parent guid="guidSHLMainMenu" id="IDM_VS_CSCD_PROJECT_ADD" />
-    </CommandPlacement>
-    <CommandPlacement guid="guidEditorConfigPackageCmdSet" id="AddGroup" priority="0x0500">
-      <Parent guid="guidSHLMainMenu" id="IDM_VS_CSCD_SLNFLDR_ADD" />
-    </CommandPlacement>
-    <CommandPlacement guid="guidEditorConfigPackageCmdSet" id="AddGroup" priority="0x0500">
-      <Parent guid="guidSHLMainMenu" id="IDM_VS_CSCD_CV_ITEMADD" />
-    </CommandPlacement>
+    <CommandPlacements>
+        <!-- IVsHierarchy -->
+        <CommandPlacement guid="guidEditorConfigPackageCmdSet" id="CreateEditorConfigFileId" priority="0x0100">
+            <Parent guid="guidEditorConfigPackageCmdSet" id="AddGroup" />
+        </CommandPlacement>
+        <CommandPlacement guid="guidEditorConfigPackageCmdSet" id="AddGroup" priority="0x0500">
+            <Parent guid="guidSHLMainMenu" id="IDM_VS_CSCD_SOLUTION_ADD" />
+        </CommandPlacement>
+        <CommandPlacement guid="guidEditorConfigPackageCmdSet" id="AddGroup" priority="0x0500">
+            <Parent guid="guidSHLMainMenu" id="IDM_VS_CSCD_PROJECT_ADD" />
+        </CommandPlacement>
+        <CommandPlacement guid="guidEditorConfigPackageCmdSet" id="AddGroup" priority="0x0500">
+            <Parent guid="guidSHLMainMenu" id="IDM_VS_CSCD_SLNFLDR_ADD" />
+        </CommandPlacement>
+        <CommandPlacement guid="guidEditorConfigPackageCmdSet" id="AddGroup" priority="0x0500">
+            <Parent guid="guidSHLMainMenu" id="IDM_VS_CSCD_CV_ITEMADD" />
+        </CommandPlacement>
 
-    <!-- AnyCode -->
-    <CommandPlacement guid="guidEditorConfigPackageCmdSet" id="CreateEditorConfigFileAnyCodeId" priority="0x0100">
-      <Parent guid="guidEditorConfigPackageCmdSet" id="AddGroupAnyCode" />
-    </CommandPlacement>
-    <CommandPlacement guid="guidEditorConfigPackageCmdSet" id="AddGroupAnyCode" priority="0x1500">
-      <Parent guid="guidWorkspaceExplorerToolWindowPackageCmdSet" id="idmAddNew" />
-    </CommandPlacement>
+        <!-- AnyCode -->
+        <CommandPlacement guid="guidEditorConfigPackageCmdSet" id="CreateEditorConfigFileAnyCodeId" priority="0x0100">
+            <Parent guid="guidEditorConfigPackageCmdSet" id="AddGroupAnyCode" />
+        </CommandPlacement>
+        <CommandPlacement guid="guidEditorConfigPackageCmdSet" id="AddGroupAnyCode" priority="0x1500">
+            <Parent guid="guidWorkspaceExplorerToolWindowPackageCmdSet" id="idmAddNew" />
+        </CommandPlacement>
 
-    <!-- Editor contextmenu -->
-    <CommandPlacement guid="guidEditorConfigPackageCmdSet" id="EditorContextMenu" priority="0x0900">
-      <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_CODEWIN" />
-    </CommandPlacement>
-    <CommandPlacement guid="guidEditorConfigPackageCmdSet" id="NavigateToParentId" priority="0x0100">
-      <Parent guid="guidEditorConfigPackageCmdSet" id="EditorContextMenu" />
-    </CommandPlacement>
-    <CommandPlacement guid="guidEditorConfigPackageCmdSet" id="OpenSettingsId" priority="0x0200">
-      <Parent guid="guidEditorConfigPackageCmdSet" id="EditorContextMenu" />
-    </CommandPlacement>
+        <!-- Editor contextmenu -->
+        <CommandPlacement guid="guidEditorConfigPackageCmdSet" id="EditorContextMenu" priority="0x0900">
+            <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_CODEWIN" />
+        </CommandPlacement>
+        <CommandPlacement guid="guidEditorConfigPackageCmdSet" id="NavigateToParentId" priority="0x0100">
+            <Parent guid="guidEditorConfigPackageCmdSet" id="EditorContextMenu" />
+        </CommandPlacement>
+        <CommandPlacement guid="guidEditorConfigPackageCmdSet" id="OpenSettingsId" priority="0x0200">
+            <Parent guid="guidEditorConfigPackageCmdSet" id="EditorContextMenu" />
+        </CommandPlacement>
 
-    <!-- Error List -->
-    <CommandPlacement guid="guidEditorConfigPackageCmdSet" id="ErrorListGroup" priority="0x0900">
-      <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_ERRORLIST" />
-    </CommandPlacement>
-    <CommandPlacement guid="guidEditorConfigPackageCmdSet" id="SuppressErrorId" priority="0x0100">
-      <Parent guid="guidEditorConfigPackageCmdSet" id="ErrorListGroup" />
-    </CommandPlacement>
-  </CommandPlacements>
+        <!-- Error List -->
+        <CommandPlacement guid="guidEditorConfigPackageCmdSet" id="ErrorListGroup" priority="0x0900">
+            <Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_ERRORLIST" />
+        </CommandPlacement>
+        <CommandPlacement guid="guidEditorConfigPackageCmdSet" id="SuppressErrorId" priority="0x0100">
+            <Parent guid="guidEditorConfigPackageCmdSet" id="ErrorListGroup" />
+        </CommandPlacement>
+    </CommandPlacements>
 
-  <KeyBindings>
-    <KeyBinding guid="guidEditorConfigPackageCmdSet" id="NavigateToParentId" key1="VK_F12" editor="guidEditorFactory"/>
-  </KeyBindings>
+    <KeyBindings>
+        <KeyBinding guid="guidEditorConfigPackageCmdSet" id="NavigateToParentId" key1="VK_F12" editor="guidEditorFactory"/>
+    </KeyBindings>
 
-  <Symbols>
-    <!-- This is the package guid. -->
-    <GuidSymbol name="guidEditorConfigPackage" value="{6736c72d-7a27-49f0-9153-413ff47963ef}" />
-    <GuidSymbol name="guidEditorFactory" value="{13cabf99-9eae-4ecc-a6f4-89f3ad54dc83}" />
+    <Symbols>
+        <!-- This is the package guid. -->
+        <GuidSymbol name="guidEditorConfigPackage" value="{6736c72d-7a27-49f0-9153-413ff47963ef}" />
+        <GuidSymbol name="guidEditorFactory" value="{13cabf99-9eae-4ecc-a6f4-89f3ad54dc83}" />
 
-    <!-- This is the guid used to group the menu commands together -->
-    <GuidSymbol name="guidEditorConfigPackageCmdSet" value="{13cabf99-9eae-4ecc-a6f4-89f3ad54dc83}">
-      <IDSymbol name="AddGroup" value="0x0001" />
-      <IDSymbol name="AddGroupAnyCode" value="0x0002" />
-      <IDSymbol name="EditorContextMenu" value="0x0003" />
-      <IDSymbol name="ErrorListGroup" value="0x0004" />
-      <IDSymbol name="CreateEditorConfigFileId" value="0x0100" />
-      <IDSymbol name="CreateEditorConfigFileAnyCodeId" value="0x0200" />
-      <IDSymbol name="OpenSettingsId" value="0x0300" />
-      <IDSymbol name="NavigateToParentId" value="0x0400" />
-      <IDSymbol name="SuppressErrorId" value="0x0500" />
-    </GuidSymbol>
+        <!-- This is the guid used to group the menu commands together -->
+        <GuidSymbol name="guidEditorConfigPackageCmdSet" value="{13cabf99-9eae-4ecc-a6f4-89f3ad54dc83}">
+            <IDSymbol name="AddGroup" value="0x0001" />
+            <IDSymbol name="AddGroupAnyCode" value="0x0002" />
+            <IDSymbol name="EditorContextMenu" value="0x0003" />
+            <IDSymbol name="ErrorListGroup" value="0x0004" />
+            <IDSymbol name="CreateEditorConfigFileId" value="0x0100" />
+            <IDSymbol name="CreateEditorConfigFileAnyCodeId" value="0x0200" />
+            <IDSymbol name="OpenSettingsId" value="0x0300" />
+            <IDSymbol name="NavigateToParentId" value="0x0400" />
+            <IDSymbol name="SuppressErrorId" value="0x0500" />
+        </GuidSymbol>
 
-    <!-- The AnyCode AddNewItem menu -->
-    <GuidSymbol name="guidWorkspaceExplorerToolWindowPackageCmdSet" value="{cfb400f1-5c60-4f3c-856e-180d28def0b7}">
-      <IDSymbol name="idmAddNew" value="0x2200"/>
-    </GuidSymbol>
+        <!-- The AnyCode AddNewItem menu -->
+        <GuidSymbol name="guidWorkspaceExplorerToolWindowPackageCmdSet" value="{cfb400f1-5c60-4f3c-856e-180d28def0b7}">
+            <IDSymbol name="idmAddNew" value="0x2200"/>
+        </GuidSymbol>
 
-    <!-- Image monikers -->
-    <GuidSymbol name="icons" value="{666770e6-562f-46d7-a555-3a0cdffe94d2}">
-      <IDSymbol name="logo" value="1" />
-    </GuidSymbol>
-  </Symbols>
+        <!-- Image monikers -->
+        <GuidSymbol name="icons" value="{666770e6-562f-46d7-a555-3a0cdffe94d2}">
+            <IDSymbol name="logo" value="1" />
+        </GuidSymbol>
+    </Symbols>
 </CommandTable>
 

@@ -1,12 +1,5 @@
 # Road map
 
-- [x] Validate spaces in globbing patterns
-- [x] Implement error suppression
-- [x] Add suppressions from light bulbs
-- [x] Intellisense for error codes in suppression
-- [x] Hover tooltips for suppressions
-- [x] Document suppression feature in [readme.md](README.md)
-- [x] Suppress errors from Error List context menu
 - [ ] Add item template for .editorconfig files
 
 Features that have a checkmark are complete and available for
@@ -17,6 +10,17 @@ download in the
 
 These are the changes to each version that has been released
 on the official Visual Studio extension gallery.
+
+## 1.15
+
+- [x] Validate spaces in globbing patterns
+- [x] Implement error suppression
+- [x] Add suppressions from light bulbs
+- [x] Intellisense for error codes in suppression
+- [x] Hover tooltips for suppressions
+- [x] Document suppression feature in [readme.md](README.md)
+- [x] Suppress errors from Error List context menu
+- [x] Hide _Navigate to parent_ from other file types
 
 ## 1.14
 

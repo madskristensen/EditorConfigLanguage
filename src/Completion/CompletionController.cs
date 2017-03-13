@@ -146,15 +146,28 @@ namespace EditorConfig
 
                 SnapshotPoint position = TextView.Caret.Position.BufferPosition;
                 ITextSnapshotLine line = TextView.TextBuffer.CurrentSnapshot.GetLineFromPosition(position);
+                string lineText = line.GetText();
 
-                if (moniker == "keyword" && !line.GetText().Contains("="))
+                if (moniker == "keyword" && !lineText.Contains("="))
                 {
                     TextView.TextBuffer.Insert(position, " = ");
+
+                    // Contains placeholders
+                    int start = lineText.IndexOf('<');
+                    int end = lineText.IndexOf('>');
+
+                    if (start > -1 && start < end)
+                    {
+                        var span = new SnapshotSpan(TextView.TextBuffer.CurrentSnapshot, Span.FromBounds(line.Start + start, line.Start + end + 1));
+                        TextView.Selection.Select(span, false);
+                        TextView.Caret.MoveTo(span.Start);
+                        return true;
+                    }
 
                     if (EditorConfigPackage.Language.Preferences.AutoListMembers)
                         StartSession();
                 }
-                else if (moniker == "value" && !line.GetText().Contains(":"))
+                else if (moniker == "value" && !lineText.Contains(":"))
                 {
                     var document = EditorConfigDocument.FromTextBuffer(TextView.TextBuffer);
                     Property prop = document.PropertyAtPosition(position - 1);

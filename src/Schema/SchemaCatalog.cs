@@ -33,6 +33,18 @@ namespace EditorConfig
         {
             keyword = AllKeywords.FirstOrDefault(c => c.Name.Is(name));
 
+            if (keyword == null && name != null && name.StartsWith("dotnet_naming_", StringComparison.OrdinalIgnoreCase) && name.IndexOf('.') > 0)
+            {
+                string[] parts = name.Split('.');
+
+                if (parts.Length >= 3)
+                {
+                    string first = $"{parts[0]}.";
+                    string last = $".{parts[parts.Length - 1]}";
+                    keyword = AllKeywords.FirstOrDefault(c => c.Name.StartsWith(first, StringComparison.OrdinalIgnoreCase) && c.Name.EndsWith(last, StringComparison.OrdinalIgnoreCase));
+                }
+            }
+
             return keyword != null;
         }
 
@@ -43,17 +55,23 @@ namespace EditorConfig
             return severity != null;
         }
 
-        private static void ParseJson()
+        internal static void ParseJson(string file = null)
         {
-            string assembly = Assembly.GetExecutingAssembly().Location;
-            string folder = Path.GetDirectoryName(assembly);
-            string file = Path.Combine(folder, "schema\\EditorConfig.json");
+            if (string.IsNullOrEmpty(file))
+            {
+                string assembly = Assembly.GetExecutingAssembly().Location;
+                string folder = Path.GetDirectoryName(assembly);
+                file = Path.Combine(folder, "schema\\EditorConfig.json");
+            }
 
-            var obj = JObject.Parse(File.ReadAllText(file));
+            if (File.Exists(file))
+            {
+                var obj = JObject.Parse(File.ReadAllText(file));
 
-            Severities = JsonConvert.DeserializeObject<IEnumerable<Severity>>(obj["severities"].ToString());
-            AllKeywords = JsonConvert.DeserializeObject<IEnumerable<Keyword>>(obj["properties"].ToString());
-            VisibleKeywords = AllKeywords.Where(p => p.IsVisible);
+                Severities = JsonConvert.DeserializeObject<IEnumerable<Severity>>(obj["severities"].ToString());
+                AllKeywords = JsonConvert.DeserializeObject<IEnumerable<Keyword>>(obj["properties"].ToString());
+                VisibleKeywords = AllKeywords.Where(p => p.IsVisible);
+            }
         }
     }
 }

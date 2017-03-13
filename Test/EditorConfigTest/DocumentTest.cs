@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using EditorConfig;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -56,6 +57,24 @@ namespace EditorConfigTest
             Assert.AreEqual("EC101", doc.ParseItems[1].Text);
             Assert.AreEqual(12, doc.ParseItems[1].Span.Start);
             Assert.AreEqual(5, doc.ParseItems[1].Span.Length);
+        }
+
+        [TestMethod, TestCategory("MEF")]
+        public void NamingRules()
+        {
+            var file = new FileInfo(@"..\..\..\..\src\schema\EditorConfig.json");
+            SchemaCatalog.ParseJson(file.FullName);
+
+            bool exist = SchemaCatalog.TryGetKeyword("dotnet_naming_rule.foo.symbols", out var keyword);
+
+            Assert.IsTrue(exist);
+
+            //ITextBuffer buffer = Mef.CreateTextBuffer(Samples.NamingRules);
+            //var doc = EditorConfigDocument.FromTextBuffer(buffer);
+
+            //await doc.WaitForParsingComplete();
+
+            //Assert.
         }
     }
 }

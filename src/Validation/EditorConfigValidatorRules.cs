@@ -183,17 +183,17 @@ namespace EditorConfig
                 {
                     if (keyword.SupportsMultipleValues)
                     {
-                        foreach (string value in property.Value.Text?.Split(','))
+                        foreach (string value in property.Value.Text?.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                         {
                             if (!keyword.Values.Any(v => v.Name.Is(value.Trim())))
                             {
-                                e.Register(keyword.Name);
+                                e.Register(value, keyword.Name);
                             }
                         }
                     }
                     else
                     {
-                        if (!keyword.Values.Any(v => v.Name.Is(property.Value.Text)))
+                        if (keyword.Values.Count() > 0 && !keyword.Values.Any(v => v.Name.Is(property.Value.Text)))
                         {
                             e.Register(property.Value.Text, keyword.Name);
                         }

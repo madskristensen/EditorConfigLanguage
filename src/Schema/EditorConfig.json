@@ -263,6 +263,61 @@
       "severity": true
     },
 
+    // Naming properties
+    {
+      "name": "dotnet_naming_rule.<naming_rule_title>.severity",
+      "description": "Naming rule severity.",
+      "values": [ "none", "suggestion", "warning", "error" ]
+    },
+    {
+      "name": "dotnet_naming_rule.<naming_rule_title>.symbols",
+      "description": "Naming rule symbols.",
+      "values": []
+    },
+    {
+      "name": "dotnet_naming_rule.<naming_rule_title>.style",
+      "description": "Naming rule style.",
+      "values": []
+    },
+    {
+      "name": "dotnet_naming_symbols.<naming_symbols_title>.applicable_kinds",
+      "description": "Application kinds.",
+      "values": [ "*", "class", "struct", "interface", "enum", "property", "method", "field", "event", "delegate", "parameter" ],
+      "multiple": true
+    },
+    {
+      "name": "dotnet_naming_symbols.<naming_symbols_title>.applicable_accessibilities",
+      "description": "Applicable accessibilities..",
+      "values": [ "*", "public", "internal", "friend", "private", "protected", "protected_internal", "protected_friend" ],
+      "multiple": true
+    },
+    {
+      "name": "dotnet_naming_symbols.<naming_symbols_title>.required_modifiers",
+      "description": "Applicable accessibilities.",
+      "values": [ "*", "abstract", "must_inherit", "async", "const", "readonly", "static", "shared" ],
+      "multiple": true
+    },
+    {
+      "name": "dotnet_naming_style.<naming_style_title>.required_prefix",
+      "description": "Required prefix.",
+      "values": []
+    },
+    {
+      "name": "dotnet_naming_style.<naming_style_title>.required_suffix",
+      "description": "Required suffix.",
+      "values": []
+    },
+    {
+      "name": "dotnet_naming_style.<naming_style_title>.word_separator",
+      "description": "Word separator.",
+      "values": []
+    },
+    {
+      "name": "dotnet_naming_style.<naming_style_title>.capitalization",
+      "description": "Capitalization.",
+      "values": [ "pascal_case", "camel_case", "first_word_upper", "all_upper", "all_lower" ]
+    },
+
     // Undocumented properties
     {
       "name": "csharp_indent_block_contents",

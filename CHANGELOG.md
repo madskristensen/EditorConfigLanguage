@@ -1,8 +1,6 @@
 # Road map
 
 - [ ] Add item template for .editorconfig files
-- [x] Fixed typo
-- [x] Fixed ArgumentOutOfRangeException in Intellisense
 
 Features that have a checkmark are complete and available for
 download in the
@@ -12,6 +10,11 @@ download in the
 
 These are the changes to each version that has been released
 on the official Visual Studio extension gallery.
+
+## 1.16
+
+- [x] Fixed typo
+- [x] Fixed ArgumentOutOfRangeException in Intellisense
 
 ## 1.15
 

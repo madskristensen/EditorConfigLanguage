@@ -173,7 +173,7 @@
     <value>The "{0}" property does not support a severity suffix.</value>
   </data>
   <data name="ValidationSpaceInSection" xml:space="preserve">
-    <value>Spces in globbing patterns are allowed, but are often the result of a typo. Make sure the globbing pattern is accurate.</value>
+    <value>Spaces in globbing patterns are allowed, but are often the result of a typo. Make sure the globbing pattern is accurate.</value>
   </data>
   <data name="ValidationTabWidthUnneeded" xml:space="preserve">
     <value>There is no need to specify "tab_width" unless it differs from the value of "indent_size".</value>

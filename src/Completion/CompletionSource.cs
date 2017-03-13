@@ -190,7 +190,7 @@ namespace EditorConfig
 
         private ITrackingSpan FindTokenSpanAtPosition(ICompletionSession session)
         {
-            int offset = _buffer.CurrentSnapshot.Length > 0 ? -1 : 0;
+            int offset = session.TextView.Caret.Position.BufferPosition.Position > 0 ? -1 : 0;
             SnapshotPoint currentPoint = (session.TextView.Caret.Position.BufferPosition) + offset;
             ITextStructureNavigator navigator = _navigator.GetTextStructureNavigator(_buffer);
             TextExtent extent = navigator.GetExtentOfWord(currentPoint);

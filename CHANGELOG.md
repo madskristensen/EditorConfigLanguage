@@ -1,6 +1,8 @@
 # Road map
 
 - [ ] Add item template for .editorconfig files
+- [x] Fixed typo
+- [x] Fixed ArgumentOutOfRangeException in Intellisense
 
 Features that have a checkmark are complete and available for
 download in the

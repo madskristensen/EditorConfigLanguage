@@ -190,11 +190,20 @@ namespace EditorConfig
 
         private ITrackingSpan FindTokenSpanAtPosition(ICompletionSession session)
         {
-            int offset = session.TextView.Caret.Position.BufferPosition.Position > 0 ? -1 : 0;
-            SnapshotPoint currentPoint = (session.TextView.Caret.Position.BufferPosition) + offset;
-            ITextStructureNavigator navigator = _navigator.GetTextStructureNavigator(_buffer);
-            TextExtent extent = navigator.GetExtentOfWord(currentPoint);
-            return currentPoint.Snapshot.CreateTrackingSpan(extent.Span, SpanTrackingMode.EdgeInclusive);
+            ParseItem item = _document.ItemAtPosition(session.TextView.Caret.Position.BufferPosition.Position);
+
+            if (item != null)
+            {
+                return session.TextView.TextSnapshot.CreateTrackingSpan(item.Span, SpanTrackingMode.EdgeInclusive);
+            }
+            else
+            {
+                int offset = session.TextView.Caret.Position.BufferPosition.Position > 0 ? -1 : 0;
+                SnapshotPoint currentPoint = (session.TextView.Caret.Position.BufferPosition) + offset;
+                ITextStructureNavigator navigator = _navigator.GetTextStructureNavigator(_buffer);
+                TextExtent extent = navigator.GetExtentOfWord(currentPoint);
+                return currentPoint.Snapshot.CreateTrackingSpan(extent.Span, SpanTrackingMode.EdgeInclusive);
+            }
         }
 
         public void Dispose()

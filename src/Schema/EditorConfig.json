@@ -272,12 +272,12 @@
     {
       "name": "dotnet_naming_rule.<naming_rule_title>.symbols",
       "description": "Naming rule symbols.",
-      "values": []
+      "values": [ "<identifier>" ]
     },
     {
       "name": "dotnet_naming_rule.<naming_rule_title>.style",
       "description": "Naming rule style.",
-      "values": []
+      "values": [ "<identifier>" ]
     },
     {
       "name": "dotnet_naming_symbols.<naming_symbols_title>.applicable_kinds",
@@ -300,17 +300,17 @@
     {
       "name": "dotnet_naming_style.<naming_style_title>.required_prefix",
       "description": "Required prefix.",
-      "values": []
+      "values": [ "<prefix>" ]
     },
     {
       "name": "dotnet_naming_style.<naming_style_title>.required_suffix",
       "description": "Required suffix.",
-      "values": []
+      "values": [ "<suffix>" ]
     },
     {
       "name": "dotnet_naming_style.<naming_style_title>.word_separator",
       "description": "Word separator.",
-      "values": []
+      "values": [ "<word-separator>" ]
     },
     {
       "name": "dotnet_naming_style.<naming_style_title>.capitalization",

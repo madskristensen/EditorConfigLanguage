@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace EditorConfig
 {
@@ -191,7 +192,7 @@ namespace EditorConfig
                             }
                         }
                     }
-                    else
+                    else if (!keyword.Values.Any(v => Regex.IsMatch(v.Name, "<.+>")))
                     {
                         if (keyword.Values.Count() > 0 && !keyword.Values.Any(v => v.Name.Is(property.Value.Text)))
                         {

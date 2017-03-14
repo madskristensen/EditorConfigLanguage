@@ -1,8 +1,8 @@
 # Road map
 
 - [x] .NET naming rules basic Intellisense and validation
+- [x] .NET naming rules value Intellisense
 - [ ] .NET naming rules dynamic validation
-- [ ] .NET naming rules snippet insertion
 - [ ] .NET naming rules dynamic Intellisense
 - [ ] Add item template for .editorconfig files
 

@@ -1,7 +1,5 @@
 # Road map
 
-- [x] .NET naming rules basic Intellisense and validation
-- [x] .NET naming rules value Intellisense
 - [ ] .NET naming rules dynamic validation
 - [ ] .NET naming rules dynamic Intellisense
 - [ ] Add item template for .editorconfig files
@@ -14,6 +12,11 @@ download in the
 
 These are the changes to each version that has been released
 on the official Visual Studio extension gallery.
+
+## 1.17
+
+- [x] .NET naming rules basic Intellisense and validation
+- [x] .NET naming rules value Intellisense
 
 ## 1.16
 

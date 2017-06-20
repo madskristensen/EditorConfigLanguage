@@ -52,14 +52,12 @@
     {
       "name": "trim_trailing_whitespace",
       "description": "Denotes whether whitespace is allowed at the end of lines",
-      "values": [ true, false, "unset" ],
-      "unsupported": true
+      "values": [ true, false, "unset" ]
     },
     {
       "name": "insert_final_newline",
       "description": "Denotes whether file should end with a newline",
-      "values": [ true, false, "unset" ],
-      "unsupported": true
+      "values": [ true, false, "unset" ]
     },
     {
       "name": "max_line_length",

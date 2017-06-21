@@ -173,7 +173,7 @@
     },
     {
       "name": "csharp_new_line_before_members_in_object_initializers",
-      "description": "Plece members in object initializers on new line.",
+      "description": "Place members in object initializers on new line.",
       "values": [ true, false ]
     },
     {

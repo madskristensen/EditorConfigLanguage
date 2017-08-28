@@ -190,7 +190,6 @@
     <Content Include="CodeExpansions\Snippets\basicdocument.snippet">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <None Include="app.config" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
@@ -273,6 +272,7 @@
     <Reference Include="Microsoft.VisualStudio.Package.LanguageService.15.0, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.VisualStudio.Package.LanguageService.15.0.15.0.26606\lib\Microsoft.VisualStudio.Package.LanguageService.15.0.dll</HintPath>
       <Private>True</Private>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.15.0, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.VisualStudio.Shell.15.0.15.0.26606\lib\Microsoft.VisualStudio.Shell.15.0.dll</HintPath>

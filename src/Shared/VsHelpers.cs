@@ -47,7 +47,7 @@ namespace EditorConfig
             if (project == null)
                 return null;
 
-            if (project.IsKind(ProjectKinds.vsProjectKindSolutionFolder))
+            if (project.IsKind("{66A26720-8FB5-11D2-AA7E-00C04F688DDE}")) // solution folder
                 return Path.GetDirectoryName(DTE.Solution.FullName);
 
             if (string.IsNullOrEmpty(project.FullName))
@@ -142,7 +142,7 @@ namespace EditorConfig
                 {
                     return item.Properties.Item("FullPath").Value.ToString();
                 }
-                else if (selItem.Object is Project proj && proj.Kind != ProjectKinds.vsProjectKindSolutionFolder)
+                else if (selItem.Object is Project proj && proj.Kind != "{66A26720-8FB5-11D2-AA7E-00C04F688DDE}") // solution folder
                 {
                     return proj.GetRootFolder();
                 }

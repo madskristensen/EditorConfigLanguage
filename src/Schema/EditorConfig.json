@@ -481,9 +481,8 @@
     },
     {
       "name": "csharp_space_between_parentheses",
-      "description": "Undocumented property",
-      "values": [ "expressions", "type_casts", "control_flow_statements" ],
-      "hidden": true
+      "description": "Space Within Parentheses for Other Options",
+      "values": [ "expressions", "type_casts", "control_flow_statements", false ]
     },
     {
       "name": "csharp_space_between_square_brackets",

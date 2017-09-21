@@ -188,14 +188,54 @@
       "values": [ true, false ]
     },
     {
-      "name": "csharp_prefer_braces",
-      "description": "Prefer braces when possible",
+      "name": "csharp_indent_case_contents",
+      "description": "Indent switch case contents.",
       "values": [ true, false ]
     },
     {
-      "name": "csharp_prefer_simple_default_expression",
-      "description": "Prefer default over default(T)",
+      "name": "csharp_indent_labels",
+      "description": "Label Positioning.",
+      "values": [ "flush_left", "no_change", "one_less_than_current" ]
+    },
+    {
+      "name": "csharp_indent_switch_labels",
+      "description": "Indent switch Labels.",
       "values": [ true, false ]
+    },
+    {
+      "name": "csharp_preserve_single_line_blocks",
+      "description": "Leave Block on Single Line.",
+      "values": [ true, false ]
+    },
+    {
+      "name": "csharp_preserve_single_line_statements",
+      "description": "Leave Statements and Member Declarations on the Same Line.",
+      "values": [ true, false ]
+    },
+    {
+      "name": "csharp_space_after_cast",
+      "description": "Require a space between a cast and the value.",
+      "values": [ true, false ]
+    },
+    {
+      "name": "csharp_space_after_keywords_in_control_flow_statements",
+      "description": "Space After Keywords in Control Flow Statements.",
+      "values": [ true, false ]
+    },
+    {
+      "name": "csharp_space_between_method_call_parameter_list_parentheses",
+      "description": "Space Within Parentheses for Method Call Argument List.",
+      "values": [ true, false ]
+    },
+    {
+      "name": "csharp_space_between_method_declaration_parameter_list_parentheses",
+      "description": "Space Between Method Declaration Argument-List Parentheses.",
+      "values": [ true, false ]
+    },
+    {
+      "name": "csharp_space_between_parentheses",
+      "description": "Space Within Parentheses for Other Options.",
+      "values": [ "expressions", "type_casts", "control_flow_statements", false ]
     },
 
     // .NET properties
@@ -340,42 +380,6 @@
       "hidden": true
     },
     {
-      "name": "csharp_indent_case_contents",
-      "description": "Undocumented property",
-      "values": [ true, false ],
-      "hidden": true
-    },
-    {
-      "name": "csharp_indent_labels",
-      "description": "Undocumented property",
-      "values": [ "flush_left", "no_change", "one_less_than_current" ],
-      "hidden": true
-    },
-    {
-      "name": "csharp_indent_switch_labels",
-      "description": "Undocumented property",
-      "values": [ true, false ],
-      "hidden": true
-    },
-    {
-      "name": "csharp_preserve_single_line_blocks",
-      "description": "Undocumented property",
-      "values": [ true, false ],
-      "hidden": true
-    },
-    {
-      "name": "csharp_preserve_single_line_statements",
-      "description": "Undocumented property",
-      "values": [ true, false ],
-      "hidden": true
-    },
-    {
-      "name": "csharp_space_after_cast",
-      "description": "Undocumented property",
-      "values": [ true, false ],
-      "hidden": true
-    },
-    {
       "name": "csharp_space_after_colon_in_inheritance_clause",
       "description": "Undocumented property",
       "values": [ true, false ],
@@ -389,12 +393,6 @@
     },
     {
       "name": "csharp_space_after_dot",
-      "description": "Undocumented property",
-      "values": [ true, false ],
-      "hidden": true
-    },
-    {
-      "name": "csharp_space_after_keywords_in_control_flow_statements",
       "description": "Undocumented property",
       "values": [ true, false ],
       "hidden": true
@@ -466,12 +464,6 @@
       "hidden": true
     },
     {
-      "name": "csharp_space_between_method_call_parameter_list_parentheses",
-      "description": "Undocumented property",
-      "values": [ true, false ],
-      "hidden": true
-    },
-    {
       "name": "csharp_space_between_method_declaration_empty_parameter_list_parentheses",
       "description": "Undocumented property",
       "values": [ true, false ],
@@ -481,18 +473,6 @@
       "name": "csharp_space_between_method_declaration_name_and_open_parenthesis",
       "description": "Undocumented property",
       "values": [ true, false ],
-      "hidden": true
-    },
-    {
-      "name": "csharp_space_between_method_declaration_parameter_list_parentheses",
-      "description": "Undocumented property",
-      "values": [ true, false ],
-      "hidden": true
-    },
-    {
-      "name": "csharp_space_between_parentheses",
-      "description": "Undocumented property",
-      "values": [ "expressions", "type_casts", "control_flow_statements" ],
       "hidden": true
     },
     {

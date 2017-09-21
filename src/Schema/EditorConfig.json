@@ -237,6 +237,16 @@
       "description": "Space Within Parentheses for Other Options.",
       "values": [ "expressions", "type_casts", "control_flow_statements", false ]
     },
+    {
+      "name": "csharp_prefer_braces",
+      "description": "Prefer braces when possible",
+      "values": [ true, false ]
+    },
+    {
+      "name": "csharp_prefer_simple_default_expression",
+      "description": "Prefer default over default(T)",
+      "values": [ true, false ]
+    },
 
     // .NET properties
     {

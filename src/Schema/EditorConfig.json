@@ -235,7 +235,7 @@
     {
       "name": "csharp_space_between_parentheses",
       "description": "Space Within Parentheses for Other Options.",
-      "values": [ "expressions", "type_casts", "control_flow_statements", false ]
+      "values": [ "expressions", "type_casts", "control_flow_statements", false ],
       "multiple": true
     },
     {

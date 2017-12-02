@@ -19,7 +19,7 @@ namespace EditorConfig.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Text {
@@ -224,7 +224,7 @@ namespace EditorConfig.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Spces in globbing patterns are allowed, but are often the result of a typo. Make sure the globbing pattern is accurate..
+        ///   Looks up a localized string similar to Spaces in globbing patterns are allowed, but are often the result of a typo. Make sure the globbing pattern is accurate..
         /// </summary>
         internal static string ValidationSpaceInSection {
             get {
@@ -247,6 +247,15 @@ namespace EditorConfig.Resources {
         internal static string ValidationUnknownElement {
             get {
                 return ResourceManager.GetString("ValidationUnknownElement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The style &quot;{0}&quot; is unknown. A capitalization style must always be specified..
+        /// </summary>
+        internal static string ValidationUnknownStyle {
+            get {
+                return ResourceManager.GetString("ValidationUnknownStyle", resourceCulture);
             }
         }
         

@@ -181,6 +181,9 @@
   <data name="ValidationUnknownElement" xml:space="preserve">
     <value>Syntax error. Element not valid at current location.</value>
   </data>
+  <data name="ValidationUnknownStyle" xml:space="preserve">
+    <value>The style "{0}" is unknown. A capitalization style must always be specified.</value>
+  </data>
   <data name="ValueUnset" xml:space="preserve">
     <value>For any standard property, a value of "unset" is to remove the effect of that property, even if it has been set before.</value>
   </data>

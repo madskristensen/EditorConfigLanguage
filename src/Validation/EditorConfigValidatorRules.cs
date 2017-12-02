@@ -86,6 +86,14 @@ namespace EditorConfig
                             }
                         }
                     });
+
+                    ErrorCatalog.UnknownStyle.Run(property.Keyword, IsDotNetNamingRuleStyle(property), (e) =>
+                    {
+                        if (!section.Properties.Any(x => x.Keyword.Text.Is($"dotnet_naming_style.{property.Value.Text}.capitalization")))
+                        {
+                            e.Register(property.Value, property.Value.Text);
+                        }
+                    });
                 }
 
                 ErrorCatalog.SectionSyntaxError.Run(section.Item, (e) =>
@@ -266,5 +274,9 @@ namespace EditorConfig
 
             return false;
         }
+
+        private static bool IsDotNetNamingRuleStyle(Property property) 
+            => property.Keyword.Text.StartsWith("dotnet_naming_rule", StringComparison.Ordinal) && 
+               property.Keyword.Text.EndsWith("style", StringComparison.Ordinal);
     }
 }

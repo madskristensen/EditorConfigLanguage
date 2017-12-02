@@ -51,6 +51,8 @@ namespace EditorConfig
             Create("EC116", ErrorCategory.Suggestion, Resources.Text.ValidationIndentSizeUnneeded);
         public static Error SpaceInSection { get; } =
             Create("EC117", ErrorCategory.Suggestion, Resources.Text.ValidationSpaceInSection, () => !_o.AllowSpacesInSections);
+        public static Error UnknownStyle { get; } =
+            Create("EC118", ErrorCategory.Error, Resources.Text.ValidationUnknownStyle);
 
         public static bool TryGetErrorCode(string code, out Error errorCode)
         {

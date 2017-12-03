@@ -260,6 +260,15 @@ namespace EditorConfig.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The style &quot;{0}&quot; is never used. Consider removing it..
+        /// </summary>
+        internal static string ValidationUnusedStyle {
+            get {
+                return ResourceManager.GetString("ValidationUnusedStyle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to For any standard property, a value of &quot;unset&quot; is to remove the effect of that property, even if it has been set before..
         /// </summary>
         internal static string ValueUnset {

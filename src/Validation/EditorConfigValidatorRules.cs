@@ -1,10 +1,10 @@
-﻿using Microsoft.VisualStudio.Shell;
-using Minimatch;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Microsoft.VisualStudio.Shell;
+using Minimatch;
 
 namespace EditorConfig
 {
@@ -89,9 +89,18 @@ namespace EditorConfig
 
                     ErrorCatalog.UnknownStyle.Run(property.Keyword, IsDotNetNamingRuleStyle(property), (e) =>
                     {
-                        if (!section.Properties.Any(x => x.Keyword.Text.Is($"dotnet_naming_style.{property.Value.Text}.capitalization")))
+                        if (!section.Properties.Any(p => p.Keyword.Text.Is($"dotnet_naming_style.{property.Value.Text}.capitalization")))
                         {
                             e.Register(property.Value, property.Value.Text);
+                        }
+                    });
+
+                    ErrorCatalog.UnusedStyle.Run(property.Keyword, IsDotNetNamingStyle(property), (e) =>
+                    {
+                        string namingStyleText = GetDotNetNamingStyleText(property);
+                        if (!section.Properties.Where(p => IsDotNetNamingRuleStyle(p)).Any(p => p.Value.Text.Is(namingStyleText)))
+                        {
+                            e.Register(property.Keyword, namingStyleText);
                         }
                     });
                 }
@@ -276,7 +285,13 @@ namespace EditorConfig
         }
 
         private static bool IsDotNetNamingRuleStyle(Property property) 
-            => property.Keyword.Text.StartsWith("dotnet_naming_rule", StringComparison.Ordinal) && 
-               property.Keyword.Text.EndsWith("style", StringComparison.Ordinal);
+            => property.Keyword.Text.StartsWith("dotnet_naming_rule.", StringComparison.Ordinal) && 
+               property.Keyword.Text.EndsWith(".style", StringComparison.Ordinal);
+
+        private static bool IsDotNetNamingStyle(Property property)
+            => property.Keyword.Text.StartsWith("dotnet_naming_style.");
+
+        private static string GetDotNetNamingStyleText(Property property)
+            => property.Keyword.Text.Split('.')[1];
     }
 }

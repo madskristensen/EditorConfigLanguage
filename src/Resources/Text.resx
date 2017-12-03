@@ -184,6 +184,9 @@
   <data name="ValidationUnknownStyle" xml:space="preserve">
     <value>The style "{0}" is unknown. A capitalization style must always be specified.</value>
   </data>
+  <data name="ValidationUnusedStyle" xml:space="preserve">
+    <value>The style "{0}" is never used. Consider removing it.</value>
+  </data>
   <data name="ValueUnset" xml:space="preserve">
     <value>For any standard property, a value of "unset" is to remove the effect of that property, even if it has been set before.</value>
   </data>

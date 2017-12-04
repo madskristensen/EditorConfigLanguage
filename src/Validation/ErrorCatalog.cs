@@ -53,6 +53,8 @@ namespace EditorConfig
             Create("EC117", ErrorCategory.Suggestion, Resources.Text.ValidationSpaceInSection, () => !_o.AllowSpacesInSections);
         public static Error UnknownStyle { get; } =
             Create("EC118", ErrorCategory.Error, Resources.Text.ValidationUnknownStyle);
+        public static Error UnusedStyle { get; } =
+            Create("EC119", ErrorCategory.Suggestion, Resources.Text.ValidationUnusedStyle);
 
         public static bool TryGetErrorCode(string code, out Error errorCode)
         {

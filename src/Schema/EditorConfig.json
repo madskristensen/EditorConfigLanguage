@@ -195,7 +195,7 @@
     {
       "name": "csharp_indent_labels",
       "description": "Label Positioning.",
-      "values": [ "one_less", "no_change" ]
+      "values": [ "flush_left", "one_less_than_current", "no_change" ]
     },
     {
       "name": "csharp_indent_switch_labels",

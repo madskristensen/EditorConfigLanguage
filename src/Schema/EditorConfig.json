@@ -76,37 +76,37 @@
     {
       "name": "csharp_style_expression_bodied_accessors",
       "description": "Prefer expression-bodied members for accessors (e.g., 'public int Age { get => _age; set => _age = value; }').",
-      "values": [ true, false ],
+      "values": [ true, false, "when_on_single_line" ],
       "severity": true
     },
     {
       "name": "csharp_style_expression_bodied_constructors",
       "description": "Prefer expression-bodied members for constructors (e.g., 'public Customer(int age) => Age = age;').",
-      "values": [ true, false ],
+      "values": [ true, false, "when_on_single_line" ],
       "severity": true
     },
     {
       "name": "csharp_style_expression_bodied_indexers",
       "description": "Prefer expression-bodied members for indexers (e.g., 'public T this[int i] => _value[i];').",
-      "values": [ true, false ],
+      "values": [ true, false, "when_on_single_line" ],
       "severity": true
     },
     {
       "name": "csharp_style_expression_bodied_methods",
       "description": "Prefer expression-bodied members for methods (e.g., 'public int GetAge() => this.Age;').",
-      "values": [ true, false ],
+      "values": [ true, false, "when_on_single_line" ],
       "severity": true
     },
     {
       "name": "csharp_style_expression_bodied_operators",
       "description": "Prefer expression-bodied members for operators.",
-      "values": [ true, false ],
+      "values": [ true, false, "when_on_single_line" ],
       "severity": true
     },
     {
       "name": "csharp_style_expression_bodied_properties",
       "description": "Prefer expression-bodied members for properties (e.g., 'public int Age => _age;').",
-      "values": [ true, false ],
+      "values": [ true, false, "when_on_single_line" ],
       "severity": true
     },
     {

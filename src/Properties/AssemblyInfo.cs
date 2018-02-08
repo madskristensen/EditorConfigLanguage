@@ -1,4 +1,5 @@
 ﻿using EditorConfig;
+using Microsoft.VisualStudio.Shell;
 using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -12,6 +13,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCopyright(Vsix.Author)]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
+[assembly: ProvideCodeBase(AssemblyName = "EditorConfig")]
 
 [assembly: InternalsVisibleTo("EditorConfigTest")]
 

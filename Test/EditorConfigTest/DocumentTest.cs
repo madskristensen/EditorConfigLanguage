@@ -65,16 +65,9 @@ namespace EditorConfigTest
             var file = new FileInfo(@"..\..\..\..\src\schema\EditorConfig.json");
             SchemaCatalog.ParseJson(file.FullName);
 
-            bool exist = SchemaCatalog.TryGetKeyword("dotnet_naming_rule.foo.symbols", out var keyword);
+            bool exist = SchemaCatalog.TryGetKeyword("dotnet_naming_rule.foo.symbols", out Keyword keyword);
 
             Assert.IsTrue(exist);
-
-            //ITextBuffer buffer = Mef.CreateTextBuffer(Samples.NamingRules);
-            //var doc = EditorConfigDocument.FromTextBuffer(buffer);
-
-            //await doc.WaitForParsingComplete();
-
-            //Assert.
         }
     }
 }

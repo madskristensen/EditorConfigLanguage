@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.OLE.Interop;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Operations;
 using System;
@@ -25,6 +26,8 @@ namespace EditorConfig
                 return VSConstants.S_OK;
             }
 
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             return Next.Exec(pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
         }
 
@@ -49,6 +52,8 @@ namespace EditorConfig
                 prgCmds[0].cmdf = (uint)OLECMDF.OLECMDF_ENABLED | (uint)OLECMDF.OLECMDF_SUPPORTED;
                 return VSConstants.S_OK;
             }
+
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             return Next.QueryStatus(pguidCmdGroup, cCmds, prgCmds, pCmdText);
         }

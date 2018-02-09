@@ -21,14 +21,11 @@ namespace EditorConfig
             _document = EditorConfigDocument.FromTextBuffer(buffer);
         }
 
-        public async Task<bool> HasSuggestedActionsAsync(ISuggestedActionCategorySet requestedActionCategories, SnapshotSpan range, CancellationToken cancellationToken)
+        public Task<bool> HasSuggestedActionsAsync(ISuggestedActionCategorySet requestedActionCategories, SnapshotSpan range, CancellationToken cancellationToken)
         {
-            return await Task.Factory.StartNew(() =>
-            {
-                _section = _document.Sections.FirstOrDefault(s => s.Span.Contains(range.Start));
+            _section = _document.Sections.FirstOrDefault(s => s.Span.Contains(range.Start));
 
-                return _section != null;
-            });
+            return Task.FromResult(_section != null);
         }
 
         public IEnumerable<SuggestedActionSet> GetSuggestedActions(ISuggestedActionCategorySet requestedActionCategories, SnapshotSpan range, CancellationToken cancellationToken)

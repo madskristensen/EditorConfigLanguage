@@ -34,6 +34,7 @@ namespace EditorConfig
         /// </summary>
         public static void PreviewDocument(string file)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             using (new NewDocumentStateScope(__VSNEWDOCUMENTSTATE2.NDS_TryProvisional, VSConstants.NewDocumentStateReason.Navigation))
             {
                 var provider = new ServiceProvider(DTE as Microsoft.VisualStudio.OLE.Interop.IServiceProvider);
@@ -153,14 +154,15 @@ namespace EditorConfig
 
         public static string GetFileName(this ITextBuffer buffer)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             if (!buffer.Properties.TryGetProperty(typeof(IVsTextBuffer), out IVsTextBuffer bufferAdapter))
                 return null;
 
-            var persistFileFormat = bufferAdapter as IPersistFileFormat;
             string ppzsFilename = null;
             int returnCode = -1;
 
-            if (persistFileFormat != null)
+            if (bufferAdapter is IPersistFileFormat persistFileFormat)
                 try
                 {
                     returnCode = persistFileFormat.GetCurFile(out ppzsFilename, out uint pnFormatIndex);
@@ -212,6 +214,7 @@ namespace EditorConfig
 
         public static BitmapSource ToBitmap(this ImageMoniker moniker, int size)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
             uint backgroundColor = VsColors.GetThemedColorRgba(_shell, EnvironmentColors.BrandedUIBackgroundBrushKey);
 
             var imageAttributes = new ImageAttributes

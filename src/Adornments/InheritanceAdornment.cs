@@ -39,12 +39,11 @@ namespace EditorConfig
                 _adornmentLayer.AddAdornment(AdornmentPositioningBehavior.ViewportRelative, null, null, this, null);
         }
 
-        private void InheritanceUpdated(object sender, EventArgs e)
+        private async void InheritanceUpdated(object sender, EventArgs e)
         {
-            ThreadHelper.Generic.BeginInvoke(DispatcherPriority.ApplicationIdle, () =>
-            {
-                CreateImage();
-            });
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+
+            CreateImage();
         }
 
         private void FileActionOccurred(object sender, TextDocumentFileActionEventArgs e)
@@ -82,7 +81,9 @@ namespace EditorConfig
 
             UpdateLayout();
 
+#pragma warning disable VSTHRD001 // Avoid legacy thread switching APIs
             ThreadHelper.Generic.BeginInvoke(DispatcherPriority.ApplicationIdle, () =>
+#pragma warning restore VSTHRD001 // Avoid legacy thread switching APIs
             {
                 SetAdornmentLocation(_adornmentLayer.TextView, EventArgs.Empty);
             });

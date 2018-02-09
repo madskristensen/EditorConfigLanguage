@@ -18,6 +18,7 @@ namespace EditorConfig
 {
     using System;
     using System.Runtime.InteropServices;
+    using Microsoft.VisualStudio.Shell;
     using ErrorHandler = Microsoft.VisualStudio.ErrorHandler;
     using IComponentModel = Microsoft.VisualStudio.ComponentModelHost.IComponentModel;
     using IConnectionPoint = Microsoft.VisualStudio.OLE.Interop.IConnectionPoint;
@@ -87,6 +88,8 @@ namespace EditorConfig
 
         public virtual object GetService(Type serviceType)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             return _serviceProvider.GetService(serviceType);
         }
 
@@ -234,6 +237,8 @@ namespace EditorConfig
 
         protected virtual IVsTextLines GetTextBuffer(System.IntPtr docDataExisting, string filename)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             IVsTextLines textLines;
             if (docDataExisting == IntPtr.Zero)
             {
@@ -288,6 +293,8 @@ namespace EditorConfig
 
         protected virtual IVsCodeWindow CreateCodeView(string documentMoniker, IVsTextLines textLines, bool createdDocData, ref string editorCaption, ref Guid cmdUI)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             Type codeWindowType = typeof(IVsCodeWindow);
             Guid riid = codeWindowType.GUID;
             Guid clsid = typeof(VsCodeWindowClass).GUID;
@@ -324,6 +331,8 @@ namespace EditorConfig
 
         private void Dispose(bool dispose)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             if (dispose)
             {
                 if (_serviceProvider != null)
@@ -351,6 +360,8 @@ namespace EditorConfig
 
             public TextBufferEventListener(IComponentModel componentModel, IVsTextLines textLines, Guid languageServiceId)
             {
+                ThreadHelper.ThrowIfNotOnUIThread();
+
                 _componentModel = componentModel;
                 _textLines = textLines;
                 _languageServiceId = languageServiceId;
@@ -367,6 +378,8 @@ namespace EditorConfig
 
             public int OnLoadCompleted(int fReload)
             {
+                ThreadHelper.ThrowIfNotOnUIThread();
+
                 _connectionPoint.Unadvise(_cookie);
                 _textLines.SetLanguageServiceID(ref _languageServiceId);
 

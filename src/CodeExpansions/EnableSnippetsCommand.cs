@@ -85,6 +85,8 @@ namespace EditorConfig
                 }
             }
 
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             return Next.Exec(pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
         }
 
@@ -99,6 +101,8 @@ namespace EditorConfig
                     return VSConstants.S_OK;
                 }
             }
+
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             return Next.QueryStatus(pguidCmdGroup, cCmds, prgCmds, pCmdText);
         }

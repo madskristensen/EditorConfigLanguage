@@ -18,6 +18,8 @@ namespace EditorConfig
                 return VSConstants.S_OK;
             }
 
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             return Next.Exec(pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
         }
 
@@ -28,6 +30,8 @@ namespace EditorConfig
                 prgCmds[0].cmdf = (uint)OLECMDF.OLECMDF_ENABLED | (uint)OLECMDF.OLECMDF_SUPPORTED;
                 return VSConstants.S_OK;
             }
+
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             return Next.QueryStatus(pguidCmdGroup, cCmds, prgCmds, pCmdText);
         }

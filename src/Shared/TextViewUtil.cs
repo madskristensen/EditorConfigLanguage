@@ -45,6 +45,7 @@ namespace EditorConfig
 
         private static IEnumerable<IVsWindowFrame> EnumerateDocumentWindowFrames()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             if (Package.GetGlobalService(typeof(SVsUIShell)) is IVsUIShell shell)
             {
@@ -77,6 +78,8 @@ namespace EditorConfig
 
         private static bool GetPhysicalPathFromFrame(IVsWindowFrame frame, out string frameFilePath)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             int hr = frame.GetProperty((int)__VSFPROPID.VSFPROPID_pszMkDocument, out object propertyValue);
 
             if (hr == VSConstants.S_OK && propertyValue != null)

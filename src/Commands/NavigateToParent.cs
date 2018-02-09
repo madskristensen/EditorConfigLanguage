@@ -20,6 +20,8 @@ namespace EditorConfig
 
         public override int Exec(ref Guid pguidCmdGroup, uint nCmdID, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             if (pguidCmdGroup == _commandGroup && nCmdID == _commandId)
             {
                 var document = EditorConfigDocument.FromTextBuffer(_buffer);
@@ -62,6 +64,8 @@ namespace EditorConfig
 
                 return VSConstants.S_OK;
             }
+
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             return Next.QueryStatus(pguidCmdGroup, cCmds, prgCmds, pCmdText);
         }

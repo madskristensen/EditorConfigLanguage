@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.OLE.Interop;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using System;
@@ -28,6 +29,8 @@ namespace EditorConfig
 
         public override int Exec(ref Guid pguidCmdGroup, uint nCmdID, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             bool handled = false;
             int hresult = VSConstants.S_OK;
 
@@ -258,6 +261,9 @@ namespace EditorConfig
                         return VSConstants.S_OK;
                 }
             }
+
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             return Next.QueryStatus(pguidCmdGroup, cCmds, prgCmds, pCmdText);
         }
     }

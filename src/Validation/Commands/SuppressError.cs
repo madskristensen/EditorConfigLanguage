@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.TableControl;
 using Microsoft.VisualStudio.Shell.TableManager;
+using Microsoft.VisualStudio.Text.Editor;
 using System;
 using System.ComponentModel.Design;
 
@@ -63,7 +64,7 @@ namespace EditorConfig
         {
             try
             {
-                if (TextViewUtil.TryGetWpfTextView(_filePath, out var view))
+                if (TextViewUtil.TryGetWpfTextView(_filePath, out IWpfTextView view))
                 {
                     var document = EditorConfigDocument.FromTextBuffer(view.TextBuffer);
                     var validator = EditorConfigValidator.FromDocument(document);

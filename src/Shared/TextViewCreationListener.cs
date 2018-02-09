@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Language.Intellisense;
+using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Text;
@@ -66,7 +67,7 @@ namespace EditorConfig
             if (textViewAdapter is IVsTextViewEx viewEx)
                 ErrorHandler.ThrowOnFailure(viewEx.PersistOutliningState());
 
-            if (DocumentService.TryGetTextDocument(_buffer, out var document))
+            if (DocumentService.TryGetTextDocument(_buffer, out ITextDocument document))
             {
                 document.FileActionOccurred += DocumentSavedAsync;
             }
@@ -84,21 +85,20 @@ namespace EditorConfig
                 await val.RequestValidationAsync(true);
             }
 
-            ThreadHelper.Generic.BeginInvoke(DispatcherPriority.ApplicationIdle, () =>
-            {
-                var statusBar = Package.GetGlobalService(typeof(SVsStatusbar)) as IVsStatusbar;
-                statusBar.IsFrozen(out int frozen);
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
-                if (frozen == 0)
-                {
-                    statusBar.SetText("Saved. Open documents must be reopened for .editorconfig changes to take effect");
-                }
-            });
+            var statusBar = Package.GetGlobalService(typeof(SVsStatusbar)) as IVsStatusbar;
+            statusBar.IsFrozen(out int frozen);
+
+            if (frozen == 0)
+            {
+                statusBar.SetText("Saved. Open documents must be reopened for .editorconfig changes to take effect");
+            }
         }
 
         private void AddCommandFilter(IVsTextView textViewAdapter, BaseCommand command)
         {
-            textViewAdapter.AddCommandFilter(command, out var next);
+            textViewAdapter.AddCommandFilter(command, out IOleCommandTarget next);
             command.Next = next;
         }
 

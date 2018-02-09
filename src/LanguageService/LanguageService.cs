@@ -1,4 +1,5 @@
 using Microsoft.VisualStudio.Package;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.TextManager.Interop;
 using System;
 using System.Runtime.InteropServices;
@@ -13,6 +14,8 @@ namespace EditorConfig
 
         public EditorConfigLanguage(object site)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             SetSite(site);
         }
 

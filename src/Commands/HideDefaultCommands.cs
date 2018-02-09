@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.OLE.Interop;
+using Microsoft.VisualStudio.Shell;
 using System;
 using System.Collections.Generic;
 
@@ -19,6 +20,8 @@ namespace EditorConfig
 
         public override int Exec(ref Guid pguidCmdGroup, uint nCmdID, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             return Next.Exec(pguidCmdGroup, nCmdID, nCmdexecopt, pvaIn, pvaOut);
         }
 
@@ -29,6 +32,8 @@ namespace EditorConfig
                 prgCmds[0].cmdf = (uint)OLECMDF.OLECMDF_SUPPORTED | (uint)OLECMDF.OLECMDF_INVISIBLE;
                 return VSConstants.S_OK;
             }
+
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             return Next.QueryStatus(pguidCmdGroup, cCmds, prgCmds, pCmdText);
         }

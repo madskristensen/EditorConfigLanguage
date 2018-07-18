@@ -34,7 +34,10 @@
           "type": "array"
         },
         "defaultSeverity": {
-          "enum": [ "none", "suggestion", "warning", "error" ]
+          "enum": [ "none", "silent", "suggestion", "warning", "error" ]
+        },
+        "documentationLink": {
+            "type":  "string"
         }
       }
     },

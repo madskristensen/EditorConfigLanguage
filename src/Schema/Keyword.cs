@@ -9,7 +9,7 @@ namespace EditorConfig
     /// <summary>The keyword is the name-part of a property.</summary>
     public class Keyword : ITooltip
     {
-        public Keyword(string name, string description, IEnumerable<string> values, IEnumerable<string> defaultValue, bool unsupported, bool hidden, bool multiple, bool severity, string defaultSeverity)
+        public Keyword(string name, string description, IEnumerable<string> values, IEnumerable<string> defaultValue, bool unsupported, bool hidden, bool multiple, bool severity, string defaultSeverity, string documentationLink)
         {
             Name = name;
             Description = description;
@@ -20,6 +20,7 @@ namespace EditorConfig
             SupportsMultipleValues = multiple;
             RequiresSeverity = severity;
             DefaultSeverity = defaultSeverity;
+            DocumentationLink = documentationLink;
         }
 
         /// <summary>The keyword of the property.</summary>
@@ -43,7 +44,11 @@ namespace EditorConfig
         public bool SupportsMultipleValues { get; }
 
         public bool RequiresSeverity { get; }
+
         public string DefaultSeverity { get; }
+
+        /// <summary>Link to the property's documentation. Null if no documentation.</summary>
+        public string DocumentationLink { get; }
 
         /// <summary>The category is used in the Intellisense filters.</summary>
         public Category Category

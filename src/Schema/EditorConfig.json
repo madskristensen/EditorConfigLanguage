@@ -22,359 +22,541 @@
     {
       "name": "root",
       "description": "Special property that should be specified at the top of the file outside of any sections. Set to \"true\" to stop .editorconfig files search on current file.",
-      "values": [ true, false, "unset" ]
+      "values": [ true, false, "unset" ],
+      "defaultValue": [ true ]
     },
     {
       "name": "charset",
-      "description": "File character encoding",
-      "values": [ "latin1", "utf-8", "utf-8-bom", "utf-16be", "utf-16le", "unset" ]
+      "description": "File character encoding.",
+      "values": [ "latin1", "utf-8", "utf-8-bom", "utf-16be", "utf-16le", "unset" ],
+      "defaultValue": [ "utf-8-bom" ]
     },
     {
       "name": "end_of_line",
-      "description": "Line ending file format (Unix, DOS, Mac)",
-      "values": [ "lf", "crlf", "cr", "unset" ]
+      "description": "Line ending file format (Unix, DOS, Mac).",
+      "values": [ "lf", "crlf", "cr", "unset" ],
+      "defaultValue": [ "crlf" ]
     },
     {
       "name": "indent_style",
-      "description": "Indentation style",
-      "values": [ "tab", "space", "unset" ]
+      "description": "Indentation style.",
+      "values": [ "tab", "space", "unset" ],
+      "defaultValue": [ "unset" ]
     },
     {
       "name": "indent_size",
       "description": "A whole number defining the number of columns used for each indentation level and the width of soft tabs (when supported). When set to tab, the value of tab_width (if specified) will be used.",
-      "values": [ 2, "tab", "unset" ]
+      "values": [ 2, "tab", "unset" ],
+      "defaultValue": [ "unset" ]
+    },
+    {
+      "name": "insert_final_newline",
+      "description": "Denotes whether file should end with a newline.",
+      "values": [ true, false, "unset" ],
+      "defaultValue": [ true ]
     },
     {
       "name": "tab_width",
       "description": "A whole number defining the number of columns used to represent a tab character. This defaults to the value of indent_size and doesn't usually need to be specified.",
-      "values": [ 2, "unset" ]
+      "values": [ 2, 4, "unset" ],
+      "defaultValue": [ "unset" ]
     },
     {
       "name": "trim_trailing_whitespace",
-      "description": "Denotes whether whitespace is allowed at the end of lines",
-      "values": [ true, false, "unset" ]
-    },
-    {
-      "name": "insert_final_newline",
-      "description": "Denotes whether file should end with a newline",
-      "values": [ true, false, "unset" ]
+      "description": "Denotes whether to trim whitespace at the end of lines.",
+      "values": [ true, false, "unset" ],
+      "defaultValue": [ true ]
     },
     {
       "name": "max_line_length",
-      "description": "Forces hard line wrapping after the amount of characters specified",
+      "description": "Forces hard line wrapping after the amount of characters specified.",
       "values": [ 80, "off", "unset" ],
+      "defaultValue": [ "off" ],
       "unsupported": true
     },
-
-    // C# properties
-    {
-      "name": "csharp_style_conditional_delegate_call",
-      "description": "Prefer to use conditional coalescing operation (?.) when invoking a lambda instead of performing a null check (e.g., 'func?.Invoke(args);').",
-      "values": [ true, false ],
-      "severity": true
-    },
-    {
-      "name": "csharp_style_expression_bodied_accessors",
-      "description": "Prefer expression-bodied members for accessors (e.g., 'public int Age { get => _age; set => _age = value; }').",
-      "values": [ true, false, "when_on_single_line" ],
-      "severity": true
-    },
-    {
-      "name": "csharp_style_expression_bodied_constructors",
-      "description": "Prefer expression-bodied members for constructors (e.g., 'public Customer(int age) => Age = age;').",
-      "values": [ true, false, "when_on_single_line" ],
-      "severity": true
-    },
-    {
-      "name": "csharp_style_expression_bodied_indexers",
-      "description": "Prefer expression-bodied members for indexers (e.g., 'public T this[int i] => _value[i];').",
-      "values": [ true, false, "when_on_single_line" ],
-      "severity": true
-    },
-    {
-      "name": "csharp_style_expression_bodied_methods",
-      "description": "Prefer expression-bodied members for methods (e.g., 'public int GetAge() => this.Age;').",
-      "values": [ true, false, "when_on_single_line" ],
-      "severity": true
-    },
-    {
-      "name": "csharp_style_expression_bodied_operators",
-      "description": "Prefer expression-bodied members for operators.",
-      "values": [ true, false, "when_on_single_line" ],
-      "severity": true
-    },
-    {
-      "name": "csharp_style_expression_bodied_properties",
-      "description": "Prefer expression-bodied members for properties (e.g., 'public int Age => _age;').",
-      "values": [ true, false, "when_on_single_line" ],
-      "severity": true
-    },
-    {
-      "name": "csharp_style_inlined_variable_declaration",
-      "description": "Prefer 'out' variables to be declared inline when possible (e.g., 'if (int.TryParse(value out int i) {...}').",
-      "values": [ true, false ],
-      "severity": true
-    },
-    {
-      "name": "csharp_style_pattern_matching_over_as_with_null_check",
-      "description": "Prefer pattern matching instead of 'as' expressions with null-checks to determine if something is of a particular type (e.g., 'if (o is string s) {...}').",
-      "values": [ true, false ],
-      "severity": true
-    },
-    {
-      "name": "csharp_style_pattern_matching_over_is_with_cast_check",
-      "description": "Prefer pattern matching instead of 'is' expressions with type casts (e.g., 'if (o is int i) {...}').",
-      "values": [ true, false ],
-      "severity": true
-    },
-    {
-      "name": "csharp_style_throw_expression",
-      "description": "Prefer to use 'throw' expressions instead of 'throw' statements.",
-      "values": [ true, false ],
-      "severity": true
-    },
-    {
-      "name": "csharp_style_var_elsewhere",
-      "description": "Prefer 'var' in all cases unless overridden by another code style rule.",
-      "values": [ true, false ],
-      "severity": true
-    },
-    {
-      "name": "csharp_style_var_for_built_in_types",
-      "description": "Prefer 'var' is used for built-in system types such as 'int'.",
-      "values": [ true, false ],
-      "severity": true
-    },
-    {
-      "name": "csharp_style_var_when_type_is_apparent",
-      "description": "Prefer 'var' when the type is already mentioned on the right-hand side of a declaration expression.",
-      "values": [ true, false ],
-      "severity": true
-    },
-    {
-      "name": "csharp_new_line_before_catch",
-      "description": "Place catch on new line.",
-      "values": [ true, false ]
-    },
-    {
-      "name": "csharp_new_line_before_else",
-      "description": "Place else on new line.",
-      "values": [ true, false ]
-    },
-    {
-      "name": "csharp_new_line_before_finally",
-      "description": "Place finally on new line.",
-      "values": [ true, false ]
-    },
-    {
-      "name": "csharp_new_line_before_members_in_anonymous_types",
-      "description": "Place members in anonymous types on new line.",
-      "values": [ true, false ]
-    },
-    {
-      "name": "csharp_new_line_before_members_in_object_initializers",
-      "description": "Place members in object initializers on new line.",
-      "values": [ true, false ]
-    },
-    {
-      "name": "csharp_new_line_before_open_brace",
-      "description": "Place new line before open brace",
-      "values": [ "none", "all", "accessors", "anonymous_methods", "anonymous_types", "control_blocks", "events", "indexers", "lambdas", "local_functions", "methods", "object_collection", "properties", "types" ],
-      "multiple": true
-    },
-    {
-      "name": "csharp_new_line_between_query_expression_clauses",
-      "description": "Place query expression clauses on new line.",
-      "values": [ true, false ]
-    },
-    {
-      "name": "csharp_indent_case_contents",
-      "description": "Indent switch case contents.",
-      "values": [ true, false ]
-    },
-    {
-      "name": "csharp_indent_labels",
-      "description": "Label Positioning.",
-      "values": [ "flush_left", "one_less_than_current", "no_change" ]
-    },
-    {
-      "name": "csharp_indent_switch_labels",
-      "description": "Indent switch Labels.",
-      "values": [ true, false ]
-    },
-    {
-      "name": "csharp_preserve_single_line_blocks",
-      "description": "Leave Block on Single Line.",
-      "values": [ true, false ]
-    },
-    {
-      "name": "csharp_preserve_single_line_statements",
-      "description": "Leave Statements and Member Declarations on the Same Line.",
-      "values": [ true, false ]
-    },
-    {
-      "name": "csharp_space_after_cast",
-      "description": "Require a space between a cast and the value.",
-      "values": [ true, false ]
-    },
-    {
-      "name": "csharp_space_after_keywords_in_control_flow_statements",
-      "description": "Space After Keywords in Control Flow Statements.",
-      "values": [ true, false ]
-    },
-    {
-      "name": "csharp_space_between_method_call_parameter_list_parentheses",
-      "description": "Space Within Parentheses for Method Call Argument List.",
-      "values": [ true, false ]
-    },
-    {
-      "name": "csharp_space_between_method_declaration_parameter_list_parentheses",
-      "description": "Space Between Method Declaration Argument-List Parentheses.",
-      "values": [ true, false ]
-    },
-    {
-      "name": "csharp_space_between_parentheses",
-      "description": "Space Within Parentheses for Other Options.",
-      "values": [ "expressions", "type_casts", "control_flow_statements", false ],
-      "multiple": true
-    },
-    {
-      "name": "csharp_prefer_braces",
-      "description": "Prefer braces when possible",
-      "values": [ true, false ]
-    },
-    {
-      "name": "csharp_prefer_simple_default_expression",
-      "description": "Prefer default over default(T)",
-      "values": [ true, false ]
-    },
-
     // .NET properties
     {
       "name": "dotnet_sort_system_directives_first",
       "description": "Prefer to place 'System' directives first when sorting usings.",
-      "values": [ true, false ]
+      "values": [ true, false ],
+      "defaultValue": [ true ]
     },
     {
       "name": "dotnet_style_coalesce_expression",
       "description": "Prefer null coalescing expression to ternary operator checking (e.g. 'var v = x ?? y;').",
       "values": [ true, false ],
-      "severity": true
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "suggestion"
     },
     {
       "name": "dotnet_style_collection_initializer",
       "description": "Prefer collections to be initialized using collection initializers when possible (e.g., 'var list = new List<int>{ 1, 2, 3 };').",
       "values": [ true, false ],
-      "severity": true
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "suggestion"
     },
     {
       "name": "dotnet_style_explicit_tuple_names",
       "description": "Prefer tuple names to ItemX properties (e.g., '(string name, int age) customer = GetCustomer(); var name = customer.name;').",
       "values": [ true, false ],
-      "severity": true
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "suggestion"
     },
     {
       "name": "dotnet_style_null_propagation",
       "description": "Prefer to use null-conditional operator where possible (e.g., 'var v = o?.ToString();').",
       "values": [ true, false ],
-      "severity": true
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "suggestion"
     },
     {
       "name": "dotnet_style_object_initializer",
       "description": "Prefer objects to be initialized using object initializers when possible (e.g., 'var c = new Customer(){ Age = 21 };').",
       "values": [ true, false ],
-      "severity": true
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "suggestion"
     },
     {
       "name": "dotnet_style_predefined_type_for_locals_parameters_members",
       "description": "For locals, parameters and type members, prefer types that have a language keyword to represent them (int, double, string, etc.) to use that keyword instead of the type name (Int32, Int64, etc.).",
       "values": [ true, false ],
-      "severity": true
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "none"
     },
     {
       "name": "dotnet_style_predefined_type_for_member_access",
       "description": "Prefer the keyword whenever a member-access expression is used on a type with a keyword representation (int, double, string, etc.).",
       "values": [ true, false ],
-      "severity": true
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "none"
+    },
+    {
+      "name": "dotnet_style_prefer_auto_properties",
+      "description": "Prefer auto-properties over properties with private backing fields.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "none"
+    },
+    {
+      "name": "dotnet_style_prefer_inferred_anonymous_type_member_names",
+      "description": "Prefer inferred anonymous type member names.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "suggestion"
+    },
+    {
+      "name": "dotnet_style_prefer_inferred_tuple_names",
+      "description": "Prefer inferred tuple element names.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "suggestion"
+    },
+    {
+      "name": "dotnet_style_prefer_is_null_check_over_reference_equality_method",
+      "description": "Prefer using a null check with pattern-matching over object.ReferenceEquals.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "suggestion"
     },
     {
       "name": "dotnet_style_qualification_for_event",
       "description": "Prefer all non-static events referenced from within non-static methods to be prefaced with 'this.' in C# and 'Me.' in Visual Basic.",
       "values": [ true, false ],
-      "severity": true
+      "defaultValue": [ false ],
+      "severity": true,
+      "defaultSeverity": "none"
     },
     {
       "name": "dotnet_style_qualification_for_field",
       "description": "Prefer all non-static fields used in non-static methods to be prefaced with 'this.' in C# or 'Me.' in Visual Basic.",
       "values": [ true, false ],
-      "severity": true
+      "defaultValue": [ false ],
+      "severity": true,
+      "defaultSeverity": "none"
     },
     {
       "name": "dotnet_style_qualification_for_method",
       "description": "Prefer all non-static methods called from within non-static methods to be prefaced with 'this.' in C# and 'Me.' in Visual Basic.",
       "values": [ true, false ],
-      "severity": true
+      "defaultValue": [ false ],
+      "severity": true,
+      "defaultSeverity": "none"
     },
     {
       "name": "dotnet_style_qualification_for_property",
       "description": "Prefer the all non-static properties used in non-static methods to be prefaced with 'this.' in C# or 'Me.' in Visual Basic.",
       "values": [ true, false ],
-      "severity": true
+      "defaultValue": [ false ],
+      "severity": true,
+      "defaultSeverity": "none"
     },
-
+    {
+      "name": "dotnet_style_readonly_field",
+      "description": "Prefer that fields should be marked with 'readonly' in C# or ReadOnly in Visual Basic if they are only ever assigned inline, or inside of a constructor.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "suggestion"
+    },
+    {
+      "name": "dotnet_style_require_accessibility_modifiers",
+      "description": "Prefer accessibility modifiers to be specified",
+      "values": [ "always", "for_non_interface_members", "never" ],
+      "defaultValue": [ "for_non_interface_members" ],
+      "severity": true,
+      "defaultSeverity": "none"
+    },
+    // C# properties
+    {
+      "name": "csharp_indent_case_contents",
+      "description": "Indent switch case contents.",
+      "values": [ true, false ],
+      "defaultValue": [ true ]
+    },
+    {
+      "name": "csharp_indent_labels",
+      "description": "Label positioning.",
+      "values": [ "flush_left", "one_less_than_current", "no_change" ],
+      "defaultValue": [ "flush_left" ]
+    },
+    {
+      "name": "csharp_indent_switch_labels",
+      "description": "Indent switch labels.",
+      "values": [ true, false ],
+      "defaultValue": [ true ]
+    },
+    {
+      "name": "csharp_new_line_before_catch",
+      "description": "Place catch on new line.",
+      "values": [ true, false ],
+      "defaultValue": [ true ]
+    },
+    {
+      "name": "csharp_new_line_before_else",
+      "description": "Place else on new line.",
+      "values": [ true, false ],
+      "defaultValue": [ true ]
+    },
+    {
+      "name": "csharp_new_line_before_finally",
+      "description": "Place finally on new line.",
+      "values": [ true, false ],
+      "defaultValue": [ true ]
+    },
+    {
+      "name": "csharp_new_line_before_members_in_anonymous_types",
+      "description": "Place members in anonymous types on new line.",
+      "values": [ true, false ],
+      "defaultValue": [ true ]
+    },
+    {
+      "name": "csharp_new_line_before_members_in_object_initializers",
+      "description": "Place members in object initializers on new line.",
+      "values": [ true, false ],
+      "defaultValue": [ true ]
+    },
+    {
+      "name": "csharp_new_line_before_open_brace",
+      "description": "Place new line before open brace",
+      "values": [ "none", "all", "accessors", "anonymous_methods", "anonymous_types", "control_blocks", "events", "indexers", "lambdas", "local_functions", "methods", "object_collection", "properties", "types" ],
+      "defaultValue": [ "all" ],
+      "multiple": true
+    },
+    {
+      "name": "csharp_new_line_between_query_expression_clauses",
+      "description": "Place query expression clauses on new line.",
+      "values": [ true, false ],
+      "defaultValue": [ true ]
+    },
+    {
+      "name": "csharp_prefer_braces",
+      "description": "Prefer braces when possible.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "none"
+    },
+    {
+      "name": "csharp_prefer_simple_default_expression",
+      "description": "Prefer default over default(T).",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "suggestion"
+    },
+    {
+      "name": "csharp_preserve_single_line_blocks",
+      "description": "Leave block on single line.",
+      "values": [ true, false ],
+      "defaultValue": [ true ]
+    },
+    {
+      "name": "csharp_preserve_single_line_statements",
+      "description": "Leave statements and member declarations on the same line.",
+      "values": [ true, false ],
+      "defaultValue": [ true ]
+    },
+    {
+      "name": "csharp_space_after_cast",
+      "description": "Require a space between a cast and the value.",
+      "values": [ true, false ],
+      "defaultValue": [ false ]
+    },
+    {
+      "name": "csharp_space_after_colon_in_inheritance_clause",
+      "description": "Require a space after the colon for bases or interfaces in a type declaration.",
+      "values": [ true, false ],
+      "defaultValue": [ true ]
+    },
+    {
+      "name": "csharp_space_after_keywords_in_control_flow_statements",
+      "description": "Space after keywords in control flow statements.",
+      "values": [ true, false ],
+      "defaultValue": [ true ]
+    },
+    {
+      "name": "csharp_space_around_binary_operators",
+      "description": "Spaces around binary operators.",
+      "values": [ "none", "before_and_after", "ignore" ],
+      "defaultValue": [ "before_and_after" ]
+    },
+    {
+      "name": "csharp_space_before_colon_in_inheritance_clause",
+      "description": "Require a space before the colon for bases or interfaces in a type declaration.",
+      "values": [ true, false ],
+      "defaultValue": [ true ]
+    },
+    {
+      "name": "csharp_space_between_method_call_empty_parameter_list_parentheses",
+      "description": "Require a space within empty argument list parentheses.",
+      "values": [ true, false ],
+      "defaultValue": [ false ]
+    },
+    {
+      "name": "csharp_space_between_method_call_name_and_opening_parenthesis",
+      "description": "Require a space between method call name and opening parenthesis.",
+      "values": [ true, false ],
+      "defaultValue": [ false ]
+    },
+    {
+      "name": "csharp_space_between_method_call_parameter_list_parentheses",
+      "description": "Space within parentheses for method call argument list.",
+      "values": [ true, false ],
+      "defaultValue": [ false ]
+    },
+    {
+      "name": "csharp_space_between_method_declaration_empty_parameter_list_parentheses",
+      "description": "Require a space within empty parameter list parentheses for a method declaration",
+      "values": [ true, false ],
+      "defaultValue": [ false ]
+    },
+    {
+      "name": "csharp_space_between_method_declaration_parameter_list_parentheses",
+      "description": "Space between method declaration argument-list parentheses.",
+      "values": [ true, false ],
+      "defaultValue": [ false ]
+    },
+    {
+      "name": "csharp_space_between_parentheses",
+      "description": "Space within parentheses for other options.",
+      "values": [ "expressions", "type_casts", "control_flow_statements", false ],
+      "defaultValue": [ false ],
+      "multiple": true
+    },
+    {
+      "name": "csharp_style_conditional_delegate_call",
+      "description": "Prefer to use conditional coalescing operation (?.) when invoking a lambda instead of performing a null check (e.g., 'func?.Invoke(args);').",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "suggestion"
+    },
+    {
+      "name": "csharp_style_expression_bodied_accessors",
+      "description": "Prefer expression-bodied members for accessors (e.g., 'public int Age { get => _age; set => _age = value; }').",
+      "values": [ true, false, "when_on_single_line" ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "none"
+    },
+    {
+      "name": "csharp_style_expression_bodied_constructors",
+      "description": "Prefer expression-bodied members for constructors (e.g., 'public Customer(int age) => Age = age;').",
+      "values": [ true, false, "when_on_single_line" ],
+      "defaultValue": [ false ],
+      "severity": true,
+      "defaultSeverity": "none"
+    },
+    {
+      "name": "csharp_style_expression_bodied_indexers",
+      "description": "Prefer expression-bodied members for indexers (e.g., 'public T this[int i] => _value[i];').",
+      "values": [ true, false, "when_on_single_line" ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "none"
+    },
+    {
+      "name": "csharp_style_expression_bodied_methods",
+      "description": "Prefer expression-bodied members for methods (e.g., 'public int GetAge() => this.Age;').",
+      "values": [ true, false, "when_on_single_line" ],
+      "defaultValue": [ false ],
+      "severity": true,
+      "defaultSeverity": "none"
+    },
+    {
+      "name": "csharp_style_expression_bodied_operators",
+      "description": "Prefer expression-bodied members for operators.",
+      "values": [ true, false, "when_on_single_line" ],
+      "defaultValue": [ false ],
+      "severity": true,
+      "defaultSeverity": "none"
+    },
+    {
+      "name": "csharp_style_expression_bodied_properties",
+      "description": "Prefer expression-bodied members for properties (e.g., 'public int Age => _age;').",
+      "values": [ true, false, "when_on_single_line" ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "none"
+    },
+    {
+      "name": "csharp_style_inlined_variable_declaration",
+      "description": "Prefer 'out' variables to be declared inline when possible (e.g., 'if (int.TryParse(value out int i) {...}').",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "suggestion"
+    },
+    {
+      "name": "csharp_style_pattern_matching_over_as_with_null_check",
+      "description": "Prefer pattern matching instead of 'as' expressions with null-checks to determine if something is of a particular type (e.g., 'if (o is string s) {...}').",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "suggestion"
+    },
+    {
+      "name": "csharp_style_pattern_matching_over_is_with_cast_check",
+      "description": "Prefer pattern matching instead of 'is' expressions with type casts (e.g., 'if (o is int i) {...}').",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "suggestion"
+    },
+    {
+      "name": "csharp_style_throw_expression",
+      "description": "Prefer to use 'throw' expressions instead of 'throw' statements.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "suggestion"
+    },
+    {
+      "name": "csharp_style_var_elsewhere",
+      "description": "Prefer 'var' in all cases unless overridden by another code style rule.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "none"
+    },
+    {
+      "name": "csharp_style_var_for_built_in_types",
+      "description": "Prefer 'var' is used for built-in system types such as 'int'.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "none"
+    },
+    {
+      "name": "csharp_style_var_when_type_is_apparent",
+      "description": "Prefer 'var' when the type is already mentioned on the right-hand side of a declaration expression.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "none"
+    },
+    // VB properties
+    {
+      "name": "visual_basic_preferred_modifier_order",
+      "description": "Prefer the specified ordering of modifiers.",
+      "values": [ "Partial", "Default", "Private", "Protected", "Public", "Friend", "NotOverridable", "Overridable", "MustOverride", "Overloads", "Overrides", "MustInherit", "NotInheritable", "Static", "Shared", "Shadows", "ReadOnly", "WriteOnly", "Dim", "Const", "WithEvents", "Widening", "Narrowing", "Custom", "Async" ],
+      "defaultValue": [ "Partial", "Default", "Private", "Protected", "Public", "Friend", "NotOverridable", "Overridable", "MustOverride", "Overloads", "Overrides", "MustInherit", "NotInheritable", "Static", "Shared", "Shadows", "ReadOnly", "WriteOnly", "Dim", "Const", "WithEvents", "Widening", "Narrowing", "Custom", "Async:suggestion" ],
+      "multiple": true
+    },
     // Naming properties
     {
       "name": "dotnet_naming_rule.<naming_rule_title>.severity",
       "description": "Naming rule severity.",
-      "values": [ "none", "suggestion", "warning", "error" ]
+      "values": [ "none", "suggestion", "warning", "error" ],
+      "defaultValue": [ "none" ]
     },
     {
       "name": "dotnet_naming_rule.<naming_rule_title>.symbols",
       "description": "Naming rule symbols.",
-      "values": [ "<identifier>" ]
+      "values": [ "<identifier>" ],
+      "defaultValue": [ "<identifier" ]
     },
     {
       "name": "dotnet_naming_rule.<naming_rule_title>.style",
       "description": "Naming rule style.",
-      "values": [ "<identifier>" ]
+      "values": [ "<identifier>" ],
+      "defaultValue": [ "<identifier" ]
     },
     {
       "name": "dotnet_naming_symbols.<naming_symbols_title>.applicable_kinds",
       "description": "Application kinds.",
       "values": [ "*", "class", "struct", "interface", "enum", "property", "method", "field", "event", "delegate", "parameter" ],
+      "defaultValue": [ "*" ],
       "multiple": true
     },
     {
       "name": "dotnet_naming_symbols.<naming_symbols_title>.applicable_accessibilities",
-      "description": "Applicable accessibilities..",
+      "description": "Applicable accessibilities.",
       "values": [ "*", "public", "internal", "friend", "private", "protected", "protected_internal", "protected_friend" ],
+      "defaultValue": [ "*" ],
       "multiple": true
     },
     {
       "name": "dotnet_naming_symbols.<naming_symbols_title>.required_modifiers",
       "description": "Applicable accessibilities.",
       "values": [ "*", "abstract", "must_inherit", "async", "const", "readonly", "static", "shared" ],
+      "defaultValue": [ "*" ],
       "multiple": true
     },
     {
       "name": "dotnet_naming_style.<naming_style_title>.required_prefix",
       "description": "Required prefix.",
-      "values": [ "<prefix>" ]
+      "values": [ "<prefix>" ],
+      "defaultValue": [ "<prefix>" ]
     },
     {
       "name": "dotnet_naming_style.<naming_style_title>.required_suffix",
       "description": "Required suffix.",
-      "values": [ "<suffix>" ]
+      "values": [ "<suffix>" ],
+      "defaultValue": [ "<suffix>" ]
     },
     {
       "name": "dotnet_naming_style.<naming_style_title>.word_separator",
       "description": "Word separator.",
-      "values": [ "<word-separator>" ]
+      "values": [ "<word-separator>" ],
+      "defaultValue": [ "<word-separator" ]
     },
     {
       "name": "dotnet_naming_style.<naming_style_title>.capitalization",
       "description": "Capitalization.",
-      "values": [ "pascal_case", "camel_case", "first_word_upper", "all_upper", "all_lower" ]
+      "values": [ "pascal_case", "camel_case", "first_word_upper", "all_upper", "all_lower" ],
+      "defaultValue": [ "pascal_case" ]
     },
 
     // Undocumented properties
@@ -382,114 +564,91 @@
       "name": "csharp_indent_block_contents",
       "description": "Undocumented property",
       "values": [ true, false ],
+      "defaultValue": [ true ],
       "hidden": true
     },
     {
       "name": "csharp_indent_braces",
       "description": "Undocumented property",
       "values": [ true, false ],
-      "hidden": true
-    },
-    {
-      "name": "csharp_space_after_colon_in_inheritance_clause",
-      "description": "Undocumented property",
-      "values": [ true, false ],
+      "defaultValue": [ false ],
       "hidden": true
     },
     {
       "name": "csharp_space_after_comma",
       "description": "Undocumented property",
       "values": [ true, false ],
+      "defaultValue": [ true ],
       "hidden": true
     },
     {
       "name": "csharp_space_after_dot",
       "description": "Undocumented property",
       "values": [ true, false ],
+      "defaultValue": [ false ],
       "hidden": true
     },
     {
       "name": "csharp_space_after_semicolon_in_for_statement",
       "description": "Undocumented property",
       "values": [ true, false ],
-      "hidden": true
-    },
-    {
-      "name": "csharp_space_around_binary_operators",
-      "description": "Undocumented property",
-      "values": [ "none", "before_and_after", "ignore" ],
+      "defaultValue": [ true ],
       "hidden": true
     },
     {
       "name": "csharp_space_around_declaration_statements",
       "description": "Undocumented property",
       "values": [ "ignore", "do_not_ignore" ],
-      "hidden": true
-    },
-    {
-      "name": "csharp_space_before_colon_in_inheritance_clause",
-      "description": "Undocumented property",
-      "values": [ true, false ],
+      "defaultValue": [ false ],
       "hidden": true
     },
     {
       "name": "csharp_space_before_comma",
       "description": "Undocumented property",
       "values": [ true, false ],
+      "defaultValue": [ false ],
       "hidden": true
     },
     {
       "name": "csharp_space_before_dot",
       "description": "Undocumented property",
       "values": [ true, false ],
+      "defaultValue": [ false ],
       "hidden": true
     },
     {
       "name": "csharp_space_before_open_square_brackets",
       "description": "Undocumented property",
       "values": [ true, false ],
+      "defaultValue": [ false ],
       "hidden": true
     },
     {
       "name": "csharp_space_before_semicolon_in_for_statement",
       "description": "Undocumented property",
       "values": [ true, false ],
+      "defaultValue": [ false ],
       "hidden": true
     },
     {
       "name": "csharp_space_between_empty_square_brackets",
       "description": "Undocumented property",
       "values": [ true, false ],
-      "hidden": true
-    },
-    {
-      "name": "csharp_space_between_method_call_empty_parameter_list_parentheses",
-      "description": "Undocumented property",
-      "values": [ true, false ],
-      "hidden": true
-    },
-    {
-      "name": "csharp_space_between_method_call_name_and_opening_parenthesis",
-      "description": "Undocumented property",
-      "values": [ true, false ],
-      "hidden": true
-    },
-    {
-      "name": "csharp_space_between_method_declaration_empty_parameter_list_parentheses",
-      "description": "Undocumented property",
-      "values": [ true, false ],
+      "defaultValue": [ false ],
       "hidden": true
     },
     {
       "name": "csharp_space_between_method_declaration_name_and_open_parenthesis",
       "description": "Undocumented property",
       "values": [ true, false ],
+      "defaultValue": [ false ],
       "hidden": true
     },
     {
       "name": "csharp_space_between_square_brackets",
       "description": "Undocumented property",
       "values": [ true, false ],
+      "defaultValue": [ false ],
       "hidden": true
     }
   ]

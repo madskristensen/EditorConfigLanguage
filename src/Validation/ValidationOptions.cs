@@ -65,7 +65,7 @@ namespace EditorConfig
 
         [Category(_sections)]
         [DisplayName("Allow spaces in sections")]
-        [Description("Spces in globbing patterns are allowed, but are often the result of a type.")]
+        [Description("Spaces in globbing patterns are allowed, but are often the result of a typo.")]
         [DefaultValue(false)]
         public bool AllowSpacesInSections { get; set; }
 

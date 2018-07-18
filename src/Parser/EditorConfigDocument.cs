@@ -76,6 +76,26 @@ namespace EditorConfig
             return null;
         }
 
+        /// <summary>Returns a list of all rules included in the current or parent document(s).</summary>
+        public List<string> GetAllIncludedRules()
+        {
+            EditorConfigDocument curDoc = this;
+            var rules = new List<string>();
+            while (curDoc != null)
+            {
+                foreach (ParseItem parseItem in curDoc.ParseItems)
+                {
+                    string parseItemStr = parseItem.Text;
+                    if (!rules.Contains(parseItemStr) && parseItem.ItemType == ItemType.Keyword)
+                    {
+                        rules.Add(parseItemStr);
+                    }
+                }
+                curDoc = curDoc.Parent;
+            }
+            return rules;
+        }
+
         public void Dispose()
         {
             DisposeParser();

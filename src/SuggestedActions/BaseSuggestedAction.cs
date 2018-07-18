@@ -45,7 +45,7 @@ namespace EditorConfig
             // nothing to dispose
         }
 
-        public Task<IEnumerable<SuggestedActionSet>> GetActionSetsAsync(CancellationToken cancellationToken)
+        public virtual Task<IEnumerable<SuggestedActionSet>> GetActionSetsAsync(CancellationToken cancellationToken)
         {
             return System.Threading.Tasks.Task.FromResult<IEnumerable<SuggestedActionSet>>(null);
         }

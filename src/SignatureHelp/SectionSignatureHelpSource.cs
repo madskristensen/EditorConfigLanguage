@@ -32,6 +32,7 @@ namespace EditorConfig
             _span = _buffer.CurrentSnapshot.CreateTrackingSpan(line.Extent, SpanTrackingMode.EdgeNegative);
 
             signatures.Add(new SectionSignature("[*.cs]", "Matches multiple files with a .cs file extension", _span, session));
+            signatures.Add(new SectionSignature("[*.vb]", "Matches multiple files with a .vb file extension", _span, session));
             signatures.Add(new SectionSignature("[*.{cs,vb}]", "Matches multiple files with brace expansion notation", _span, session));
             signatures.Add(new SectionSignature("[app/**.js]", "Matches all .js files under lib directory", _span, session));
             signatures.Add(new SectionSignature("[{package.json,.npmrc}]", "Matches the exact files - either package.json or .npmrc", _span, session));

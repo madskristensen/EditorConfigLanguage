@@ -21,7 +21,7 @@ namespace EditorConfig
 
         public override string DisplayText
         {
-            get { return "Basic"; }
+            get { return "VB"; }
         }
 
         public override void Execute(CancellationToken cancellationToken)

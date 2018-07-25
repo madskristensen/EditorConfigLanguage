@@ -106,7 +106,7 @@ Hover the mouse over any keyword to see a full description.
 ![Classification](art/quick-info.png)
 
 ### <a name="light_bulbs">Light Bulbs</a>
-Sorting properties and deleting sections is easy with the commands being shown as light bulbs in the editor margin.
+Sorting properties, deleting sections, and adding missing rules is easy with the commands being shown as light bulbs in the editor margin.
 
 ![Light bulbs](art/light-bulb.png)
 

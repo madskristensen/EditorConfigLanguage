@@ -67,6 +67,11 @@
     <Compile Include="Schema\Category.cs" />
     <Compile Include="Shared\Extensions.cs" />
     <Compile Include="Shared\TextViewUtil.cs" />
+    <Compile Include="SuggestedActions\AddMissingRulesAction.cs" />
+    <Compile Include="SuggestedActions\AddMissingRulesActionAll.cs" />
+    <Compile Include="SuggestedActions\AddMissingRulesActionDotNet.cs" />
+    <Compile Include="SuggestedActions\AddMissingRulesActionCSharp.cs" />
+    <Compile Include="SuggestedActions\AddMissingRulesActionVB.cs" />
     <Compile Include="SuggestedActions\SuppressErrorAction.cs" />
     <Compile Include="Validation\Commands\SuppressError.cs" />
     <Compile Include="Validation\EditorConfigValidatorRules.cs" />

@@ -6,5 +6,6 @@
         Standard,
         CSharp,
         DotNet,
+        VisualBasic
     }
 }

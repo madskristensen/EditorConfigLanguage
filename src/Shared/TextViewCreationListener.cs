@@ -58,7 +58,7 @@ namespace EditorConfig
 
             AddCommandFilter(textViewAdapter, new FormatterCommand(view, undoManager));
             AddCommandFilter(textViewAdapter, new CompletionController(view, CompletionBroker, QuickInfoBroker));
-            AddCommandFilter(textViewAdapter, new F1Help());
+            AddCommandFilter(textViewAdapter, new F1Help(textViewAdapter, view));
             AddCommandFilter(textViewAdapter, new NavigateToParent(_buffer));
             AddCommandFilter(textViewAdapter, new SignatureHelpCommand(view, SignatureHelpBroker, QuickInfoBroker));
             AddCommandFilter(textViewAdapter, new HideDefaultCommands());

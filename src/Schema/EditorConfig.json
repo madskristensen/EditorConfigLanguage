@@ -498,7 +498,7 @@
     {
       "name": "dotnet_naming_rule.<naming_rule_title>.severity",
       "description": "Naming rule severity.",
-      "values": [ "none", "suggestion", "warning", "error" ],
+      "values": [ "none", "silent", "suggestion", "warning", "error" ],
       "defaultValue": [ "none" ]
     },
     {
@@ -516,7 +516,7 @@
     {
       "name": "dotnet_naming_symbols.<naming_symbols_title>.applicable_kinds",
       "description": "Application kinds.",
-      "values": [ "*", "class", "struct", "interface", "enum", "property", "method", "field", "event", "delegate", "parameter" ],
+      "values": [ "*", "namespace", "class", "struct", "interface", "enum", "property", "method", "field", "event", "delegate", "parameter", "type_parameter", "local", "local_function" ],
       "defaultValue": [ "*" ],
       "multiple": true
     },

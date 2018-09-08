@@ -672,7 +672,7 @@
     {
       "name": "dotnet_naming_symbols.<naming_symbols_title>.applicable_kinds",
       "description": "Application kinds.",
-      "values": [ "*", "class", "struct", "interface", "enum", "property", "method", "field", "event", "delegate", "parameter" ],
+      "values": [ "*", "namespace", "class", "struct", "interface", "enum", "property", "method", "field", "event", "delegate", "parameter", "type_parameter", "local", "local_function" ],
       "defaultValue": [ "*" ],
       "multiple": true,
       "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-naming-conventions"

@@ -7,7 +7,7 @@
 
 EditorConfig helps developers define and maintain consistent coding styles between different editors and IDEs.</Description>
         <MoreInfo>https://github.com/madskristensen/EditorConfigLanguage</MoreInfo>
-        <License>Resources/LICENSE</License>
+        <License>Resources\LICENSE</License>
         <ReleaseNotes>https://github.com/madskristensen/EditorConfigLanguage/blob/master/CHANGELOG.md</ReleaseNotes>
         <Icon>Resources\Icon.png</Icon>
         <PreviewImage>Resources\Icon.png</PreviewImage>

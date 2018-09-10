@@ -59,7 +59,7 @@ namespace EditorConfigTest
             Assert.AreEqual(5, doc.ParseItems[1].Span.Length);
         }
 
-        [TestMethod, TestCategory("MEF")]
+        [TestMethod]
         public void NamingRules()
         {
             var file = new FileInfo(@"..\..\..\..\src\schema\EditorConfig.json");

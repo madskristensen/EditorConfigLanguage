@@ -10,7 +10,7 @@ namespace EditorConfig
     {
         private static Regex _property = new Regex(@"^\s*(?<keyword>[^;\[#:\s=]+)\s*[=:]?\s*(?<value>[^;#:]+)?(\s*:\s*(?<severity>[^;#:\s]+))?");
         private static Regex _section = new Regex(@"^\s*(?<section>\[.+)");
-        private static Regex _comment = new Regex(@"^\s*[#;].+");
+        private static Regex _comment = new Regex(@"^\s*[#;].*");
         private static Regex _unknown = new Regex(@"\s*(?<unknown>.+)");
         private static Regex _suppress = new Regex(@"^(?<comment>#\s*suppress\s*):?\s*(?<errors>(\w{0,5}\s*)+)$", RegexOptions.IgnoreCase);
 

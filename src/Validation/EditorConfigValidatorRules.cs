@@ -278,6 +278,7 @@ namespace EditorConfig
 
             if (!string.IsNullOrWhiteSpace(p))
             {
+                p = p.Replace("**", "{*,**/**/**}");
                 return Minimatcher.Check(path, p, _miniMatchOptions);
             }
 

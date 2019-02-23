@@ -309,6 +309,13 @@
       "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#indent"
     },
     {
+      "name": "csharp_indent_case_contents_when_block",
+      "description": "Indent switch case contents, when the content is a single block.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#indent"
+    },
+    {
       "name": "csharp_indent_labels",
       "description": "Label positioning.",
       "values": [ "flush_left", "one_less_than_current", "no_change" ],

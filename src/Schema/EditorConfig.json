@@ -678,7 +678,7 @@
     },
     {
       "name": "dotnet_naming_symbols.<naming_symbols_title>.applicable_kinds",
-      "description": "Application kinds.",
+      "description": "Application kinds. Must match any.",
       "values": [ "*", "namespace", "class", "struct", "interface", "enum", "property", "method", "field", "event", "delegate", "parameter", "type_parameter", "local", "local_function" ],
       "defaultValue": [ "*" ],
       "multiple": true,
@@ -686,7 +686,7 @@
     },
     {
       "name": "dotnet_naming_symbols.<naming_symbols_title>.applicable_accessibilities",
-      "description": "Applicable accessibilities.",
+      "description": "Applicable accessibilities. Must match any",
       "values": [ "*", "public", "internal", "friend", "private", "protected", "protected_internal", "protected_friend" ],
       "defaultValue": [ "*" ],
       "multiple": true,
@@ -694,7 +694,7 @@
     },
     {
       "name": "dotnet_naming_symbols.<naming_symbols_title>.required_modifiers",
-      "description": "Applicable accessibilities.",
+      "description": "Required modifiers. Must match all.",
       "values": [ "*", "abstract", "must_inherit", "async", "const", "readonly", "static", "shared" ],
       "defaultValue": [ "*" ],
       "multiple": true,

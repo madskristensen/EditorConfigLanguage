@@ -89,6 +89,13 @@
     },
     // .NET properties
     {
+      "name": "dotnet_separate_import_directive_groups",
+      "description": "Separate using directive groups.",
+      "values": [ true, false ],
+      "defaultValue": [ false ],
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#usings"
+    },
+    {
       "name": "dotnet_sort_system_directives_first",
       "description": "Prefer to place 'System' directives first when sorting usings.",
       "values": [ true, false ],
@@ -408,6 +415,15 @@
       "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#expression_level_csharp"
     },
     {
+      "name": "csharp_style_deconstructed_variable_declaration",
+      "description": "Prefer deconstructed variable declaration.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "suggestion",
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#expression_level_csharp"
+    },
+    {
       "name": "csharp_preserve_single_line_blocks",
       "description": "Leave block on single line.",
       "values": [ true, false ],
@@ -687,7 +703,7 @@
     {
       "name": "dotnet_naming_symbols.<naming_symbols_title>.applicable_accessibilities",
       "description": "Applicable accessibilities. Must match any",
-      "values": [ "*", "public", "internal", "friend", "private", "protected", "protected_internal", "protected_friend" ],
+      "values": [ "*", "public", "internal", "friend", "private", "protected", "protected_internal", "protected_friend", "private_protected" ],
       "defaultValue": [ "*" ],
       "multiple": true,
       "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-naming-conventions"

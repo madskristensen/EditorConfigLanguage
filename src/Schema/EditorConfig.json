@@ -703,7 +703,7 @@
     {
       "name": "dotnet_naming_symbols.<naming_symbols_title>.applicable_accessibilities",
       "description": "Applicable accessibilities. Must match any",
-      "values": [ "*", "public", "internal", "friend", "private", "protected", "protected_internal", "protected_friend", "private_protected" ],
+      "values": [ "*", "public", "internal", "friend", "private", "protected", "protected_internal", "protected_friend", "private_protected","local" ],
       "defaultValue": [ "*" ],
       "multiple": true,
       "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-naming-conventions"

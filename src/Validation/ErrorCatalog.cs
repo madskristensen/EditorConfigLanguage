@@ -55,6 +55,8 @@ namespace EditorConfig
             Create("EC118", ErrorCategory.Error, Resources.Text.ValidationUnknownStyle);
         public static Error UnusedStyle { get; } =
             Create("EC119", ErrorCategory.Suggestion, Resources.Text.ValidationUnusedStyle);
+        public static Error NamingRuleReordered { get; } =
+            Create("EC120", ErrorCategory.Warning, Resources.Text.NamingRuleReordered);
 
         public static bool TryGetErrorCode(string code, out Error errorCode)
         {

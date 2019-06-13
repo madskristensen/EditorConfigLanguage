@@ -153,8 +153,8 @@ namespace EditorConfig
             NamingStylePreferences namingStyle = EditorConfigNamingStyleParser.GetNamingStyles(section.Properties);
 
             IOrderedEnumerable<NamingRule> orderedRules = namingStyle.Rules.NamingRules
-                .OrderBy(rule => rule, NamingRuleAccessibilityListComparer.Instance)
-                .ThenBy(rule => rule, NamingRuleModifierListComparer.Instance)
+                .OrderBy(rule => rule, NamingRuleModifierListComparer.Instance)
+                .ThenBy(rule => rule, NamingRuleAccessibilityListComparer.Instance)
                 .ThenBy(rule => rule, NamingRuleSymbolListComparer.Instance)
                 .ThenBy(rule => rule.Name, StringComparer.OrdinalIgnoreCase)
                 .ThenBy(rule => rule.Name, StringComparer.Ordinal);

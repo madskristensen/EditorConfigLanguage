@@ -225,7 +225,7 @@ namespace EditorConfig.Validation.NamingStyles
                     return ImmutableArray<ModifierKind>.Empty;
                 }
 
-                ImmutableArray<ModifierKind>.Builder result = ImmutableArray.CreateBuilder<ModifierKind>();
+                var result = new List<ModifierKind>();
                 foreach (string modifier in modifiers.Split(','))
                 {
                     switch (modifier.Trim())
@@ -239,6 +239,8 @@ namespace EditorConfig.Validation.NamingStyles
                             break;
                         case "const":
                             result.Add(ModifierKind.IsConst);
+                            result.Add(ModifierKind.IsReadOnly);
+                            result.Add(ModifierKind.IsStatic);
                             break;
                         case "readonly":
                             result.Add(ModifierKind.IsReadOnly);
@@ -252,7 +254,7 @@ namespace EditorConfig.Validation.NamingStyles
                     }
                 }
 
-                return result.ToImmutable();
+                return result.Distinct().ToImmutableArray();
             }
         }
 

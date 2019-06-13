@@ -11,7 +11,7 @@ namespace EditorConfig
 {
     [Guid(PackageGuids.guidEditorConfigPackageString)]
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
-    [InstalledProductRegistration("#110", "#112", Vsix.Version, IconResourceID = 400)]
+    [InstalledProductRegistration("#110", "#112", ThisAssembly.AssemblyInformationalVersion, IconResourceID = 400)]
 
     [ProvideLanguageService(typeof(EditorConfigLanguage), Constants.LanguageName, 101, ShowCompletion = true, EnableAsyncCompletion = true, EnableAdvancedMembersOption = true, HideAdvancedMembersByDefault = false, QuickInfo = true, ShowDropDownOptions = true, DefaultToInsertSpaces = true, EnableCommenting = true, AutoOutlining = true, EnableLineNumbers = true, MatchBraces = true, MatchBracesAtCaret = true, ShowMatchingBrace = true)]
     [ProvideLanguageExtension(typeof(EditorConfigLanguage), Constants.FileName)]

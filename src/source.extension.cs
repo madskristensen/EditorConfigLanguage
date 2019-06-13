@@ -13,7 +13,6 @@ namespace EditorConfig
 
 EditorConfig helps developers define and maintain consistent coding styles between different editors and IDEs.";
         public const string Language = "en-US";
-        public const string Version = "1.17";
         public const string Author = "Mads Kristensen";
         public const string Tags = "editorconfig";
     }

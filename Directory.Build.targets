@@ -1,0 +1,6 @@
+<Project>
+
+  <!-- Returns the current build version. Used in .vsixmanifests to substitute our build version into them -->
+  <Target Name="GetVsixVersion" DependsOnTargets="GetBuildVersion" Returns="$(AssemblyFileVersion)" />
+
+</Project>

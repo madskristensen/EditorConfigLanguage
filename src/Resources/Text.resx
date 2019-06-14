@@ -126,6 +126,9 @@
   <data name="InvalidValue" xml:space="preserve">
     <value>"{0}" is not a valid value for the "{1}" property</value>
   </data>
+  <data name="NamingRuleReordered" xml:space="preserve">
+    <value>Naming rule '{0}' was reordered relative to overlapping rule '{1}'. Elements which match both will be validated against rule '{0}' starting with Visual Studio 2019 version 16.3.</value>
+  </data>
   <data name="NotSupportedByVS" xml:space="preserve">
     <value>Not supported by Visual Studio</value>
   </data>

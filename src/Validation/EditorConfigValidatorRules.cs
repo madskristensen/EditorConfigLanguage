@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using EditorConfig.Validation.NamingStyles;
 using Microsoft.VisualStudio.Shell;
 using Minimatch;
 
@@ -141,7 +143,189 @@ namespace EditorConfig
                         e.Register(section.Item.Text);
                     }
                 });
+
+                ValidateNamingStyles(section);
             }
+        }
+
+        private void ValidateNamingStyles(Section section)
+        {
+            NamingStylePreferences namingStyle = EditorConfigNamingStyleParser.GetNamingStyles(section.Properties);
+
+            IOrderedEnumerable<NamingRule> orderedRules = namingStyle.Rules.NamingRules
+                .OrderBy(rule => rule, NamingRuleModifierListComparer.Instance)
+                .ThenBy(rule => rule, NamingRuleAccessibilityListComparer.Instance)
+                .ThenBy(rule => rule, NamingRuleSymbolListComparer.Instance)
+                .ThenBy(rule => rule.Name, StringComparer.OrdinalIgnoreCase)
+                .ThenBy(rule => rule.Name, StringComparer.Ordinal);
+
+            var orderedRulePreferences = new NamingStylePreferences(
+                namingStyle.SymbolSpecifications,
+                namingStyle.NamingStyles,
+                orderedRules.Select(
+                    rule => new SerializableNamingRule
+                    {
+                        Name = rule.Name,
+                        SymbolSpecificationID = rule.SymbolSpecification.ID,
+                        NamingStyleID = rule.NamingStyle.ID,
+                        EnforcementLevel = rule.EnforcementLevel,
+                    }).ToImmutableArray());
+
+            var reorderedOverlappingRules = new List<(string firstRule, string secondRule)>();
+            ImmutableArray<NamingRule> declaredNamingRules = namingStyle.Rules.NamingRules;
+            ImmutableArray<NamingRule> orderedNamingRules = orderedRulePreferences.Rules.NamingRules;
+            for (int i = 0; i < declaredNamingRules.Length; i++)
+            {
+                for (int j = 0; j < i; j++)
+                {
+                    NamingRule firstRule = declaredNamingRules[j];
+                    NamingRule secondRule = declaredNamingRules[i];
+
+                    // If the reordered rules are in the same relative order, no need to check the overlap
+                    bool reordered = false;
+                    foreach (NamingRule rule in orderedNamingRules)
+                    {
+                        if (rule.Name == firstRule.Name)
+                        {
+                            break;
+                        }
+                        else if (rule.Name == secondRule.Name)
+                        {
+                            reordered = true;
+                            break;
+                        }
+                    }
+
+                    if (!reordered)
+                    {
+                        continue;
+                    }
+
+                    // If the rules don't overlap, reordering is not a problem
+                    if (!Overlaps(firstRule, secondRule))
+                    {
+                        continue;
+                    }
+
+                    reorderedOverlappingRules.Add((firstRule.Name, secondRule.Name));
+                }
+            }
+
+            var reportedRules = new HashSet<string>();
+            foreach (Property property in section.Properties)
+            {
+                string name = property.Keyword.Text.Trim();
+                if (!name.StartsWith("dotnet_naming_rule."))
+                {
+                    continue;
+                }
+
+                string[] nameSplit = name.Split('.');
+                if (nameSplit.Length != 3)
+                {
+                    continue;
+                }
+
+                string ruleName = nameSplit[1];
+                if (!reportedRules.Add(ruleName))
+                {
+                    continue;
+                }
+
+                foreach ((string firstRule, string secondRule) in reorderedOverlappingRules)
+                {
+                    if (secondRule != ruleName)
+                    {
+                        continue;
+                    }
+
+                    ErrorCatalog.NamingRuleReordered.Run(property.Keyword, e =>
+                    {
+                        e.Register(secondRule, firstRule);
+                    });
+                }
+            }
+        }
+
+        private bool Overlaps(in NamingRule x, in NamingRule y)
+        {
+            bool overlapAccessibility = false;
+            foreach (Accessibility accessibility in x.SymbolSpecification.ApplicableAccessibilityList)
+            {
+                if (y.SymbolSpecification.ApplicableAccessibilityList.Contains(accessibility))
+                {
+                    overlapAccessibility = true;
+                    break;
+                }
+            }
+
+            if (!overlapAccessibility)
+            {
+                return false;
+            }
+
+            bool overlapSymbols = false;
+            foreach (SymbolKindOrTypeKind symbolKind in x.SymbolSpecification.ApplicableSymbolKindList)
+            {
+                if (y.SymbolSpecification.ApplicableSymbolKindList.Contains(symbolKind))
+                {
+                    overlapSymbols = true;
+                    break;
+                }
+            }
+
+            if (!overlapSymbols)
+            {
+                return false;
+            }
+
+            if (x.SymbolSpecification.RequiredModifierList.IsEmpty || y.SymbolSpecification.RequiredModifierList.IsEmpty)
+            {
+                // Modifiers are the last check. If either is empty, it matches all so the rules must overlap.
+                return true;
+            }
+
+            foreach (ModifierKind modifier in x.SymbolSpecification.RequiredModifierList)
+            {
+                switch (modifier)
+                {
+                    case ModifierKind.IsAbstract:
+                        if (y.SymbolSpecification.RequiredModifierList.Contains(ModifierKind.IsStatic)
+                            || y.SymbolSpecification.RequiredModifierList.Contains(ModifierKind.IsConst))
+                        {
+                            return false;
+                        }
+
+                        break;
+
+                    case ModifierKind.IsStatic:
+                        if (y.SymbolSpecification.RequiredModifierList.Contains(ModifierKind.IsAbstract))
+                        {
+                            return false;
+                        }
+
+                        break;
+
+                    case ModifierKind.IsAsync:
+                        break;
+
+                    case ModifierKind.IsReadOnly:
+                        break;
+
+                    case ModifierKind.IsConst:
+                        if (y.SymbolSpecification.RequiredModifierList.Contains(ModifierKind.IsAbstract))
+                        {
+                            return false;
+                        }
+
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+
+            return true;
         }
 
         private IEnumerable<EditorConfigDocument> GetAllParentDocuments()
@@ -294,5 +478,95 @@ namespace EditorConfig
 
         private static string GetDotNetNamingStyleText(Property property)
             => property.Keyword.Text.Split('.')[1];
+
+        private abstract class NamingRuleSubsetComparer : IComparer<NamingRule>
+        {
+            protected NamingRuleSubsetComparer()
+            {
+            }
+
+            public int Compare(NamingRule x, NamingRule y)
+            {
+                bool firstIsSubset = FirstIsSubset(in x, in y);
+                bool secondIsSubset = FirstIsSubset(in y, in x);
+                if (firstIsSubset)
+                {
+                    return secondIsSubset ? 0 : -1;
+                }
+                else
+                {
+                    return secondIsSubset ? 1 : 0;
+                }
+            }
+
+            protected abstract bool FirstIsSubset(in NamingRule x, in NamingRule y);
+        }
+
+        private sealed class NamingRuleAccessibilityListComparer : NamingRuleSubsetComparer
+        {
+            internal static readonly NamingRuleAccessibilityListComparer Instance = new NamingRuleAccessibilityListComparer();
+
+            private NamingRuleAccessibilityListComparer()
+            {
+            }
+
+            protected override bool FirstIsSubset(in NamingRule x, in NamingRule y)
+            {
+                foreach (Accessibility accessibility in x.SymbolSpecification.ApplicableAccessibilityList)
+                {
+                    if (!y.SymbolSpecification.ApplicableAccessibilityList.Contains(accessibility))
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+        }
+
+        private sealed class NamingRuleModifierListComparer : NamingRuleSubsetComparer
+        {
+            internal static readonly NamingRuleModifierListComparer Instance = new NamingRuleModifierListComparer();
+
+            private NamingRuleModifierListComparer()
+            {
+            }
+
+            protected override bool FirstIsSubset(in NamingRule x, in NamingRule y)
+            {
+                // Since modifiers are "match all", a subset of symbols is matched by a superset of modifiers
+                foreach (ModifierKind modifier in y.SymbolSpecification.RequiredModifierList)
+                {
+                    if (!x.SymbolSpecification.RequiredModifierList.Contains(modifier))
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+        }
+
+        private sealed class NamingRuleSymbolListComparer : NamingRuleSubsetComparer
+        {
+            internal static readonly NamingRuleSymbolListComparer Instance = new NamingRuleSymbolListComparer();
+
+            private NamingRuleSymbolListComparer()
+            {
+            }
+
+            protected override bool FirstIsSubset(in NamingRule x, in NamingRule y)
+            {
+                foreach (SymbolKindOrTypeKind symbolKind in x.SymbolSpecification.ApplicableSymbolKindList)
+                {
+                    if (!y.SymbolSpecification.ApplicableSymbolKindList.Contains(symbolKind))
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+        }
     }
 }

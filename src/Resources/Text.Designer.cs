@@ -19,7 +19,7 @@ namespace EditorConfig.Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Text {
@@ -84,6 +84,15 @@ namespace EditorConfig.Resources {
         internal static string InvalidValue {
             get {
                 return ResourceManager.GetString("InvalidValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Naming rule &apos;{0}&apos; was reordered relative to overlapping rule &apos;{1}&apos;. Elements which match both will be validated against rule &apos;{0}&apos; starting with Visual Studio 2019 version 16.3..
+        /// </summary>
+        internal static string NamingRuleReordered {
+            get {
+                return ResourceManager.GetString("NamingRuleReordered", resourceCulture);
             }
         }
         

@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Operations;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -54,9 +55,19 @@ namespace EditorConfig
                 {
                     IEnumerable<Keyword> properties = EditorConfigPackage.CompletionOptions.ShowHiddenKeywords ? SchemaCatalog.AllKeywords : SchemaCatalog.VisibleKeywords;
                     IEnumerable<Keyword> items = properties.Where(i => i.Name != SchemaCatalog.Root);
+                    IEnumerable<string> globallyUsedKeywords = _document.GetAllIncludedRules();
 
                     foreach (Keyword property in items)
+                    {
+                        string keyword = property.Name;
+
+                        if (globallyUsedKeywords.Contains(keyword)
+                            && (keyword.StartsWith("csharp_", StringComparison.OrdinalIgnoreCase) || keyword.StartsWith("dotnet_", StringComparison.OrdinalIgnoreCase))
+                            && !keyword.StartsWith("dotnet_naming_", StringComparison.OrdinalIgnoreCase))
+                            continue;
+
                         list.Add(CreateCompletion(property, property.Category));
+                    }
                 }
 
                 moniker = "keyword";

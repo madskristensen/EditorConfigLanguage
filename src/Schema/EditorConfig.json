@@ -659,6 +659,15 @@
       "defaultSeverity": "silent",
       "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#implicit-and-explicit-types"
     },
+    {
+      "name": "csharp_using_directive_placement",
+      "description": "Prefer 'using' directives to be inside or outside a namespace.",
+      "values": [ "inside_namespace", "outside_namespace" ],
+      "defaultValue": [ "outside_namespace" ],
+      "severity": true,
+      "defaultSeverity": "silent",
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#implicit-and-explicit-types"
+    },
     // VB properties
     {
       "name": "visual_basic_preferred_modifier_order",
@@ -703,7 +712,7 @@
     {
       "name": "dotnet_naming_symbols.<naming_symbols_title>.applicable_accessibilities",
       "description": "Applicable accessibilities. Must match any",
-      "values": [ "*", "public", "internal", "friend", "private", "protected", "protected_internal", "protected_friend", "private_protected","local" ],
+      "values": [ "*", "public", "internal", "friend", "private", "protected", "protected_internal", "protected_friend", "private_protected", "local" ],
       "defaultValue": [ "*" ],
       "multiple": true,
       "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-naming-conventions"

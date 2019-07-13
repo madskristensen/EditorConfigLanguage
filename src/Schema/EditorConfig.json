@@ -666,7 +666,7 @@
       "defaultValue": [ "outside_namespace" ],
       "severity": true,
       "defaultSeverity": "silent",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#implicit-and-explicit-types"
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-formatting-conventions#c-formatting-settings"
     },
     // VB properties
     {

@@ -46,6 +46,7 @@ namespace EditorConfig
             if (string.IsNullOrWhiteSpace(line.GetText()) || parseItem?.ItemType == ItemType.Keyword)
             {
                 bool isInRoot = !_document.ParseItems.Exists(p => p.ItemType == ItemType.Section && p.Span.Start < position);
+
                 if (isInRoot)
                 {
                     if (SchemaCatalog.TryGetKeyword(SchemaCatalog.Root, out Keyword root))
@@ -55,15 +56,25 @@ namespace EditorConfig
                 {
                     IEnumerable<Keyword> properties = EditorConfigPackage.CompletionOptions.ShowHiddenKeywords ? SchemaCatalog.AllKeywords : SchemaCatalog.VisibleKeywords;
                     IEnumerable<Keyword> items = properties.Where(i => i.Name != SchemaCatalog.Root);
-                    IEnumerable<string> globallyUsedKeywords = _document.GetAllIncludedRules();
+                    IEnumerable<string> usedKeywords = _document.GetAllIncludedRules();
+
+                    ParseItem parseItemSection = _document.ParseItems.LastOrDefault(p => p.ItemType == ItemType.Section && p.Span.Start < position);
+                    if (parseItemSection != null)
+                    {
+                        Section section = _document.Sections.FirstOrDefault(x => x.Item.Text.Equals(parseItemSection.Text, StringComparison.OrdinalIgnoreCase));
+                        if (section != null)
+                        {
+                            // Set keywords scope to current section
+                            usedKeywords = section.Properties.Select(x => x.Keyword.Text).ToList();
+                        }
+                    }
 
                     foreach (Keyword property in items)
                     {
                         string keyword = property.Name;
 
-                        if (globallyUsedKeywords.Contains(keyword)
-                            && (keyword.StartsWith("csharp_", StringComparison.OrdinalIgnoreCase) || keyword.StartsWith("dotnet_", StringComparison.OrdinalIgnoreCase))
-                            && !keyword.StartsWith("dotnet_naming_", StringComparison.OrdinalIgnoreCase))
+                        // Keyword already used and keyword does not qualify as repeatable
+                        if (usedKeywords.Contains(keyword) && !keyword.StartsWith("dotnet_naming_", StringComparison.OrdinalIgnoreCase))
                             continue;
 
                         list.Add(CreateCompletion(property, property.Category));
@@ -72,7 +83,6 @@ namespace EditorConfig
 
                 moniker = "keyword";
             }
-
             // Value
             else if (parseItem?.ItemType == ItemType.Value)
             {
@@ -89,7 +99,6 @@ namespace EditorConfig
 
                 moniker = "value";
             }
-
             // Severity
             else if ((position > 0 && snapshot.Length > 1 && snapshot.GetText(position - 1, 1) == ":") || parseItem?.ItemType == ItemType.Severity)
             {
@@ -102,7 +111,6 @@ namespace EditorConfig
                     moniker = "severity";
                 }
             }
-
             // Suppression
             else if (parseItem?.ItemType == ItemType.Suppression)
             {

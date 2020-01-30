@@ -57,6 +57,8 @@ namespace EditorConfig
 
         public void Invoke(CancellationToken cancellationToken)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             var dte = Package.GetGlobalService(typeof(DTE)) as DTE;
 
             try

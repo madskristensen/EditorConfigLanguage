@@ -185,6 +185,8 @@ namespace EditorConfig
                         out Guid commandUIGuid,
                         out int createDocumentWindowFlags)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             // Initialize output parameters
             docView = IntPtr.Zero;
             docData = IntPtr.Zero;
@@ -276,6 +278,8 @@ namespace EditorConfig
 
         protected virtual object CreateDocumentView(string documentMoniker, string physicalView, IVsHierarchy hierarchy, uint itemid, IVsTextLines textLines, bool createdDocData, out string editorCaption, out Guid cmdUI)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             //Init out params
             editorCaption = string.Empty;
             cmdUI = Guid.Empty;
@@ -345,6 +349,8 @@ namespace EditorConfig
 
         public void Dispose()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             Dispose(true);
             GC.SuppressFinalize(this);
         }

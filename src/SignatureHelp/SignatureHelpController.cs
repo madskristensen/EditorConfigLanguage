@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text.Editor;
 using System;
 using System.Runtime.InteropServices;
-using System.Windows.Threading;
+using Task = System.Threading.Tasks.Task;
 
 namespace EditorConfig
 {
@@ -61,12 +61,16 @@ namespace EditorConfig
                 if (_quickInfoBroker.IsQuickInfoActive(_view))
                     _quickInfoBroker.GetSessions(_view)[0].Dismiss();
 
-                Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() =>
-                {
-                    _session = _signaturehelpBroker.TriggerSignatureHelp(_view);
-                    if (_session != null)
-                        _session.Match();
-                }), DispatcherPriority.Normal, null);
+                ThreadHelper.JoinableTaskFactory.StartOnIdle(
+                    () =>
+                    {
+                        _session = _signaturehelpBroker.TriggerSignatureHelp(_view);
+                        if (_session != null)
+                            _session.Match();
+
+                        return Task.CompletedTask;
+                    },
+                    VsTaskRunContext.UIThreadNormalPriority);
             }
         }
 

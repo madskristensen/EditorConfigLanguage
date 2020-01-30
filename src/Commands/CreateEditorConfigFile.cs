@@ -14,6 +14,8 @@ namespace EditorConfig
 
         private CreateEditorConfigFile(Package package, OleMenuCommandService commandService)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             _package = package ?? throw new ArgumentNullException(nameof(package));
 
             var cmdId = new CommandID(PackageGuids.guidEditorConfigPackageCmdSet, PackageIds.CreateEditorConfigFileId);
@@ -38,6 +40,8 @@ namespace EditorConfig
 
         private void CreateFile(object sender, EventArgs e)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             var dte = VsHelpers.GetService<DTE, DTE2>();
             string folder = VsHelpers.GetSelectedItemPath(out object item);
 
@@ -64,6 +68,8 @@ namespace EditorConfig
 
         private static ProjectItem AddFileToHierarchy(object item, string fileName)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             if (item is Project proj)
             {
                 Telemetry.TrackUserTask("FileAddedToProject");
@@ -85,6 +91,8 @@ namespace EditorConfig
 
         private static ProjectItem AddFileToSolution(string fileName, Solution2 solution)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             Project currentProject = null;
 
             foreach (Project project in solution.Projects)
@@ -104,6 +112,8 @@ namespace EditorConfig
 
         private static string FindFolder(object item)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             if (item == null)
                 return null;
 

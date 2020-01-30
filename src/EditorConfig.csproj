@@ -65,6 +65,7 @@
     </Compile>
     <Compile Include="Schema\Category.cs" />
     <Compile Include="Shared\Extensions.cs" />
+    <Compile Include="Shared\JoinableTaskFactoryExtensions.cs" />
     <Compile Include="Shared\TextViewUtil.cs" />
     <Compile Include="SuggestedActions\AddMissingRulesAction.cs" />
     <Compile Include="SuggestedActions\AddMissingRulesActionAll.cs" />

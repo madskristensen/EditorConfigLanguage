@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.OLE.Interop;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Workspace.VSIntegration.UI;
 using System;
 using System.Collections.Generic;
@@ -34,6 +35,8 @@ namespace EditorConfig.Commands
 
         public int Exec(List<WorkspaceVisualNodeBase> selection, Guid pguidCmdGroup, uint nCmdID, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             if (IsSupportedCommand(pguidCmdGroup, nCmdID))
             {
                 if (selection.Count == 1 && selection[0] is IFolderNode folder)

@@ -13,6 +13,8 @@ namespace EditorConfig
     {
         public static bool TryGetWpfTextView(string filePath, out IWpfTextView view)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             view = null;
             IVsTextView vTextView = FindTextViewFor(filePath);
 
@@ -31,6 +33,8 @@ namespace EditorConfig
 
         private static IVsTextView FindTextViewFor(string filePath)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             IVsWindowFrame frame = FindWindowFrame(filePath);
             if (frame != null)
             {
@@ -65,6 +69,8 @@ namespace EditorConfig
 
         private static IVsWindowFrame FindWindowFrame(string filePath)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             foreach (IVsWindowFrame currentFrame in EnumerateDocumentWindowFrames())
             {
                 if (IsFrameForFilePath(currentFrame, filePath))
@@ -101,6 +107,7 @@ namespace EditorConfig
 
         private static bool IsFrameForFilePath(IVsWindowFrame frame, string filePath)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
 
             if (GetPhysicalPathFromFrame(frame, out string frameFilePath))
             {

@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.ComponentModelHost;
+﻿using Microsoft;
+using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.TableControl;
 using Microsoft.VisualStudio.Shell.TableManager;
@@ -20,7 +21,10 @@ namespace EditorConfig
 
         private TableDataSource()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             var compositionService = ServiceProvider.GlobalProvider.GetService(typeof(SComponentModel)) as IComponentModel;
+            Assumes.Present(compositionService);
             compositionService.DefaultCompositionService.SatisfyImportsOnce(this);
 
             ITableManager manager = TableManagerProvider.GetTableManager(StandardTables.ErrorsTable);

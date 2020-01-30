@@ -26,6 +26,8 @@ namespace EditorConfig
 
         public static TReturnType GetService<TServiceType, TReturnType>()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             return (TReturnType)ServiceProvider.GlobalProvider.GetService(typeof(TServiceType));
         }
 
@@ -45,6 +47,8 @@ namespace EditorConfig
         /// <summary>Gets the root folder of any Visual Studio project.</summary>
         public static string GetRootFolder(this Project project)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             if (project == null)
                 return null;
 
@@ -88,6 +92,8 @@ namespace EditorConfig
 
         public static ProjectItem AddFileToProject(this Project project, string file, string itemType = null)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             if (project.IsKind(ProjectTypes.ASPNET_5, ProjectTypes.SSDT))
                 return DTE.Solution.FindProjectItem(file);
 
@@ -103,6 +109,8 @@ namespace EditorConfig
 
         public static void SetItemType(this ProjectItem item, string itemType)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             try
             {
                 if (item == null || item.ContainingProject == null)
@@ -121,6 +129,8 @@ namespace EditorConfig
 
         public static bool IsKind(this Project project, params string[] kindGuids)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             foreach (string guid in kindGuids)
             {
                 if (project.Kind.Equals(guid, StringComparison.OrdinalIgnoreCase))
@@ -132,6 +142,8 @@ namespace EditorConfig
 
         public static string GetSelectedItemPath(out object selectedItem)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             var items = (Array)DTE.ToolWindows.SolutionExplorer.SelectedItems;
             selectedItem = null;
 
@@ -180,6 +192,8 @@ namespace EditorConfig
 
         public static IServiceProvider AsServiceProvider(this DTE2 dte)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             return new ServiceProvider(dte as Microsoft.VisualStudio.OLE.Interop.IServiceProvider);
         }
 
@@ -198,6 +212,8 @@ namespace EditorConfig
 
         public static void OpenFile(string fileName)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             VsShellUtilities.OpenDocument(DTE.AsServiceProvider(), fileName);
             DTE.ExecuteCommandSafe("SolutionExplorer.SyncWithActiveDocument");
             DTE.ActiveDocument.Activate();
@@ -205,6 +221,8 @@ namespace EditorConfig
 
         public static void ExecuteCommandSafe(this DTE2 dte, string commandName)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             Command command = dte.Commands.Item(commandName);
             if (command.IsAvailable)
             {

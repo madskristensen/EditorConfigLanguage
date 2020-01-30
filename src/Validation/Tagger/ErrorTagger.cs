@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.Text.Tagging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Threading;
+using Task = System.Threading.Tasks.Task;
 
 namespace EditorConfig
 {
@@ -25,12 +25,15 @@ namespace EditorConfig
             _validator = EditorConfigValidator.FromDocument(_document);
             _validator.Validated += DocumentValidated;
 
-            ThreadHelper.Generic.BeginInvoke(DispatcherPriority.ApplicationIdle, () =>
-            {
-                _hasLoaded = true;
-                var span = new SnapshotSpan(view.TextBuffer.CurrentSnapshot, 0, view.TextBuffer.CurrentSnapshot.Length);
-                TagsChanged?.Invoke(this, new SnapshotSpanEventArgs(span));
-            });
+            ThreadHelper.JoinableTaskFactory.StartOnIdle(
+                () =>
+                {
+                    _hasLoaded = true;
+                    var span = new SnapshotSpan(view.TextBuffer.CurrentSnapshot, 0, view.TextBuffer.CurrentSnapshot.Length);
+                    TagsChanged?.Invoke(this, new SnapshotSpanEventArgs(span));
+                    return Task.CompletedTask;
+                },
+                VsTaskRunContext.UIThreadIdlePriority);
         }
 
         private void DocumentValidated(object sender, EventArgs e)

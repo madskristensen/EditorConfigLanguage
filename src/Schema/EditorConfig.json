@@ -753,6 +753,21 @@
       "defaultValue": [ "pascal_case" ],
       "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-naming-conventions"
     },
+    // Diagnostics properties
+    {
+      "name": "dotnet_diagnostic.<rule_id>.severity",
+      "description": "Diagnostic rule configuration",
+      "values": [ "error", "warning", "suggestion", "silent", "refactoring", "none" ],
+      "defaultValue": [ "unset" ],
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/code-quality/use-roslyn-analyzers?view=vs-2019#set-rule-severity-in-an-editorconfig-file"
+    },
+    {
+      "name": "dotnet_analyzer_diagnostic.category-<category>.severity",
+      "description": "Diagnostic severity configuration by category",
+      "values": [ "error", "warning", "suggestion", "silent", "refactoring", "none" ],
+      "defaultValue": [ "unset" ],
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/code-quality/use-roslyn-analyzers?view=vs-2019#set-rule-severity-of-multiple-analyzer-rules-at-once-in-an-editorconfig-file"
+    },
 
     // Undocumented properties
     {

@@ -399,7 +399,7 @@
     {
       "name": "csharp_prefer_braces",
       "description": "Prefer braces when possible.",
-      "values": [ true, false ],
+      "values": [ true, false, "when-multiline" ],
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "silent",

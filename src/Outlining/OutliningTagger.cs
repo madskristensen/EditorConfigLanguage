@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.Text.Tagging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Threading;
+using Task = System.Threading.Tasks.Task;
 
 namespace EditorConfig
 {
@@ -62,15 +62,18 @@ namespace EditorConfig
 
         private void StartParsing()
         {
-            ThreadHelper.Generic.BeginInvoke(DispatcherPriority.ApplicationIdle, () =>
-            {
-                if (TagsChanged == null || _document.IsParsing)
-                    return;
+            ThreadHelper.JoinableTaskFactory.StartOnIdle(
+                () =>
+                {
+                    if (TagsChanged == null || _document.IsParsing)
+                        return Task.CompletedTask;
 
-                Regions.Clear();
-                ReParse();
-                TagsChanged?.Invoke(this, new SnapshotSpanEventArgs(new SnapshotSpan(_snapshot, 0, _snapshot.Length)));
-            });
+                    Regions.Clear();
+                    ReParse();
+                    TagsChanged?.Invoke(this, new SnapshotSpanEventArgs(new SnapshotSpan(_snapshot, 0, _snapshot.Length)));
+                    return Task.CompletedTask;
+                },
+                VsTaskRunContext.UIThreadIdlePriority);
         }
 
         void ReParse()

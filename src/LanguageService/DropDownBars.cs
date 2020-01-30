@@ -11,7 +11,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Windows.Threading;
+using Task = System.Threading.Tasks.Task;
 
 namespace EditorConfig
 {
@@ -121,10 +121,13 @@ namespace EditorConfig
 
         private void SyncDropDowns()
         {
-            ThreadHelper.Generic.BeginInvoke(DispatcherPriority.ApplicationIdle, () =>
-            {
-                _languageService.SynchronizeDropdowns();
-            });
+            ThreadHelper.JoinableTaskFactory.StartOnIdle(
+                () =>
+                {
+                    _languageService.SynchronizeDropdowns();
+                    return Task.CompletedTask;
+                },
+                VsTaskRunContext.UIThreadIdlePriority);
         }
     }
 

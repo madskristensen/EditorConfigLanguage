@@ -62,6 +62,8 @@ namespace EditorConfig
 
         private void Execute(object sender, EventArgs e)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             try
             {
                 if (TextViewUtil.TryGetWpfTextView(_filePath, out IWpfTextView view))

@@ -27,6 +27,8 @@ namespace EditorConfig
 
             Loaded += (s, e) =>
             {
+                Dispatcher.VerifyAccess();
+
                 CreateImage();
                 doc.FileActionOccurred += FileActionOccurred;
                 Updated += InheritanceUpdated;
@@ -56,6 +58,8 @@ namespace EditorConfig
 
         private void CreateImage()
         {
+            Dispatcher.VerifyAccess();
+
             Children.Clear();
 
             EditorConfigDocument parent = _document.Parent;
@@ -91,6 +95,8 @@ namespace EditorConfig
 
         private void CreateInheritance(string parentFileName, int padding)
         {
+            Dispatcher.VerifyAccess();
+
             string fileName = _adornmentLayer.TextView.TextBuffer.GetFileName();
 
             if (string.IsNullOrEmpty(fileName))
@@ -114,6 +120,8 @@ namespace EditorConfig
 
             inherits.MouseLeftButtonDown += (s, e) =>
             {
+                Dispatcher.VerifyAccess();
+
                 e.Handled = true;
                 VsHelpers.PreviewDocument(parentFileName);
                 Telemetry.TrackUserTask("InheritanceNavigated");
@@ -151,6 +159,8 @@ namespace EditorConfig
 
         private static string GetShortcut()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             Command cmd = VsHelpers.DTE.Commands.Item("EditorContextMenus.CodeWindow.EditorConfig.NavigateToParent");
 
             if (cmd == null || !cmd.IsAvailable)

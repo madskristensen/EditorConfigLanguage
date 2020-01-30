@@ -1,4 +1,5 @@
 ﻿using EnvDTE;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Utilities;
@@ -23,6 +24,8 @@ namespace EditorConfig
 
         public void TextViewCreated(IWpfTextView view)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             if (_documentService.TryGetTextDocument(view.TextBuffer, out var doc))
             {
                 _file = doc.FilePath;

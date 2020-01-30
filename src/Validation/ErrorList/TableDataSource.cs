@@ -20,6 +20,8 @@ namespace EditorConfig
 
         private TableDataSource()
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             var compositionService = ServiceProvider.GlobalProvider.GetService(typeof(SComponentModel)) as IComponentModel;
             compositionService.DefaultCompositionService.SatisfyImportsOnce(this);
 

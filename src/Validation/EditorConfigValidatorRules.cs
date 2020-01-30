@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using EditorConfig.Validation.NamingStyles;
 using Microsoft.VisualStudio.Shell;
-using Minimatch;
 
 namespace EditorConfig
 {
@@ -429,19 +428,28 @@ namespace EditorConfig
             if (pattern.Equals("*"))
                 return true;
 
+            var matcher = AnalyzerConfig.TryCreateSectionNameMatcher(pattern);
+            if (matcher is null)
+                return false;
+
+            return DoesFilesMatch(folder, matcher.Value, root);
+        }
+
+        private static bool DoesFilesMatch(string folder, AnalyzerConfig.SectionNameMatcher matcher, string root)
+        {
             try
             {
                 foreach (string file in Directory.EnumerateFiles(folder).Where(f => !_ignorePaths.Any(p => folder.Contains(p))))
                 {
-                    string relative = file.Replace(root, string.Empty).TrimStart('\\');
+                    string relative = file.Replace(root, string.Empty);
 
-                    if (CheckGlobbing(relative, pattern))
+                    if (CheckGlobbing(relative.Replace('\\', '/'), matcher))
                         return true;
                 }
 
                 foreach (string directory in Directory.EnumerateDirectories(folder))
                 {
-                    if (!_ignorePaths.Any(i => directory.Contains(i)) && DoesFilesMatch(directory, pattern, root))
+                    if (!_ignorePaths.Any(i => directory.Contains(i)) && DoesFilesMatch(directory, matcher, root))
                     {
                         return true;
                     }
@@ -456,18 +464,8 @@ namespace EditorConfig
             return false;
         }
 
-        private static bool CheckGlobbing(string path, string pattern)
-        {
-            string p = pattern?.TrimEnd('/');
-
-            if (!string.IsNullOrWhiteSpace(p))
-            {
-                p = p.Replace("**", "{*,**/**/**}");
-                return Minimatcher.Check(path, p, _miniMatchOptions);
-            }
-
-            return false;
-        }
+        private static bool CheckGlobbing(string path, AnalyzerConfig.SectionNameMatcher matcher)
+            => matcher.IsMatch(path);
 
         private static bool IsDotNetNamingRuleStyle(Property property) 
             => property.Keyword.Text.StartsWith("dotnet_naming_rule.", StringComparison.Ordinal) && 

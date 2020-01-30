@@ -64,6 +64,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Schema\Category.cs" />
+    <Compile Include="Shared\AnalyzerConfig_SectionNameMatching.cs" />
     <Compile Include="Shared\Extensions.cs" />
     <Compile Include="Shared\JoinableTaskFactoryExtensions.cs" />
     <Compile Include="Shared\TextViewUtil.cs" />
@@ -270,7 +271,6 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Madskristensen.VisualStudio.SDK" Version="15.0.0-beta4" ExludeAssets="runtime" />
-    <PackageReference Include="Minimatch" Version="1.1.0" />
     <PackageReference Include="Microsoft.VSSDK.BuildTools">
       <Version>15.8.3247</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>

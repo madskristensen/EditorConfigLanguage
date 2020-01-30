@@ -31,9 +31,17 @@ namespace EditorConfig
         /// <summary>Tries to get a keyword by name.</summary>
         public static bool TryGetKeyword(string name, out Keyword keyword)
         {
-            keyword = AllKeywords.FirstOrDefault(c => c.Name.Is(name));
+            if (name is null)
+            {
+                keyword = null;
+                return false;
+            }
 
-            if (keyword == null && name != null && name.StartsWith("dotnet_naming_", StringComparison.OrdinalIgnoreCase) && name.IndexOf('.') > 0)
+            keyword = AllKeywords.FirstOrDefault(c => c.Name.Is(name));
+            if (keyword is object)
+                return true;
+
+            if (name.StartsWith("dotnet_naming_", StringComparison.OrdinalIgnoreCase) && name.IndexOf('.') > 0)
             {
                 string[] parts = name.Split('.');
 
@@ -42,6 +50,27 @@ namespace EditorConfig
                     string first = $"{parts[0]}.";
                     string last = $".{parts[parts.Length - 1]}";
                     keyword = AllKeywords.FirstOrDefault(c => c.Name.StartsWith(first, StringComparison.OrdinalIgnoreCase) && c.Name.EndsWith(last, StringComparison.OrdinalIgnoreCase));
+                }
+            }
+            else if (name.StartsWith("dotnet_diagnostic.", StringComparison.OrdinalIgnoreCase))
+            {
+                string[] parts = name.Split('.');
+                if (parts.Length == 3
+                    && parts[0] == "dotnet_diagnostic"
+                    && parts[2] == "severity")
+                {
+                    keyword = AllKeywords.FirstOrDefault(c => c.Name.Is("dotnet_diagnostic.<rule_id>.severity"));
+                }
+            }
+            else if (name.StartsWith("dotnet_analyzer_diagnostic.", StringComparison.OrdinalIgnoreCase))
+            {
+                string[] parts = name.Split('.');
+                if (parts.Length == 3
+                    && parts[0] == "dotnet_analyzer_diagnostic"
+                    && parts[1].StartsWith("category-", StringComparison.OrdinalIgnoreCase)
+                    && parts[2] == "severity")
+                {
+                    keyword = AllKeywords.FirstOrDefault(c => c.Name.Is("dotnet_analyzer_diagnostic.category-<category>.severity"));
                 }
             }
 

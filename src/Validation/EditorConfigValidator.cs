@@ -1,5 +1,4 @@
-﻿using Minimatch;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Timers;
@@ -19,7 +18,6 @@ namespace EditorConfig
         private bool _hasChanged;
         private bool _prevEnabled = EditorConfigPackage.ValidationOptions != null ? EditorConfigPackage.ValidationOptions.EnableValidation : true;
         private Dictionary<string, bool> _globbingCache = new Dictionary<string, bool>();
-        private static readonly Options _miniMatchOptions = new Options { AllowWindowsPaths = true, MatchBase = true };
 
         private EditorConfigValidator(EditorConfigDocument document)
         {

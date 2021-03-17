@@ -211,6 +211,15 @@
       "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#expression_level"
     },
     {
+      "name": "dotnet_style_prefer_compound_assignment",
+      "description": "This style rule concerns with the use of compound assignments. The option value specifies whether or not they are desired.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "silent",
+      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0054-ide0074#dotnet_style_prefer_compound_assignment"
+    },
+    {
       "name": "dotnet_style_prefer_conditional_expression_over_assignment",
       "description": "Prefer assignments with a ternary conditional over an if-else statement.",
       "values": [ true, false ],
@@ -561,6 +570,24 @@
       "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#expression_bodied_members"
     },
     {
+      "name": "csharp_style_expression_bodied_lambdas",
+      "description": "Prefer expression-bodied members for indexers (e.g., 'public T this[int i] => _value[i];').",
+      "values": [ true, false, "when_on_single_line" ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "silent",
+      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0053"
+    },
+    {
+      "name": "csharp_style_expression_bodied_local_functions",
+      "description": "Prefer expression-bodied members for indexers (e.g., 'public T this[int i] => _value[i];').",
+      "values": [ true, false, "when_on_single_line" ],
+      "defaultValue": [ false ],
+      "severity": true,
+      "defaultSeverity": "silent",
+      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0061"
+    },
+    {
       "name": "csharp_style_expression_bodied_methods",
       "description": "Prefer expression-bodied members for methods (e.g., 'public int GetAge() => this.Age;').",
       "values": [ true, false, "when_on_single_line" ],
@@ -624,13 +651,22 @@
       "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#pattern_matching"
     },
     {
+      "name": "csharp_style_prefer_range_operator",
+      "description": "This style rule concern the use of the range operator, which is available in C# 8.0 and later.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "suggestion",
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#pattern_matching"
+    },
+    {
       "name": "csharp_style_throw_expression",
       "description": "Prefer to use 'throw' expressions instead of 'throw' statements.",
       "values": [ true, false ],
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "suggestion",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#null_checking_csharp"
+      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0057"
     },
     {
       "name": "csharp_style_var_elsewhere",
@@ -658,6 +694,15 @@
       "severity": true,
       "defaultSeverity": "silent",
       "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#implicit-and-explicit-types"
+    },
+    {
+      "name": "csharp_style_unused_value_expression_statement_preference",
+      "description": "",
+      "values": [ "discard_variable", "unused_local_variable" ],
+      "defaultValue": [ "discard_variable" ],
+      "severity": true,
+      "defaultSeverity": "silent",
+      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0058"
     },
     {
       "name": "csharp_using_directive_placement",
@@ -815,7 +860,7 @@
     {
       "name": "csharp_space_around_declaration_statements",
       "description": "Undocumented property",
-      "values": [ "ignore", "do_not_ignore" ],
+      "values": [ "ignore", "false" ],
       "defaultValue": [ false ],
       "hidden": true
     },

@@ -263,6 +263,24 @@
       "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#expression_level"
     },
     {
+      "name": "dotnet_style_prefer_simplified_boolean_expressions",
+      "description": "This style rule concerns with simplification of conditional expressions that return constant value true or false versus retaining conditional expressions with explicit true or false return values.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "silent",
+      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0075"
+    },
+    {
+      "name": "dotnet_style_prefer_simplified_interpolation",
+      "description": "This style rule concerns with simplification of interpolated strings to improve code readability. It recommends removal of certain explicit method calls, such as ToString(), when the same method would be implicitly invoked by the compiler if the explicit method call is removed.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "silent",
+      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0071"
+    },
+    {
       "name": "dotnet_style_qualification_for_event",
       "description": "Prefer all non-static events referenced from within non-static methods to be prefaced with 'this.' in C# and 'Me.' in Visual Basic.",
       "values": [ true, false ],
@@ -422,6 +440,15 @@
       "severity": true,
       "defaultSeverity": "suggestion",
       "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#expression_level_csharp"
+    },
+    {
+      "name": "csharp_prefer_simple_using_statement",
+      "description": "This style rule concerns the use of using statements without curly braces. This alternative syntax was introduced in C# 8.0.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "suggestion",
+      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0063"
     },
     {
       "name": "csharp_style_deconstructed_variable_declaration",
@@ -615,6 +642,42 @@
       "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#expression_bodied_members"
     },
     {
+      "name": "csharp_style_prefer_index_operator",
+      "description": "This style rule concern the use of the index-from-end operator, which is available in C# 8.0 and later.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "suggestion",
+      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0056"
+    },
+    {
+      "name": "csharp_style_prefer_not_pattern",
+      "description": "This style rule concerns the use of C# 9.0 'not' pattern, when possible.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "suggestion",
+      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0083"
+    },
+    {
+      "name": "csharp_style_prefer_pattern_matching",
+      "description": "This style rule concerns the use of C# 9.0 pattern matching constructs, when possible.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "suggestion",
+      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0078"
+    },
+    {
+      "name": "csharp_style_prefer_switch_expression",
+      "description": "This style rule concerns the use of switch expressions versus switch statements.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "suggestion",
+      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0066"
+    },
+    {
       "name": "csharp_style_inlined_variable_declaration",
       "description": "Prefer 'out' variables to be declared inline when possible (e.g., 'if (int.TryParse(value out int i) {...}').",
       "values": [ true, false ],
@@ -664,6 +727,15 @@
       "description": "Prefer to use 'throw' expressions instead of 'throw' statements.",
       "values": [ true, false ],
       "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "suggestion",
+      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0057"
+    },
+    {
+      "name": "csharp_style_unused_value_assignment_preference",
+      "description": "This rule flags unnecessary value assignments.",
+      "values": [ "discard_variable", "unused_local_variable" ],
+      "defaultValue": [ "discard_variable" ],
       "severity": true,
       "defaultSeverity": "suggestion",
       "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0057"
@@ -819,6 +891,20 @@
       "values": [ "error", "warning", "suggestion", "silent", "refactoring", "none" ],
       "defaultValue": [ "unset" ],
       "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/code-quality/use-roslyn-analyzers?view=vs-2019#set-rule-severity-of-multiple-analyzer-rules-at-once-in-an-editorconfig-file"
+    },
+    {
+      "name": "dotnet_remove_unnecessary_suppression_exclusions",
+      "description": "Diagnostic severity configuration by category",
+      "values": [ "<rule IDs or categories>" ],
+      "defaultValue": [ "<rule IDs or categories>" ],
+      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0079"
+    },
+    {
+      "name": "dotnet_code_quality_unused_parameters",
+      "description": "This rule concerns with flagging unused parameters. The option value determines if unused parameters should be flagged only for non-public methods or for both public and non-public methods.",
+      "values": [ "all", "non_public" ],
+      "defaultValue": [ "all" ],
+      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0060"
     },
 
     // Undocumented properties

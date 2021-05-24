@@ -451,15 +451,6 @@
       "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0063"
     },
     {
-      "name": "csharp_style_deconstructed_variable_declaration",
-      "description": "Prefer deconstructed variable declaration.",
-      "values": [ true, false ],
-      "defaultValue": [ true ],
-      "severity": true,
-      "defaultSeverity": "suggestion",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#expression_level_csharp"
-    },
-    {
       "name": "csharp_style_implicit_object_creation_when_type_is_apparent",
       "description": "Prefer target-typed new expressions when created type is apparent.",
       "values": [ true, false ],

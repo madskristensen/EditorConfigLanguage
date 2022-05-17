@@ -705,6 +705,15 @@
       "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#expression_level_csharp"
     },
     {
+      "name": "csharp_style_prefer_local_over_anonymous_function",
+      "description": "Prefer local functions over anonymous functions.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "suggestion",
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#expression_level_csharp"
+    },
+    {
       "name": "csharp_style_pattern_matching_over_as_with_null_check",
       "description": "Prefer pattern matching instead of 'as' expressions with null-checks to determine if something is of a particular type (e.g., 'if (o is string s) {...}').",
       "values": [ true, false ],
@@ -793,6 +802,15 @@
       "severity": true,
       "defaultSeverity": "silent",
       "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-formatting-conventions#c-formatting-settings"
+    },
+    {
+      "name": "csharp_style_namespace_declarations",
+      "description": "Prefer block-scoped or file-scoped namespace declarations.",
+      "values": [ "block_scoped", "file_scoped" ],
+      "defaultValue": [ "block_scoped" ],
+      "severity": true,
+      "defaultSeverity": "silent",
+      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/formatting-rules#csharp_style_namespace_declarations"
     },
     // VB properties
     {
@@ -1006,6 +1024,62 @@
       "description": "Undocumented property",
       "values": [ true, false ],
       "defaultValue": [ false ],
+      "hidden": true
+    },
+    {
+      "name": "csharp_style_prefer_extended_property_pattern",
+      "description": "Undocumented property.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "defaultSeverity": "suggestion",
+      "hidden": true
+    },
+    {
+      "name": "csharp_style_prefer_method_group_conversion",
+      "description": "Undocumented property",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "defaultSeverity": "silent",
+      "hidden": true
+    },
+    {
+      "name": "csharp_style_prefer_null_check_over_type_check",
+      "description": "Undocumented property",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "defaultSeverity": "suggestion",
+      "hidden": true
+    },
+    {
+      "name": "csharp_style_prefer_parameter_null_checking",
+      "description": "Undocumented property",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "defaultSeverity": "suggestion",
+      "hidden": true
+    },
+    {
+      "name": "csharp_style_prefer_top_level_statements",
+      "description": "Undocumented property",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "defaultSeverity": "silent",
+      "hidden": true
+    },
+    {
+      "name": "csharp_style_prefer_tuple_swap",
+      "description": "Undocumented property",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "defaultSeverity": "suggestion",
+      "hidden": true
+    },
+    {
+      "name": "csharp_style_prefer_utf8_string_literals",
+      "description": "Undocumented property",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "defaultSeverity": "suggestion",
       "hidden": true
     }
   ]

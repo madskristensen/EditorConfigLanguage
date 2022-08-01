@@ -812,6 +812,72 @@
       "defaultSeverity": "silent",
       "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/formatting-rules#csharp_style_namespace_declarations"
     },
+    {
+      "name": "csharp_indent_block_contents",
+      "description": "Indent block contents.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/csharp-formatting-options#csharp_indent_block_contents"
+    },
+    {
+      "name": "csharp_indent_braces",
+      "description": "Indent curly braces.",
+      "values": [ true, false ],
+      "defaultValue": [ false ],
+      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/csharp-formatting-options#csharp_indent_braces"
+    },
+    {
+      "name": "csharp_space_before_open_square_brackets",
+      "description": "Insert space before opening square brackets",
+      "values": [ true, false ],
+      "defaultValue": [ false ],
+      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/csharp-formatting-options#csharp_space_before_open_square_brackets"
+    },
+    {
+      "name": "csharp_space_between_empty_square_brackets",
+      "description": "Insert space between empty square brackets",
+      "values": [ true, false ],
+      "defaultValue": [ false ],
+      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/csharp-formatting-options#csharp_space_between_empty_square_brackets"
+    },
+    {
+      "name": "csharp_space_between_method_declaration_name_and_open_parenthesis",
+      "description": "Place a space character between the method name and opening parenthesis in the method declaration",
+      "values": [ true, false ],
+      "defaultValue": [ false ],
+      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/csharp-formatting-options#csharp_space_between_method_declaration_name_and_open_parenthesis"
+    },
+    {
+      "name": "csharp_space_between_square_brackets",
+      "description": "Insert space characters in non-empty square brackets",
+      "values": [ true, false ],
+      "defaultValue": [ false ],
+      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/csharp-formatting-options#csharp_space_between_square_brackets"
+    },
+    {
+      "name": "csharp_style_prefer_extended_property_pattern",
+      "description": "Prefer the extended property pattern.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "defaultSeverity": "suggestion",
+      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0170#csharp_style_prefer_extended_property_pattern"
+    },
+    {
+      "name": "csharp_style_prefer_null_check_over_type_check",
+      "description": "Prefer null check over type check.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "defaultSeverity": "suggestion",
+      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0150#csharp_style_prefer_null_check_over_type_check"
+    },
+    {
+      "name": "csharp_style_prefer_tuple_swap",
+      "description": "Prefer using a tuple to swap two values.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "defaultSeverity": "suggestion",
+      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0180#csharp_style_prefer_tuple_swap"
+    },
     // VB properties
     {
       "name": "visual_basic_preferred_modifier_order",
@@ -936,20 +1002,6 @@
 
     // Undocumented properties
     {
-      "name": "csharp_indent_block_contents",
-      "description": "Undocumented property",
-      "values": [ true, false ],
-      "defaultValue": [ true ],
-      "hidden": true
-    },
-    {
-      "name": "csharp_indent_braces",
-      "description": "Undocumented property",
-      "values": [ true, false ],
-      "defaultValue": [ false ],
-      "hidden": true
-    },
-    {
       "name": "csharp_space_after_comma",
       "description": "Undocumented property",
       "values": [ true, false ],
@@ -992,46 +1044,10 @@
       "hidden": true
     },
     {
-      "name": "csharp_space_before_open_square_brackets",
-      "description": "Undocumented property",
-      "values": [ true, false ],
-      "defaultValue": [ false ],
-      "hidden": true
-    },
-    {
       "name": "csharp_space_before_semicolon_in_for_statement",
       "description": "Undocumented property",
       "values": [ true, false ],
       "defaultValue": [ false ],
-      "hidden": true
-    },
-    {
-      "name": "csharp_space_between_empty_square_brackets",
-      "description": "Undocumented property",
-      "values": [ true, false ],
-      "defaultValue": [ false ],
-      "hidden": true
-    },
-    {
-      "name": "csharp_space_between_method_declaration_name_and_open_parenthesis",
-      "description": "Undocumented property",
-      "values": [ true, false ],
-      "defaultValue": [ false ],
-      "hidden": true
-    },
-    {
-      "name": "csharp_space_between_square_brackets",
-      "description": "Undocumented property",
-      "values": [ true, false ],
-      "defaultValue": [ false ],
-      "hidden": true
-    },
-    {
-      "name": "csharp_style_prefer_extended_property_pattern",
-      "description": "Undocumented property.",
-      "values": [ true, false ],
-      "defaultValue": [ true ],
-      "defaultSeverity": "suggestion",
       "hidden": true
     },
     {
@@ -1040,14 +1056,6 @@
       "values": [ true, false ],
       "defaultValue": [ true ],
       "defaultSeverity": "silent",
-      "hidden": true
-    },
-    {
-      "name": "csharp_style_prefer_null_check_over_type_check",
-      "description": "Undocumented property",
-      "values": [ true, false ],
-      "defaultValue": [ true ],
-      "defaultSeverity": "suggestion",
       "hidden": true
     },
     {
@@ -1064,14 +1072,6 @@
       "values": [ true, false ],
       "defaultValue": [ true ],
       "defaultSeverity": "silent",
-      "hidden": true
-    },
-    {
-      "name": "csharp_style_prefer_tuple_swap",
-      "description": "Undocumented property",
-      "values": [ true, false ],
-      "defaultValue": [ true ],
-      "defaultSeverity": "suggestion",
       "hidden": true
     },
     {

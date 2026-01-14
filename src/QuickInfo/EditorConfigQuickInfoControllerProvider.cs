@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
@@ -17,7 +17,10 @@ namespace EditorConfig
 
         public IIntellisenseController TryCreateIntellisenseController(ITextView textView, IList<ITextBuffer> subjectBuffers)
         {
-            if (EditorConfigPackage.Language.Preferences.EnableQuickInfo && subjectBuffers.Count > 0)
+            // Check if package is loaded; if not, default to enabling QuickInfo
+            bool enableQuickInfo = EditorConfigPackage.Language?.Preferences?.EnableQuickInfo ?? true;
+
+            if (enableQuickInfo && subjectBuffers.Count > 0)
             {
                 return textView.Properties.GetOrCreateSingletonProperty(() => new EditorConfigQuickInfoController(textView, subjectBuffers, this));
             }

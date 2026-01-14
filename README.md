@@ -1,21 +1,26 @@
-# EditorConfig
+# EditorConfig Language Service
 
-[![Build status](https://ci.appveyor.com/api/projects/status/ybr0kd6wjefu7893?svg=true)](https://ci.appveyor.com/project/madskristensen/editorconfiglanguage)
+[![Build](https://github.com/madskristensen/EditorConfigLanguage/actions/workflows/build.yaml/badge.svg)](https://github.com/madskristensen/EditorConfigLanguage/actions/workflows/build.yaml)
+[![Visual Studio Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/MadsKristensen.EditorConfig)](https://marketplace.visualstudio.com/items?itemName=MadsKristensen.EditorConfig)
+[![Visual Studio Marketplace Downloads](https://img.shields.io/visual-studio-marketplace/d/MadsKristensen.EditorConfig)](https://marketplace.visualstudio.com/items?itemName=MadsKristensen.EditorConfig)
+[![Visual Studio Marketplace Rating](https://img.shields.io/visual-studio-marketplace/r/MadsKristensen.EditorConfig)](https://marketplace.visualstudio.com/items?itemName=MadsKristensen.EditorConfig)
 
-Download this extension from the [VS Marketplace](https://marketplace.visualstudio.com/items?itemName=MadsKristensen.EditorConfig)
-or get the [CI build](http://vsixgallery.com/extension/1209461d-57f8-46a4-814a-dbe5fecef941/).
+Download this extension from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=MadsKristensen.EditorConfig)
+or get the [CI build](https://www.vsixgallery.com/extension/1209461d-57f8-46a4-814a-dbe5fecef941/).
 
 ---------------------------------------
 
-[The EditorConfig Project](http://editorconfig.org/) helps developers define and maintain consistent coding styles between different editors and IDEs.
+**Provides full language support for .editorconfig files in Visual Studio, including IntelliSense, validation, and formatting.**
 
-Visual Studio 2017 natively supports .editorconfig files, but it doesn't give language support for editing those files. This extension provides that
+[The EditorConfig Project](https://editorconfig.org/) helps developers define and maintain consistent coding styles between different editors and IDEs.
 
-For Visual Studio version 2010 to 2015, get the [EditorConfig extension](https://marketplace.visualstudio.com/items?itemName=EditorConfigTeam.EditorConfig) instead.
+Visual Studio natively supports .editorconfig files, but it doesn't provide rich language support for editing those files. This extension fills that gap with IntelliSense, validation, formatting, and more.
+
+> **Note:** This extension requires Visual Studio 2022 (17.0) or newer.
 
 See the [change log](CHANGELOG.md) for changes and road map.
 
-Need help getting started with commands? Check out [Microsoft's Reference Guide](https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference) for details and examples of coding styles available
+Need help getting started? Check out [Microsoft's EditorConfig documentation](https://learn.microsoft.com/visualstudio/ide/create-portable-custom-editor-options) for details and examples of coding styles available.
 
 ## Features
 
@@ -49,7 +54,7 @@ Full colorization of the full .editorconfig syntax.
 ![Classification](art/classification.png)
 
 ### <a name="csharp_net_style_analyzers">C# and .NET Style Analyzers</a>
-Visual Studio 2017 lets you add C# and .NET specific rules to the .editorconfig file. In addition to enabling various rules, a severity is also added to control how Visual Studio is going to handle these rules. 
+Visual Studio lets you add C# and .NET specific rules to the .editorconfig file. In addition to enabling various rules, a severity is also added to control how Visual Studio is going to handle these rules.
 
 ![C# and .NET style analyzers](art/csharp-analyzers.png)
 
@@ -130,7 +135,7 @@ The inheritance visualizer is located at the bottom right corner of the editor w
 
 You can navigate to the immediate parent document by hitting **F12**. You can change the shortcut under Tools -> Options -> Environment -> Keyboard and find the command called *EditorConfig.NavigateToParent*.
 
-Note, the inheritance visualizer is only visible when the current file isn't the root of the hierarchys or by specifying the `root = true` property.
+Note, the inheritance visualizer is only visible when the current file isn't the root of the hierarchy or by specifying the `root = true` property.
 
 ### <a name="settings">Settings</a>
 Change the behavior of the editor from **Tools -> Options** or simply by right-clicking in the editor.
@@ -143,17 +148,16 @@ Change the behavior of the editor from **Tools -> Options** or simply by right-c
 Check out the [contribution guidelines](.github/CONTRIBUTING.md)
 if you want to contribute to this project.
 
-For cloning and building this project yourself, make sure
-to install the
-[Extensibility Tools 2015](https://visualstudiogallery.msdn.microsoft.com/ab39a092-1343-46e2-b0f1-6a3f91155aa6)
-extension for Visual Studio which enables some features
-used by this project.
+To build this project locally:
+1. Clone the repository
+2. Open `EditorConfigLanguage.sln` in Visual Studio 2022
+3. Build and run (F5) to test in the Experimental Instance
 
-References to available formatting/code options directly from Roslyn codebase
-- [CSharp Portable Formatting Options](https://github.com/dotnet/roslyn/blob/master/src/Workspaces/CSharp/Portable/Formatting/CSharpFormattingOptions.cs)
-- [CSharp Portable Code Style Options](https://github.com/dotnet/roslyn/blob/master/src/Workspaces/CSharp/Portable/CodeStyle/CSharpCodeStyleOptions.cs)
-- [DotNet Portable Formatting Options](https://github.com/dotnet/roslyn/blob/master/src/Workspaces/Core/Portable/Formatting/FormattingOptions.cs)
-- [DotNet Portable Code Style Options](https://github.com/dotnet/roslyn/blob/master/src/Workspaces/Core/Portable/CodeStyle/CodeStyleOptions.cs)
+References to available formatting/code options directly from Roslyn codebase:
+- [CSharp Formatting Options](https://github.com/dotnet/roslyn/blob/main/src/Workspaces/CSharp/Portable/Formatting/CSharpFormattingOptions.cs)
+- [CSharp Code Style Options](https://github.com/dotnet/roslyn/blob/main/src/Workspaces/CSharp/Portable/CodeStyle/CSharpCodeStyleOptions.cs)
+- [.NET Formatting Options](https://github.com/dotnet/roslyn/blob/main/src/Workspaces/Core/Portable/Formatting/FormattingOptions.cs)
+- [.NET Code Style Options](https://github.com/dotnet/roslyn/blob/main/src/Workspaces/Core/Portable/CodeStyle/CodeStyleOptions2.cs)
 
 ### <a name="license">License</a>
 [Apache 2.0](LICENSE)

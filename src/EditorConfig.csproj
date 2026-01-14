@@ -13,8 +13,8 @@
     <ProjectGuid>{428EFC5A-7AC4-4CE4-8A37-D402B8A03EB4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CommentsVS</RootNamespace>
-    <AssemblyName>CommentsVS</AssemblyName>
+    <RootNamespace>EditorConfig</RootNamespace>
+    <AssemblyName>EditorConfig</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <GeneratePkgDefFile>true</GeneratePkgDefFile>
     <UseCodebase>true</UseCodebase>

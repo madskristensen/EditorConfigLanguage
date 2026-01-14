@@ -10,11 +10,9 @@ namespace EditorConfig
     {
         public const string Id = "1209461d-57f8-46a4-814a-dbe5fecef941";
         public const string Name = "EditorConfig Language Service";
-        public const string Description = @"Language service for .editorconfig files.
-
-EditorConfig helps developers define and maintain consistent coding styles between different editors and IDEs.";
+        public const string Description = @"Language service for .editorconfig files with IntelliSense, validation and more. Supports .NET specific rules and severities";
         public const string Language = "en-US";
-        public const string Version = "1.17";
+        public const string Version = "1.18";
         public const string Author = "Mads Kristensen";
         public const string Tags = "editorconfig";
         public const bool IsPreview = false;

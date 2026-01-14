@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.PlatformUI;
+using Microsoft.VisualStudio.PlatformUI;
+using Microsoft.VisualStudio.Shell;
 using System.Windows.Controls;
 
 namespace EditorConfig.Shared
@@ -16,6 +17,8 @@ namespace EditorConfig.Shared
 
             Loaded += (s, e) =>
             {
+                ThreadHelper.ThrowIfNotOnUIThread();
+
                 ItemName.Content = PrettifyName(item);
                 ItemName.SetResourceReference(TextBlock.ForegroundProperty, EnvironmentColors.SystemMenuTextBrushKey);
 

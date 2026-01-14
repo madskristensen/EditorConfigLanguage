@@ -2,7 +2,7 @@
   "$schema": "http://json.schemastore.org/vsix-publish",
   "categories": [ "coding" ],
   "identity": {
-    "internalName": "EditorConfigLanguageService",
+    "internalName": "EditorConfig",
     "tags": [ "editorconfig", "formatting", "intellisense", "validation", "code style" ]
   },
   "assetFiles": [

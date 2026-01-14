@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Package;
@@ -121,7 +121,7 @@ namespace EditorConfig
 
         private void SyncDropDowns()
         {
-            ThreadHelper.JoinableTaskFactory.StartOnIdle(
+            _ = ThreadHelper.JoinableTaskFactory.StartOnIdle(
                 () =>
                 {
                     _languageService.SynchronizeDropdowns();

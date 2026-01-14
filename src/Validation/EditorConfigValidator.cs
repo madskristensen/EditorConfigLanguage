@@ -30,12 +30,12 @@ namespace EditorConfig
         private EditorConfigValidator(EditorConfigDocument document)
         {
             _document = document;
-            _document.Parsed += DocumentParsedAsync;
+            _document.Parsed += DocumentParsed;
 
             if (_prevEnabled)
-                ValidateAsync().ConfigureAwait(false);
+                _ = ValidateAsync();
 
-            ValidationOptions.Saved += DocumentParsedAsync;
+            ValidationOptions.Saved += DocumentParsed;
         }
 
         public bool IsValidating { get; private set; }
@@ -46,7 +46,7 @@ namespace EditorConfig
             return document.TextBuffer.Properties.GetOrCreateSingletonProperty(() => new EditorConfigValidator(document));
         }
 
-        private async void DocumentParsedAsync(object sender, EventArgs e)
+        private void DocumentParsed(object sender, EventArgs e)
         {
             if (!EditorConfigPackage.ValidationOptions.EnableValidation)
             {
@@ -59,7 +59,7 @@ namespace EditorConfig
             }
             else
             {
-                await RequestValidationAsync(false);
+                _ = RequestValidationAsync(false);
             }
 
             _prevEnabled = EditorConfigPackage.ValidationOptions.EnableValidation;
@@ -81,7 +81,7 @@ namespace EditorConfig
                 if (_timer == null)
                 {
                     _timer = new Timer(_validationDelay);
-                    _timer.Elapsed += TimerElapsedAsync;
+                    _timer.Elapsed += TimerElapsed;
                 }
 
                 _hasChanged = true;
@@ -89,12 +89,12 @@ namespace EditorConfig
             }
         }
 
-        private async void TimerElapsedAsync(object sender, ElapsedEventArgs e)
+        private void TimerElapsed(object sender, ElapsedEventArgs e)
         {
             if (DateTime.Now.AddMilliseconds(-_validationDelay) > _lastRequestForValidation && _hasChanged && !_document.IsParsing)
             {
                 _timer.Stop();
-                await ValidateAsync();
+                _ = ValidateAsync();
             }
         }
 
@@ -165,8 +165,8 @@ namespace EditorConfig
 
             Validated = null;
 
-            _document.Parsed -= DocumentParsedAsync;
-            ValidationOptions.Saved -= DocumentParsedAsync;
+            _document.Parsed -= DocumentParsed;
+            ValidationOptions.Saved -= DocumentParsed;
         }
 
         public event EventHandler Validated;

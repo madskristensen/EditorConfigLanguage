@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="1209461d-57f8-46a4-814a-dbe5fecef941" Version="1.17" Language="en-US" Publisher="Mads Kristensen" />
+        <Identity Id="1209461d-57f8-46a4-814a-dbe5fecef941" Version="1.18" Language="en-US" Publisher="Mads Kristensen" />
         <DisplayName>EditorConfig Language Service</DisplayName>
-        <Description xml:space="preserve">Language service for .editorconfig files.
-
-EditorConfig helps developers define and maintain consistent coding styles between different editors and IDEs.</Description>
+        <Description xml:space="preserve">Language service for .editorconfig files with IntelliSense, validation and more. Supports .NET specific rules and severities</Description>
         <MoreInfo>https://github.com/madskristensen/EditorConfigLanguage</MoreInfo>
         <License>Resources\LICENSE</License>
         <ReleaseNotes>https://github.com/madskristensen/EditorConfigLanguage/blob/master/CHANGELOG.md</ReleaseNotes>

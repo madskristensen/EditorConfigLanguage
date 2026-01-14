@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Adornments;
 using Microsoft.VisualStudio.Text.Editor;
@@ -25,7 +25,7 @@ namespace EditorConfig
             _validator = EditorConfigValidator.FromDocument(_document);
             _validator.Validated += DocumentValidated;
 
-            ThreadHelper.JoinableTaskFactory.StartOnIdle(
+            _ = ThreadHelper.JoinableTaskFactory.StartOnIdle(
                 () =>
                 {
                     _hasLoaded = true;

@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using System;
 using System.ComponentModel.Design;
@@ -23,6 +23,8 @@ namespace EditorConfig
 
         private void BeforeQueryStatus(object sender, EventArgs e)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             var button = (OleMenuCommand)sender;
             button.Enabled = button.Visible = VsHelpers.DTE.ActiveDocument?.Language == Constants.LanguageName;
         }

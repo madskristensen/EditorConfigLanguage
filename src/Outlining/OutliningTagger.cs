@@ -62,7 +62,7 @@ namespace EditorConfig
 
         private void StartParsing()
         {
-            ThreadHelper.JoinableTaskFactory.StartOnIdle(
+            _ = ThreadHelper.JoinableTaskFactory.StartOnIdle(
                 () =>
                 {
                     if (TagsChanged == null || _document.IsParsing)

@@ -1,4 +1,4 @@
-﻿using EnvDTE;
+using EnvDTE;
 using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -41,12 +42,16 @@ namespace EditorConfig
                 _adornmentLayer.AddAdornment(AdornmentPositioningBehavior.ViewportRelative, null, null, this, null);
         }
 
-        private async void InheritanceUpdated(object sender, EventArgs e)
-        {
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-
-            CreateImage();
-        }
+                private void InheritanceUpdated(object sender, EventArgs e)
+                {
+        #pragma warning disable VSSDK007 // Await/join tasks created from ThreadHelper.JoinableTaskFactory.RunAsync
+                    _ = ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                    {
+                        await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                        CreateImage();
+                    });
+        #pragma warning restore VSSDK007 // Await/join tasks created from ThreadHelper.JoinableTaskFactory.RunAsync
+                }
 
         private void FileActionOccurred(object sender, TextDocumentFileActionEventArgs e)
         {

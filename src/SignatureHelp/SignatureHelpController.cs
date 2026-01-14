@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
@@ -62,7 +62,7 @@ namespace EditorConfig
                 if (quickInfoSession != null)
                     ThreadHelper.JoinableTaskFactory.Run(async () => await quickInfoSession.DismissAsync());
 
-                ThreadHelper.JoinableTaskFactory.StartOnIdle(
+                _ = ThreadHelper.JoinableTaskFactory.StartOnIdle(
                     () =>
                     {
                         _session = _signaturehelpBroker.TriggerSignatureHelp(_view);

@@ -1,11 +1,11 @@
-﻿using EditorConfig;
+using EditorConfig;
 using System.Threading.Tasks;
 
 namespace EditorConfigTest
 {
     public static class Extensions
     {
-        public static async Task WaitForParsingComplete(this EditorConfigDocument document)
+        public static async Task WaitForParsingCompleteAsync(this EditorConfigDocument document)
         {
             while (document.IsParsing)
             {

@@ -18,7 +18,7 @@ namespace EditorConfigTest
             ITextBuffer buffer = Mef.CreateTextBuffer(Samples.OneSectionStandard);
             var doc = EditorConfigDocument.FromTextBuffer(buffer);
 
-            await doc.WaitForParsingComplete();
+            await doc.WaitForParsingCompleteAsync();
 
             Assert.HasCount(12, doc.ParseItems);
             Assert.AreEqual(ItemType.Keyword, doc.ParseItems[0].ItemType);
@@ -41,7 +41,7 @@ namespace EditorConfigTest
             ITextBuffer buffer = Mef.CreateTextBuffer(Samples.MultipleValuesSection);
             var doc = EditorConfigDocument.FromTextBuffer(buffer);
 
-            await doc.WaitForParsingComplete();
+            await doc.WaitForParsingCompleteAsync();
 
             Assert.HasCount(3, doc.ParseItems);
             Assert.AreEqual("accessors, indexers", doc.ParseItems.Last().Text);
@@ -53,7 +53,7 @@ namespace EditorConfigTest
             ITextBuffer buffer = Mef.CreateTextBuffer(Samples.Suppression);
             var doc = EditorConfigDocument.FromTextBuffer(buffer);
 
-            await doc.WaitForParsingComplete();
+            await doc.WaitForParsingCompleteAsync();
 
             Assert.HasCount(3, doc.ParseItems);
             Assert.AreEqual("EC101", doc.ParseItems[1].Text);

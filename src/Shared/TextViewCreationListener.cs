@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.OLE.Interop;
@@ -69,32 +69,37 @@ namespace EditorConfig
 
             if (DocumentService.TryGetTextDocument(_buffer, out ITextDocument document))
             {
-                document.FileActionOccurred += DocumentSavedAsync;
+                document.FileActionOccurred += DocumentSaved;
             }
 
             view.Closed += OnViewClosed;
         }
 
-        private async void DocumentSavedAsync(object sender, TextDocumentFileActionEventArgs e)
-        {
-            if (e.FileActionType != FileActionTypes.ContentSavedToDisk)
-                return;
+                        private void DocumentSaved(object sender, TextDocumentFileActionEventArgs e)
+                        {
+                            if (e.FileActionType != FileActionTypes.ContentSavedToDisk)
+                                return;
 
-            if (_buffer != null && _buffer.Properties.TryGetProperty(typeof(EditorConfigValidator), out EditorConfigValidator val))
-            {
-                await val.RequestValidationAsync(true);
-            }
+                #pragma warning disable VSSDK007 // Await/join tasks created from ThreadHelper.JoinableTaskFactory.RunAsync
+                            _ = ThreadHelper.JoinableTaskFactory.RunAsync(async delegate
+                            {
+                                if (_buffer != null && _buffer.Properties.TryGetProperty(typeof(EditorConfigValidator), out EditorConfigValidator val))
+                                {
+                                    await val.RequestValidationAsync(true);
+                                }
 
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
-            var statusBar = Package.GetGlobalService(typeof(SVsStatusbar)) as IVsStatusbar;
-            statusBar.IsFrozen(out int frozen);
+                                var statusBar = Package.GetGlobalService(typeof(SVsStatusbar)) as IVsStatusbar;
+                                statusBar.IsFrozen(out int frozen);
 
-            if (frozen == 0)
-            {
-                statusBar.SetText("Saved. Open documents must be reopened for .editorconfig changes to take effect");
-            }
-        }
+                                if (frozen == 0)
+                                {
+                                    statusBar.SetText("Saved. Open documents must be reopened for .editorconfig changes to take effect");
+                                }
+                            });
+                #pragma warning restore VSSDK007 // Await/join tasks created from ThreadHelper.JoinableTaskFactory.RunAsync
+                        }
 
         private void AddCommandFilter(IVsTextView textViewAdapter, BaseCommand command)
         {

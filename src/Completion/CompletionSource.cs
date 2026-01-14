@@ -40,9 +40,19 @@ namespace EditorConfig
             ParseItem prev = _document.ParseItems.LastOrDefault(p => p.Span.Start < position && !p.Span.Contains(position - 1));
             ParseItem parseItem = _document.ItemAtPosition(position);
             string moniker = null;
+            string lineText = line.GetText();
+
+            // Determine what type of completion to show
+            bool isTypingNewKeyword = !string.IsNullOrWhiteSpace(lineText) &&
+                                      !lineText.Contains("=") &&
+                                      !lineText.TrimStart().StartsWith("[") &&
+                                      !lineText.TrimStart().StartsWith("#") &&
+                                      !lineText.TrimStart().StartsWith(";");
+
+            bool isInSeverityPosition = IsInSeverityPosition(lineText, position - line.Start.Position);
 
             // Property/Keyword completion
-            if (string.IsNullOrWhiteSpace(line.GetText()) || parseItem?.ItemType == ItemType.Keyword)
+            if (string.IsNullOrWhiteSpace(lineText) || parseItem?.ItemType == ItemType.Keyword || isTypingNewKeyword)
             {
                 bool isInRoot = !_document.ParseItems.Exists(p => p.ItemType == ItemType.Section && p.Span.Start < position);
 
@@ -80,7 +90,17 @@ namespace EditorConfig
 
                 moniker = "keyword";
             }
-            // Value completion - check if we're in a value position on the line
+            // Severity completion - check BEFORE value completion
+            else if (isInSeverityPosition || parseItem?.ItemType == ItemType.Severity)
+            {
+                Keyword keyword = GetKeywordForLine(line);
+                if (keyword != null && keyword.RequiresSeverity)
+                {
+                    AddSeverity(list);
+                    moniker = "severity";
+                }
+            }
+            // Value completion
             else if (parseItem?.ItemType == ItemType.Value || IsInValuePosition(line, position))
             {
                 Keyword keyword = GetKeywordForLine(line);
@@ -114,18 +134,6 @@ namespace EditorConfig
 
                 moniker = "value";
             }
-            // Severity completion
-            else if ((position > 0 && snapshot.Length > 1 && snapshot.GetText(position - 1, 1) == ":") || parseItem?.ItemType == ItemType.Severity)
-            {
-                if (prev?.ItemType == ItemType.Value || parseItem?.ItemType == ItemType.Severity)
-                {
-                    Property prop = _document.PropertyAtPosition(prev.Span.Start);
-                    if (SchemaCatalog.TryGetKeyword(prop?.Keyword?.Text, out Keyword key) && key.RequiresSeverity)
-                        AddSeverity(list);
-
-                    moniker = "severity";
-                }
-            }
             // Suppression completion
             else if (parseItem?.ItemType == ItemType.Suppression)
             {
@@ -145,7 +153,30 @@ namespace EditorConfig
         }
 
         /// <summary>
-        /// Checks if the position is in a value position (after the = sign) on the line.
+        /// Checks if the position is in a severity position (after the : that follows a value).
+        /// </summary>
+        private static bool IsInSeverityPosition(string lineText, int posInLine)
+        {
+            int eq = lineText.IndexOf('=');
+            if (eq < 0 || posInLine <= eq)
+                return false;
+
+            // Find the last : in the value portion (after =)
+            string afterEq = lineText.Substring(eq + 1);
+            int colonIndex = afterEq.LastIndexOf(':');
+            
+            if (colonIndex < 0)
+                return false;
+
+            // The colon position in the line
+            int colonPosInLine = eq + 1 + colonIndex;
+            
+            // We're in severity position if cursor is after the colon
+            return posInLine > colonPosInLine;
+        }
+
+        /// <summary>
+        /// Checks if the position is in a value position (after the = sign but not in severity position).
         /// </summary>
         private static bool IsInValuePosition(SnapshotSpan line, int position)
         {
@@ -155,6 +186,12 @@ namespace EditorConfig
                 return false;
 
             int eqPos = eq + line.Start.Position;
+            int posInLine = position - line.Start.Position;
+            
+            // Not in value position if we're in severity position
+            if (IsInSeverityPosition(lineText, posInLine))
+                return false;
+            
             return position > eqPos;
         }
 
@@ -197,55 +234,105 @@ namespace EditorConfig
 
         /// <summary>
         /// Gets the applicable span for completion - the text that will be replaced when a completion is selected.
-        /// For multi-value properties, this is just the current value segment, not the entire value list.
         /// </summary>
         private static ITrackingSpan GetApplicableSpan(ITextSnapshot snapshot, SnapshotSpan line, int position)
         {
             string lineText = line.GetText();
             int posInLine = position - line.Start.Position;
 
-            // Find the start of the current value (after = or ,)
-            int valueStart = posInLine;
-            for (int i = posInLine - 1; i >= 0; i--)
+            bool isKeywordPosition = !lineText.Contains("=");
+            bool isSeverityPosition = IsInSeverityPosition(lineText, posInLine);
+
+            int spanStart;
+            int spanEnd;
+
+            if (isKeywordPosition)
             {
-                char c = lineText[i];
-                if (c == '=' || c == ',')
+                // For keywords: find start of word (skip leading whitespace)
+                spanStart = 0;
+                while (spanStart < lineText.Length && char.IsWhiteSpace(lineText[spanStart]))
+                    spanStart++;
+
+                // End is at cursor position or end of current word
+                spanEnd = posInLine;
+                for (int i = posInLine; i < lineText.Length; i++)
                 {
-                    valueStart = i + 1;
-                    // Skip whitespace after delimiter
-                    while (valueStart < lineText.Length && char.IsWhiteSpace(lineText[valueStart]))
-                        valueStart++;
-                    break;
+                    if (char.IsWhiteSpace(lineText[i]))
+                        break;
+                    spanEnd = i + 1;
                 }
             }
-
-            // Find the end of the current value (before , or : or end of line)
-            int valueEnd = posInLine;
-            for (int i = posInLine; i < lineText.Length; i++)
+            else if (isSeverityPosition)
             {
-                char c = lineText[i];
-                if (c == ',' || c == ':' || c == ';' || c == '#')
+                // For severity: find start after the last :
+                int eq = lineText.IndexOf('=');
+                string afterEq = lineText.Substring(eq + 1);
+                int colonIndex = afterEq.LastIndexOf(':');
+                spanStart = eq + 1 + colonIndex + 1;
+                
+                // Skip whitespace after :
+                while (spanStart < lineText.Length && char.IsWhiteSpace(lineText[spanStart]))
+                    spanStart++;
+
+                // End is at end of line or before comment
+                spanEnd = lineText.Length;
+                for (int i = spanStart; i < lineText.Length; i++)
                 {
-                    valueEnd = i;
-                    break;
+                    if (lineText[i] == '#' || lineText[i] == ';')
+                    {
+                        spanEnd = i;
+                        break;
+                    }
                 }
-                valueEnd = i + 1;
+
+                // Trim trailing whitespace
+                while (spanEnd > spanStart && char.IsWhiteSpace(lineText[spanEnd - 1]))
+                    spanEnd--;
+            }
+            else
+            {
+                // For values: find the start of the current value (after = or ,)
+                spanStart = posInLine;
+                for (int i = posInLine - 1; i >= 0; i--)
+                {
+                    char c = lineText[i];
+                    if (c == '=' || c == ',')
+                    {
+                        spanStart = i + 1;
+                        while (spanStart < lineText.Length && char.IsWhiteSpace(lineText[spanStart]))
+                            spanStart++;
+                        break;
+                    }
+                }
+
+                // Find the end of the current value (before , or : or end of line)
+                spanEnd = posInLine;
+                for (int i = posInLine; i < lineText.Length; i++)
+                {
+                    char c = lineText[i];
+                    if (c == ',' || c == ':' || c == ';' || c == '#')
+                    {
+                        spanEnd = i;
+                        break;
+                    }
+                    spanEnd = i + 1;
+                }
+
+                // Trim trailing whitespace
+                while (spanEnd > spanStart && char.IsWhiteSpace(lineText[spanEnd - 1]))
+                    spanEnd--;
             }
 
-            // Trim trailing whitespace
-            while (valueEnd > valueStart && char.IsWhiteSpace(lineText[valueEnd - 1]))
-                valueEnd--;
+            int absoluteStart = line.Start.Position + spanStart;
+            int spanLength = spanEnd - spanStart;
 
-            int spanStart = line.Start.Position + valueStart;
-            int spanLength = valueEnd - valueStart;
-
-            if (spanStart > position)
-                spanStart = position;
+            if (absoluteStart > position)
+                absoluteStart = position;
 
             if (spanLength < 0)
                 spanLength = 0;
 
-            return snapshot.CreateTrackingSpan(spanStart, spanLength, SpanTrackingMode.EdgeInclusive);
+            return snapshot.CreateTrackingSpan(absoluteStart, spanLength, SpanTrackingMode.EdgeInclusive);
         }
 
         private static void CreateCompletionSet(string moniker, IList<CompletionSet> completionSets, List<Completion4> list, ITrackingSpan applicableTo)

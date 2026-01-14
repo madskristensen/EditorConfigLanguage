@@ -108,7 +108,7 @@ namespace EditorConfig
 
         private async Task ValidateAsync()
         {
-            if (IsValidating) return;
+            if (IsValidating || _document.IsParsing) return;
 
             IsValidating = true;
 
@@ -119,8 +119,6 @@ namespace EditorConfig
                     ValidateUnknown();
                     ValidateRootProperties();
                     ValidateSections();
-
-                    Validated?.Invoke(this, EventArgs.Empty);
                 }
                 catch (Exception ex)
                 {
@@ -132,6 +130,8 @@ namespace EditorConfig
                     IsValidating = false;
                 }
             });
+
+            Validated?.Invoke(this, EventArgs.Empty);
         }
 
         public void SuppressError(string errorCode)

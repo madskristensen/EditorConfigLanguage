@@ -6,16 +6,14 @@ using Microsoft.VisualStudio.Text.Tagging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Task = System.Threading.Tasks.Task;
 
 namespace EditorConfig
 {
     class ErrorTagger : ITagger<IErrorTag>, IDisposable
     {
-        private EditorConfigDocument _document;
-        private IWpfTextView _view;
-        private EditorConfigValidator _validator;
-        private bool _hasLoaded;
+        private readonly EditorConfigDocument _document;
+        private readonly IWpfTextView _view;
+        private readonly EditorConfigValidator _validator;
 
         public ErrorTagger(IWpfTextView view)
         {
@@ -24,37 +22,39 @@ namespace EditorConfig
             _document = EditorConfigDocument.FromTextBuffer(view.TextBuffer);
             _validator = EditorConfigValidator.FromDocument(_document);
             _validator.Validated += DocumentValidated;
-
-            _ = ThreadHelper.JoinableTaskFactory.StartOnIdle(
-                () =>
-                {
-                    _hasLoaded = true;
-                    var span = new SnapshotSpan(view.TextBuffer.CurrentSnapshot, 0, view.TextBuffer.CurrentSnapshot.Length);
-                    TagsChanged?.Invoke(this, new SnapshotSpanEventArgs(span));
-                    return Task.CompletedTask;
-                },
-                VsTaskRunContext.UIThreadIdlePriority);
         }
 
         private void DocumentValidated(object sender, EventArgs e)
         {
-            var span = new SnapshotSpan(_view.TextBuffer.CurrentSnapshot, 0, _view.TextBuffer.CurrentSnapshot.Length);
-            TagsChanged?.Invoke(this, new SnapshotSpanEventArgs(span));
+            _ = ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+            {
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                var span = new SnapshotSpan(_view.TextBuffer.CurrentSnapshot, 0, _view.TextBuffer.CurrentSnapshot.Length);
+                TagsChanged?.Invoke(this, new SnapshotSpanEventArgs(span));
+            });
         }
 
         public IEnumerable<ITagSpan<IErrorTag>> GetTags(NormalizedSnapshotSpanCollection spans)
         {
             var tags = new List<ITagSpan<IErrorTag>>();
 
-            if (_document.IsParsing || _validator.IsValidating || !_hasLoaded || !spans.Any() || spans[0].IsEmpty)
+            if (_document.IsParsing || _validator.IsValidating || !spans.Any() || spans[0].IsEmpty)
                 return tags;
 
-            ITextSnapshotLine line = spans[0].Start.GetContainingLine();
-            IEnumerable<ParseItem> items = _document.ItemsInSpan(line.Extent);
+            // Get all items that have errors, regardless of span
+            IEnumerable<ParseItem> itemsWithErrors = _document.ParseItems?.Where(p => p.HasErrors) ?? [];
 
-            foreach (ParseItem item in items)
+            foreach (ParseItem item in itemsWithErrors)
             {
-                tags.AddRange(CreateError(item));
+                // Check if this item's span intersects with any requested span
+                foreach (SnapshotSpan requestedSpan in spans)
+                {
+                    if (requestedSpan.IntersectsWith(new Span(item.Span.Start, item.Span.Length)))
+                    {
+                        tags.AddRange(CreateError(item));
+                        break; // Don't add same item multiple times
+                    }
+                }
             }
 
             return tags;

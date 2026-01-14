@@ -411,7 +411,7 @@ namespace EditorConfig
                 }
             });
 
-            ErrorCatalog.SeverityNotApplicable.Run(property.Severity, !hasKeyword, (e) =>
+            ErrorCatalog.SeverityNotApplicable.Run(property.Severity, hasKeyword, (e) =>
             {
                 if (property.Severity != null && !keyword.RequiresSeverity)
                 {

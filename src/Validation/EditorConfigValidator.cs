@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Timers;
@@ -10,7 +10,7 @@ namespace EditorConfig
     partial class EditorConfigValidator : IDisposable
     {
         private const int _validationDelay = 500;
-        private static string[] _ignorePaths = { "\\node_modules", "\\.git", "\\packages", "\\bower_components", "\\jspm_packages", "\\testresults", "\\.vs" };
+        private static string[] _ignorePaths = ["\\node_modules", "\\.git", "\\packages", "\\bower_components", "\\jspm_packages", "\\testresults", "\\.vs"];
 
         private EditorConfigDocument _document;
         private DateTime _lastRequestForValidation;

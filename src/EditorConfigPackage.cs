@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
@@ -15,9 +15,9 @@ namespace EditorConfig
 
     [ProvideLanguageService(typeof(EditorConfigLanguage), Constants.LanguageName, 101, ShowCompletion = true, EnableAsyncCompletion = true, EnableAdvancedMembersOption = true, HideAdvancedMembersByDefault = false, QuickInfo = true, ShowDropDownOptions = true, DefaultToInsertSpaces = true, EnableCommenting = true, AutoOutlining = true, EnableLineNumbers = true, MatchBraces = true, MatchBracesAtCaret = true, ShowMatchingBrace = true)]
     [ProvideLanguageExtension(typeof(EditorConfigLanguage), Constants.FileName)]
-    [ProvideLanguageEditorOptionPage(typeof(FormatterOptions), Constants.LanguageName, null, "Formatting", "#101", new[] { "editorconfig", "formatting" })]
-    [ProvideLanguageEditorOptionPage(typeof(ValidationOptions), Constants.LanguageName, null, "Validation", "#102", new[] { "editorconfig", "validation" })]
-    [ProvideLanguageEditorOptionPage(typeof(CompletionOptions), Constants.LanguageName, null, "Intellisense", "#103", new[] { "editorconfig", "intellisenes", "completion" })]
+    [ProvideLanguageEditorOptionPage(typeof(FormatterOptions), Constants.LanguageName, null, "Formatting", "#101", ["editorconfig", "formatting"])]
+    [ProvideLanguageEditorOptionPage(typeof(ValidationOptions), Constants.LanguageName, null, "Validation", "#102", ["editorconfig", "validation"])]
+    [ProvideLanguageEditorOptionPage(typeof(CompletionOptions), Constants.LanguageName, null, "Intellisense", "#103", ["editorconfig", "intellisenes", "completion"])]
     [ProvideLanguageCodeExpansion(typeof(EditorConfigLanguage), Constants.LanguageName, 0, Constants.LanguageName, null, SearchPaths = @"$PackageFolder$\CodeExpansions\Snippets")]
     [ProvideEditorFactory(typeof(EditorFactory), 110, CommonPhysicalViewAttributes = (int)__VSPHYSICALVIEWATTRIBUTES.PVA_SupportsPreview, TrustLevel = __VSEDITORTRUSTLEVEL.ETL_AlwaysTrusted)]
     [ProvideEditorLogicalView(typeof(EditorFactory), VSConstants.LOGVIEWID.TextView_string, IsTrusted = true)]

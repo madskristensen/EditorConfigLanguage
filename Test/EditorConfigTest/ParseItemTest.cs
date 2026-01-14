@@ -1,4 +1,4 @@
-﻿using EditorConfig;
+using EditorConfig;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.VisualStudio.Text;
 
@@ -18,7 +18,7 @@ namespace EditorConfigTest
             Assert.IsFalse(a != c);
             Assert.IsTrue(a != b);
             Assert.IsFalse(a == b);
-            Assert.IsTrue(a.GetHashCode() != b.GetHashCode());
+            Assert.AreNotEqual(b.GetHashCode(), a.GetHashCode());
             Assert.IsTrue(a.Equals(a));
             Assert.IsTrue(a.Equals(c));
             Assert.IsFalse(a.Equals(b));

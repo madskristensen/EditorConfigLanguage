@@ -76,7 +76,7 @@ namespace EditorConfig
             }
 
             // Suppression
-            else if (item.ItemType == ItemType.Suppression && ErrorCatalog.TryGetErrorCode(item.Text, out var code))
+            else if (item.ItemType == ItemType.Suppression && ErrorCatalog.TryGetErrorCode(item.Text, out Error code))
             {
                 var element = new ContainerElement(ContainerElementStyle.Wrapped, new Shared.EditorTooltip(code));
                 return new QuickInfoItem(applicableToSpan, element);

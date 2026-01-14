@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text.Editor;
@@ -190,7 +190,7 @@ namespace EditorConfig
                     new Guid(_guid),
                     shortcut,
                     _vsTextView,
-                    new TextSpan[] { addSpan },
+                    [addSpan],
                     0,
                     out path,
                     out title);

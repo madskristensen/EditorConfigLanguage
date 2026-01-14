@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
@@ -384,7 +384,7 @@ namespace EditorConfig
                 {
                     if (keyword.SupportsMultipleValues)
                     {
-                        foreach (string value in property.Value.Text?.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                        foreach (string value in property.Value.Text?.Split([','], StringSplitOptions.RemoveEmptyEntries))
                         {
                             if (!keyword.Values.Any(v => v.Name.Is(value.Trim())))
                             {
@@ -428,7 +428,7 @@ namespace EditorConfig
             if (pattern.Equals("*"))
                 return true;
 
-            var matcher = AnalyzerConfig.TryCreateSectionNameMatcher(pattern);
+            AnalyzerConfig.SectionNameMatcher? matcher = AnalyzerConfig.TryCreateSectionNameMatcher(pattern);
             if (matcher is null)
                 return false;
 

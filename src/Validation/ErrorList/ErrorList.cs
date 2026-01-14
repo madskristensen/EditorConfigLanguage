@@ -1,4 +1,4 @@
-﻿using EnvDTE;
+using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
@@ -26,7 +26,7 @@ namespace EditorConfig
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
-            if (_documentService.TryGetTextDocument(view.TextBuffer, out var doc))
+            if (_documentService.TryGetTextDocument(view.TextBuffer, out ITextDocument doc))
             {
                 _file = doc.FilePath;
                 view.Properties.AddProperty("file", doc.FilePath);

@@ -1,4 +1,4 @@
-﻿// https://raw.githubusercontent.com/dotnet/roslyn/6a26fbc5d173392c0f8df604ecea12a9f806b1e4/src/Compilers/Core/Portable/CommandLine/AnalyzerConfig.SectionNameMatching.cs
+// https://raw.githubusercontent.com/dotnet/roslyn/6a26fbc5d173392c0f8df604ecea12a9f806b1e4/src/Compilers/Core/Portable/CommandLine/AnalyzerConfig.SectionNameMatching.cs
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
@@ -29,7 +29,7 @@ namespace EditorConfig
 
             public bool IsMatch(string s)
             {
-                var match = Regex.Match(s);
+                Match match = Regex.Match(s);
                 if (!match.Success)
                 {
                     return false;
@@ -38,7 +38,7 @@ namespace EditorConfig
                 Debug.Assert(match.Groups.Count - 1 == _numberRangePairs.Length);
                 for (int i = 0; i < _numberRangePairs.Length; i++)
                 {
-                    var (minValue, maxValue) = _numberRangePairs[i];
+                    (int minValue, int maxValue) = _numberRangePairs[i];
                     // Index 0 is the whole regex
                     if (!int.TryParse(match.Groups[i + 1].Value, out int matchedNum) ||
                         matchedNum < minValue ||
@@ -96,7 +96,7 @@ namespace EditorConfig
             }
 
             var lexer = new SectionNameLexer(sectionName);
-            var numberRangePairs = ImmutableArray.CreateBuilder<(int minValue, int maxValue)>();
+            ImmutableArray<(int minValue, int maxValue)>.Builder numberRangePairs = ImmutableArray.CreateBuilder<(int minValue, int maxValue)>();
             if (!TryCompilePathList(ref lexer, sb, parsingChoice: false, numberRangePairs))
             {
                 return null;
@@ -125,7 +125,7 @@ namespace EditorConfig
         {
             while (!lexer.IsDone)
             {
-                var tokenKind = lexer.Lex();
+                TokenKind tokenKind = lexer.Lex();
                 switch (tokenKind)
                 {
                     case TokenKind.BadToken:
@@ -168,9 +168,9 @@ namespace EditorConfig
                         else
                         {
                             (string numStart, string numEnd) = rangeOpt.GetValueOrDefault();
-                            if (int.TryParse(numStart, out var intStart) && int.TryParse(numEnd, out var intEnd))
+                            if (int.TryParse(numStart, out int intStart) && int.TryParse(numEnd, out int intEnd))
                             {
-                                var pair = intStart < intEnd ? (intStart, intEnd) : (intEnd, intStart);
+                                (int, int) pair = intStart < intEnd ? (intStart, intEnd) : (intEnd, intStart);
                                 numberRangePairs.Add(pair);
                                 // Group allowing any digit sequence. The validity will be checked outside of the regex
                                 sb.Append("(-?[0-9]+)");
@@ -219,7 +219,7 @@ namespace EditorConfig
             }
             while (!lexer.IsDone)
             {
-                var currentChar = lexer.EatCurrentCharacter();
+                char currentChar = lexer.EatCurrentCharacter();
                 switch (currentChar)
                 {
                     case '-':
@@ -310,14 +310,14 @@ namespace EditorConfig
         /// </summary>
         private static (string numStart, string numEnd)? TryParseNumberRange(ref SectionNameLexer lexer)
         {
-            var saved = lexer.Position;
+            int saved = lexer.Position;
             if (lexer.Lex() != TokenKind.OpenCurly)
             {
                 lexer.Position = saved;
                 return null;
             }
 
-            var numStart = lexer.TryLexNumber();
+            string numStart = lexer.TryLexNumber();
             if (numStart is null)
             {
                 // Not a number
@@ -334,7 +334,7 @@ namespace EditorConfig
             }
 
             // Now another number
-            var numEnd = lexer.TryLexNumber();
+            string numEnd = lexer.TryLexNumber();
             if (numEnd is null || lexer.IsDone || lexer.Lex() != TokenKind.CloseCurly)
             {
                 // Not a number or no '}'
@@ -345,30 +345,22 @@ namespace EditorConfig
             return (numStart, numEnd);
         }
 
-        private struct SectionNameLexer
+        private struct SectionNameLexer(string sectionName)
         {
-            private readonly string _sectionName;
 
-            public int Position { get; set; }
+            public int Position { get; set; } = 0;
 
-            public SectionNameLexer(string sectionName)
-            {
-                _sectionName = sectionName;
-                Position = 0;
-            }
-
-            public bool IsDone => Position >= _sectionName.Length;
+            public readonly bool IsDone => Position >= sectionName.Length;
 
             public TokenKind Lex()
             {
-                int lexemeStart = Position;
-                switch (_sectionName[Position])
+                switch (sectionName[Position])
                 {
                     case '*':
                         {
                             int nextPos = Position + 1;
-                            if (nextPos < _sectionName.Length &&
-                                _sectionName[nextPos] == '*')
+                            if (nextPos < sectionName.Length &&
+                                sectionName[nextPos] == '*')
                             {
                                 Position += 2;
                                 return TokenKind.StarStar;
@@ -418,12 +410,12 @@ namespace EditorConfig
                 }
             }
 
-            public char CurrentCharacter => _sectionName[Position];
+            public readonly char CurrentCharacter => sectionName[Position];
 
             /// <summary>
             /// Call after getting <see cref="TokenKind.SimpleCharacter" /> from <see cref="Lex()" />
             /// </summary>
-            public char EatCurrentCharacter() => _sectionName[Position++];
+            public char EatCurrentCharacter() => sectionName[Position++];
 
             /// <summary>
             /// Returns false if there are no more characters in the lex stream.
@@ -443,7 +435,7 @@ namespace EditorConfig
                 }
             }
 
-            public char this[int position] => _sectionName[position];
+            public readonly char this[int position] => sectionName[position];
 
             /// <summary>
             /// Returns the string representation of a decimal integer, or null if
@@ -474,7 +466,7 @@ namespace EditorConfig
                     start = false;
                 }
 
-                var str = sb.ToString();
+                string str = sb.ToString();
                 return str.Length == 0 || str == "-"
                     ? null
                     : str;

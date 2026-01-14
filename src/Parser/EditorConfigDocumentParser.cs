@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -49,7 +49,7 @@ namespace EditorConfig
                         continue;
 
                     // Suppression
-                    if (IsMatch(_suppress, text, out var match))
+                    if (IsMatch(_suppress, text, out Match match))
                     {
                         ParseItem comment = CreateParseItem(ItemType.Comment, line, match.Groups["comment"]);
                         AddToList(items, comment);

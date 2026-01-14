@@ -1,4 +1,4 @@
-﻿using EnvDTE;
+using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
 using System;
@@ -42,7 +42,7 @@ namespace EditorConfig
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
-            var dte = VsHelpers.GetService<DTE, DTE2>();
+            DTE2 dte = VsHelpers.GetService<DTE, DTE2>();
             string folder = VsHelpers.GetSelectedItemPath(out object item);
 
             if (string.IsNullOrEmpty(folder))

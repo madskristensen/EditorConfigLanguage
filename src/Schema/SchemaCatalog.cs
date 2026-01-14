@@ -78,6 +78,18 @@ namespace EditorConfig
                     _keywordLookup.TryGetValue("dotnet_analyzer_diagnostic.category-<category>.severity", out keyword);
                 }
             }
+            // Support for dotnet_code_quality.<rule_id>.<option> patterns used by .NET analyzers
+            else if (name.StartsWith("dotnet_code_quality.", StringComparison.OrdinalIgnoreCase))
+            {
+                string[] parts = name.Split('.');
+                // Matches patterns like: dotnet_code_quality.CA5391.exclude_aspnet_core_mvc_controllerbase
+                if (parts.Length >= 3
+                    && parts[0].Equals("dotnet_code_quality", StringComparison.OrdinalIgnoreCase))
+                {
+                    // These are valid .NET analyzer configuration options, accept them as known
+                    _keywordLookup.TryGetValue("dotnet_code_quality.<rule_id>.<option>", out keyword);
+                }
+            }
 
             return keyword != null;
         }

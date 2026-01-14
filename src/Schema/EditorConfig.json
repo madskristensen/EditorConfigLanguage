@@ -1138,6 +1138,13 @@
       "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/code-quality/use-roslyn-analyzers?view=vs-2019#set-rule-severity-of-multiple-analyzer-rules-at-once-in-an-editorconfig-file"
     },
     {
+      "name": "dotnet_code_quality.<rule_id>.<option>",
+      "description": "Code quality analyzer option configuration. Allows configuring analyzer-specific options for individual rules.",
+      "values": [ true, false, "<value>" ],
+      "defaultValue": [ "unset" ],
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/configuration-options"
+    },
+    {
       "name": "dotnet_remove_unnecessary_suppression_exclusions",
       "description": "Diagnostic severity configuration by category",
       "values": [ "<rule IDs or categories>" ],

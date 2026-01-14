@@ -11,15 +11,13 @@ namespace EditorConfig
 {
     class EditorConfigCompletionSource : ICompletionSource
     {
-        private ITextBuffer _buffer;
-        private EditorConfigDocument _document;
-        private ITextStructureNavigatorSelectorService _navigator;
-        private bool _disposed = false;
+        private readonly ITextBuffer _buffer;
+        private readonly EditorConfigDocument _document;
+        private bool _disposed;
 
         public EditorConfigCompletionSource(ITextBuffer buffer, ITextStructureNavigatorSelectorService navigator)
         {
             _buffer = buffer;
-            _navigator = navigator;
             _document = EditorConfigDocument.FromTextBuffer(buffer);
         }
 
@@ -43,7 +41,7 @@ namespace EditorConfig
             ParseItem parseItem = _document.ItemAtPosition(position);
             string moniker = null;
 
-            // Property
+            // Property/Keyword completion
             if (string.IsNullOrWhiteSpace(line.GetText()) || parseItem?.ItemType == ItemType.Keyword)
             {
                 bool isInRoot = !_document.ParseItems.Exists(p => p.ItemType == ItemType.Section && p.Span.Start < position);
@@ -65,7 +63,6 @@ namespace EditorConfig
                         Section section = _document.Sections.FirstOrDefault(x => x.Item.Text.Equals(parseItemSection.Text, StringComparison.OrdinalIgnoreCase));
                         if (section != null)
                         {
-                            // Set keywords scope to current section
                             usedKeywords = section.Properties.Select(x => x.Keyword.Text).ToList();
                         }
                     }
@@ -74,7 +71,6 @@ namespace EditorConfig
                     {
                         string keyword = property.Name;
 
-                        // Keyword already used and keyword does not qualify as repeatable
                         if (usedKeywords.Contains(keyword) && !keyword.StartsWith("dotnet_naming_", StringComparison.OrdinalIgnoreCase))
                             continue;
 
@@ -84,23 +80,41 @@ namespace EditorConfig
 
                 moniker = "keyword";
             }
-            // Value
-            else if (parseItem?.ItemType == ItemType.Value)
+            // Value completion - check if we're in a value position on the line
+            else if (parseItem?.ItemType == ItemType.Value || IsInValuePosition(line, position))
             {
-                if (SchemaCatalog.TryGetKeyword(prev.Text, out Keyword item))
-                {
-                    if (!item.SupportsMultipleValues && parseItem.Text.Contains(","))
-                    {
-                        return;
-                    }
+                Keyword keyword = GetKeywordForLine(line);
 
-                    foreach (Value value in item.Values)
-                        list.Add(CreateCompletion(value, iconAutomation: "value"));
+                if (keyword != null)
+                {
+                    string valueText = GetValueTextFromLine(line);
+
+                    if (!keyword.SupportsMultipleValues && valueText.Contains(","))
+                        return;
+
+                    if (keyword.SupportsMultipleValues)
+                    {
+                        HashSet<string> usedValues = new HashSet<string>(
+                            valueText.Split([','], StringSplitOptions.RemoveEmptyEntries)
+                                .Select(v => v.Trim()),
+                            StringComparer.OrdinalIgnoreCase);
+
+                        foreach (Value value in keyword.Values)
+                        {
+                            if (!usedValues.Contains(value.Name))
+                                list.Add(CreateCompletion(value, iconAutomation: "value"));
+                        }
+                    }
+                    else
+                    {
+                        foreach (Value value in keyword.Values)
+                            list.Add(CreateCompletion(value, iconAutomation: "value"));
+                    }
                 }
 
                 moniker = "value";
             }
-            // Severity
+            // Severity completion
             else if ((position > 0 && snapshot.Length > 1 && snapshot.GetText(position - 1, 1) == ":") || parseItem?.ItemType == ItemType.Severity)
             {
                 if (prev?.ItemType == ItemType.Value || parseItem?.ItemType == ItemType.Severity)
@@ -112,7 +126,7 @@ namespace EditorConfig
                     moniker = "severity";
                 }
             }
-            // Suppression
+            // Suppression completion
             else if (parseItem?.ItemType == ItemType.Suppression)
             {
                 foreach (Error code in ErrorCatalog.All.OrderBy(e => e.Code))
@@ -121,37 +135,117 @@ namespace EditorConfig
                 moniker = "suppression";
             }
 
-            if (!list.Any())
+            // Calculate the applicable span for completion
+            if (list.Any())
             {
-                if (SchemaCatalog.TryGetKeyword(prev?.Text, out Keyword property))
-                {
-                    int eq = line.GetText().IndexOf("=");
-
-                    if (eq != -1)
-                    {
-                        int eqPos = eq + line.Start.Position;
-
-                        if (position > eqPos)
-                            foreach (Value value in property.Values)
-                                list.Add(CreateCompletion(value));
-                    }
-
-                    moniker = "value";
-                }
-            }
-            else
-            {
-                ITrackingSpan trackingSpan = FindTokenSpanAtPosition(session);
-                SnapshotSpan span = trackingSpan.GetSpan(snapshot);
-                string text = span.GetText();
-
-                if (text == ":" || text == ",")
-                    applicableTo = snapshot.CreateTrackingSpan(new Span(span.Start + 1, 0), SpanTrackingMode.EdgeInclusive);
-                else if (!string.IsNullOrWhiteSpace(text))
-                    applicableTo = trackingSpan;
+                applicableTo = GetApplicableSpan(snapshot, line, position);
             }
 
             CreateCompletionSet(moniker, completionSets, list, applicableTo);
+        }
+
+        /// <summary>
+        /// Checks if the position is in a value position (after the = sign) on the line.
+        /// </summary>
+        private static bool IsInValuePosition(SnapshotSpan line, int position)
+        {
+            string lineText = line.GetText();
+            int eq = lineText.IndexOf('=');
+            if (eq < 0)
+                return false;
+
+            int eqPos = eq + line.Start.Position;
+            return position > eqPos;
+        }
+
+        /// <summary>
+        /// Gets the keyword for the given line by parsing the keyword text before the = sign.
+        /// </summary>
+        private static Keyword GetKeywordForLine(SnapshotSpan line)
+        {
+            string lineText = line.GetText();
+            int eq = lineText.IndexOf('=');
+            if (eq < 0)
+                return null;
+
+            string keywordText = lineText.Substring(0, eq).Trim();
+            SchemaCatalog.TryGetKeyword(keywordText, out Keyword keyword);
+            return keyword;
+        }
+
+        /// <summary>
+        /// Gets the value text from the line (everything after = and before any severity suffix).
+        /// </summary>
+        private static string GetValueTextFromLine(SnapshotSpan line)
+        {
+            string lineText = line.GetText();
+            int eq = lineText.IndexOf('=');
+            if (eq < 0)
+                return "";
+
+            string valueText = lineText.Substring(eq + 1).TrimEnd();
+
+            // Check for severity suffix and remove it
+            int colonIndex = valueText.LastIndexOf(':');
+            if (colonIndex > 0 && !valueText.Substring(colonIndex + 1).Trim().Contains(","))
+            {
+                valueText = valueText.Substring(0, colonIndex);
+            }
+
+            return valueText;
+        }
+
+        /// <summary>
+        /// Gets the applicable span for completion - the text that will be replaced when a completion is selected.
+        /// For multi-value properties, this is just the current value segment, not the entire value list.
+        /// </summary>
+        private static ITrackingSpan GetApplicableSpan(ITextSnapshot snapshot, SnapshotSpan line, int position)
+        {
+            string lineText = line.GetText();
+            int posInLine = position - line.Start.Position;
+
+            // Find the start of the current value (after = or ,)
+            int valueStart = posInLine;
+            for (int i = posInLine - 1; i >= 0; i--)
+            {
+                char c = lineText[i];
+                if (c == '=' || c == ',')
+                {
+                    valueStart = i + 1;
+                    // Skip whitespace after delimiter
+                    while (valueStart < lineText.Length && char.IsWhiteSpace(lineText[valueStart]))
+                        valueStart++;
+                    break;
+                }
+            }
+
+            // Find the end of the current value (before , or : or end of line)
+            int valueEnd = posInLine;
+            for (int i = posInLine; i < lineText.Length; i++)
+            {
+                char c = lineText[i];
+                if (c == ',' || c == ':' || c == ';' || c == '#')
+                {
+                    valueEnd = i;
+                    break;
+                }
+                valueEnd = i + 1;
+            }
+
+            // Trim trailing whitespace
+            while (valueEnd > valueStart && char.IsWhiteSpace(lineText[valueEnd - 1]))
+                valueEnd--;
+
+            int spanStart = line.Start.Position + valueStart;
+            int spanLength = valueEnd - valueStart;
+
+            if (spanStart > position)
+                spanStart = position;
+
+            if (spanLength < 0)
+                spanLength = 0;
+
+            return snapshot.CreateTrackingSpan(spanStart, spanLength, SpanTrackingMode.EdgeInclusive);
         }
 
         private static void CreateCompletionSet(string moniker, IList<CompletionSet> completionSets, List<Completion4> list, ITrackingSpan applicableTo)
@@ -208,24 +302,6 @@ namespace EditorConfig
             completion.Properties.AddProperty("item", item);
 
             return completion;
-        }
-
-        private ITrackingSpan FindTokenSpanAtPosition(ICompletionSession session)
-        {
-            ParseItem item = _document.ItemAtPosition(session.TextView.Caret.Position.BufferPosition.Position);
-
-            if (item != null)
-            {
-                return session.TextView.TextSnapshot.CreateTrackingSpan(item.Span, SpanTrackingMode.EdgeInclusive);
-            }
-            else
-            {
-                int offset = session.TextView.Caret.Position.BufferPosition.Position > 0 ? -1 : 0;
-                SnapshotPoint currentPoint = (session.TextView.Caret.Position.BufferPosition) + offset;
-                ITextStructureNavigator navigator = _navigator.GetTextStructureNavigator(_buffer);
-                TextExtent extent = navigator.GetExtentOfWord(currentPoint);
-                return currentPoint.Snapshot.CreateTrackingSpan(extent.Span, SpanTrackingMode.EdgeInclusive);
-            }
         }
 
         public void Dispose()

@@ -58,6 +58,7 @@
     <Compile Include="Completion\CompletionOptions.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Completion\CompletionSource.cs" />
     <Compile Include="Schema\Category.cs" />
     <Compile Include="Shared\AnalyzerConfig_SectionNameMatching.cs" />
     <Compile Include="Shared\Extensions.cs" />
@@ -141,7 +142,6 @@
     <Compile Include="Formatting\FormatterCommand.cs" />
     <Compile Include="Schema\Keyword.cs" />
     <Compile Include="Completion\CompletionController.cs" />
-    <Compile Include="Completion\CompletionSource.cs" />
     <Compile Include="Commands\CreateEditorConfigFile.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="DragDrop\EditorConfigDropHandler.cs" />

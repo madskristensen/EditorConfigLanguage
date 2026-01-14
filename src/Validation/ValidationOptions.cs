@@ -1,6 +1,7 @@
-using Microsoft.VisualStudio.Shell;
 using System;
 using System.ComponentModel;
+
+using Microsoft.VisualStudio.Shell;
 
 namespace EditorConfig
 {
@@ -79,11 +80,20 @@ namespace EditorConfig
         /// Checks if a property keyword should be ignored based on the configured ignored prefixes.
         /// </summary>
         public bool HasIgnoredPrefix(string keyword)
+            => HasIgnoredPrefix(keyword, IgnoredPrefixes);
+
+        /// <summary>
+        /// Checks if a property keyword should be ignored based on the provided prefix list.
+        /// </summary>
+        /// <param name="keyword">The keyword to check.</param>
+        /// <param name="prefixList">Comma-separated list of prefixes to ignore.</param>
+        /// <returns>True if the keyword starts with any of the ignored prefixes.</returns>
+        public static bool HasIgnoredPrefix(string keyword, string prefixList)
         {
-            if (string.IsNullOrEmpty(IgnoredPrefixes) || string.IsNullOrEmpty(keyword))
+            if (string.IsNullOrEmpty(prefixList) || string.IsNullOrEmpty(keyword))
                 return false;
 
-            string[] prefixes = IgnoredPrefixes.Split([','], StringSplitOptions.RemoveEmptyEntries);
+            string[] prefixes = prefixList.Split([','], StringSplitOptions.RemoveEmptyEntries);
             foreach (string prefix in prefixes)
             {
                 string trimmedPrefix = prefix.Trim();

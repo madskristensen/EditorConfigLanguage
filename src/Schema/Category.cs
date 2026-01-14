@@ -1,4 +1,4 @@
-﻿namespace EditorConfig
+namespace EditorConfig
 {
     public enum Category
     {
@@ -6,6 +6,7 @@
         Standard,
         CSharp,
         DotNet,
-        VisualBasic
+        VisualBasic,
+        CPP,
     }
 }

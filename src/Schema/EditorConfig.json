@@ -1220,14 +1220,430 @@
       "defaultSeverity": "silent",
       "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0210"
     },
-    {
-      "name": "csharp_style_prefer_utf8_string_literals",
-      "description": "Prefer UTF-8 string literals.",
-      "values": [ true, false ],
-      "defaultValue": [ true ],
-      "severity": true,
-      "defaultSeverity": "suggestion",
-      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0230"
+        {
+          "name": "csharp_style_prefer_utf8_string_literals",
+          "description": "Prefer UTF-8 string literals.",
+          "values": [ true, false ],
+          "defaultValue": [ true ],
+          "severity": true,
+          "defaultSeverity": "suggestion",
+          "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0230"
+        },
+        // Code quality options
+        {
+          "name": "dotnet_code_quality.<rule_id>.api_surface",
+          "description": "Which part of the API surface to analyze.",
+          "values": [ "public", "internal", "friend", "private", "all" ],
+          "defaultValue": [ "public" ],
+          "multiple": true,
+          "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/code-quality-rule-options#api_surface"
+        },
+        // C++ formatting properties
+        {
+          "name": "cpp_indent_braces",
+          "description": "Indent braces.",
+          "values": [ true, false ],
+          "defaultValue": [ false ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_indent_multi_line_relative_to",
+          "description": "Indent each line relatively to.",
+          "values": [ "outermost_parenthesis", "innermost_parenthesis", "statement_begin" ],
+          "defaultValue": [ "outermost_parenthesis" ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_indent_within_parentheses",
+          "description": "Within parentheses, align new lines when I type them.",
+          "values": [ "align_to_parenthesis", "indent" ],
+          "defaultValue": [ "align_to_parenthesis" ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_indent_preserve_within_parentheses",
+          "description": "In existing code, do not use the setting for alignment of new lines within parentheses.",
+          "values": [ true, false ],
+          "defaultValue": [ false ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_indent_case_contents",
+          "description": "Indent case contents.",
+          "values": [ true, false ],
+          "defaultValue": [ true ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_indent_case_labels",
+          "description": "Indent case labels.",
+          "values": [ true, false ],
+          "defaultValue": [ true ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_indent_case_contents_when_block",
+          "description": "Indent braces following a case statement.",
+          "values": [ true, false ],
+          "defaultValue": [ false ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_indent_lambda_braces_when_parameter",
+          "description": "Indent braces of lambdas used as parameters.",
+          "values": [ true, false ],
+          "defaultValue": [ true ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_indent_goto_labels",
+          "description": "Position of goto labels.",
+          "values": [ "one_left", "leftmost_column", "none" ],
+          "defaultValue": [ "one_left" ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_indent_preprocessor",
+          "description": "Position of preprocessor directives.",
+          "values": [ "one_left", "leftmost_column", "none" ],
+          "defaultValue": [ "leftmost_column" ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_indent_access_specifiers",
+          "description": "Indent access specifiers.",
+          "values": [ true, false ],
+          "defaultValue": [ false ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_indent_namespace_contents",
+          "description": "Indent namespace contents.",
+          "values": [ true, false ],
+          "defaultValue": [ true ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_indent_preserve_comments",
+          "description": "Preserve indentation of comments.",
+          "values": [ true, false ],
+          "defaultValue": [ false ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_new_line_before_open_brace_namespace",
+          "description": "Position of open braces for namespaces.",
+          "values": [ "new_line", "same_line", "ignore" ],
+          "defaultValue": [ "new_line" ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_new_line_before_open_brace_type",
+          "description": "Position of open braces for types.",
+          "values": [ "new_line", "same_line", "ignore" ],
+          "defaultValue": [ "new_line" ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_new_line_before_open_brace_function",
+          "description": "Position of open braces for functions.",
+          "values": [ "new_line", "same_line", "ignore" ],
+          "defaultValue": [ "new_line" ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_new_line_before_open_brace_block",
+          "description": "Position of open braces for control blocks.",
+          "values": [ "new_line", "same_line", "ignore" ],
+          "defaultValue": [ "new_line" ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_new_line_before_open_brace_lambda",
+          "description": "Position of open braces for lambdas.",
+          "values": [ "new_line", "same_line", "ignore" ],
+          "defaultValue": [ "new_line" ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_new_line_scope_braces_on_separate_lines",
+          "description": "Place scope braces on separate lines.",
+          "values": [ true, false ],
+          "defaultValue": [ true ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_new_line_close_brace_same_line_empty_type",
+          "description": "For empty types, move closing braces to the same line as opening braces.",
+          "values": [ true, false ],
+          "defaultValue": [ true ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_new_line_close_brace_same_line_empty_function",
+          "description": "For empty function bodies, move closing braces to the same line as opening braces.",
+          "values": [ true, false ],
+          "defaultValue": [ true ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_new_line_before_catch",
+          "description": "Place 'catch' and similar keywords on a new line.",
+          "values": [ true, false ],
+          "defaultValue": [ true ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_new_line_before_else",
+          "description": "Place 'else' on a new line.",
+          "values": [ true, false ],
+          "defaultValue": [ true ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_new_line_before_while_in_do_while",
+          "description": "Place 'while' in a do-while loop on a new line.",
+          "values": [ true, false ],
+          "defaultValue": [ false ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_space_before_function_open_parenthesis",
+          "description": "Spacing between function names and opening parentheses of argument lists.",
+          "values": [ "insert", "remove", "ignore" ],
+          "defaultValue": [ "remove" ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_space_within_parameter_list_parentheses",
+          "description": "Insert space within parentheses of an argument list.",
+          "values": [ true, false ],
+          "defaultValue": [ false ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_space_between_empty_parameter_list_parentheses",
+          "description": "Insert space between parentheses when argument list is empty.",
+          "values": [ true, false ],
+          "defaultValue": [ false ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_space_after_keywords_in_control_flow_statements",
+          "description": "Insert space between keyword and opening parenthesis in control flow statements.",
+          "values": [ true, false ],
+          "defaultValue": [ true ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_space_within_control_flow_statement_parentheses",
+          "description": "Insert space within parentheses of a control statement.",
+          "values": [ true, false ],
+          "defaultValue": [ false ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_space_before_lambda_open_parenthesis",
+          "description": "Insert space before opening parenthesis of lambda argument lists.",
+          "values": [ true, false ],
+          "defaultValue": [ false ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_space_within_cast_parentheses",
+          "description": "Insert space within parentheses of a C-style cast.",
+          "values": [ true, false ],
+          "defaultValue": [ false ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_space_after_cast_close_parenthesis",
+          "description": "Insert space after closing parenthesis of C-style cast.",
+          "values": [ true, false ],
+          "defaultValue": [ false ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_space_within_expression_parentheses",
+          "description": "Insert space within parentheses of a parenthesized expression.",
+          "values": [ true, false ],
+          "defaultValue": [ false ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_space_before_block_open_brace",
+          "description": "Insert space before opening brace of blocks.",
+          "values": [ true, false ],
+          "defaultValue": [ true ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_space_between_empty_braces",
+          "description": "Insert space between empty braces.",
+          "values": [ true, false ],
+          "defaultValue": [ false ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_space_before_initializer_list_open_brace",
+          "description": "Insert space before opening brace of uniform initialization and initializer lists.",
+          "values": [ true, false ],
+          "defaultValue": [ false ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_space_within_initializer_list_braces",
+          "description": "Insert space within braces of uniform initialization and initializer lists.",
+          "values": [ true, false ],
+          "defaultValue": [ true ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_space_preserve_in_initializer_list",
+          "description": "Preserve spaces inside uniform initialization and initializer lists.",
+          "values": [ true, false ],
+          "defaultValue": [ true ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_space_before_open_square_bracket",
+          "description": "Insert space before opening square brackets.",
+          "values": [ true, false ],
+          "defaultValue": [ false ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_space_within_square_brackets",
+          "description": "Insert space within square bracket.",
+          "values": [ true, false ],
+          "defaultValue": [ false ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_space_before_empty_square_brackets",
+          "description": "Insert space before empty square brackets.",
+          "values": [ true, false ],
+          "defaultValue": [ false ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_space_between_empty_square_brackets",
+          "description": "Insert space between empty square brackets.",
+          "values": [ true, false ],
+          "defaultValue": [ false ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_space_group_square_brackets",
+          "description": "Group square brackets for multi-dimensional arrays together.",
+          "values": [ true, false ],
+          "defaultValue": [ true ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_space_within_lambda_brackets",
+          "description": "Insert space within square brackets for lambdas.",
+          "values": [ true, false ],
+          "defaultValue": [ false ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_space_between_empty_lambda_brackets",
+          "description": "Insert space between empty lambda brackets.",
+          "values": [ true, false ],
+          "defaultValue": [ false ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_space_before_comma",
+          "description": "Insert space before commas.",
+          "values": [ true, false ],
+          "defaultValue": [ false ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_space_after_comma",
+          "description": "Insert space after commas.",
+          "values": [ true, false ],
+          "defaultValue": [ true ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_space_remove_around_member_operators",
+          "description": "Remove spaces before and after member operators.",
+          "values": [ true, false ],
+          "defaultValue": [ true ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_space_before_inheritance_colon",
+          "description": "Insert space before colon for base in type declarations.",
+          "values": [ true, false ],
+          "defaultValue": [ true ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_space_before_constructor_colon",
+          "description": "Insert space before colon for constructors.",
+          "values": [ true, false ],
+          "defaultValue": [ true ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_space_remove_before_semicolon",
+          "description": "Remove space before semicolons.",
+          "values": [ true, false ],
+          "defaultValue": [ true ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_space_after_semicolon",
+          "description": "Insert space after semicolons.",
+          "values": [ true, false ],
+          "defaultValue": [ false ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_space_remove_around_unary_operator",
+          "description": "Remove spaces between unary operators and their operands.",
+          "values": [ true, false ],
+          "defaultValue": [ true ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_space_around_binary_operator",
+          "description": "Spacing for binary operators.",
+          "values": [ "insert", "remove", "ignore" ],
+          "defaultValue": [ "insert" ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_space_around_assignment_operator",
+          "description": "Spacing for assignment operators.",
+          "values": [ "insert", "remove", "ignore" ],
+          "defaultValue": [ "insert" ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_space_pointer_reference_alignment",
+          "description": "Pointer/reference alignment.",
+          "values": [ "left", "center", "right", "ignore" ],
+          "defaultValue": [ "left" ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_space_around_ternary_operator",
+          "description": "Spacing for conditional operators.",
+          "values": [ "insert", "remove", "ignore" ],
+          "defaultValue": [ "insert" ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_wrap_preserve_blocks",
+          "description": "Wrapping options for blocks.",
+          "values": [ "one_liners", "all_one_line_scopes", "never" ],
+          "defaultValue": [ "one_liners" ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        }
+      ]
     }
-  ]
-}

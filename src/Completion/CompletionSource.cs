@@ -1,10 +1,11 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
 using Microsoft.VisualStudio.Imaging;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Operations;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace EditorConfig
 {
@@ -161,8 +162,10 @@ namespace EditorConfig
                 {
                     IntellisenseFilter[] filters = [
                         new IntellisenseFilter(KnownMonikers.Property, "Standard rules (Alt + S)", "s", Category.Standard.ToString()),
+                        new IntellisenseFilter(KnownMonikers.CPPFileNode, "C++ rules (Alt + P)", "p", Category.CPP.ToString()),
                         new IntellisenseFilter(KnownMonikers.CSFileNode, "C# analysis rules (Alt + C)", "c", Category.CSharp.ToString()),
                         new IntellisenseFilter(KnownMonikers.DotNET, ".NET analysis rules (Alt + D)", "d", Category.DotNet.ToString()),
+                        new IntellisenseFilter(KnownMonikers.VBFileNode, "VB.NET analysis rules (Alt + V)", "v", Category.VisualBasic.ToString()),
                     ];
 
                     completionSets.Add(new FilteredCompletionSet(moniker, applicableTo, list, Enumerable.Empty<Completion4>(), filters));

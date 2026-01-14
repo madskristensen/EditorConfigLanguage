@@ -1,8 +1,9 @@
-﻿using Microsoft.VisualStudio.Imaging;
-using Microsoft.VisualStudio.Imaging.Interop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
+using Microsoft.VisualStudio.Imaging;
+using Microsoft.VisualStudio.Imaging.Interop;
 
 namespace EditorConfig
 {
@@ -63,6 +64,8 @@ namespace EditorConfig
                         return Category.DotNet;
                     else if (Name.StartsWith("visual_basic_", StringComparison.OrdinalIgnoreCase))
                         return Category.VisualBasic;
+                    else if (Name.StartsWith("cpp_", StringComparison.OrdinalIgnoreCase))
+                        return Category.CPP;
                     else
                         return Category.Standard;
                 }
@@ -76,17 +79,14 @@ namespace EditorConfig
         {
             get
             {
-                switch (Category)
+                return Category switch
                 {
-                    case Category.CSharp:
-                        return KnownMonikers.CSFileNode;
-                    case Category.DotNet:
-                        return KnownMonikers.DotNET;
-                    case Category.VisualBasic:
-                        return KnownMonikers.VBFileNode;
-                }
-
-                return KnownMonikers.Property;
+                    Category.CSharp => KnownMonikers.CSFileNode,
+                    Category.DotNet => KnownMonikers.DotNET,
+                    Category.VisualBasic => KnownMonikers.VBFileNode,
+                    Category.CPP => KnownMonikers.CPPFileNode,
+                    _ => KnownMonikers.Property,
+                };
             }
         }
     }

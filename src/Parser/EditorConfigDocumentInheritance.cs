@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.ComponentModelHost;
+using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Utilities;
@@ -24,6 +24,10 @@ namespace EditorConfig
         {
             get
             {
+                // .globalconfig files don't inherit from parent directories
+                if (IsGlobalConfig)
+                    return null;
+
                 if (Root != null && Root.IsValid && Root.Value.Text.Is("true") && Root.Severity == null)
                     return null;
 
@@ -33,6 +37,10 @@ namespace EditorConfig
                 return _parent;
             }
         }
+
+        /// <summary>Returns true if this is a .globalconfig file.</summary>
+        public bool IsGlobalConfig =>
+            FileName != null && FileName.EndsWith(Constants.GlobalConfigFileName, StringComparison.OrdinalIgnoreCase);
 
         private void InitializeInheritance()
         {

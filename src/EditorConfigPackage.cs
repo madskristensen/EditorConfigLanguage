@@ -15,6 +15,7 @@ namespace EditorConfig
 
     [ProvideLanguageService(typeof(EditorConfigLanguage), Constants.LanguageName, 101, ShowCompletion = true, EnableAsyncCompletion = true, EnableAdvancedMembersOption = true, HideAdvancedMembersByDefault = false, QuickInfo = true, ShowDropDownOptions = true, DefaultToInsertSpaces = true, EnableCommenting = true, AutoOutlining = true, EnableLineNumbers = true, MatchBraces = true, MatchBracesAtCaret = true, ShowMatchingBrace = true)]
     [ProvideLanguageExtension(typeof(EditorConfigLanguage), Constants.FileName)]
+    [ProvideLanguageExtension(typeof(EditorConfigLanguage), Constants.GlobalConfigFileName)]
     [ProvideLanguageEditorOptionPage(typeof(FormatterOptions), Constants.LanguageName, null, "Formatting", "#101", ["editorconfig", "formatting"])]
     [ProvideLanguageEditorOptionPage(typeof(ValidationOptions), Constants.LanguageName, null, "Validation", "#102", ["editorconfig", "validation"])]
     [ProvideLanguageEditorOptionPage(typeof(CompletionOptions), Constants.LanguageName, null, "Intellisense", "#103", ["editorconfig", "intellisenes", "completion"])]
@@ -23,6 +24,7 @@ namespace EditorConfig
     [ProvideEditorLogicalView(typeof(EditorFactory), VSConstants.LOGVIEWID.TextView_string, IsTrusted = true)]
 
     [ProvideEditorExtension(typeof(EditorFactory), Constants.FileName, 1000)]
+    [ProvideEditorExtension(typeof(EditorFactory), Constants.GlobalConfigFileName, 1000)]
     [ProvideBraceCompletion(Constants.LanguageName)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     public sealed class EditorConfigPackage : AsyncPackage

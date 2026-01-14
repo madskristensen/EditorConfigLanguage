@@ -269,7 +269,7 @@
     <PackageReference Include="Microsoft.VisualStudio.Workspace.VSIntegration">
       <Version>16.3.43</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.13.40">
+    <PackageReference Include="Microsoft.VSSDK.BuildTools" Version="17.14.2120">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>

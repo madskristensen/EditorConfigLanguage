@@ -40,7 +40,6 @@ namespace EditorConfig
     using ServiceProvider = Microsoft.VisualStudio.Shell.ServiceProvider;
     using VsCodeWindowClass = Microsoft.VisualStudio.TextManager.Interop.VsCodeWindowClass;
     using VSConstants = Microsoft.VisualStudio.VSConstants;
-    using VsServiceProviderWrapper = Microsoft.VisualStudio.Shell.VsServiceProviderWrapper;
     using VsTextBufferClass = Microsoft.VisualStudio.TextManager.Interop.VsTextBufferClass;
 
     [Guid(PackageGuids.guidEditorFactoryString)]
@@ -302,7 +301,7 @@ namespace EditorConfig
             Type codeWindowType = typeof(IVsCodeWindow);
             Guid riid = codeWindowType.GUID;
             Guid clsid = typeof(VsCodeWindowClass).GUID;
-            var compModel = (IComponentModel)new VsServiceProviderWrapper(_package).GetService(typeof(SComponentModel));
+            var compModel = (IComponentModel)Package.GetGlobalService(typeof(SComponentModel));
             IVsEditorAdaptersFactoryService adapterService = compModel.GetService<IVsEditorAdaptersFactoryService>();
 
             IVsCodeWindow window = adapterService.CreateVsCodeWindowAdapter((IOleServiceProvider)_serviceProvider.GetService(typeof(IOleServiceProvider)));
@@ -321,7 +320,7 @@ namespace EditorConfig
 
             cmdUI = VSConstants.GUID_TextEditorFactory;
 
-            var componentModel = (IComponentModel)new VsServiceProviderWrapper(Package).GetService(typeof(SComponentModel));
+            var componentModel = (IComponentModel)Package.GetGlobalService(typeof(SComponentModel));
             var bufferEventListener = new TextBufferEventListener(componentModel, textLines, _languageServiceId);
             if (!createdDocData)
             {

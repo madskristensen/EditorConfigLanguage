@@ -13,7 +13,7 @@ namespace EditorConfig
     public class EditorConfigQuickInfoControllerProvider : IIntellisenseControllerProvider
     {
         [Import]
-        public IQuickInfoBroker QuickInfoBroker { get; set; }
+        public IAsyncQuickInfoBroker QuickInfoBroker { get; set; }
 
         public IIntellisenseController TryCreateIntellisenseController(ITextView textView, IList<ITextBuffer> subjectBuffers)
         {

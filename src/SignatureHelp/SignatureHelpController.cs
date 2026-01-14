@@ -15,10 +15,10 @@ namespace EditorConfig
         private const uint _commandId = (uint)VSConstants.VSStd2KCmdID.TYPECHAR;
         private IWpfTextView _view;
         private ISignatureHelpBroker _signaturehelpBroker;
-        private IQuickInfoBroker _quickInfoBroker;
+        private IAsyncQuickInfoBroker _quickInfoBroker;
         private ISignatureHelpSession _session;
 
-        public SignatureHelpCommand(IWpfTextView view, ISignatureHelpBroker signaturehelpBroker, IQuickInfoBroker quickInfoBroker)
+        public SignatureHelpCommand(IWpfTextView view, ISignatureHelpBroker signaturehelpBroker, IAsyncQuickInfoBroker quickInfoBroker)
         {
             _view = view;
             _signaturehelpBroker = signaturehelpBroker;
@@ -58,8 +58,9 @@ namespace EditorConfig
         {
             if (_session == null || _session.IsDismissed)
             {
-                if (_quickInfoBroker.IsQuickInfoActive(_view))
-                    _quickInfoBroker.GetSessions(_view)[0].Dismiss();
+                IAsyncQuickInfoSession quickInfoSession = _quickInfoBroker.GetSession(_view);
+                if (quickInfoSession != null)
+                    ThreadHelper.JoinableTaskFactory.Run(async () => await quickInfoSession.DismissAsync());
 
                 ThreadHelper.JoinableTaskFactory.StartOnIdle(
                     () =>

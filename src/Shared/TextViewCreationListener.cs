@@ -36,7 +36,7 @@ namespace EditorConfig
         private ITextDocumentFactoryService DocumentService { get; set; }
 
         [Import]
-        private IQuickInfoBroker QuickInfoBroker { get; set; }
+        private IAsyncQuickInfoBroker QuickInfoBroker { get; set; }
 
         [Import]
         ISignatureHelpBroker SignatureHelpBroker { get; set; }

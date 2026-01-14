@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel.Composition;
+using System.Windows.Media;
+
 using Microsoft.VisualStudio.Text.Adornments;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Utilities;
-using System.ComponentModel.Composition;
-using System.Windows.Media;
 
 namespace EditorConfig
 {
@@ -14,7 +13,9 @@ namespace EditorConfig
 
         [Export(typeof(ErrorTypeDefinition))]
         [Name(Suggestion)]
+#pragma warning disable CS0618 // Type or member is obsolete
         [DisplayName(Suggestion)]
+#pragma warning restore CS0618 // Type or member is obsolete
         internal static ErrorTypeDefinition MessageDefinition = null;
 
         [Export(typeof(EditorFormatDefinition))]

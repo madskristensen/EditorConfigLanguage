@@ -72,7 +72,7 @@ namespace EditorConfig
         public IEnumerable<SuggestedActionSet> CreateActionSet(params BaseSuggestedAction[] actions)
         {
             actions = actions.Where(val => val != null).ToArray();
-            return new[] { new SuggestedActionSet(actions) };
+            return new[] { new SuggestedActionSet(categoryName: null, actions: actions, title: null, priority: SuggestedActionSetPriority.None, applicableToSpan: null) };
         }
 
         public override void Execute(CancellationToken cancellationToken)

@@ -1,12 +1,14 @@
-﻿using Microsoft.VisualStudio.Language.Intellisense;
+using Microsoft.VisualStudio.Language.Intellisense;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
-using System;
-using System.Collections.Generic;
+using Microsoft.VisualStudio.Text.Adornments;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace EditorConfig
 {
-    internal class EditorConfigQuickInfo : IQuickInfoSource
+    internal class EditorConfigQuickInfo : IAsyncQuickInfoSource
     {
         private ITextBuffer _buffer;
         private EditorConfigDocument _document;
@@ -17,28 +19,29 @@ namespace EditorConfig
             _document = EditorConfigDocument.FromTextBuffer(buffer);
         }
 
-        public void AugmentQuickInfoSession(IQuickInfoSession session, IList<object> qiContent, out ITrackingSpan applicableToSpan)
+        public async Task<QuickInfoItem> GetQuickInfoItemAsync(IAsyncQuickInfoSession session, CancellationToken cancellationToken)
         {
-            applicableToSpan = null;
-
             SnapshotPoint? point = session.GetTriggerPoint(_buffer.CurrentSnapshot);
 
-            if (session == null || qiContent == null || !point.HasValue || point.Value.Position >= point.Value.Snapshot.Length)
-                return;
+            if (session == null || !point.HasValue || point.Value.Position >= point.Value.Snapshot.Length)
+                return null;
 
             ParseItem item = _document.ItemAtPosition(point.Value);
 
             if (item == null)
-                return;
+                return null;
 
-            applicableToSpan = point.Value.Snapshot.CreateTrackingSpan(item.Span, SpanTrackingMode.EdgeNegative);
+            ITrackingSpan applicableToSpan = point.Value.Snapshot.CreateTrackingSpan(item.Span, SpanTrackingMode.EdgeNegative);
+
+            // Switch to UI thread before creating WPF controls
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
 
             if (item.Errors.Any())
             {
                 foreach (DisplayError error in item.Errors)
                 {
-                    qiContent.Add(new Shared.EditorTooltip(error));
-                    return;
+                    var element = new ContainerElement(ContainerElementStyle.Wrapped, new Shared.EditorTooltip(error));
+                    return new QuickInfoItem(applicableToSpan, element);
                 }
             }
 
@@ -49,7 +52,8 @@ namespace EditorConfig
             // Keyword
             if (keyword != null && item.ItemType == ItemType.Keyword)
             {
-                qiContent.Add(new Shared.EditorTooltip(keyword));
+                var element = new ContainerElement(ContainerElementStyle.Wrapped, new Shared.EditorTooltip(keyword));
+                return new QuickInfoItem(applicableToSpan, element);
             }
 
             // Value
@@ -58,20 +62,27 @@ namespace EditorConfig
                 Value value = keyword.Values.FirstOrDefault(v => v.Name.Is(item.Text));
 
                 if (value != null && !string.IsNullOrEmpty(value.Description))
-                    qiContent.Add(new Shared.EditorTooltip(value));
+                {
+                    var element = new ContainerElement(ContainerElementStyle.Wrapped, new Shared.EditorTooltip(value));
+                    return new QuickInfoItem(applicableToSpan, element);
+                }
             }
 
             // Severity
             else if (item.ItemType == ItemType.Severity && SchemaCatalog.TryGetSeverity(item.Text, out Severity severity))
             {
-                qiContent.Add(new Shared.EditorTooltip(severity));
+                var element = new ContainerElement(ContainerElementStyle.Wrapped, new Shared.EditorTooltip(severity));
+                return new QuickInfoItem(applicableToSpan, element);
             }
 
             // Suppression
             else if (item.ItemType == ItemType.Suppression && ErrorCatalog.TryGetErrorCode(item.Text, out var code))
             {
-                qiContent.Add(new Shared.EditorTooltip(code));
+                var element = new ContainerElement(ContainerElementStyle.Wrapped, new Shared.EditorTooltip(code));
+                return new QuickInfoItem(applicableToSpan, element);
             }
+
+            return null;
         }
 
         public void Dispose()

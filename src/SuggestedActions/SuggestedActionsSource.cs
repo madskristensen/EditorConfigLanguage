@@ -76,7 +76,7 @@ namespace EditorConfig
 
         public IEnumerable<SuggestedActionSet> CreateActionSet(params BaseSuggestedAction[] actions)
         {
-            return new[] { new SuggestedActionSet(actions) };
+            return new[] { new SuggestedActionSet(categoryName: null, actions: actions, title: null, priority: SuggestedActionSetPriority.None, applicableToSpan: null) };
         }
 
         public void Dispose()

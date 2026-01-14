@@ -33,9 +33,9 @@ namespace EditorConfig
             {
                 ITrackingPoint triggerPoint = point.Value.Snapshot.CreateTrackingPoint(point.Value.Position, PointTrackingMode.Positive);
 
-                if (!m_provider.QuickInfoBroker.IsQuickInfoActive(m_textView))
+                if (m_provider.QuickInfoBroker.GetSession(m_textView) == null)
                 {
-                    m_provider.QuickInfoBroker.TriggerQuickInfo(m_textView, triggerPoint, true);
+                    m_provider.QuickInfoBroker.TriggerQuickInfoAsync(m_textView, triggerPoint, QuickInfoSessionOptions.TrackMouse);
                 }
             }
         }

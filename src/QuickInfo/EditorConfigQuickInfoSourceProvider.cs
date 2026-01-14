@@ -6,13 +6,13 @@ using System.ComponentModel.Composition;
 
 namespace EditorConfig
 {
-    [Export(typeof(IQuickInfoSourceProvider))]
+    [Export(typeof(IAsyncQuickInfoSourceProvider))]
     [Name("EditorConfig QuickInfo Source")]
     [Order(Before = "Default Quick Info Presenter")]
     [ContentType(Constants.LanguageName)]
-    internal class EditorConfigQuickInfoSourceProvider : IQuickInfoSourceProvider
+    internal class EditorConfigQuickInfoSourceProvider : IAsyncQuickInfoSourceProvider
     {
-        public IQuickInfoSource TryCreateQuickInfoSource(ITextBuffer textBuffer)
+        public IAsyncQuickInfoSource TryCreateQuickInfoSource(ITextBuffer textBuffer)
         {
             return textBuffer.Properties.GetOrCreateSingletonProperty(() => new EditorConfigQuickInfo(textBuffer));
         }

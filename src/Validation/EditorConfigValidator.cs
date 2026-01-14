@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Timers;
 using System.Threading.Tasks;
+using System.Timers;
+
 using Microsoft.VisualStudio.Text;
 
 namespace EditorConfig
@@ -13,18 +14,18 @@ namespace EditorConfig
         private const int _maxRecursionDepth = 5; // Limit directory traversal depth
 
         // Use HashSet for O(1) lookup instead of array with LINQ Any()
-        private static readonly HashSet<string> _ignorePaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        private static readonly HashSet<string> _ignorePaths = new(StringComparer.OrdinalIgnoreCase)
         {
             "\\node_modules", "\\.git", "\\packages", "\\bower_components",
             "\\jspm_packages", "\\testresults", "\\.vs", "\\bin", "\\obj"
         };
 
-        private EditorConfigDocument _document;
+        private readonly EditorConfigDocument _document;
         private DateTime _lastRequestForValidation;
         private Timer _timer;
         private bool _hasChanged;
-        private bool _prevEnabled = EditorConfigPackage.ValidationOptions != null ? EditorConfigPackage.ValidationOptions.EnableValidation : true;
-        private Dictionary<string, bool> _globbingCache = new Dictionary<string, bool>();
+        private bool _prevEnabled = EditorConfigPackage.ValidationOptions == null || EditorConfigPackage.ValidationOptions.EnableValidation;
+        private readonly Dictionary<string, bool> _globbingCache = [];
 
         private EditorConfigValidator(EditorConfigDocument document)
         {
@@ -139,7 +140,7 @@ namespace EditorConfig
                 return;
 
             var range = new Span(0, 0);
-            IEnumerable<string> errorCodes = _document.Suppressions.Union(new[] { errorCode }).OrderBy(c => c);
+            IEnumerable<string> errorCodes = _document.Suppressions.Union([errorCode]).OrderBy(c => c);
 
             if (_document.Suppressions.Any())
             {
@@ -159,11 +160,8 @@ namespace EditorConfig
 
         public void Dispose()
         {
-            if (_timer != null)
-            {
-                _timer.Dispose();
-                _timer = null;
-            }
+            _timer?.Dispose();
+            _timer = null;
 
             Validated = null;
 

@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.Language.StandardClassification;
+using Microsoft.VisualStudio.Language.StandardClassification;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using System;
@@ -38,10 +38,10 @@ namespace EditorConfig
 
             foreach (ParseItem item in parseItems)
             {
-                if (_map.ContainsKey(item.ItemType))
+                if (_map.TryGetValue(item.ItemType, out IClassificationType classificationType))
                 {
                     var snapshotSpan = new SnapshotSpan(span.Snapshot, item.Span);
-                    list.Add(new ClassificationSpan(snapshotSpan, _map[item.ItemType]));
+                    list.Add(new ClassificationSpan(snapshotSpan, classificationType));
                 }
             }
 

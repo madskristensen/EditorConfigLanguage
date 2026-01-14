@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text;
 
 namespace EditorConfig
 {
@@ -40,15 +40,14 @@ namespace EditorConfig
 
         public override string ToString()
         {
-            string text = Keyword.Text;
+            // Optimize string concatenation to reduce allocations
+            if (Value == null)
+                return Keyword.Text;
 
-            if (Value != null)
-                text += $" = {Value.Text}";
+            if (Severity == null)
+                return string.Concat(Keyword.Text, " = ", Value.Text);
 
-            if (Severity != null)
-                text += $" : {Severity.Text}";
-
-            return text;
+            return string.Concat(Keyword.Text, " = ", Value.Text, " : ", Severity.Text);
         }
     }
 }

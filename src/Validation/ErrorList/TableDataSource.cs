@@ -1,4 +1,4 @@
-﻿using Microsoft;
+using Microsoft;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.TableControl;
@@ -13,8 +13,8 @@ namespace EditorConfig
     class TableDataSource : ITableDataSource
     {
         private static TableDataSource _instance;
-        private readonly List<SinkManager> _managers = new List<SinkManager>();
-        private static Dictionary<string, TableEntriesSnapshot> _snapshots = new Dictionary<string, TableEntriesSnapshot>();
+        private readonly List<SinkManager> _managers = [];
+        private static Dictionary<string, TableEntriesSnapshot> _snapshots = [];
 
         [Import]
         private ITableManagerProvider TableManagerProvider { get; set; } = null;

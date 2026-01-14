@@ -1,6 +1,5 @@
-﻿using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace EditorConfig
 {
@@ -10,7 +9,7 @@ namespace EditorConfig
         public Section(ParseItem section)
         {
             Item = section;
-            Properties = new List<Property>();
+            Properties = [];
         }
 
         /// <summary>The ParseItem containing the section display text.</summary>
@@ -24,8 +23,12 @@ namespace EditorConfig
         {
             get
             {
-                Property last = Properties.LastOrDefault();
-                return last != null ? new Span(Item.Span.Start, last.Span.End - Item.Span.Start) : Item.Span;
+                // Access last element directly via indexer for O(1) instead of LINQ LastOrDefault O(n)
+                if (Properties.Count == 0)
+                    return Item.Span;
+
+                Property last = Properties[Properties.Count - 1];
+                return new Span(Item.Span.Start, last.Span.End - Item.Span.Start);
             }
         }
     }

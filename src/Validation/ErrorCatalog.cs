@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,7 +7,7 @@ namespace EditorConfig
     public static class ErrorCatalog
     {
         private static ValidationOptions _o = EditorConfigPackage.ValidationOptions;
-        private static List<Error> _errors = new List<Error>();
+        private static List<Error> _errors = [];
 
         public static IReadOnlyList<Error> All
         {

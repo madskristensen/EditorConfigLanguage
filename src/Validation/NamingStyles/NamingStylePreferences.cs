@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Immutable;
 using System.Linq;
 
@@ -33,6 +33,6 @@ namespace EditorConfig.Validation.NamingStyles
             => SymbolSpecifications.Single(s => s.ID == symbolSpecificationID);
 
         private NamingStyleRules CreateRules()
-            => new NamingStyleRules(NamingRules.Select(r => r.GetRule(this)).ToImmutableArray());
+            => new(NamingRules.Select(r => r.GetRule(this)).ToImmutableArray());
     }
 }

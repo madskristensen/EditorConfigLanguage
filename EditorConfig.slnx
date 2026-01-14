@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="src/EditorConfig.csproj" />
+  <Project Path="Test/EditorConfigTest/EditorConfigTest.csproj" />
+  <Properties Name="Performance">
+    <Property Name="HasPerformanceSessions" Value="true" />
+  </Properties>
+</Solution>

@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,16 +20,16 @@ namespace EditorConfig
         public ITextBuffer TextBuffer { get; }
 
         /// <summary>A list of all the parse items in the document.</summary>
-        public List<ParseItem> ParseItems { get; private set; } = new List<ParseItem>();
+        public List<ParseItem> ParseItems { get; private set; } = [];
 
         /// <summary>A list of all the sections in the document.</summary>
-        public List<Section> Sections { get; private set; } = new List<Section>();
+        public List<Section> Sections { get; private set; } = [];
 
         /// <summary>A list of all the properties in the root of the document.</summary>
-        public List<Property> Properties { get; private set; } = new List<Property>();
+        public List<Property> Properties { get; private set; } = [];
 
         /// <summary>A list of all the error suppressions in the document.</summary>
-        public List<string> Suppressions { get; private set; } = new List<string>();
+        public List<string> Suppressions { get; private set; } = [];
 
         /// <summary>The root property of the document if one is specified</summary>
         public Property Root

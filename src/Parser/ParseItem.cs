@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System;
@@ -29,7 +29,7 @@ namespace EditorConfig
         public string Text { get; set; }
 
         /// <summary>A list of validation errors.</summary>
-        public List<DisplayError> Errors { get; } = new List<DisplayError>();
+        public List<DisplayError> Errors { get; } = [];
 
         /// <summary>True if the item contains errors; otherwise false.</summary>
         public bool HasErrors

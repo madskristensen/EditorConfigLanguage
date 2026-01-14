@@ -8,12 +8,12 @@ namespace EditorConfig
 {
     partial class EditorConfigDocument
     {
-        private static readonly Regex _property = new Regex(@"^\s*(?<keyword>[^;\[#:\s=]+)\s*[=:]?\s*(?<value>[^;#:]+)?(\s*:\s*(?<severity>[^;#:\s]+))?", RegexOptions.Compiled);
-        private static readonly Regex _section = new Regex(@"^\s*(?<section>\[.+)", RegexOptions.Compiled);
-        private static readonly Regex _comment = new Regex(@"^\s*[#;].*", RegexOptions.Compiled);
-        private static readonly Regex _unknown = new Regex(@"\s*(?<unknown>.+)", RegexOptions.Compiled);
-        private static readonly Regex _suppress = new Regex(@"^(?<comment>#\s*suppress\s*):?\s*(?<errors>(\w{0,5}\s*)+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
-        private static readonly Regex _suppressionCode = new Regex(@"\w+", RegexOptions.Compiled);
+        private static readonly Regex _property = new(@"^\s*(?<keyword>[^;\[#:\s=]+)\s*[=:]?\s*(?<value>[^;#:]+)?(\s*:\s*(?<severity>[^;#:\s]+))?", RegexOptions.Compiled);
+        private static readonly Regex _section = new(@"^\s*(?<section>\[.+)", RegexOptions.Compiled);
+        private static readonly Regex _comment = new(@"^\s*[#;].*", RegexOptions.Compiled);
+        private static readonly Regex _unknown = new(@"\s*(?<unknown>.+)", RegexOptions.Compiled);
+        private static readonly Regex _suppress = new(@"^(?<comment>#\s*suppress\s*):?\s*(?<errors>(\w{0,5}\s*)+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private static readonly Regex _suppressionCode = new(@"\w+", RegexOptions.Compiled);
 
         /// <summary>Returns true if the document is currently being parsed.</summary>
         public bool IsParsing { get; private set; }
@@ -39,7 +39,7 @@ namespace EditorConfig
                 var sections = new List<Section>();
                 var properties = new List<Property>();
 
-                Suppressions = new List<string>();
+                Suppressions = [];
                 Section parentSection = null;
 
                 foreach (ITextSnapshotLine line in TextBuffer.CurrentSnapshot.Lines)

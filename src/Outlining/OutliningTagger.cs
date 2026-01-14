@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
 using System;
@@ -25,7 +25,7 @@ namespace EditorConfig
             StartParsing();
         }
 
-        public List<Region> Regions { get; private set; } = new List<Region>();
+        public List<Region> Regions { get; private set; } = [];
 
         public IEnumerable<ITagSpan<IOutliningRegionTag>> GetTags(NormalizedSnapshotSpanCollection spans)
         {

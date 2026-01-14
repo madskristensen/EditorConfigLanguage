@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.Shell.TableManager;
+using Microsoft.VisualStudio.Shell.TableManager;
 using System.Linq;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ namespace EditorConfig
     {
         private readonly ITableDataSink _sink;
         private TableDataSource _errorList;
-        private List<TableEntriesSnapshot> _snapshots = new List<TableEntriesSnapshot>();
+        private List<TableEntriesSnapshot> _snapshots = [];
 
         internal SinkManager(TableDataSource errorList, ITableDataSink sink)
         {

@@ -24,11 +24,16 @@ namespace EditorConfig
 
         private void ValidateSections()
         {
-            IEnumerable<EditorConfigDocument> parents = GetAllParentDocuments();
+            // Materialize parent documents once to avoid re-enumeration
+            List<EditorConfigDocument> parents = GetAllParentDocuments().ToList();
 
             foreach (Section section in _document.Sections)
             {
-                IEnumerable<Section> parentSections = parents.SelectMany(d => d.Sections).Where(s => s.Item.Text == section.Item.Text);
+                // Materialize parentSections to avoid multiple enumerations in the inner loop
+                List<Section> parentSections = parents
+                    .SelectMany(d => d.Sections)
+                    .Where(s => s.Item.Text == section.Item.Text)
+                    .ToList();
 
                 foreach (Property property in section.Properties)
                 {
@@ -55,12 +60,16 @@ namespace EditorConfig
 
                     ErrorCatalog.ParentDuplicateProperty.Run(property.Keyword, (e) =>
                     {
-                        if (!property.Keyword.Errors.Any() && parentSections.Any())
+                        if (!property.Keyword.Errors.Any() && parentSections.Count > 0)
                         {
-                            IEnumerable<Property> parentProperties = parentSections.SelectMany(s => s.Properties.Where(p => p.ToString() == property.ToString()));
-                            if (parentProperties.Any())
+                            // Find first matching property to avoid multiple enumerations
+                            Property parentProperty = parentSections
+                                .SelectMany(s => s.Properties)
+                                .FirstOrDefault(p => p.ToString() == property.ToString());
+
+                            if (parentProperty != null)
                             {
-                                string fileName = PackageUtilities.MakeRelative(_document.FileName, parentProperties.First().Keyword.Document.FileName);
+                                string fileName = PackageUtilities.MakeRelative(_document.FileName, parentProperty.Keyword.Document.FileName);
                                 e.Register(fileName);
                             }
                         }
@@ -520,7 +529,7 @@ namespace EditorConfig
 
         private sealed class NamingRuleAccessibilityListComparer : NamingRuleSubsetComparer
         {
-            internal static readonly NamingRuleAccessibilityListComparer Instance = new NamingRuleAccessibilityListComparer();
+            internal static readonly NamingRuleAccessibilityListComparer Instance = new();
 
             private NamingRuleAccessibilityListComparer()
             {
@@ -542,7 +551,7 @@ namespace EditorConfig
 
         private sealed class NamingRuleModifierListComparer : NamingRuleSubsetComparer
         {
-            internal static readonly NamingRuleModifierListComparer Instance = new NamingRuleModifierListComparer();
+            internal static readonly NamingRuleModifierListComparer Instance = new();
 
             private NamingRuleModifierListComparer()
             {
@@ -565,7 +574,7 @@ namespace EditorConfig
 
         private sealed class NamingRuleSymbolListComparer : NamingRuleSubsetComparer
         {
-            internal static readonly NamingRuleSymbolListComparer Instance = new NamingRuleSymbolListComparer();
+            internal static readonly NamingRuleSymbolListComparer Instance = new();
 
             private NamingRuleSymbolListComparer()
             {

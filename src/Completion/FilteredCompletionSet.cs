@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.Language.Intellisense;
@@ -9,10 +9,10 @@ namespace EditorConfig
     public class FilteredCompletionSet : CompletionSet2
     {
         public FilteredObservableCollection<Completion> currentCompletions;
-        private BulkObservableCollection<Completion> _completions = new BulkObservableCollection<Completion>();
-        public List<string> _activeFilters = new List<string>();
+        private BulkObservableCollection<Completion> _completions = [];
+        public List<string> _activeFilters = [];
         private string _typed;
-        private static List<Span> _defaultEmptyList = new List<Span>();
+        private static List<Span> _defaultEmptyList = [];
 
         public FilteredCompletionSet(string moniker, ITrackingSpan applicableTo, IEnumerable<Completion> completions, IEnumerable<Completion> completionBuilders, IReadOnlyList<IIntellisenseFilter> filters)
             : base(moniker, "All", applicableTo, completions, completionBuilders, filters)

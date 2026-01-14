@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell;
 using System;
 using System.ComponentModel;
 
@@ -29,6 +29,12 @@ namespace EditorConfig
         [Description("This will show errors for unknown properties. It is a good way to catch typos.")]
         [DefaultValue(true)]
         public bool EnableUnknownProperties { get; set; } = true;
+
+        [Category(_rules)]
+        [DisplayName("Ignored property prefixes")]
+        [Description("Comma-separated list of property prefixes to ignore during validation (e.g., resharper_, idea_, roslynator_).")]
+        [DefaultValue("resharper_, idea_, roslynator_, ij_")]
+        public string IgnoredPrefixes { get; set; } = "resharper_, idea_, roslynator_, ij_";
 
         [Category(_rules)]
         [DisplayName("Validate unknown values")]
@@ -68,6 +74,25 @@ namespace EditorConfig
         [Description("Spaces in globbing patterns are allowed, but are often the result of a typo.")]
         [DefaultValue(false)]
         public bool AllowSpacesInSections { get; set; }
+
+        /// <summary>
+        /// Checks if a property keyword should be ignored based on the configured ignored prefixes.
+        /// </summary>
+        public bool HasIgnoredPrefix(string keyword)
+        {
+            if (string.IsNullOrEmpty(IgnoredPrefixes) || string.IsNullOrEmpty(keyword))
+                return false;
+
+            string[] prefixes = IgnoredPrefixes.Split([','], StringSplitOptions.RemoveEmptyEntries);
+            foreach (string prefix in prefixes)
+            {
+                string trimmedPrefix = prefix.Trim();
+                if (!string.IsNullOrEmpty(trimmedPrefix) && keyword.StartsWith(trimmedPrefix, StringComparison.OrdinalIgnoreCase))
+                    return true;
+            }
+
+            return false;
+        }
 
         public override void SaveSettingsToStorage()
         {

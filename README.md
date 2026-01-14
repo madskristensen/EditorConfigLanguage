@@ -26,7 +26,7 @@ Need help getting started? Check out [Microsoft's EditorConfig documentation](ht
 
 - Makes it easy to create .editorconfig files
 - Syntax highlighting
-- C# and .NET style analyzers
+- C#, VB.NET, and C++ style analyzers
 - Intellisense
 - Code snippets
 - Validation
@@ -53,12 +53,15 @@ Full colorization of the full .editorconfig syntax.
 
 ![Classification](art/classification.png)
 
-### C# and .NET Style Analyzers
-Visual Studio lets you add C# and .NET specific rules to the .editorconfig file. In addition to enabling various rules, a severity is also added to control how Visual Studio is going to handle these rules.
+### C#, VB.NET, and C++ Style Analyzers
+Visual Studio lets you add C#, VB.NET, and C++ specific rules to the .editorconfig file. In addition to enabling various rules, a severity is also added to control how Visual Studio is going to handle these rules.
 
 ![C# and .NET style analyzers](art/csharp-analyzers.png)
 
 Each severity is clearly marked by an icon to make it easy to identify.
+
+#### C++ Support
+The extension provides full IntelliSense and validation for [C++ EditorConfig properties](https://learn.microsoft.com/visualstudio/ide/cpp-editorconfig-properties), including indentation, formatting, and code style options.
 
 ### Intellisense
 The extension provides Intellisense for both keywords and values.
@@ -105,6 +108,16 @@ Another way to suppress the error is by right-clicking the error in the Error Li
 
 ![Suppress from Error list](art/suppress-errorlist.png)
 
+#### Third-Party Property Support
+Many third-party tools like ReSharper, Rider, and Roslynator add their own properties to .editorconfig files. By default, the extension ignores properties with these common prefixes to avoid false validation errors:
+
+- `resharper_` - JetBrains ReSharper/Rider properties
+- `idea_` - JetBrains IntelliJ IDEA properties
+- `roslynator_` - Roslynator analyzer properties
+- `ij_` - Alternative IntelliJ prefix
+
+You can customize the ignored prefixes in **Tools → Options → Text Editor → EditorConfig → Validation → Ignored property prefixes**.
+
 ### Hover Tooltips
 Hover the mouse over any keyword to see a full description.
 
@@ -148,7 +161,7 @@ Change the behavior of the editor from **Tools -> Options** or simply by right-c
 To build this project locally:
 
 1. Clone the repository
-2. Open `EditorConfigLanguage.sln` in Visual Studio 2026
+2. Open `EditorConfigLanguage.slnx` in Visual Studio 2022
 3. Build and run (F5) to test in the Experimental Instance
 
 References to available formatting/code options directly from Roslyn codebase:

@@ -4,7 +4,9 @@ using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+
 using EditorConfig.Validation.NamingStyles;
+
 using Microsoft.VisualStudio.Shell;
 
 namespace EditorConfig
@@ -367,11 +369,16 @@ namespace EditorConfig
         {
             bool hasKeyword = SchemaCatalog.TryGetKeyword(property.Keyword.Text, out Keyword keyword);
 
-            // Unknown keyword
-            ErrorCatalog.UnknownKeyword.Run(property.Keyword, !hasKeyword, (e) =>
+            // Unknown keyword - skip if the keyword has an ignored prefix
+            bool hasIgnoredPrefix = EditorConfigPackage.ValidationOptions.HasIgnoredPrefix(property.Keyword.Text);
+            ErrorCatalog.UnknownKeyword.Run(property.Keyword, !hasKeyword && !hasIgnoredPrefix, (e) =>
             {
                 e.Register(property.Keyword.Text);
             });
+
+            // Skip further validation for properties with ignored prefixes
+            if (!hasKeyword && hasIgnoredPrefix)
+                return;
 
             ErrorCatalog.MissingValue.Run(property.Keyword, property.Value == null, (e) =>
             {
@@ -429,7 +436,7 @@ namespace EditorConfig
 
         private static bool DoesFilesMatch(string folder, string pattern, string root = null)
         {
-            root = root ?? folder;
+            root ??= folder;
             pattern = pattern.Trim('[', ']');
 
             // No reason to check file system since this will match at least the .editorconfig file itself
@@ -493,8 +500,8 @@ namespace EditorConfig
         private static bool CheckGlobbing(string path, AnalyzerConfig.SectionNameMatcher matcher)
             => matcher.IsMatch(path);
 
-        private static bool IsDotNetNamingRuleStyle(Property property) 
-            => property.Keyword.Text.StartsWith("dotnet_naming_rule.", StringComparison.Ordinal) && 
+        private static bool IsDotNetNamingRuleStyle(Property property)
+            => property.Keyword.Text.StartsWith("dotnet_naming_rule.", StringComparison.Ordinal) &&
                property.Keyword.Text.EndsWith(".style", StringComparison.Ordinal);
 
         private static bool IsDotNetNamingStyle(Property property)

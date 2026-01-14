@@ -12,7 +12,7 @@ namespace EditorConfig
         private static readonly Regex _section = new(@"^\s*(?<section>\[.+)", RegexOptions.Compiled);
         private static readonly Regex _comment = new(@"^\s*[#;].*", RegexOptions.Compiled);
         private static readonly Regex _unknown = new(@"\s*(?<unknown>.+)", RegexOptions.Compiled);
-        private static readonly Regex _suppress = new(@"^(?<comment>#\s*suppress\s*):?\s*(?<errors>(\w{0,5}\s*)+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private static readonly Regex _suppress = new(@"^(?<comment>#\s*suppress\s*):?\s*(?<errors>[\w\s]*)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         private static readonly Regex _suppressionCode = new(@"\w+", RegexOptions.Compiled);
 
         /// <summary>Returns true if the document is currently being parsed.</summary>

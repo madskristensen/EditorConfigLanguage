@@ -13,8 +13,9 @@ namespace EditorConfigTest
         [ClassInitialize]
         public static void Initialize(TestContext context)
         {
-            var file = new FileInfo(@"..\..\..\..\src\schema\EditorConfig.json");
-            SchemaCatalog.ParseJson(file.FullName);
+            string testDir = Path.GetDirectoryName(typeof(SchemaCatalogTest).Assembly.Location);
+            string file = Path.Combine(testDir, "schema", "EditorConfig.json");
+            SchemaCatalog.ParseJson(file);
         }
 
         [TestMethod]

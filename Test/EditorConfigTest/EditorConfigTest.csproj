@@ -75,6 +75,12 @@
       <Version>4.0.2</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup>
+  <Content Include="..\..\src\schema\EditorConfig.json">
+    <Link>schema\EditorConfig.json</Link>
+    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+  </Content>
+</ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

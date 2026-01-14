@@ -61,15 +61,16 @@ namespace EditorConfigTest
             Assert.AreEqual(5, doc.ParseItems[1].Span.Length);
         }
 
-        [TestMethod]
-        public void NamingRules()
-        {
-            var file = new FileInfo(@"..\..\..\..\src\schema\EditorConfig.json");
-            SchemaCatalog.ParseJson(file.FullName);
+                [TestMethod]
+                public void NamingRules()
+                {
+                    string testDir = Path.GetDirectoryName(typeof(DocumentTest).Assembly.Location);
+                    string file = Path.Combine(testDir, "schema", "EditorConfig.json");
+                    SchemaCatalog.ParseJson(file);
 
-            bool exist = SchemaCatalog.TryGetKeyword("dotnet_naming_rule.foo.symbols", out _);
+                    bool exist = SchemaCatalog.TryGetKeyword("dotnet_naming_rule.foo.symbols", out _);
 
-            Assert.IsTrue(exist);
+                    Assert.IsTrue(exist);
+                }
+            }
         }
-    }
-}

@@ -98,7 +98,7 @@ namespace EditorConfig
             }
 
             _snapshot = newSnapshot;
-            Regions = newRegions.Where(line => line.StartLine != line.EndLine).ToList();
+            Regions = [.. newRegions.Where(line => line.StartLine != line.EndLine)];
         }
     }
 

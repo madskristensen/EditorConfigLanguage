@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -71,7 +71,7 @@ namespace EditorConfig
    
         public IEnumerable<SuggestedActionSet> CreateActionSet(params BaseSuggestedAction[] actions)
         {
-            actions = actions.Where(val => val != null).ToArray();
+            actions = [.. actions.Where(val => val != null)];
             return new[] { new SuggestedActionSet(categoryName: null, actions: actions, title: null, priority: SuggestedActionSetPriority.None, applicableToSpan: null) };
         }
 

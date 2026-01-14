@@ -133,7 +133,7 @@ namespace EditorConfig
                 }
             }
 
-            return matches.Values.ToList();
+            return [.. matches.Values];
         }
     }
 }

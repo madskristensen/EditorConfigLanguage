@@ -25,15 +25,14 @@ namespace EditorConfig
         private void ValidateSections()
         {
             // Materialize parent documents once to avoid re-enumeration
-            List<EditorConfigDocument> parents = GetAllParentDocuments().ToList();
+            List<EditorConfigDocument> parents = [.. GetAllParentDocuments()];
 
             foreach (Section section in _document.Sections)
             {
                 // Materialize parentSections to avoid multiple enumerations in the inner loop
-                List<Section> parentSections = parents
+                List<Section> parentSections = [.. parents
                     .SelectMany(d => d.Sections)
-                    .Where(s => s.Item.Text == section.Item.Text)
-                    .ToList();
+                    .Where(s => s.Item.Text == section.Item.Text)];
 
                 foreach (Property property in section.Properties)
                 {

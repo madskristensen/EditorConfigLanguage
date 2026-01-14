@@ -5,28 +5,20 @@ using System.Linq;
 using Microsoft.VisualStudio.Imaging;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
-using Microsoft.VisualStudio.Text.Operations;
 
 namespace EditorConfig
 {
-    class EditorConfigCompletionSource : ICompletionSource
+    class EditorConfigCompletionSource(ITextBuffer buffer) : ICompletionSource
     {
-        private readonly ITextBuffer _buffer;
-        private readonly EditorConfigDocument _document;
+        private readonly EditorConfigDocument _document = EditorConfigDocument.FromTextBuffer(buffer);
         private bool _disposed;
-
-        public EditorConfigCompletionSource(ITextBuffer buffer, ITextStructureNavigatorSelectorService navigator)
-        {
-            _buffer = buffer;
-            _document = EditorConfigDocument.FromTextBuffer(buffer);
-        }
 
         public void AugmentCompletionSession(ICompletionSession session, IList<CompletionSet> completionSets)
         {
             if (_disposed || _document.IsParsing)
                 return;
 
-            ITextSnapshot snapshot = _buffer.CurrentSnapshot;
+            ITextSnapshot snapshot = buffer.CurrentSnapshot;
             SnapshotPoint? triggerPoint = session.GetTriggerPoint(snapshot);
 
             if (triggerPoint == null || !triggerPoint.HasValue)
@@ -73,7 +65,7 @@ namespace EditorConfig
                         Section section = _document.Sections.FirstOrDefault(x => x.Item.Text.Equals(parseItemSection.Text, StringComparison.OrdinalIgnoreCase));
                         if (section != null)
                         {
-                            usedKeywords = section.Properties.Select(x => x.Keyword.Text).ToList();
+                            usedKeywords = [.. section.Properties.Select(x => x.Keyword.Text)];
                         }
                     }
 
@@ -114,7 +106,7 @@ namespace EditorConfig
 
                     if (keyword.SupportsMultipleValues)
                     {
-                        HashSet<string> usedValues = new HashSet<string>(
+                        var usedValues = new HashSet<string>(
                             valueText.Split([','], StringSplitOptions.RemoveEmptyEntries)
                                 .Select(v => v.Trim()),
                             StringComparer.OrdinalIgnoreCase);
@@ -164,13 +156,13 @@ namespace EditorConfig
             // Find the last : in the value portion (after =)
             string afterEq = lineText.Substring(eq + 1);
             int colonIndex = afterEq.LastIndexOf(':');
-            
+
             if (colonIndex < 0)
                 return false;
 
             // The colon position in the line
             int colonPosInLine = eq + 1 + colonIndex;
-            
+
             // We're in severity position if cursor is after the colon
             return posInLine > colonPosInLine;
         }
@@ -187,11 +179,11 @@ namespace EditorConfig
 
             int eqPos = eq + line.Start.Position;
             int posInLine = position - line.Start.Position;
-            
+
             // Not in value position if we're in severity position
             if (IsInSeverityPosition(lineText, posInLine))
                 return false;
-            
+
             return position > eqPos;
         }
 
@@ -269,7 +261,7 @@ namespace EditorConfig
                 string afterEq = lineText.Substring(eq + 1);
                 int colonIndex = afterEq.LastIndexOf(':');
                 spanStart = eq + 1 + colonIndex + 1;
-                
+
                 // Skip whitespace after :
                 while (spanStart < lineText.Length && char.IsWhiteSpace(lineText[spanStart]))
                     spanStart++;
@@ -371,13 +363,12 @@ namespace EditorConfig
             IEnumerable<CompletionIcon2> icon = null;
             string automationText = iconAutomation;
             string text = item.Name;
-
-            if (int.TryParse(item.Name, out int integer))
+            if (int.TryParse(item.Name, out _))
                 text = "<integer>";
 
             if (!item.IsSupported)
             {
-                icon = new[] { new CompletionIcon2(KnownMonikers.IntellisenseWarning, "warning", "") };
+                icon = [new CompletionIcon2(KnownMonikers.IntellisenseWarning, "warning", "")];
             }
 
             if (category != Category.None)

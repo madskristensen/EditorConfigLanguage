@@ -1,4 +1,4 @@
-﻿using EnvDTE;
+using EnvDTE;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Shell.TableManager;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ namespace EditorConfig
         {
             _projectName = projectName;
 
-            Errors = result.SelectMany(p => p.Errors).ToList();
+            Errors = [.. result.SelectMany(p => p.Errors)];
             Url = fileName;
         }
 

@@ -45,6 +45,15 @@
       "documentationLink": "https://github.com/editorconfig/editorconfig/wiki/EditorConfig-Properties#end_of_line"
     },
     {
+      "name": "file_header_template",
+      "description": "Preferred file header template. Use 'unset' to remove any existing file header.",
+      "values": [ "unset", "<file_header>" ],
+      "defaultValue": [ "unset" ],
+      "severity": true,
+      "defaultSeverity": "silent",
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0073"
+    },
+    {
       "name": "indent_style",
       "description": "Indentation style.",
       "values": [ "tab", "space", "unset" ],
@@ -333,15 +342,6 @@
       "severity": true,
       "defaultSeverity": "silent",
       "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0040"
-    },
-    {
-      "name": "file_header_template",
-      "description": "Preferred file header template. Use 'unset' to remove any existing file header.",
-      "values": [ "unset", "<file_header>" ],
-      "defaultValue": [ "unset" ],
-      "severity": true,
-      "defaultSeverity": "silent",
-      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0073"
     },
     {
       "name": "dotnet_style_namespace_match_folder",

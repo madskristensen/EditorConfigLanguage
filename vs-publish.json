@@ -2,8 +2,91 @@
   "$schema": "http://json.schemastore.org/vsix-publish",
   "categories": [ "coding" ],
   "identity": {
-    "internalName": "EditorConfigLanguageService"
+    "internalName": "EditorConfigLanguageService",
+    "tags": [ "editorconfig", "formatting", "intellisense", "validation", "code style" ]
   },
+  "assetFiles": [
+    {
+      "pathOnDisk": "art/context-menu.png",
+      "targetPath": "art/context-menu.png"
+    },
+    {
+      "pathOnDisk": "art/classification.png",
+      "targetPath": "art/classification.png"
+    },
+    {
+      "pathOnDisk": "art/csharp-analyzers.png",
+      "targetPath": "art/csharp-analyzers.png"
+    },
+    {
+      "pathOnDisk": "art/keyword-intellisense.png",
+      "targetPath": "art/keyword-intellisense.png"
+    },
+    {
+      "pathOnDisk": "art/value-intellisense.png",
+      "targetPath": "art/value-intellisense.png"
+    },
+    {
+      "pathOnDisk": "art/snippets-context-menu.png",
+      "targetPath": "art/snippets-context-menu.png"
+    },
+    {
+      "pathOnDisk": "art/snippets-expansion.png",
+      "targetPath": "art/snippets-expansion.png"
+    },
+    {
+      "pathOnDisk": "art/validation.png",
+      "targetPath": "art/validation.png"
+    },
+    {
+      "pathOnDisk": "art/validation-duplicates.png",
+      "targetPath": "art/validation-duplicates.png"
+    },
+    {
+      "pathOnDisk": "art/validation-duplicates-parent.png",
+      "targetPath": "art/validation-duplicates-parent.png"
+    },
+    {
+      "pathOnDisk": "art/suppress_error.png",
+      "targetPath": "art/suppress_error.png"
+    },
+    {
+      "pathOnDisk": "art/suppress-comment.png",
+      "targetPath": "art/suppress-comment.png"
+    },
+    {
+      "pathOnDisk": "art/suppress-errorlist.png",
+      "targetPath": "art/suppress-errorlist.png"
+    },
+    {
+      "pathOnDisk": "art/quick-info.png",
+      "targetPath": "art/quick-info.png"
+    },
+    {
+      "pathOnDisk": "art/light-bulb.png",
+      "targetPath": "art/light-bulb.png"
+    },
+    {
+      "pathOnDisk": "art/formatting.png",
+      "targetPath": "art/formatting.png"
+    },
+    {
+      "pathOnDisk": "art/navigation-dropdown.png",
+      "targetPath": "art/navigation-dropdown.png"
+    },
+    {
+      "pathOnDisk": "art/inheritance-visualizer.png",
+      "targetPath": "art/inheritance-visualizer.png"
+    },
+    {
+      "pathOnDisk": "art/editor-context-menu.png",
+      "targetPath": "art/editor-context-menu.png"
+    },
+    {
+      "pathOnDisk": "art/settings.png",
+      "targetPath": "art/settings.png"
+    }
+  ],
   "overview": "README.md",
   "priceCategory": "free",
   "publisher": "MadsKristensen",

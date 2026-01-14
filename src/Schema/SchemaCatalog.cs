@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -13,6 +13,10 @@ namespace EditorConfig
     {
         /// <summary>The name of the root keyword.</summary>
         public const string Root = "root";
+
+        // Lookup dictionaries for O(1) access
+        private static Dictionary<string, Keyword> _keywordLookup;
+        private static Dictionary<string, Severity> _severityLookup;
 
         static SchemaCatalog()
         {
@@ -37,10 +41,11 @@ namespace EditorConfig
                 return false;
             }
 
-            keyword = AllKeywords.FirstOrDefault(c => c.Name.Is(name));
-            if (keyword is object)
+            // Fast path: direct dictionary lookup (case-insensitive)
+            if (_keywordLookup.TryGetValue(name.ToLowerInvariant(), out keyword))
                 return true;
 
+            // Slow path: pattern matching for dynamic naming rules
             if (name.StartsWith("dotnet_naming_", StringComparison.OrdinalIgnoreCase) && name.IndexOf('.') > 0)
             {
                 string[] parts = name.Split('.');
@@ -56,21 +61,21 @@ namespace EditorConfig
             {
                 string[] parts = name.Split('.');
                 if (parts.Length == 3
-                    && parts[0] == "dotnet_diagnostic"
-                    && parts[2] == "severity")
+                    && parts[0].Equals("dotnet_diagnostic", StringComparison.OrdinalIgnoreCase)
+                    && parts[2].Equals("severity", StringComparison.OrdinalIgnoreCase))
                 {
-                    keyword = AllKeywords.FirstOrDefault(c => c.Name.Is("dotnet_diagnostic.<rule_id>.severity"));
+                    _keywordLookup.TryGetValue("dotnet_diagnostic.<rule_id>.severity", out keyword);
                 }
             }
             else if (name.StartsWith("dotnet_analyzer_diagnostic.", StringComparison.OrdinalIgnoreCase))
             {
                 string[] parts = name.Split('.');
                 if (parts.Length == 3
-                    && parts[0] == "dotnet_analyzer_diagnostic"
+                    && parts[0].Equals("dotnet_analyzer_diagnostic", StringComparison.OrdinalIgnoreCase)
                     && parts[1].StartsWith("category-", StringComparison.OrdinalIgnoreCase)
-                    && parts[2] == "severity")
+                    && parts[2].Equals("severity", StringComparison.OrdinalIgnoreCase))
                 {
-                    keyword = AllKeywords.FirstOrDefault(c => c.Name.Is("dotnet_analyzer_diagnostic.category-<category>.severity"));
+                    _keywordLookup.TryGetValue("dotnet_analyzer_diagnostic.category-<category>.severity", out keyword);
                 }
             }
 
@@ -80,8 +85,13 @@ namespace EditorConfig
         /// <summary>Tries to get a severity by name.</summary>
         public static bool TryGetSeverity(string name, out Severity severity)
         {
-            severity = Severities.FirstOrDefault(s => s.Name.Is(name));
-            return severity != null;
+            if (name is null)
+            {
+                severity = null;
+                return false;
+            }
+
+            return _severityLookup.TryGetValue(name.ToLowerInvariant(), out severity);
         }
 
         internal static void ParseJson(string file = null)
@@ -100,6 +110,10 @@ namespace EditorConfig
                 Severities = JsonConvert.DeserializeObject<IEnumerable<Severity>>(obj["severities"].ToString());
                 AllKeywords = JsonConvert.DeserializeObject<IEnumerable<Keyword>>(obj["properties"].ToString());
                 VisibleKeywords = AllKeywords.Where(p => p.IsVisible);
+
+                // Build lookup dictionaries for O(1) access
+                _keywordLookup = AllKeywords.ToDictionary(k => k.Name.ToLowerInvariant(), k => k);
+                _severityLookup = Severities.ToDictionary(s => s.Name.ToLowerInvariant(), s => s);
             }
         }
     }

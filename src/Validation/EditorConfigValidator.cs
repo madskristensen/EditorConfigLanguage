@@ -10,7 +10,14 @@ namespace EditorConfig
     partial class EditorConfigValidator : IDisposable
     {
         private const int _validationDelay = 500;
-        private static string[] _ignorePaths = ["\\node_modules", "\\.git", "\\packages", "\\bower_components", "\\jspm_packages", "\\testresults", "\\.vs"];
+        private const int _maxRecursionDepth = 5; // Limit directory traversal depth
+
+        // Use HashSet for O(1) lookup instead of array with LINQ Any()
+        private static readonly HashSet<string> _ignorePaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "\\node_modules", "\\.git", "\\packages", "\\bower_components",
+            "\\jspm_packages", "\\testresults", "\\.vs", "\\bin", "\\obj"
+        };
 
         private EditorConfigDocument _document;
         private DateTime _lastRequestForValidation;

@@ -432,14 +432,22 @@ namespace EditorConfig
             if (matcher is null)
                 return false;
 
-            return DoesFilesMatch(folder, matcher.Value, root);
+            return DoesFilesMatch(folder, matcher.Value, root, 0);
         }
 
-        private static bool DoesFilesMatch(string folder, AnalyzerConfig.SectionNameMatcher matcher, string root)
+        private static bool DoesFilesMatch(string folder, AnalyzerConfig.SectionNameMatcher matcher, string root, int depth)
         {
+            // Limit recursion depth to prevent traversing huge directory trees
+            if (depth > _maxRecursionDepth)
+                return false;
+
+            // Early exit if this folder is in the ignore list
+            if (ShouldIgnorePath(folder))
+                return false;
+
             try
             {
-                foreach (string file in Directory.EnumerateFiles(folder).Where(f => !_ignorePaths.Any(p => folder.Contains(p))))
+                foreach (string file in Directory.EnumerateFiles(folder))
                 {
                     string relative = file.Replace(root, string.Empty);
 
@@ -449,7 +457,7 @@ namespace EditorConfig
 
                 foreach (string directory in Directory.EnumerateDirectories(folder))
                 {
-                    if (!_ignorePaths.Any(i => directory.Contains(i)) && DoesFilesMatch(directory, matcher, root))
+                    if (!ShouldIgnorePath(directory) && DoesFilesMatch(directory, matcher, root, depth + 1))
                     {
                         return true;
                     }
@@ -461,6 +469,16 @@ namespace EditorConfig
                 return true;
             }
 
+            return false;
+        }
+
+        private static bool ShouldIgnorePath(string path)
+        {
+            foreach (string ignorePath in _ignorePaths)
+            {
+                if (path.IndexOf(ignorePath, StringComparison.OrdinalIgnoreCase) >= 0)
+                    return true;
+            }
             return false;
         }
 

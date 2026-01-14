@@ -8,11 +8,12 @@ namespace EditorConfig
 {
     partial class EditorConfigDocument
     {
-        private static Regex _property = new Regex(@"^\s*(?<keyword>[^;\[#:\s=]+)\s*[=:]?\s*(?<value>[^;#:]+)?(\s*:\s*(?<severity>[^;#:\s]+))?");
-        private static Regex _section = new Regex(@"^\s*(?<section>\[.+)");
-        private static Regex _comment = new Regex(@"^\s*[#;].*");
-        private static Regex _unknown = new Regex(@"\s*(?<unknown>.+)");
-        private static Regex _suppress = new Regex(@"^(?<comment>#\s*suppress\s*):?\s*(?<errors>(\w{0,5}\s*)+)$", RegexOptions.IgnoreCase);
+        private static readonly Regex _property = new Regex(@"^\s*(?<keyword>[^;\[#:\s=]+)\s*[=:]?\s*(?<value>[^;#:]+)?(\s*:\s*(?<severity>[^;#:\s]+))?", RegexOptions.Compiled);
+        private static readonly Regex _section = new Regex(@"^\s*(?<section>\[.+)", RegexOptions.Compiled);
+        private static readonly Regex _comment = new Regex(@"^\s*[#;].*", RegexOptions.Compiled);
+        private static readonly Regex _unknown = new Regex(@"\s*(?<unknown>.+)", RegexOptions.Compiled);
+        private static readonly Regex _suppress = new Regex(@"^(?<comment>#\s*suppress\s*):?\s*(?<errors>(\w{0,5}\s*)+)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private static readonly Regex _suppressionCode = new Regex(@"\w+", RegexOptions.Compiled);
 
         /// <summary>Returns true if the document is currently being parsed.</summary>
         public bool IsParsing { get; private set; }
@@ -57,8 +58,7 @@ namespace EditorConfig
                         Group errorsGroup = match.Groups["errors"];
                         string value = errorsGroup.Value;
 
-                        var c = new Regex(@"\w+");
-                        foreach (Match code in c.Matches(match.Value, errorsGroup.Index))
+                        foreach (Match code in _suppressionCode.Matches(match.Value, errorsGroup.Index))
                         {
                             ParseItem errors = CreateParseItem(ItemType.Suppression, line, code);
                             AddToList(items, errors);

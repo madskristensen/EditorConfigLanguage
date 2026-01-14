@@ -43,6 +43,16 @@ jobs:
     - name: Build
       run: msbuild /v:m -restore /p:OutDir=\_built
 
+    - name: Test
+      run: dotnet test --no-build --configuration ${{ env.Configuration }} --logger trx --results-directory TestResults
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: test-results
+        path: TestResults/*.trx
+
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
@@ -60,12 +70,12 @@ jobs:
       - name: Download Package artifact
         uses: actions/download-artifact@v4
         with:
-          name: ${{ github.event.repository.name }}.vsix
+          name: EditorConfig.vsix
 
       - name: Upload to Open VSIX
         uses: timheuer/openvsixpublish@v1
         with:
-          vsix-file: ${{ github.event.repository.name }}.vsix
+          vsix-file: EditorConfig.vsix
 
       - name: Publish extension to Marketplace
         if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[release]') }}

@@ -328,11 +328,72 @@
     {
       "name": "dotnet_style_require_accessibility_modifiers",
       "description": "Prefer accessibility modifiers to be specified",
-      "values": [ "always", "for_non_interface_members", "never" ],
+      "values": [ "always", "for_non_interface_members", "never", "omit_if_default" ],
       "defaultValue": [ "for_non_interface_members" ],
       "severity": true,
       "defaultSeverity": "silent",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#normalize_modifiers"
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0040"
+    },
+    {
+      "name": "file_header_template",
+      "description": "Preferred file header template. Use 'unset' to remove any existing file header.",
+      "values": [ "unset", "<file_header>" ],
+      "defaultValue": [ "unset" ],
+      "severity": true,
+      "defaultSeverity": "silent",
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0073"
+    },
+    {
+      "name": "dotnet_style_namespace_match_folder",
+      "description": "Prefer namespaces to match the folder structure.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "suggestion",
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0130"
+    },
+    {
+      "name": "dotnet_style_operator_placement_when_wrapping",
+      "description": "Prefer operators to be placed at the beginning or end of a line when wrapping.",
+      "values": [ "beginning_of_line", "end_of_line" ],
+      "defaultValue": [ "beginning_of_line" ],
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0055"
+    },
+    {
+      "name": "dotnet_style_prefer_collection_expression",
+      "description": "Prefer collection expressions for array, span, list, and other collection initializations.",
+      "values": [ "true", "when_types_loosely_match", "when_types_exactly_match", "false" ],
+      "defaultValue": [ "true" ],
+      "severity": true,
+      "defaultSeverity": "suggestion",
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0300"
+    },
+    {
+      "name": "dotnet_style_prefer_foreach_explicit_cast_in_source",
+      "description": "Prefer explicit cast in foreach loop when the source collection type is loosely typed.",
+      "values": [ "always", "when_strongly_typed" ],
+      "defaultValue": [ "when_strongly_typed" ],
+      "severity": true,
+      "defaultSeverity": "suggestion",
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0220"
+    },
+    {
+      "name": "dotnet_style_allow_multiple_blank_lines_experimental",
+      "description": "Allow multiple blank lines.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "silent",
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide2000"
+    },
+    {
+      "name": "dotnet_style_allow_statement_immediately_after_block_experimental",
+      "description": "Allow statement immediately after block.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "silent",
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide2003"
     },
     // C# properties
     {
@@ -416,12 +477,12 @@
     {
       "name": "csharp_preferred_modifier_order",
       "description": "Prefer the specified ordering of modifiers.",
-      "values": [ "public", "private", "protected", "internal", "static", "extern", "new", "virtual", "abstract", "sealed", "override", "readonly", "unsafe", "volatile", "async" ],
-      "defaultValue": [ "public", "private", "protected", "internal", "static", "extern", "new", "virtual", "abstract", "sealed", "override", "readonly", "unsafe", "volatile", "async" ],
+      "values": [ "public", "private", "protected", "internal", "file", "static", "extern", "new", "virtual", "abstract", "sealed", "override", "readonly", "unsafe", "required", "volatile", "async" ],
+      "defaultValue": [ "public", "private", "protected", "internal", "file", "static", "extern", "new", "virtual", "abstract", "sealed", "override", "readonly", "unsafe", "required", "volatile", "async" ],
       "multiple": true,
       "severity": true,
       "defaultSeverity": "suggestion",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#normalize_modifiers"
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0036"
     },
     {
       "name": "csharp_prefer_braces",
@@ -693,16 +754,7 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "suggestion",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#inlined_variable_declarations"
-    },
-    {
-      "name": "csharp_style_pattern_local_over_anonymous_function",
-      "description": "Prefer local functions over anonymous functions.",
-      "values": [ true, false ],
-      "defaultValue": [ true ],
-      "severity": true,
-      "defaultSeverity": "suggestion",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#expression_level_csharp"
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0018"
     },
     {
       "name": "csharp_style_prefer_local_over_anonymous_function",
@@ -711,7 +763,7 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "suggestion",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#expression_level_csharp"
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0039"
     },
     {
       "name": "csharp_style_pattern_matching_over_as_with_null_check",
@@ -875,8 +927,108 @@
       "description": "Prefer using a tuple to swap two values.",
       "values": [ true, false ],
       "defaultValue": [ true ],
+      "severity": true,
       "defaultSeverity": "suggestion",
-      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0180#csharp_style_prefer_tuple_swap"
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0180"
+    },
+    {
+      "name": "csharp_style_prefer_readonly_struct",
+      "description": "Prefer to make a struct readonly when all its members are readonly.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "suggestion",
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0250"
+    },
+    {
+      "name": "csharp_style_prefer_readonly_struct_member",
+      "description": "Prefer to make struct members readonly when they don't modify state.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "suggestion",
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0251"
+    },
+    {
+      "name": "csharp_style_prefer_primary_constructors",
+      "description": "Prefer primary constructors.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "suggestion",
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0290"
+    },
+    {
+      "name": "csharp_prefer_static_anonymous_function",
+      "description": "Prefer anonymous functions to be marked static when they don't capture local variables or instance state.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "suggestion",
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0320"
+    },
+    {
+      "name": "csharp_prefer_system_threading_lock",
+      "description": "Prefer System.Threading.Lock over object for locking.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "suggestion",
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0330"
+    },
+    {
+      "name": "csharp_style_prefer_unbound_generic_type_in_nameof",
+      "description": "Prefer unbound generic type in nameof.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "suggestion",
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0340"
+    },
+    {
+      "name": "csharp_style_allow_embedded_statements_on_same_line_experimental",
+      "description": "Allow embedded statements on same line.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "silent",
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide2001"
+    },
+    {
+      "name": "csharp_style_allow_blank_lines_between_consecutive_braces_experimental",
+      "description": "Allow blank lines between consecutive braces.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "silent",
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide2002"
+    },
+    {
+      "name": "csharp_style_allow_blank_line_after_colon_in_constructor_initializer_experimental",
+      "description": "Allow blank line after colon in constructor initializer.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "silent",
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide2004"
+    },
+    {
+      "name": "csharp_style_allow_blank_line_after_token_in_conditional_expression_experimental",
+      "description": "Allow blank line after token in conditional expression.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "silent",
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide2005"
+    },
+    {
+      "name": "csharp_style_allow_blank_line_after_token_in_arrow_expression_clause_experimental",
+      "description": "Allow blank line after token in arrow expression clause.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "silent",
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide2006"
     },
     // VB properties
     {
@@ -997,90 +1149,85 @@
       "description": "This rule concerns with flagging unused parameters. The option value determines if unused parameters should be flagged only for non-public methods or for both public and non-public methods.",
       "values": [ "all", "non_public" ],
       "defaultValue": [ "all" ],
-      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0060"
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0060"
     },
 
-    // Undocumented properties
+    // Spacing properties (documented in IDE0055)
     {
       "name": "csharp_space_after_comma",
-      "description": "Undocumented property",
+      "description": "Insert space after a comma.",
       "values": [ true, false ],
       "defaultValue": [ true ],
-      "hidden": true
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0055"
     },
     {
       "name": "csharp_space_after_dot",
-      "description": "Undocumented property",
+      "description": "Insert space after a dot.",
       "values": [ true, false ],
       "defaultValue": [ false ],
-      "hidden": true
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0055"
     },
     {
       "name": "csharp_space_after_semicolon_in_for_statement",
-      "description": "Undocumented property",
+      "description": "Insert space after semicolon in a for statement.",
       "values": [ true, false ],
       "defaultValue": [ true ],
-      "hidden": true
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0055"
     },
     {
       "name": "csharp_space_around_declaration_statements",
-      "description": "Undocumented property",
+      "description": "Remove extra space characters in declaration statements.",
       "values": [ "ignore", "false" ],
       "defaultValue": [ false ],
-      "hidden": true
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0055"
     },
     {
       "name": "csharp_space_before_comma",
-      "description": "Undocumented property",
+      "description": "Insert space before a comma.",
       "values": [ true, false ],
       "defaultValue": [ false ],
-      "hidden": true
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0055"
     },
     {
       "name": "csharp_space_before_dot",
-      "description": "Undocumented property",
+      "description": "Insert space before a dot.",
       "values": [ true, false ],
       "defaultValue": [ false ],
-      "hidden": true
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0055"
     },
     {
       "name": "csharp_space_before_semicolon_in_for_statement",
-      "description": "Undocumented property",
+      "description": "Insert space before semicolon in a for statement.",
       "values": [ true, false ],
       "defaultValue": [ false ],
-      "hidden": true
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0055"
     },
     {
       "name": "csharp_style_prefer_method_group_conversion",
-      "description": "Undocumented property",
+      "description": "Prefer method group conversion over lambda when possible.",
       "values": [ true, false ],
       "defaultValue": [ true ],
+      "severity": true,
       "defaultSeverity": "silent",
-      "hidden": true
-    },
-    {
-      "name": "csharp_style_prefer_parameter_null_checking",
-      "description": "Undocumented property",
-      "values": [ true, false ],
-      "defaultValue": [ true ],
-      "defaultSeverity": "suggestion",
-      "hidden": true
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0200"
     },
     {
       "name": "csharp_style_prefer_top_level_statements",
-      "description": "Undocumented property",
+      "description": "Prefer top-level statements over an explicit Main method entry point.",
       "values": [ true, false ],
       "defaultValue": [ true ],
+      "severity": true,
       "defaultSeverity": "silent",
-      "hidden": true
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0210"
     },
     {
       "name": "csharp_style_prefer_utf8_string_literals",
-      "description": "Undocumented property",
+      "description": "Prefer UTF-8 string literals.",
       "values": [ true, false ],
       "defaultValue": [ true ],
+      "severity": true,
       "defaultSeverity": "suggestion",
-      "hidden": true
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0230"
     }
   ]
 }

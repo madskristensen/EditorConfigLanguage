@@ -63,7 +63,10 @@ namespace EditorConfig
             var view = (IWpfTextView)sender;
             view.Closed -= ViewClosed;
 
-            _validator?.Validated -= Validated;
+            if (_validator != null)
+            {
+                _validator.Validated -= Validated;
+            }
 
             if (view.Properties.TryGetProperty("file", out string file))
             {

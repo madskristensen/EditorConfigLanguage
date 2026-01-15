@@ -16,8 +16,8 @@ namespace EditorConfig
 {
     class InheritanceAdornment : StackPanel
     {
-        private IAdornmentLayer _adornmentLayer;
-        private EditorConfigDocument _document;
+        private readonly IAdornmentLayer _adornmentLayer;
+        private readonly EditorConfigDocument _document;
 
         public InheritanceAdornment(IWpfTextView view, ITextDocument doc)
         {

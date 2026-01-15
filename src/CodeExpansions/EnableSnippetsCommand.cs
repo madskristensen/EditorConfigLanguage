@@ -11,11 +11,11 @@ namespace EditorConfig
     internal class EnableSnippetsCommand : BaseCommand, IVsExpansionClient
     {
         private const string _guid = EditorConfigLanguage.LanguageGuid;
-        private IVsTextView _vsTextView;
-        private ITextView _view;
-        private IVsExpansionManager _manager;
+        private readonly IVsTextView _vsTextView;
+        private readonly ITextView _view;
+        private readonly IVsExpansionManager _manager;
         private IVsExpansionSession _session;
-        private ITextStructureNavigatorSelectorService _navigator;
+        private readonly ITextStructureNavigatorSelectorService _navigator;
 
         internal EnableSnippetsCommand(IVsTextView vsTextView, ITextView textView, ITextStructureNavigatorSelectorService navigator)
         {

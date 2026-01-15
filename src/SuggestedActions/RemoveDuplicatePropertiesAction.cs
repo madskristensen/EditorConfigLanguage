@@ -10,8 +10,8 @@ namespace EditorConfig
 {
     class RemoveDuplicatePropertiesAction : BaseSuggestedAction
     {
-        private Section _section;
-        private ITextView _view;
+        private readonly Section _section;
+        private readonly ITextView _view;
 
         public RemoveDuplicatePropertiesAction(Section section, ITextView view)
         {

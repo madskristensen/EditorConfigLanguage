@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.Imaging;
+using Microsoft.VisualStudio.Imaging;
 using Microsoft.VisualStudio.Imaging.Interop;
 using System;
 using System.Linq;
@@ -7,7 +7,7 @@ namespace EditorConfig
 {
     public class Error : ITooltip
     {
-        private Func<bool> _isSupported;
+        private readonly Func<bool> _isSupported;
 
         public Error(string code, ErrorCategory type, string format, Func<bool> isSupported)
         {

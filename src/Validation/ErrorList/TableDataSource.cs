@@ -14,7 +14,7 @@ namespace EditorConfig
     {
         private static TableDataSource _instance;
         private readonly List<SinkManager> _managers = [];
-        private static Dictionary<string, TableEntriesSnapshot> _snapshots = [];
+        private static readonly Dictionary<string, TableEntriesSnapshot> _snapshots = [];
 
         [Import]
         private ITableManagerProvider TableManagerProvider { get; set; } = null;

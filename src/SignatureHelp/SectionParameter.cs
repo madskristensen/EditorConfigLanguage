@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.Language.Intellisense;
+using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 
 namespace EditorConfig
@@ -6,7 +6,7 @@ namespace EditorConfig
 
     internal class GenericParameter : IParameter
     {
-        private SectionSignature _signature;
+        private readonly SectionSignature _signature;
 
         public GenericParameter(SectionSignature signature)
         {

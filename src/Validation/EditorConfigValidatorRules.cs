@@ -355,7 +355,7 @@ namespace EditorConfig
         {
             foreach (Property property in _document.Properties)
             {
-                ErrorCatalog.OnlyRootAllowd.Run(property.Keyword, (e) =>
+                ErrorCatalog.OnlyRootAllowed.Run(property.Keyword, (e) =>
                 {
                     if (property != _document.Root)
                     {

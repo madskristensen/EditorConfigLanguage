@@ -1,18 +1,21 @@
-using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Text;
-using Microsoft.VisualStudio.Text.Tagging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text.Tagging;
+
 using Task = System.Threading.Tasks.Task;
 
 namespace EditorConfig
 {
-    internal sealed class OutliningTagger : ITagger<IOutliningRegionTag>
+    internal sealed class OutliningTagger : ITagger<IOutliningRegionTag>, IDisposable
     {
         private readonly ITextBuffer _buffer;
         private ITextSnapshot _snapshot;
-        private EditorConfigDocument _document;
+        private readonly EditorConfigDocument _document;
+        private bool _isDisposed;
 
         public OutliningTagger(ITextBuffer buffer)
         {
@@ -21,6 +24,8 @@ namespace EditorConfig
 
             _document = EditorConfigDocument.FromTextBuffer(buffer);
             _document.Parsed += DocumentChanged;
+
+            _buffer.Changed += BufferChanged;
 
             StartParsing();
         }
@@ -99,6 +104,29 @@ namespace EditorConfig
 
             _snapshot = newSnapshot;
             Regions = [.. newRegions.Where(line => line.StartLine != line.EndLine)];
+        }
+
+        private void BufferChanged(object sender, TextContentChangedEventArgs e)
+        {
+            // Check if buffer is being disposed (empty snapshot after change often indicates this)
+        }
+
+        public void Dispose()
+        {
+            if (_isDisposed)
+                return;
+
+            _isDisposed = true;
+
+            if (_document != null)
+            {
+                _document.Parsed -= DocumentChanged;
+            }
+
+            if (_buffer != null)
+            {
+                _buffer.Changed -= BufferChanged;
+            }
         }
     }
 

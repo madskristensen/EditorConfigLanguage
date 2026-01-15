@@ -9,10 +9,10 @@ namespace EditorConfig
     public class FilteredCompletionSet : CompletionSet2
     {
         public FilteredObservableCollection<Completion> currentCompletions;
-        private BulkObservableCollection<Completion> _completions = [];
+        private readonly BulkObservableCollection<Completion> _completions = [];
         public List<string> _activeFilters = [];
         private string _typed;
-        private static List<Span> _defaultEmptyList = [];
+        private static readonly List<Span> _defaultEmptyList = [];
 
         public FilteredCompletionSet(string moniker, ITrackingSpan applicableTo, IEnumerable<Completion> completions, IEnumerable<Completion> completionBuilders, IReadOnlyList<IIntellisenseFilter> filters)
             : base(moniker, "All", applicableTo, completions, completionBuilders, filters)

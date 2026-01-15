@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell;
 using System;
 using System.Globalization;
 
@@ -7,7 +7,7 @@ namespace EditorConfig
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
     public class ProvideBraceCompletionAttribute : RegistrationAttribute
     {
-        private string languageName;
+        private readonly string languageName;
         public ProvideBraceCompletionAttribute(string languageName)
         {
             this.languageName = languageName;

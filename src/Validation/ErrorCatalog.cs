@@ -6,8 +6,8 @@ namespace EditorConfig
 {
     public static class ErrorCatalog
     {
-        private static ValidationOptions _o = EditorConfigPackage.ValidationOptions;
-        private static List<Error> _errors = [];
+        private static readonly ValidationOptions _o = EditorConfigPackage.ValidationOptions;
+        private static readonly List<Error> _errors = [];
 
         public static IReadOnlyList<Error> All
         {
@@ -27,7 +27,7 @@ namespace EditorConfig
             Create("EC104", ErrorCategory.Error, Resources.Text.ValidationMissingSeverity);
         public static Error MissingValue { get; } =
             Create("EC105", ErrorCategory.Error, Resources.Text.ValidationMissingPropertyValue);
-        public static Error OnlyRootAllowd { get; } =
+        public static Error OnlyRootAllowed { get; } =
             Create("EC106", ErrorCategory.Error, Resources.Text.ValidateOnlyRootAllowed);
         public static Error ParentDuplicateProperty { get; } =
             Create("EC107", ErrorCategory.Suggestion, Resources.Text.ValidationParentPropertyDuplicate, () => _o.EnableDuplicateFoundInParent);

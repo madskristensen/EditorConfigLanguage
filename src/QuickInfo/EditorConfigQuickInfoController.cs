@@ -8,8 +8,8 @@ namespace EditorConfig
     internal class EditorConfigQuickInfoController : IIntellisenseController
     {
         private ITextView m_textView;
-        private IList<ITextBuffer> m_subjectBuffers;
-        private EditorConfigQuickInfoControllerProvider m_provider;
+        private readonly IList<ITextBuffer> m_subjectBuffers;
+        private readonly EditorConfigQuickInfoControllerProvider m_provider;
 
         internal EditorConfigQuickInfoController(ITextView textView, IList<ITextBuffer> subjectBuffers, EditorConfigQuickInfoControllerProvider provider)
         {

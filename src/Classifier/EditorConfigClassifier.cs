@@ -9,8 +9,8 @@ namespace EditorConfig
     internal class EditorConfigClassifier : IClassifier
     {
         private static Dictionary<ItemType, IClassificationType> _map;
-        private EditorConfigDocument _document;
-        private ITextBuffer _buffer;
+        private readonly EditorConfigDocument _document;
+        private readonly ITextBuffer _buffer;
 
         public EditorConfigClassifier(IClassificationTypeRegistryService registry, ITextBuffer buffer)
         {

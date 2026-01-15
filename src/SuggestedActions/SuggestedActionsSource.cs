@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.Language.Intellisense;
+using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using System;
@@ -11,8 +11,8 @@ namespace EditorConfig
 {
     class SuggestedActionsSource : ISuggestedActionsSource
     {
-        private ITextView _view;
-        private EditorConfigDocument _document;
+        private readonly ITextView _view;
+        private readonly EditorConfigDocument _document;
         private Section _section;
 
         public SuggestedActionsSource(ITextView view, ITextBuffer buffer)

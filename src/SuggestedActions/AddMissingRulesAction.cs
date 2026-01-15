@@ -1,9 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
 using Microsoft.VisualStudio.Imaging;
 using Microsoft.VisualStudio.Imaging.Interop;
 using Microsoft.VisualStudio.Language.Intellisense;
@@ -11,24 +11,15 @@ using Microsoft.VisualStudio.Text.Editor;
 
 namespace EditorConfig
 {
-    class AddMissingRulesAction : BaseSuggestedAction
+    class AddMissingRulesAction(List<Keyword> missingRules, EditorConfigDocument document, ITextView view) : BaseSuggestedAction
     {
-        List<Keyword> _missingRules;
-        EditorConfigDocument _document;
-        private ITextView _view;
-
-        public AddMissingRulesAction(List<Keyword> missingRules, EditorConfigDocument document, ITextView view)
-        {
-            _missingRules = missingRules;
-            _document = document;
-            _view = view;
-        }
+        readonly List<Keyword> _missingRules = missingRules;
 
         public override string DisplayText
         {
             get { return "Add Missing Rules"; }
         }
-    
+
         public override bool HasActionSets
         {
             get { return true; }
@@ -43,7 +34,7 @@ namespace EditorConfig
         {
             var list = new List<SuggestedActionSet>();
 
-            var addMissingRulesActionAll = new AddMissingRulesActionAll(_missingRules, _document, _view);
+            var addMissingRulesActionAll = new AddMissingRulesActionAll(_missingRules, document, view);
 
             List<Keyword> missingRulesDotNet = FindMissingRulesSpecific(Category.DotNet);
             List<Keyword> missingRulesCSharp = FindMissingRulesSpecific(Category.CSharp);
@@ -54,25 +45,25 @@ namespace EditorConfig
             AddMissingRulesActionVB addMissingRulesActionVB = null;
             if (missingRulesDotNet.Count() != 0)
             {
-                addMissingRulesActionDotNet = new AddMissingRulesActionDotNet(missingRulesDotNet, _document, _view);
+                addMissingRulesActionDotNet = new AddMissingRulesActionDotNet(missingRulesDotNet, document, view);
             }
             if (missingRulesCSharp.Count() != 0)
             {
-                addMissingRulesActionCSharp = new AddMissingRulesActionCSharp(missingRulesCSharp, _document, _view);
+                addMissingRulesActionCSharp = new AddMissingRulesActionCSharp(missingRulesCSharp, document, view);
             }
             if (missingRulesVB.Count() != 0)
             {
-                addMissingRulesActionVB = new AddMissingRulesActionVB(missingRulesVB, _document, _view);
+                addMissingRulesActionVB = new AddMissingRulesActionVB(missingRulesVB, document, view);
             }
 
             list.AddRange(CreateActionSet(addMissingRulesActionAll, addMissingRulesActionDotNet, addMissingRulesActionCSharp, addMissingRulesActionVB));
             return Task.FromResult<IEnumerable<SuggestedActionSet>>(list);
         }
-   
+
         public IEnumerable<SuggestedActionSet> CreateActionSet(params BaseSuggestedAction[] actions)
         {
             actions = [.. actions.Where(val => val != null)];
-            return new[] { new SuggestedActionSet(categoryName: null, actions: actions, title: null, priority: SuggestedActionSetPriority.None, applicableToSpan: null) };
+            return [new SuggestedActionSet(categoryName: null, actions: actions, title: null, priority: SuggestedActionSetPriority.None, applicableToSpan: null)];
         }
 
         public override void Execute(CancellationToken cancellationToken)
@@ -84,13 +75,13 @@ namespace EditorConfig
         {
             var missingRules = new List<Keyword>();
             var missingRuleNames = new List<string>();
-            IEnumerator<Keyword> allRules = SchemaCatalog.VisibleKeywords.GetEnumerator();
-            while (allRules.MoveNext())
+
+            foreach (Keyword keyword in SchemaCatalog.VisibleKeywords)
             {
-                string curRule = allRules.Current.Name.ToLower(CultureInfo.InvariantCulture);
+                string curRule = keyword.Name.ToLower(CultureInfo.InvariantCulture);
                 if (!currentRules.Contains(curRule) && !missingRuleNames.Contains(curRule) && !curRule.StartsWith("dotnet_naming") && !curRule.Equals("root") && !curRule.Equals("max_line_length"))
                 {
-                    missingRules.Add(allRules.Current);
+                    missingRules.Add(keyword);
                     missingRuleNames.Add(curRule);
                 }
             }

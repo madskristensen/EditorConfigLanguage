@@ -8,8 +8,8 @@ namespace EditorConfig
 {
     class SortAllPropertiesAction : BaseSuggestedAction
     {
-        private EditorConfigDocument _document;
-        private ITextView _view;
+        private readonly EditorConfigDocument _document;
+        private readonly ITextView _view;
 
         public SortAllPropertiesAction(EditorConfigDocument document, ITextView view)
         {

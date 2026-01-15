@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.Imaging;
+using Microsoft.VisualStudio.Imaging;
 using Microsoft.VisualStudio.Imaging.Interop;
 using Microsoft.VisualStudio.Text;
 
@@ -6,8 +6,8 @@ namespace EditorConfig
 {
     public class DisplayError : ITooltip
     {
-        private Error _error;
-        private ParseItem _item;
+        private readonly Error _error;
+        private readonly ParseItem _item;
 
         public DisplayError(Error error, ParseItem item)
         {

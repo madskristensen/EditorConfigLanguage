@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text.Editor;
@@ -9,8 +9,8 @@ namespace EditorConfig
 {
     internal sealed class FormatterCommand : BaseCommand
     {
-        private ITextBufferUndoManager _undoManager;
-        private IWpfTextView _view;
+        private readonly ITextBufferUndoManager _undoManager;
+        private readonly IWpfTextView _view;
 
         public FormatterCommand(IWpfTextView textView, ITextBufferUndoManager undoManager)
         {

@@ -8,8 +8,8 @@ namespace EditorConfig
 {
     internal sealed class HideDefaultCommands : BaseCommand
     {
-        private static Guid _commandGuid = typeof(VSConstants.VSStd97CmdID).GUID;
-        private static HashSet<uint> _commands =
+        private static readonly Guid _commandGuid = typeof(VSConstants.VSStd97CmdID).GUID;
+        private static readonly HashSet<uint> _commands =
         [
             (uint)VSConstants.VSStd97CmdID.GotoDefn,
             (uint)VSConstants.VSStd97CmdID.GotoDecl,

@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.OLE.Interop;
 using System;
 using Microsoft.VisualStudio.Shell;
@@ -10,10 +10,10 @@ namespace EditorConfig
 {
     internal sealed class F1Help : BaseCommand
     {
-        private Guid _commandGroup = typeof(VSConstants.VSStd97CmdID).GUID;
+        private readonly Guid _commandGroup = typeof(VSConstants.VSStd97CmdID).GUID;
         private const uint _commandId = (uint)VSConstants.VSStd97CmdID.F1Help;
-        private IVsTextView _vsTextView;
-        private IWpfTextView _view;
+        private readonly IVsTextView _vsTextView;
+        private readonly IWpfTextView _view;
 
         public F1Help(IVsTextView textViewAdapter, IWpfTextView view)
         {

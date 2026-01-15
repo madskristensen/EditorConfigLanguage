@@ -1,32 +1,25 @@
-using Microsoft.VisualStudio.Text;
 using System.Collections.Generic;
 using System.Linq;
-using System;
+
+using Microsoft.VisualStudio.Text;
 
 namespace EditorConfig
 {
     /// <summary>A building block of the document.</summary>
-    public class ParseItem
+    public class ParseItem(EditorConfigDocument document, ItemType type, Span span, string text)
     {
-        public ParseItem(EditorConfigDocument document, ItemType type, Span span, string text)
-        {
-            Document = document;
-            ItemType = type;
-            Span = span;
-            Text = text;
-        }
 
         /// <summary>The document this item belongs to.</summary>
-        public EditorConfigDocument Document { get; set; }
+        public EditorConfigDocument Document { get; set; } = document;
 
         /// <summary>The span of this item in the text buffer.</summary>
-        public Span Span { get; set; }
+        public Span Span { get; set; } = span;
 
         /// <summary>The type of item.</summary>
-        public ItemType ItemType { get; set; }
+        public ItemType ItemType { get; set; } = type;
 
         /// <summary>The text of this item in the text buffer.</summary>
-        public string Text { get; set; }
+        public string Text { get; set; } = text;
 
         /// <summary>A list of validation errors.</summary>
         public List<DisplayError> Errors { get; } = [];
@@ -57,7 +50,7 @@ namespace EditorConfig
 
         public override bool Equals(object obj)
         {
-            if (!(obj is ParseItem other))
+            if (obj is not ParseItem other)
                 return false;
 
             return Equals(other);
@@ -76,11 +69,8 @@ namespace EditorConfig
 
         public static bool operator ==(ParseItem a, ParseItem b)
         {
-            if (ReferenceEquals(a, b))
-                return true;
-
-            if (((object)a == null) || ((object)b == null))
-                return false;
+            if (a is null)
+                return b is null;
 
             return a.Equals(b);
         }

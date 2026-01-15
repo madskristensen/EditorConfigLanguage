@@ -1,4 +1,4 @@
-﻿using EnvDTE;
+using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.ComponentModelHost;
@@ -18,8 +18,8 @@ namespace EditorConfig
 {
     public static class VsHelpers
     {
-        private static IVsUIShell5 _shell = GetService<SVsUIShell, IVsUIShell5>();
-        private static IVsSolution5 _solution = GetService<IVsSolution, IVsSolution5>();
+        private static readonly IVsUIShell5 _shell = GetService<SVsUIShell, IVsUIShell5>();
+        private static readonly IVsSolution5 _solution = GetService<IVsSolution, IVsSolution5>();
         private static IComponentModel _compositionService;
 
         internal static DTE2 DTE { get; } = GetService<DTE, DTE2>();

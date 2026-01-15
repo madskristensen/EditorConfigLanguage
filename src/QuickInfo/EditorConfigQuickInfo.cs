@@ -10,8 +10,8 @@ namespace EditorConfig
 {
     internal class EditorConfigQuickInfo : IAsyncQuickInfoSource
     {
-        private ITextBuffer _buffer;
-        private EditorConfigDocument _document;
+        private readonly ITextBuffer _buffer;
+        private readonly EditorConfigDocument _document;
 
         public EditorConfigQuickInfo(ITextBuffer buffer)
         {

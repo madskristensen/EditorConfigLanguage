@@ -8,8 +8,8 @@ namespace EditorConfig
 {
     class DeleteSectionAction : BaseSuggestedAction
     {
-        private ITextBuffer _buffer;
-        private Section _section;
+        private readonly ITextBuffer _buffer;
+        private readonly Section _section;
 
         public DeleteSectionAction(ITextBuffer buffer, Section section)
         {

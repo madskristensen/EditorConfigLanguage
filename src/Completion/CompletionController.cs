@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
@@ -12,7 +12,7 @@ namespace EditorConfig
     internal sealed class CompletionController : BaseCommand
     {
         private ICompletionSession _currentSession;
-        private IAsyncQuickInfoBroker _quickInfoBroker;
+        private readonly IAsyncQuickInfoBroker _quickInfoBroker;
 
         public CompletionController(IWpfTextView textView, ICompletionBroker broker, IAsyncQuickInfoBroker quickInfoBroker)
         {

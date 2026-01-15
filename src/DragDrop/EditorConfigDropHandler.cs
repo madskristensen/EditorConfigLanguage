@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.Text.Editor;
+using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Editor.DragDrop;
 using Microsoft.VisualStudio.Text.Operations;
 using System;
@@ -11,8 +11,8 @@ namespace EditorConfig
 {
     internal class EditorConfigDropHandler : IDropHandler
     {
-        private IWpfTextView _view;
-        private ITextBufferUndoManager _undoManager;
+        private readonly IWpfTextView _view;
+        private readonly ITextBufferUndoManager _undoManager;
         private string _ext;
 
         const string _template = "[*{0}]";

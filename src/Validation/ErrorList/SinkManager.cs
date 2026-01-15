@@ -8,8 +8,8 @@ namespace EditorConfig
     class SinkManager : IDisposable
     {
         private readonly ITableDataSink _sink;
-        private TableDataSource _errorList;
-        private List<TableEntriesSnapshot> _snapshots = [];
+        private readonly TableDataSource _errorList;
+        private readonly List<TableEntriesSnapshot> _snapshots = [];
 
         internal SinkManager(TableDataSource errorList, ITableDataSink sink)
         {

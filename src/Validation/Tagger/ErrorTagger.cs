@@ -1,11 +1,12 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Adornments;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Tagging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace EditorConfig
 {
@@ -73,15 +74,12 @@ namespace EditorConfig
 
         public static string GetErrorType(ErrorCategory errorType)
         {
-            switch (errorType)
+            return errorType switch
             {
-                case ErrorCategory.Error:
-                    return PredefinedErrorTypeNames.SyntaxError;
-                case ErrorCategory.Warning:
-                    return PredefinedErrorTypeNames.Warning;
-            }
-
-            return ErrorFormatDefinition.Suggestion;
+                ErrorCategory.Error => PredefinedErrorTypeNames.SyntaxError,
+                ErrorCategory.Warning => PredefinedErrorTypeNames.Warning,
+                _ => ErrorFormatDefinition.Suggestion,
+            };
         }
 
         public void Dispose()

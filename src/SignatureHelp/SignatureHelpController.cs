@@ -11,11 +11,11 @@ namespace EditorConfig
 {
     internal sealed class SignatureHelpCommand : BaseCommand
     {
-        private Guid _commandGroup = typeof(VSConstants.VSStd2KCmdID).GUID;
+        private readonly Guid _commandGroup = typeof(VSConstants.VSStd2KCmdID).GUID;
         private const uint _commandId = (uint)VSConstants.VSStd2KCmdID.TYPECHAR;
-        private IWpfTextView _view;
-        private ISignatureHelpBroker _signaturehelpBroker;
-        private IAsyncQuickInfoBroker _quickInfoBroker;
+        private readonly IWpfTextView _view;
+        private readonly ISignatureHelpBroker _signaturehelpBroker;
+        private readonly IAsyncQuickInfoBroker _quickInfoBroker;
         private ISignatureHelpSession _session;
 
         public SignatureHelpCommand(IWpfTextView view, ISignatureHelpBroker signaturehelpBroker, IAsyncQuickInfoBroker quickInfoBroker)

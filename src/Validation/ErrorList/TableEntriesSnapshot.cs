@@ -8,7 +8,7 @@ namespace EditorConfig
 {
     class TableEntriesSnapshot : TableEntriesSnapshotBase
     {
-        private string _projectName;
+        private readonly string _projectName;
 
         internal TableEntriesSnapshot(IEnumerable<ParseItem> result, string projectName, string fileName)
         {

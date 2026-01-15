@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text;
 using System;
 using System.Linq;
 using System.Text;
@@ -7,7 +7,7 @@ namespace EditorConfig
 {
     class EditorConfigFormatter
     {
-        private EditorConfigDocument _document;
+        private readonly EditorConfigDocument _document;
         private int _spaceBeforeEquals, _spaceAfterEquals;
         private int _spaceBeforeColon, _spaceAfterColon;
 

@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -9,9 +9,9 @@ namespace EditorConfig
 {
     internal sealed class NavigateToParent : BaseCommand
     {
-        private Guid _commandGroup = PackageGuids.guidEditorConfigPackageCmdSet;
+        private readonly Guid _commandGroup = PackageGuids.guidEditorConfigPackageCmdSet;
         private const uint _commandId = PackageIds.NavigateToParentId;
-        private ITextBuffer _buffer;
+        private readonly ITextBuffer _buffer;
 
         public NavigateToParent(ITextBuffer buffer)
         {

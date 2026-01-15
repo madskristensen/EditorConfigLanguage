@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.Language.Intellisense;
+using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using System;
 using System.Collections.Generic;
@@ -9,13 +9,13 @@ namespace EditorConfig
 {
     public class SectionSignature : ISignature
     {
-        private string _propertyName;
-        private string _syntax;
-        private string _description;
-        private string _content;
-        private GenericParameter _nameParam;
+        private readonly string _propertyName;
+        private readonly string _syntax;
+        private readonly string _description;
+        private readonly string _content;
+        private readonly GenericParameter _nameParam;
         private IParameter _currentParam;
-        private ITrackingSpan _trackingSpan;
+        private readonly ITrackingSpan _trackingSpan;
         private ISignatureHelpSession _session;
 
         public event EventHandler<CurrentParameterChangedEventArgs> CurrentParameterChanged;

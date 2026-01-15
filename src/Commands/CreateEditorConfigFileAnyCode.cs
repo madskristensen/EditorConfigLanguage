@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Workspace.VSIntegration.UI;
@@ -13,7 +13,7 @@ namespace EditorConfig.Commands
     [Export(typeof(INodeExtender))]
     public class CreateEditorConfigFileAnyCodeProvider : INodeExtender
     {
-        private IWorkspaceCommandHandler _handler = new CreateEditorConfigFileAnyCode();
+        private readonly IWorkspaceCommandHandler _handler = new CreateEditorConfigFileAnyCode();
         public IChildrenSource ProvideChildren(WorkspaceVisualNodeBase parentNode) => null;
 
         public IWorkspaceCommandHandler ProvideCommandHandler(WorkspaceVisualNodeBase parentNode)

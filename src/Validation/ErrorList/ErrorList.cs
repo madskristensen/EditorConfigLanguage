@@ -1,11 +1,13 @@
+using System;
+using System.ComponentModel.Composition;
+using System.Linq;
+
 using EnvDTE;
+
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Utilities;
-using System;
-using System.ComponentModel.Composition;
-using System.Linq;
 
 namespace EditorConfig
 {
@@ -20,7 +22,7 @@ namespace EditorConfig
         private string _file;
 
         [Import]
-        private ITextDocumentFactoryService _documentService = null;
+        private readonly ITextDocumentFactoryService _documentService = null;
 
         public void TextViewCreated(IWpfTextView view)
         {
@@ -60,6 +62,8 @@ namespace EditorConfig
         {
             var view = (IWpfTextView)sender;
             view.Closed -= ViewClosed;
+
+            _validator?.Validated -= Validated;
 
             if (view.Properties.TryGetProperty("file", out string file))
             {

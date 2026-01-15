@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using Microsoft.VisualStudio.Text;
@@ -8,9 +8,9 @@ namespace EditorConfig
 {
     class AddMissingRulesActionAll : BaseSuggestedAction
     {
-        private List<Keyword> _missingRules;
-        private EditorConfigDocument _document;
-        private ITextView _view;
+        private readonly List<Keyword> _missingRules;
+        private readonly EditorConfigDocument _document;
+        private readonly ITextView _view;
 
         public AddMissingRulesActionAll(List<Keyword> missingRules, EditorConfigDocument document, ITextView view)
         {

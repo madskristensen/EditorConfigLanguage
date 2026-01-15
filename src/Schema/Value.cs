@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.Imaging;
+using Microsoft.VisualStudio.Imaging;
 using Microsoft.VisualStudio.Imaging.Interop;
 using System;
 
@@ -7,7 +7,7 @@ namespace EditorConfig
     /// <summary>The value of a property.</summary>
     public class Value : ITooltip
     {
-        private bool _isUnset;
+        private readonly bool _isUnset;
 
         public Value(string name)
         {

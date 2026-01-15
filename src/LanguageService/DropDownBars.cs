@@ -20,7 +20,7 @@ namespace EditorConfig
         private readonly LanguageService _languageService;
         private readonly ITextBuffer _buffer;
         private List<DropDownItem> _members;
-        private EditorConfigDocument _document;
+        private readonly EditorConfigDocument _document;
 
         public DropDownBars(LanguageService languageService, IVsTextView view)
         : base(languageService)

@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.Language.Intellisense;
+using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ namespace EditorConfig
 {
     internal class SectionSignatureHelpSource : ISignatureHelpSource
     {
-        private ITextBuffer _buffer;
+        private readonly ITextBuffer _buffer;
         private ITrackingSpan _span;
 
         public SectionSignatureHelpSource(ITextBuffer textBuffer)

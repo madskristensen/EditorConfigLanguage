@@ -9,8 +9,8 @@ namespace EditorConfig
     class SuppressErrorAction : BaseSuggestedAction
     {
         private const string _suppressFormat = "# Suppress: {0}";
-        private EditorConfigDocument _document;
-        string _errorCode;
+        private readonly EditorConfigDocument _document;
+        readonly string _errorCode;
 
         public SuppressErrorAction(EditorConfigDocument document, string errorCode)
         {

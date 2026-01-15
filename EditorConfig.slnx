@@ -1,6 +1,6 @@
 <Solution>
-  <Project Path="src/EditorConfig.csproj" />
-  <Project Path="Test/EditorConfigTest/EditorConfigTest.csproj" />
+  <Project Path="src/EditorConfig.csproj" Id="428efc5a-7ac4-4ce4-8a37-d402b8a03eb4" />
+  <Project Path="Test/EditorConfigTest/EditorConfigTest.csproj" Id="d4005889-6273-4725-af75-8a2ee92fa639" />
   <Properties Name="Performance">
     <Property Name="HasPerformanceSessions" Value="true" />
   </Properties>

@@ -233,19 +233,21 @@
       "description": "Prefer assignments with a ternary conditional over an if-else statement.",
       "values": [ true, false ],
       "defaultValue": [ true ],
+      "severity": true,
       "defaultSeverity": "silent",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#expression_level"
-    },
-    {
+        "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0045"
+      },
+      {
       "name": "dotnet_style_prefer_conditional_expression_over_return",
       "description": "Prefer return statements to use a ternary conditional over an if-else statement.",
       "values": [ true, false ],
       "defaultValue": [ true ],
+      "severity": true,
       "defaultSeverity": "silent",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#expression_level"
-    },
-    {
-      "name": "dotnet_style_prefer_inferred_anonymous_type_member_names",
+        "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0046"
+      },
+      {
+        "name": "dotnet_style_prefer_inferred_anonymous_type_member_names",
       "description": "Prefer inferred anonymous type member names.",
       "values": [ true, false ],
       "defaultValue": [ true ],
@@ -911,16 +913,27 @@
       "description": "Prefer the extended property pattern.",
       "values": [ true, false ],
       "defaultValue": [ true ],
+      "severity": true,
       "defaultSeverity": "suggestion",
-      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0170#csharp_style_prefer_extended_property_pattern"
-    },
-    {
-      "name": "csharp_style_prefer_null_check_over_type_check",
-      "description": "Prefer null check over type check.",
+        "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0170"
+      },
+      {
+        "name": "csharp_style_prefer_null_check_over_type_check",
+        "description": "Prefer null check over type check.",
+        "values": [ true, false ],
+        "defaultValue": [ true ],
+        "severity": true,
+        "defaultSeverity": "suggestion",
+        "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0150"
+      },
+      {
+        "name": "csharp_style_prefer_implicitly_typed_lambda_expression",
+      "description": "Prefer implicitly typed lambda expressions.",
       "values": [ true, false ],
       "defaultValue": [ true ],
+      "severity": true,
       "defaultSeverity": "suggestion",
-      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0150#csharp_style_prefer_null_check_over_type_check"
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0350"
     },
     {
       "name": "csharp_style_prefer_tuple_swap",
@@ -929,10 +942,10 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "suggestion",
-      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0180"
-    },
-    {
-      "name": "csharp_style_prefer_readonly_struct",
+        "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0180"
+      },
+      {
+        "name": "csharp_style_prefer_readonly_struct",
       "description": "Prefer to make a struct readonly when all its members are readonly.",
       "values": [ true, false ],
       "defaultValue": [ true ],
@@ -1040,6 +1053,24 @@
       "severity": true,
       "defaultSeverity": "suggestion",
       "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#normalize_modifiers"
+    },
+    {
+      "name": "visual_basic_style_prefer_isnot_expression",
+      "description": "Prefer IsNot expression over Not Is.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "suggestion",
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0084"
+    },
+    {
+      "name": "visual_basic_style_prefer_simplified_object_creation",
+      "description": "Prefer simplified object creation.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "suggestion",
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0140"
     },
     // Naming properties
     {

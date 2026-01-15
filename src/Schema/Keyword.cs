@@ -8,48 +8,38 @@ using Microsoft.VisualStudio.Imaging.Interop;
 namespace EditorConfig
 {
     /// <summary>The keyword is the name-part of a property.</summary>
-    public class Keyword : ITooltip
+    public class Keyword(string name, string description, IEnumerable<string> values, IEnumerable<string> defaultValue, bool unsupported, bool hidden, bool multiple, bool severity, string defaultSeverity, string documentationLink, string example) : ITooltip
     {
-        public Keyword(string name, string description, IEnumerable<string> values, IEnumerable<string> defaultValue, bool unsupported, bool hidden, bool multiple, bool severity, string defaultSeverity, string documentationLink)
-        {
-            Name = name;
-            Description = description;
-            Values = values.Select(v => new Value(v));
-            DefaultValue = defaultValue.Select(v => new Value(v));
-            IsSupported = !unsupported;
-            IsVisible = !hidden;
-            SupportsMultipleValues = multiple;
-            RequiresSeverity = severity;
-            DefaultSeverity = defaultSeverity;
-            DocumentationLink = documentationLink;
-        }
 
         /// <summary>The keyword of the property.</summary>
-        public string Name { get; }
+        public string Name { get; } = name;
 
         /// <summary>The description of the property.</summary>
-        public string Description { get; }
+        public string Description { get; } = description;
 
         /// <summary>A list of values applicable to the property.</summary>
-        public IEnumerable<Value> Values { get; }
+        public IEnumerable<Value> Values { get; } = values.Select(v => new Value(v));
 
-        public IEnumerable<Value> DefaultValue { get; }
+        public IEnumerable<Value> DefaultValue { get; } = defaultValue.Select(v => new Value(v));
 
         /// <summary>True if the property is supported by Visual Studio.</summary>
-        public bool IsSupported { get; }
+        public bool IsSupported { get; } = !unsupported;
 
         /// <summary>True if the property shows up in Intellisense.</summary>
-        public bool IsVisible { get; }
+        public bool IsVisible { get; } = !hidden;
 
         /// <summary>True if the value can be a comman separated list.</summary>
-        public bool SupportsMultipleValues { get; }
+        public bool SupportsMultipleValues { get; } = multiple;
 
-        public bool RequiresSeverity { get; }
+        public bool RequiresSeverity { get; } = severity;
 
-        public string DefaultSeverity { get; }
+        public string DefaultSeverity { get; } = defaultSeverity;
 
         /// <summary>Link to the property's documentation. Null if no documentation.</summary>
-        public string DocumentationLink { get; }
+        public string DocumentationLink { get; } = documentationLink;
+
+        /// <summary>A code example showing the effect of this property.</summary>
+        public string Example { get; } = example;
 
         /// <summary>The category is used in the Intellisense filters.</summary>
         public Category Category

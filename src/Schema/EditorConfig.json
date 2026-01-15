@@ -55,17 +55,19 @@
     },
     {
       "name": "indent_style",
-      "description": "Indentation style.",
+      "description": "Indentation style. Specify whether to use tabs or spaces for indentation.",
       "values": [ "tab", "space", "unset" ],
       "defaultValue": [ "unset" ],
-      "documentationLink": "https://github.com/editorconfig/editorconfig/wiki/EditorConfig-Properties#indent_style"
+      "documentationLink": "https://github.com/editorconfig/editorconfig/wiki/EditorConfig-Properties#indent_style",
+      "example": "    int x = 5;"
     },
     {
       "name": "indent_size",
       "description": "A whole number defining the number of columns used for each indentation level and the width of soft tabs (when supported). When set to tab, the value of tab_width (if specified) will be used.",
       "values": [ 2, "tab", "unset" ],
       "defaultValue": [ "unset" ],
-      "documentationLink": "https://github.com/editorconfig/editorconfig/wiki/EditorConfig-Properties#indent_size"
+      "documentationLink": "https://github.com/editorconfig/editorconfig/wiki/EditorConfig-Properties#indent_size",
+      "example": "  int x = 5;"
     },
     {
       "name": "insert_final_newline",
@@ -102,14 +104,16 @@
       "description": "Separate using directive groups.",
       "values": [ true, false ],
       "defaultValue": [ false ],
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#usings"
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#usings",
+      "example": "using System;\nusing System.IO;\n\nusing MyApp;"
     },
     {
       "name": "dotnet_sort_system_directives_first",
       "description": "Prefer to place 'System' directives first when sorting usings.",
       "values": [ true, false ],
       "defaultValue": [ true ],
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#usings"
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#usings",
+      "example": "using System;\nusing MyApp;"
     },
     {
       "name": "dotnet_style_coalesce_expression",
@@ -118,7 +122,8 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "suggestion",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#null_checking"
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#null_checking",
+      "example": "var v = x ?? y;"
     },
     {
       "name": "dotnet_style_collection_initializer",
@@ -127,7 +132,8 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "suggestion",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#expression_level"
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#expression_level",
+      "example": "var list = new List<int> { 1, 2, 3 };"
     },
     {
       "name": "dotnet_style_explicit_tuple_names",
@@ -136,7 +142,8 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "suggestion",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#expression_level"
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#expression_level",
+      "example": "var name = customer.name;"
     },
     {
       "name": "dotnet_style_null_propagation",
@@ -145,7 +152,8 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "suggestion",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#null_checking"
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#null_checking",
+      "example": "var v = o?.ToString();"
     },
     {
       "name": "dotnet_style_object_initializer",
@@ -154,26 +162,29 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "suggestion",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#expression_level"
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#expression_level",
+      "example": "var c = new Customer { Age = 21 };"
     },
     {
-      "name": "dotnet_style_parentheses_in_arithmetic_binary_operators",
-      "description": "Prefer parentheses to clarify arithmetic operator (*, /, %, +, -, <<, >>, &, ^, |) precedence.",
-      "values": [ "always_for_clarity", "never_if_unnecessary" ],
-      "defaultValue": [ "always_for_clarity" ],
-      "severity": true,
-      "defaultSeverity": "silent",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#parentheses"
-    },
+        "name": "dotnet_style_parentheses_in_arithmetic_binary_operators",
+        "description": "Prefer parentheses to clarify arithmetic operator (*, /, %, +, -, <<, >>, &, ^, |) precedence.",
+        "values": [ "always_for_clarity", "never_if_unnecessary" ],
+        "defaultValue": [ "always_for_clarity" ],
+        "severity": true,
+        "defaultSeverity": "silent",
+        "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#parentheses",
+        "example": "var v = a + (b * c);"
+      },
     {
-      "name": "dotnet_style_parentheses_in_other_binary_operators",
-      "description": "Prefer parentheses to clarify other binary operator (&&, ||, ??) precedence.",
-      "values": [ "always_for_clarity", "never_if_unnecessary" ],
-      "defaultValue": [ "always_for_clarity" ],
-      "severity": true,
-      "defaultSeverity": "silent",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#parentheses"
-    },
+        "name": "dotnet_style_parentheses_in_other_binary_operators",
+        "description": "Prefer parentheses to clarify other binary operator (&&, ||, ??) precedence.",
+        "values": [ "always_for_clarity", "never_if_unnecessary" ],
+        "defaultValue": [ "always_for_clarity" ],
+        "severity": true,
+        "defaultSeverity": "silent",
+        "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#parentheses",
+        "example": "var v = (a && b) || c;"
+      },
     {
       "name": "dotnet_style_parentheses_in_other_operators",
       "description": "Prefer parentheses to clarify operator precedence.",
@@ -193,41 +204,45 @@
       "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#parentheses"
     },
     {
-      "name": "dotnet_style_predefined_type_for_locals_parameters_members",
-      "description": "For locals, parameters and type members, prefer types that have a language keyword to represent them (int, double, string, etc.) to use that keyword instead of the type name (Int32, Int64, etc.).",
-      "values": [ true, false ],
-      "defaultValue": [ true ],
-      "severity": true,
-      "defaultSeverity": "silent",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#language_keywords"
-    },
+        "name": "dotnet_style_predefined_type_for_locals_parameters_members",
+        "description": "For locals, parameters and type members, prefer types that have a language keyword to represent them (int, double, string, etc.) to use that keyword instead of the type name (Int32, Int64, etc.).",
+        "values": [ true, false ],
+        "defaultValue": [ true ],
+        "severity": true,
+        "defaultSeverity": "silent",
+        "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#language_keywords",
+        "example": "int x = 5;"
+      },
     {
-      "name": "dotnet_style_predefined_type_for_member_access",
-      "description": "Prefer the keyword whenever a member-access expression is used on a type with a keyword representation (int, double, string, etc.).",
-      "values": [ true, false ],
-      "defaultValue": [ true ],
-      "severity": true,
-      "defaultSeverity": "silent",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#language_keywords"
-    },
+        "name": "dotnet_style_predefined_type_for_member_access",
+        "description": "Prefer the keyword whenever a member-access expression is used on a type with a keyword representation (int, double, string, etc.).",
+        "values": [ true, false ],
+        "defaultValue": [ true ],
+        "severity": true,
+        "defaultSeverity": "silent",
+        "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#language_keywords",
+        "example": "var max = int.MaxValue;"
+      },
     {
-      "name": "dotnet_style_prefer_auto_properties",
-      "description": "Prefer auto-properties over properties with private backing fields.",
-      "values": [ true, false ],
-      "defaultValue": [ true ],
-      "severity": true,
-      "defaultSeverity": "silent",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#expression_level"
-    },
+        "name": "dotnet_style_prefer_auto_properties",
+        "description": "Prefer auto-properties over properties with private backing fields.",
+        "values": [ true, false ],
+        "defaultValue": [ true ],
+        "severity": true,
+        "defaultSeverity": "silent",
+        "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#expression_level",
+        "example": "public int Age { get; set; }"
+      },
     {
-      "name": "dotnet_style_prefer_compound_assignment",
-      "description": "This style rule concerns with the use of compound assignments. The option value specifies whether or not they are desired.",
-      "values": [ true, false ],
-      "defaultValue": [ true ],
-      "severity": true,
-      "defaultSeverity": "silent",
-      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0054-ide0074#dotnet_style_prefer_compound_assignment"
-    },
+        "name": "dotnet_style_prefer_compound_assignment",
+        "description": "This style rule concerns with the use of compound assignments. The option value specifies whether or not they are desired.",
+        "values": [ true, false ],
+        "defaultValue": [ true ],
+        "severity": true,
+        "defaultSeverity": "silent",
+        "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0054-ide0074#dotnet_style_prefer_compound_assignment",
+        "example": "x += 5;"
+      },
     {
       "name": "dotnet_style_prefer_conditional_expression_over_assignment",
       "description": "Prefer assignments with a ternary conditional over an if-else statement.",
@@ -235,26 +250,29 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "silent",
-        "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0045"
-      },
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0045",
+      "example": "string s = expr ? \"hello\" : \"world\";"
+    },
       {
-      "name": "dotnet_style_prefer_conditional_expression_over_return",
-      "description": "Prefer return statements to use a ternary conditional over an if-else statement.",
-      "values": [ true, false ],
-      "defaultValue": [ true ],
-      "severity": true,
-      "defaultSeverity": "silent",
-        "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0046"
+        "name": "dotnet_style_prefer_conditional_expression_over_return",
+        "description": "Prefer return statements to use a ternary conditional over an if-else statement.",
+        "values": [ true, false ],
+        "defaultValue": [ true ],
+        "severity": true,
+        "defaultSeverity": "silent",
+        "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0046",
+        "example": "return expr ? \"hello\" : \"world\";"
       },
       {
         "name": "dotnet_style_prefer_inferred_anonymous_type_member_names",
-      "description": "Prefer inferred anonymous type member names.",
-      "values": [ true, false ],
-      "defaultValue": [ true ],
-      "severity": true,
-      "defaultSeverity": "suggestion",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#expression_level"
-    },
+        "description": "Prefer inferred anonymous type member names.",
+        "values": [ true, false ],
+        "defaultValue": [ true ],
+        "severity": true,
+        "defaultSeverity": "suggestion",
+        "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#expression_level",
+        "example": "var anon = new { age, name };"
+      },
     {
       "name": "dotnet_style_prefer_inferred_tuple_names",
       "description": "Prefer inferred tuple element names.",
@@ -262,7 +280,8 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "suggestion",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#expression_level"
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#expression_level",
+      "example": "var tuple = (age, name);"
     },
     {
       "name": "dotnet_style_prefer_is_null_check_over_reference_equality_method",
@@ -271,7 +290,8 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "silent",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#expression_level"
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#expression_level",
+      "example": "if (value is null) { }"
     },
     {
       "name": "dotnet_style_prefer_simplified_boolean_expressions",
@@ -280,7 +300,8 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "silent",
-      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0075"
+      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0075",
+      "example": "return x && y;"
     },
     {
       "name": "dotnet_style_prefer_simplified_interpolation",
@@ -289,7 +310,8 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "silent",
-      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0071"
+      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0071",
+      "example": "var s = $\"{value}\";"
     },
     {
       "name": "dotnet_style_qualification_for_event",
@@ -298,7 +320,8 @@
       "defaultValue": [ false ],
       "severity": true,
       "defaultSeverity": "silent",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#this_and_me"
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#this_and_me",
+      "example": "this.Elapsed += Handler;"
     },
     {
       "name": "dotnet_style_qualification_for_field",
@@ -307,7 +330,8 @@
       "defaultValue": [ false ],
       "severity": true,
       "defaultSeverity": "silent",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#this_and_me"
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#this_and_me",
+      "example": "this.capacity = 0;"
     },
     {
       "name": "dotnet_style_qualification_for_method",
@@ -316,7 +340,8 @@
       "defaultValue": [ false ],
       "severity": true,
       "defaultSeverity": "silent",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#this_and_me"
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#this_and_me",
+      "example": "this.Display();"
     },
     {
       "name": "dotnet_style_qualification_for_property",
@@ -325,17 +350,19 @@
       "defaultValue": [ false ],
       "severity": true,
       "defaultSeverity": "silent",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#this_and_me"
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#this_and_me",
+      "example": "this.ID = 0;"
     },
     {
-      "name": "dotnet_style_readonly_field",
-      "description": "Prefer that fields should be marked with 'readonly' in C# or ReadOnly in Visual Basic if they are only ever assigned inline, or inside of a constructor.",
-      "values": [ true, false ],
-      "defaultValue": [ true ],
-      "severity": true,
-      "defaultSeverity": "suggestion",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#normalize_modifiers"
-    },
+        "name": "dotnet_style_readonly_field",
+        "description": "Prefer that fields should be marked with 'readonly' in C# or ReadOnly in Visual Basic if they are only ever assigned inline, or inside of a constructor.",
+        "values": [ true, false ],
+        "defaultValue": [ true ],
+        "severity": true,
+        "defaultSeverity": "suggestion",
+        "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#normalize_modifiers",
+        "example": "private readonly int _age;"
+      },
     {
       "name": "dotnet_style_require_accessibility_modifiers",
       "description": "Prefer accessibility modifiers to be specified",
@@ -343,7 +370,8 @@
       "defaultValue": [ "for_non_interface_members" ],
       "severity": true,
       "defaultSeverity": "silent",
-      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0040"
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0040",
+      "example": "public class MyClass { }"
     },
     {
       "name": "dotnet_style_namespace_match_folder",
@@ -352,7 +380,8 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "suggestion",
-      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0130"
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0130",
+      "example": "namespace Company.Product.Feature;"
     },
     {
       "name": "dotnet_style_operator_placement_when_wrapping",
@@ -400,52 +429,59 @@
     // C# properties
     {
       "name": "csharp_indent_case_contents",
-      "description": "Indent switch case contents.",
+      "description": "When enabled, the statements within a switch case are indented one level from the case label. This improves readability by visually grouping code under each case.",
       "values": [ true, false ],
       "defaultValue": [ true ],
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#indent"
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#indent",
+      "example": "case 0:\n    int x = 0;"
     },
     {
       "name": "csharp_indent_case_contents_when_block",
-      "description": "Indent switch case contents, when the content is a single block.",
+      "description": "When enabled, indents the opening brace of a block statement within a switch case. When disabled, braces align with the case label.",
       "values": [ true, false ],
       "defaultValue": [ true ],
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#indent"
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#indent",
+      "example": "case 0:\n    {\n        int x = 0;\n    }"
     },
     {
       "name": "csharp_indent_labels",
-      "description": "Label positioning.",
+      "description": "Controls the indentation of goto labels. 'flush_left' places labels at column zero, 'one_less_than_current' indents one level less than the current scope, 'no_change' keeps labels at the same indentation as surrounding code.",
       "values": [ "flush_left", "one_less_than_current", "no_change" ],
       "defaultValue": [ "flush_left" ],
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#indent"
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#indent",
+      "example": "myLabel:\n    Console.WriteLine();"
     },
     {
       "name": "csharp_indent_switch_labels",
-      "description": "Indent switch labels.",
+      "description": "When enabled, case and default labels in a switch statement are indented one level from the switch keyword. When disabled, labels align with the switch.",
       "values": [ true, false ],
       "defaultValue": [ true ],
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#indent"
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#indent",
+      "example": "switch (x)\n{\n    case 0:\n        break;\n}"
     },
     {
       "name": "csharp_new_line_before_catch",
       "description": "Place catch on new line.",
       "values": [ true, false ],
       "defaultValue": [ true ],
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#newline"
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#newline",
+      "example": "}\ncatch { }"
     },
     {
       "name": "csharp_new_line_before_else",
       "description": "Place else on new line.",
       "values": [ true, false ],
       "defaultValue": [ true ],
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#newline"
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#newline",
+      "example": "}\nelse { }"
     },
     {
       "name": "csharp_new_line_before_finally",
       "description": "Place finally on new line.",
       "values": [ true, false ],
       "defaultValue": [ true ],
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#newline"
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#newline",
+      "example": "}\nfinally { }"
     },
     {
       "name": "csharp_new_line_before_members_in_anonymous_types",
@@ -493,7 +529,8 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "silent",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#code_block"
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#code_block",
+      "example": "if (test) { this.Display(); }"
     },
     {
       "name": "csharp_prefer_simple_default_expression",
@@ -502,7 +539,8 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "suggestion",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#expression_level_csharp"
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#expression_level_csharp",
+      "example": "void Method(int x = default) { }"
     },
     {
       "name": "csharp_prefer_simple_using_statement",
@@ -511,7 +549,8 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "suggestion",
-      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0063"
+      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0063",
+      "example": "using var resource = GetResource();"
     },
     {
       "name": "csharp_style_implicit_object_creation_when_type_is_apparent",
@@ -520,7 +559,8 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "suggestion",
-      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0090"
+      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0090",
+      "example": "C c = new();"
     },
     {
       "name": "csharp_prefer_static_local_function",
@@ -529,7 +569,8 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "suggestion",
-      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0062"
+      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0062",
+      "example": "static int Add(int x, int y) => x + y;"
     },
     {
       "name": "csharp_preserve_single_line_blocks",
@@ -630,7 +671,8 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "suggestion",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#null_checking_csharp"
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#null_checking_csharp",
+      "example": "func?.Invoke(args);"
     },
     {
       "name": "csharp_style_deconstructed_variable_declaration",
@@ -639,7 +681,8 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "suggestion",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#expression_level_csharp"
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#expression_level_csharp",
+      "example": "var (name, age) = GetPerson();"
     },
     {
       "name": "csharp_style_expression_bodied_accessors",
@@ -657,7 +700,8 @@
       "defaultValue": [ false ],
       "severity": true,
       "defaultSeverity": "silent",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#expression_bodied_members"
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#expression_bodied_members",
+      "example": "public Customer(int age) => Age = age;"
     },
     {
       "name": "csharp_style_expression_bodied_indexers",
@@ -666,25 +710,28 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "silent",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#expression_bodied_members"
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#expression_bodied_members",
+      "example": "public T this[int i] => _value[i];"
     },
     {
       "name": "csharp_style_expression_bodied_lambdas",
-      "description": "Prefer expression-bodied members for indexers (e.g., 'public T this[int i] => _value[i];').",
+      "description": "Prefer expression-bodied members for lambdas.",
       "values": [ true, false, "when_on_single_line" ],
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "silent",
-      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0053"
+      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0053",
+      "example": "Func<int, int> square = x => x * x;"
     },
     {
       "name": "csharp_style_expression_bodied_local_functions",
-      "description": "Prefer expression-bodied members for indexers (e.g., 'public T this[int i] => _value[i];').",
+      "description": "Prefer expression-bodied members for local functions.",
       "values": [ true, false, "when_on_single_line" ],
       "defaultValue": [ false ],
       "severity": true,
       "defaultSeverity": "silent",
-      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0061"
+      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0061",
+      "example": "int Add(int x, int y) => x + y;"
     },
     {
       "name": "csharp_style_expression_bodied_methods",
@@ -693,7 +740,8 @@
       "defaultValue": [ false ],
       "severity": true,
       "defaultSeverity": "silent",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#expression_bodied_members"
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#expression_bodied_members",
+      "example": "public int GetAge() => this.Age;"
     },
     {
       "name": "csharp_style_expression_bodied_operators",
@@ -702,7 +750,8 @@
       "defaultValue": [ false ],
       "severity": true,
       "defaultSeverity": "silent",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#expression_bodied_members"
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#expression_bodied_members",
+      "example": "public static C operator +(C a, C b) => new C();"
     },
     {
       "name": "csharp_style_expression_bodied_properties",
@@ -711,7 +760,8 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "silent",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#expression_bodied_members"
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#expression_bodied_members",
+      "example": "public int Age => _age;"
     },
     {
       "name": "csharp_style_prefer_index_operator",
@@ -720,7 +770,8 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "suggestion",
-      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0056"
+      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0056",
+      "example": "var last = array[^1];"
     },
     {
       "name": "csharp_style_prefer_not_pattern",
@@ -729,7 +780,8 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "suggestion",
-      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0083"
+      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0083",
+      "example": "if (e is not null) { }"
     },
     {
       "name": "csharp_style_prefer_pattern_matching",
@@ -738,7 +790,8 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "suggestion",
-      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0078"
+      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0078",
+      "example": "if (o is { Length: > 0 }) { }"
     },
     {
       "name": "csharp_style_prefer_switch_expression",
@@ -747,16 +800,18 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "suggestion",
-      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0066"
+      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0066",
+      "example": "return x switch { 1 => 1, _ => 0 };"
     },
     {
       "name": "csharp_style_inlined_variable_declaration",
-      "description": "Prefer 'out' variables to be declared inline when possible (e.g., 'if (int.TryParse(value out int i) {...}').",
+      "description": "Prefer 'out' variables to be declared inline when possible.",
       "values": [ true, false ],
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "suggestion",
-      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0018"
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0018",
+      "example": "if (int.TryParse(s, out int i)) { }"
     },
     {
       "name": "csharp_style_prefer_local_over_anonymous_function",
@@ -765,7 +820,8 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "suggestion",
-      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0039"
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0039",
+      "example": "int Square(int x) => x * x;"
     },
     {
       "name": "csharp_style_pattern_matching_over_as_with_null_check",
@@ -774,7 +830,8 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "suggestion",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#pattern_matching"
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#pattern_matching",
+      "example": "if (o is string s) { }"
     },
     {
       "name": "csharp_style_pattern_matching_over_is_with_cast_check",
@@ -783,7 +840,8 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "suggestion",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#pattern_matching"
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#pattern_matching",
+      "example": "if (o is int i) { }"
     },
     {
       "name": "csharp_style_prefer_range_operator",
@@ -792,7 +850,8 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "suggestion",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#pattern_matching"
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#pattern_matching",
+      "example": "var sub = array[1..4];"
     },
     {
       "name": "csharp_style_throw_expression",
@@ -801,7 +860,8 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "suggestion",
-      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0057"
+      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0057",
+      "example": "_s = s ?? throw new ArgumentNullException();"
     },
     {
       "name": "csharp_style_unused_value_assignment_preference",
@@ -810,7 +870,8 @@
       "defaultValue": [ "discard_variable" ],
       "severity": true,
       "defaultSeverity": "suggestion",
-      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0057"
+      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0057",
+      "example": "_ = GetValue();"
     },
     {
       "name": "csharp_style_var_elsewhere",
@@ -819,7 +880,8 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "silent",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#implicit-and-explicit-types"
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#implicit-and-explicit-types",
+      "example": "var result = GetResult();"
     },
     {
       "name": "csharp_style_var_for_built_in_types",
@@ -828,7 +890,8 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "silent",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#implicit-and-explicit-types"
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#implicit-and-explicit-types",
+      "example": "var x = 5;"
     },
     {
       "name": "csharp_style_var_when_type_is_apparent",
@@ -837,16 +900,18 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "silent",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#implicit-and-explicit-types"
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#implicit-and-explicit-types",
+      "example": "var customer = new Customer();"
     },
     {
       "name": "csharp_style_unused_value_expression_statement_preference",
-      "description": "",
+      "description": "Prefer to use a discard for unused expression values.",
       "values": [ "discard_variable", "unused_local_variable" ],
       "defaultValue": [ "discard_variable" ],
       "severity": true,
       "defaultSeverity": "silent",
-      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0058"
+      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0058",
+      "example": "_ = expression;"
     },
     {
       "name": "csharp_using_directive_placement",
@@ -855,7 +920,8 @@
       "defaultValue": [ "outside_namespace" ],
       "severity": true,
       "defaultSeverity": "silent",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-formatting-conventions#c-formatting-settings"
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-formatting-conventions#c-formatting-settings",
+      "example": "using System;\nnamespace N { }"
     },
     {
       "name": "csharp_style_namespace_declarations",
@@ -864,21 +930,24 @@
       "defaultValue": [ "block_scoped" ],
       "severity": true,
       "defaultSeverity": "silent",
-      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/formatting-rules#csharp_style_namespace_declarations"
+      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/formatting-rules#csharp_style_namespace_declarations",
+      "example": "namespace MyApp;"
     },
     {
       "name": "csharp_indent_block_contents",
-      "description": "Indent block contents.",
+      "description": "When enabled, the contents inside curly braces (methods, classes, loops, etc.) are indented one level from the braces. This is the standard formatting for most C# code.",
       "values": [ true, false ],
       "defaultValue": [ true ],
-      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/csharp-formatting-options#csharp_indent_block_contents"
+      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/csharp-formatting-options#csharp_indent_block_contents",
+      "example": "{\n    int x = 0;\n}"
     },
     {
       "name": "csharp_indent_braces",
-      "description": "Indent curly braces.",
+      "description": "When enabled, curly braces themselves are indented relative to their parent scope. Most C# styles keep this disabled so braces align with the containing construct.",
       "values": [ true, false ],
       "defaultValue": [ false ],
-      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/csharp-formatting-options#csharp_indent_braces"
+      "documentationLink": "https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/csharp-formatting-options#csharp_indent_braces",
+      "example": "if (true)\n{\n}"
     },
     {
       "name": "csharp_space_before_open_square_brackets",
@@ -915,8 +984,9 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "suggestion",
-        "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0170"
-      },
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0170",
+      "example": "if (e is { Address.City.Length: > 0 }) { }"
+    },
       {
         "name": "csharp_style_prefer_null_check_over_type_check",
         "description": "Prefer null check over type check.",
@@ -924,17 +994,19 @@
         "defaultValue": [ true ],
         "severity": true,
         "defaultSeverity": "suggestion",
-        "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0150"
+        "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0150",
+        "example": "if (o is null) { }"
       },
       {
         "name": "csharp_style_prefer_implicitly_typed_lambda_expression",
-      "description": "Prefer implicitly typed lambda expressions.",
-      "values": [ true, false ],
-      "defaultValue": [ true ],
-      "severity": true,
-      "defaultSeverity": "suggestion",
-      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0350"
-    },
+        "description": "Prefer implicitly typed lambda expressions.",
+        "values": [ true, false ],
+        "defaultValue": [ true ],
+        "severity": true,
+        "defaultSeverity": "suggestion",
+        "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0350",
+        "example": "var f = (int x) => x * 2;"
+      },
     {
       "name": "csharp_style_prefer_tuple_swap",
       "description": "Prefer using a tuple to swap two values.",
@@ -942,17 +1014,19 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "suggestion",
-        "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0180"
-      },
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0180",
+      "example": "(a, b) = (b, a);"
+    },
       {
         "name": "csharp_style_prefer_readonly_struct",
-      "description": "Prefer to make a struct readonly when all its members are readonly.",
-      "values": [ true, false ],
-      "defaultValue": [ true ],
-      "severity": true,
-      "defaultSeverity": "suggestion",
-      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0250"
-    },
+        "description": "Prefer to make a struct readonly when all its members are readonly.",
+        "values": [ true, false ],
+        "defaultValue": [ true ],
+        "severity": true,
+        "defaultSeverity": "suggestion",
+        "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0250",
+        "example": "readonly struct Point { }"
+      },
     {
       "name": "csharp_style_prefer_readonly_struct_member",
       "description": "Prefer to make struct members readonly when they don't modify state.",
@@ -960,7 +1034,8 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "suggestion",
-      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0251"
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0251",
+      "example": "readonly int GetValue() => _value;"
     },
     {
       "name": "csharp_style_prefer_primary_constructors",
@@ -969,7 +1044,8 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "suggestion",
-      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0290"
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0290",
+      "example": "class Person(string name) { }"
     },
     {
       "name": "csharp_prefer_static_anonymous_function",
@@ -978,7 +1054,8 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "suggestion",
-      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0320"
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0320",
+      "example": "var f = static (int x) => x * 2;"
     },
     {
       "name": "csharp_prefer_system_threading_lock",
@@ -987,7 +1064,8 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "suggestion",
-      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0330"
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0330",
+      "example": "private Lock _lock = new();"
     },
     {
       "name": "csharp_style_prefer_unbound_generic_type_in_nameof",
@@ -996,7 +1074,8 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "suggestion",
-      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0340"
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0340",
+      "example": "var name = nameof(List<>);"
     },
     {
       "name": "csharp_style_allow_embedded_statements_on_same_line_experimental",
@@ -1052,7 +1131,8 @@
       "multiple": true,
       "severity": true,
       "defaultSeverity": "suggestion",
-      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#normalize_modifiers"
+      "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-code-style-settings-reference#normalize_modifiers",
+      "example": "Public Shared ReadOnly Property"
     },
     {
       "name": "visual_basic_style_prefer_isnot_expression",
@@ -1061,7 +1141,8 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "suggestion",
-      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0084"
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0084",
+      "example": "If value IsNot Nothing Then"
     },
     {
       "name": "visual_basic_style_prefer_simplified_object_creation",
@@ -1070,7 +1151,8 @@
       "defaultValue": [ true ],
       "severity": true,
       "defaultSeverity": "suggestion",
-      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0140"
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0140",
+      "example": "Dim x As New List(Of Integer)"
     },
     // Naming properties
     {

@@ -38,6 +38,10 @@
         },
         "documentationLink": {
             "type":  "string"
+        },
+        "example": {
+            "type": "string",
+            "description": "A code example showing the effect of this property"
         }
       }
     },

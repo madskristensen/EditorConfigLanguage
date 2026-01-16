@@ -18,9 +18,11 @@ namespace EditorConfig
         public string Description { get; } = description;
 
         /// <summary>A list of values applicable to the property.</summary>
-        public IEnumerable<Value> Values { get; } = values.Select(v => new Value(v));
+        /// <remarks>Materialized to array to avoid creating new Value objects on every access.</remarks>
+        public IEnumerable<Value> Values { get; } = values.Select(v => new Value(v)).ToArray();
 
-        public IEnumerable<Value> DefaultValue { get; } = defaultValue.Select(v => new Value(v));
+        /// <remarks>Materialized to array to avoid creating new Value objects on every access.</remarks>
+        public IEnumerable<Value> DefaultValue { get; } = defaultValue.Select(v => new Value(v)).ToArray();
 
         /// <summary>True if the property is supported by Visual Studio.</summary>
         public bool IsSupported { get; } = !unsupported;

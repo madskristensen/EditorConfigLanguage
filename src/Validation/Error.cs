@@ -40,7 +40,8 @@ namespace EditorConfig
 
         public void Run(ParseItem item, bool enabled, Action<DisplayError> action)
         {
-            if (enabled && item != null && !item.HasErrors && IsSupported && !item.Document.Suppressions.Contains(Code, StringComparer.OrdinalIgnoreCase))
+            // HashSet.Contains is O(1) and already case-insensitive
+            if (enabled && item != null && !item.HasErrors && IsSupported && !item.Document.Suppressions.Contains(Code))
             {
                 action.Invoke(new DisplayError(this, item));
             }

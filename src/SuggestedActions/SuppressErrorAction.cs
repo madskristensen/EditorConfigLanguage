@@ -29,7 +29,8 @@ namespace EditorConfig
         {
             get
             {
-                return !_document.Suppressions.Contains(_errorCode, StringComparer.OrdinalIgnoreCase);
+                // HashSet.Contains is O(1) and already case-insensitive
+                return !_document.Suppressions.Contains(_errorCode);
             }
         }
 

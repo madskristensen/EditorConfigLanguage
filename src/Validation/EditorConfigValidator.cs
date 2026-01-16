@@ -139,15 +139,16 @@ namespace EditorConfig
 
         public void SuppressError(string errorCode)
         {
+            // HashSet.Contains is O(1)
             if (string.IsNullOrEmpty(errorCode) || _document.Suppressions.Contains(errorCode))
                 return;
 
             var range = new Span(0, 0);
             IEnumerable<string> errorCodes = _document.Suppressions.Union([errorCode]).OrderBy(c => c);
 
-            if (_document.Suppressions.Any())
+            if (_document.Suppressions.Count > 0)
             {
-                int position = _document.ParseItems.First().Span.Start;
+                int position = _document.ParseItems[0].Span.Start;
                 ITextSnapshotLine line = _document.TextBuffer.CurrentSnapshot.GetLineFromPosition(position);
                 range = Span.FromBounds(line.Start, line.EndIncludingLineBreak);
             }

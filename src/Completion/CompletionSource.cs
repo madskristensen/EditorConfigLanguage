@@ -146,7 +146,7 @@ namespace EditorConfig
             }
 
             // Calculate the applicable span for completion
-            if (list.Any())
+            if (list.Count > 0)
             {
                 applicableTo = GetApplicableSpan(snapshot, line, position);
             }

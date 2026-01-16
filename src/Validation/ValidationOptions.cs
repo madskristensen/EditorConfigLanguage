@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 using Microsoft.VisualStudio.Shell;
@@ -31,11 +32,22 @@ namespace EditorConfig
         [DefaultValue(true)]
         public bool EnableUnknownProperties { get; set; } = true;
 
+        private string _ignoredPrefixes = "resharper_, idea_, roslynator_, ij_";
+        private string[] _cachedPrefixes;
+
         [Category(_rules)]
         [DisplayName("Ignored property prefixes")]
         [Description("Comma-separated list of property prefixes to ignore during validation (e.g., resharper_, idea_, roslynator_).")]
         [DefaultValue("resharper_, idea_, roslynator_, ij_")]
-        public string IgnoredPrefixes { get; set; } = "resharper_, idea_, roslynator_, ij_";
+        public string IgnoredPrefixes
+        {
+            get => _ignoredPrefixes;
+            set
+            {
+                _ignoredPrefixes = value;
+                _cachedPrefixes = null; // Invalidate cache when value changes
+            }
+        }
 
         [Category(_rules)]
         [DisplayName("Validate unknown values")]
@@ -80,7 +92,21 @@ namespace EditorConfig
         /// Checks if a property keyword should be ignored based on the configured ignored prefixes.
         /// </summary>
         public bool HasIgnoredPrefix(string keyword)
-            => HasIgnoredPrefix(keyword, IgnoredPrefixes);
+        {
+            if (string.IsNullOrEmpty(keyword))
+                return false;
+
+            // Lazy initialize and cache the parsed prefixes
+            _cachedPrefixes ??= ParsePrefixes(_ignoredPrefixes);
+
+            foreach (string prefix in _cachedPrefixes)
+            {
+                if (keyword.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                    return true;
+            }
+
+            return false;
+        }
 
         /// <summary>
         /// Checks if a property keyword should be ignored based on the provided prefix list.
@@ -93,15 +119,30 @@ namespace EditorConfig
             if (string.IsNullOrEmpty(prefixList) || string.IsNullOrEmpty(keyword))
                 return false;
 
-            string[] prefixes = prefixList.Split([','], StringSplitOptions.RemoveEmptyEntries);
+            string[] prefixes = ParsePrefixes(prefixList);
             foreach (string prefix in prefixes)
             {
-                string trimmedPrefix = prefix.Trim();
-                if (!string.IsNullOrEmpty(trimmedPrefix) && keyword.StartsWith(trimmedPrefix, StringComparison.OrdinalIgnoreCase))
+                if (keyword.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
                     return true;
             }
 
             return false;
+        }
+
+        private static string[] ParsePrefixes(string prefixList)
+        {
+            if (string.IsNullOrEmpty(prefixList))
+                return [];
+
+            string[] parts = prefixList.Split([','], StringSplitOptions.RemoveEmptyEntries);
+            var result = new List<string>(parts.Length);
+            foreach (string part in parts)
+            {
+                string trimmed = part.Trim();
+                if (!string.IsNullOrEmpty(trimmed))
+                    result.Add(trimmed);
+            }
+            return [.. result];
         }
 
         public override void SaveSettingsToStorage()

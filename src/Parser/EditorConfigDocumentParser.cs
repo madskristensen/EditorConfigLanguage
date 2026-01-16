@@ -39,7 +39,7 @@ namespace EditorConfig
                 var sections = new List<Section>();
                 var properties = new List<Property>();
 
-                Suppressions = [];
+                Suppressions = new(StringComparer.OrdinalIgnoreCase);
                 Section parentSection = null;
 
                 foreach (ITextSnapshotLine line in TextBuffer.CurrentSnapshot.Lines)
@@ -63,7 +63,9 @@ namespace EditorConfig
                             ParseItem errors = CreateParseItem(ItemType.Suppression, line, code);
                             AddToList(items, errors);
 
-                            if (!Suppressions.Contains(code.Value) && ErrorCatalog.All.Any(ec => ec.Code == code.Value))
+                            // HashSet.Add returns false if already exists - O(1) lookup
+                            // Also use TryGetErrorCode for O(1) lookup instead of Any()
+                            if (ErrorCatalog.TryGetErrorCode(code.Value, out _))
                                 Suppressions.Add(code.Value);
                         }
                     }

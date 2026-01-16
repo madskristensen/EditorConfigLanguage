@@ -49,7 +49,7 @@ namespace EditorConfig
 
         public bool HasErrors
         {
-            get { return _snapshots.Any(); }
+            get { return _snapshots.Count > 0; }
         }
 
         #region ITableDataSource members

@@ -41,20 +41,20 @@ namespace EditorConfig
         public ISignature GetBestMatch(ISignatureHelpSession session)
         {
             if (session.Signatures.Count != 4)
-                return session.Signatures.FirstOrDefault();
+                return session.Signatures.Count > 0 ? session.Signatures[0] : null;
 
             string text = _span.GetText(_buffer.CurrentSnapshot);
 
             if (text.Contains("[{"))
-                return session.Signatures.ElementAt(3);
+                return session.Signatures[3];
 
             if (text.Contains("{"))
-                return session.Signatures.ElementAt(1);
+                return session.Signatures[1];
 
             if (text.Contains("**"))
-                return session.Signatures.ElementAt(2);
+                return session.Signatures[2];
 
-            return session.Signatures.ElementAt(0);
+            return session.Signatures[0];
         }
 
         public void Dispose()

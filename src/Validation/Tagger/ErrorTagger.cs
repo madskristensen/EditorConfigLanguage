@@ -39,7 +39,7 @@ namespace EditorConfig
         {
             var tags = new List<ITagSpan<IErrorTag>>();
 
-            if (_document.IsParsing || _validator.IsValidating || !spans.Any() || spans[0].IsEmpty)
+            if (_document.IsParsing || _validator.IsValidating || spans.Count == 0 || spans[0].IsEmpty)
                 return tags;
 
             // Get all items that have errors, regardless of span

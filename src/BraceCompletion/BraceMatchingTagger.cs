@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.Text;
@@ -13,11 +13,14 @@ namespace EditorConfig
         ITextBuffer SourceBuffer { get; set; }
         SnapshotPoint? CurrentChar { get; set; }
         private readonly Dictionary<char, char> _braceList;
+        private readonly Dictionary<char, char> _closeBraceToOpen;
 
         internal BraceMatchingTagger(ITextView view, ITextBuffer sourceBuffer)
         {
             //here the keys are the open braces, and the values are the close braces
             _braceList = new Dictionary<char, char> { { '[', ']' }, { '(', ')' }, { '{', '}' } };
+            // Reverse lookup for close braces - avoids LINQ query on every keystroke
+            _closeBraceToOpen = new Dictionary<char, char> { { ']', '[' }, { ')', '(' }, { '}', '{' } };
             View = view;
             SourceBuffer = sourceBuffer;
             CurrentChar = null;
@@ -77,12 +80,9 @@ namespace EditorConfig
                     yield return new TagSpan<TextMarkerTag>(pairSpan, new TextMarkerTag("MarkerFormatDefinition/HighlightWordFormatDefinition"));
                 }
             }
-            else if (_braceList.ContainsValue(lastText))    //the value is the close brace, which is the *previous* character
+            else if (_closeBraceToOpen.TryGetValue(lastText, out char openChar))    //the value is the close brace, which is the *previous* character
             {
-                IEnumerable<char> open = from n in _braceList
-                                         where n.Value.Equals(lastText)
-                                         select n.Key;
-                if (FindMatchingOpenChar(lastChar, open.ElementAt(0), lastText, View.TextViewLines.Count, out pairSpan))
+                if (FindMatchingOpenChar(lastChar, openChar, lastText, View.TextViewLines.Count, out pairSpan))
                 {
                     yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(lastChar, 1), new TextMarkerTag("MarkerFormatDefinition/HighlightWordFormatDefinition"));
                     yield return new TagSpan<TextMarkerTag>(pairSpan, new TextMarkerTag("MarkerFormatDefinition/HighlightWordFormatDefinition"));

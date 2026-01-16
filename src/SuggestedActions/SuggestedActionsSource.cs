@@ -64,7 +64,7 @@ namespace EditorConfig
 
                 // Missing rules
                 List<Keyword> missingRules = AddMissingRulesAction.FindMissingRulesAll(_document.GetAllIncludedRules());
-                if (missingRules.Count() != 0)
+                if (missingRules.Count != 0)
                 {
                     var addMissingRules = new AddMissingRulesAction(missingRules, _document, _view);
                     list.AddRange(CreateActionSet(addMissingRules));

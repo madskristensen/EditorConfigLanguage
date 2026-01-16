@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace EditorConfig
 {
@@ -8,6 +7,7 @@ namespace EditorConfig
     {
         private static readonly ValidationOptions _o = EditorConfigPackage.ValidationOptions;
         private static readonly List<Error> _errors = [];
+        private static readonly Dictionary<string, Error> _errorLookup = new(StringComparer.OrdinalIgnoreCase);
 
         public static IReadOnlyList<Error> All
         {
@@ -60,8 +60,7 @@ namespace EditorConfig
 
         public static bool TryGetErrorCode(string code, out Error errorCode)
         {
-            errorCode = All.FirstOrDefault(c => c.Code.Equals(code));
-            return errorCode != null;
+            return _errorLookup.TryGetValue(code, out errorCode);
         }
 
         private static Error Create(string errorCode, ErrorCategory type, string message)
@@ -73,6 +72,7 @@ namespace EditorConfig
         {
             var ec = new Error(errorCode, type, message, isSupported);
             _errors.Add(ec);
+            _errorLookup[errorCode] = ec;
 
             return ec;
         }

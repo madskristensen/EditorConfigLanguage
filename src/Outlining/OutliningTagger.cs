@@ -34,7 +34,7 @@ namespace EditorConfig
 
         public IEnumerable<ITagSpan<IOutliningRegionTag>> GetTags(NormalizedSnapshotSpanCollection spans)
         {
-            if (spans.Count == 0 || !Regions.Any())
+            if (spans.Count == 0 || Regions.Count == 0)
                 yield break;
 
             IEnumerable<Region> currentRegions = Regions;

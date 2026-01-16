@@ -1,5 +1,5 @@
+using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -43,15 +43,15 @@ namespace EditorConfig
             AddMissingRulesActionDotNet addMissingRulesActionDotNet = null;
             AddMissingRulesActionCSharp addMissingRulesActionCSharp = null;
             AddMissingRulesActionVB addMissingRulesActionVB = null;
-            if (missingRulesDotNet.Count() != 0)
+            if (missingRulesDotNet.Count != 0)
             {
                 addMissingRulesActionDotNet = new AddMissingRulesActionDotNet(missingRulesDotNet, document, view);
             }
-            if (missingRulesCSharp.Count() != 0)
+            if (missingRulesCSharp.Count != 0)
             {
                 addMissingRulesActionCSharp = new AddMissingRulesActionCSharp(missingRulesCSharp, document, view);
             }
-            if (missingRulesVB.Count() != 0)
+            if (missingRulesVB.Count != 0)
             {
                 addMissingRulesActionVB = new AddMissingRulesActionVB(missingRulesVB, document, view);
             }
@@ -74,15 +74,20 @@ namespace EditorConfig
         internal static List<Keyword> FindMissingRulesAll(List<string> currentRules)
         {
             var missingRules = new List<Keyword>();
-            var missingRuleNames = new List<string>();
+            // Use HashSet for O(1) lookups instead of List.Contains which is O(n)
+            var currentRulesSet = new HashSet<string>(currentRules, StringComparer.OrdinalIgnoreCase);
+            var missingRuleNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
             foreach (Keyword keyword in SchemaCatalog.VisibleKeywords)
             {
-                string curRule = keyword.Name.ToLower(CultureInfo.InvariantCulture);
-                if (!currentRules.Contains(curRule) && !missingRuleNames.Contains(curRule) && !curRule.StartsWith("dotnet_naming") && !curRule.Equals("root") && !curRule.Equals("max_line_length"))
+                string curRule = keyword.Name;
+                if (!currentRulesSet.Contains(curRule) && 
+                    missingRuleNames.Add(curRule) && 
+                    !curRule.StartsWith("dotnet_naming", StringComparison.OrdinalIgnoreCase) && 
+                    !curRule.Equals("root", StringComparison.OrdinalIgnoreCase) && 
+                    !curRule.Equals("max_line_length", StringComparison.OrdinalIgnoreCase))
                 {
                     missingRules.Add(keyword);
-                    missingRuleNames.Add(curRule);
                 }
             }
 

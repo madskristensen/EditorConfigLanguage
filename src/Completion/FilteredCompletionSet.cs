@@ -37,12 +37,14 @@ namespace EditorConfig
 
             CustomFilter();
 
-            IOrderedEnumerable<Completion> ordered = currentCompletions.OrderByDescending(c => GetHighlightedSpansInDisplayText(c.DisplayText).Sum(s => s.Length));
+            // Materialize once to avoid multiple enumeration and use List for Count property
+            var orderedList = currentCompletions
+                .OrderByDescending(c => GetHighlightedSpansInDisplayText(c.DisplayText).Sum(s => s.Length))
+                .ToList();
 
-            if (ordered.Any())
+            if (orderedList.Count > 0)
             {
-                int count = ordered.Count();
-                SelectionStatus = new CompletionSelectionStatus(ordered.First(), count == 1, count == 1);
+                SelectionStatus = new CompletionSelectionStatus(orderedList[0], orderedList.Count == 1, orderedList.Count == 1);
             }
             else
             {
@@ -56,10 +58,11 @@ namespace EditorConfig
 
             if (currentActiveFilters != null && currentActiveFilters.Count > 0)
             {
-                IEnumerable<string> activeFilters = currentActiveFilters.Where(f => f.IsChecked).Select(f => f.AutomationText);
+                // Materialize to list to avoid multiple enumeration
+                var activeFilters = currentActiveFilters.Where(f => f.IsChecked).Select(f => f.AutomationText).ToList();
 
-                if (!activeFilters.Any())
-                    activeFilters = currentActiveFilters.Select(f => f.AutomationText);
+                if (activeFilters.Count == 0)
+                    activeFilters = currentActiveFilters.Select(f => f.AutomationText).ToList();
 
                 _activeFilters.Clear();
                 _activeFilters.AddRange(activeFilters);

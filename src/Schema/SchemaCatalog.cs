@@ -42,7 +42,7 @@ namespace EditorConfig
             }
 
             // Fast path: direct dictionary lookup (case-insensitive)
-            if (_keywordLookup.TryGetValue(name.ToLowerInvariant(), out keyword))
+            if (_keywordLookup.TryGetValue(name, out keyword))
                 return true;
 
             // Slow path: pattern matching for dynamic naming rules
@@ -103,7 +103,7 @@ namespace EditorConfig
                 return false;
             }
 
-            return _severityLookup.TryGetValue(name.ToLowerInvariant(), out severity);
+            return _severityLookup.TryGetValue(name, out severity);
         }
 
         internal static void ParseJson(string file = null)
@@ -123,9 +123,9 @@ namespace EditorConfig
                 AllKeywords = JsonConvert.DeserializeObject<IEnumerable<Keyword>>(obj["properties"].ToString());
                 VisibleKeywords = AllKeywords.Where(p => p.IsVisible);
 
-                // Build lookup dictionaries for O(1) access
-                _keywordLookup = AllKeywords.ToDictionary(k => k.Name.ToLowerInvariant(), k => k);
-                _severityLookup = Severities.ToDictionary(s => s.Name.ToLowerInvariant(), s => s);
+                // Build lookup dictionaries for O(1) access with case-insensitive comparison
+                _keywordLookup = AllKeywords.ToDictionary(k => k.Name, k => k, StringComparer.OrdinalIgnoreCase);
+                _severityLookup = Severities.ToDictionary(s => s.Name, s => s, StringComparer.OrdinalIgnoreCase);
             }
         }
     }

@@ -27,7 +27,7 @@ namespace EditorConfig
         /// <summary>True if the item contains errors; otherwise false.</summary>
         public bool HasErrors
         {
-            get { return Errors.Any(); }
+            get { return Errors.Count > 0; }
         }
 
         /// <summary>Adds an error to the Errors list if it doesn't already contain it.</summary>

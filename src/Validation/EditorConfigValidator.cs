@@ -100,9 +100,12 @@ namespace EditorConfig
 
         private void ClearAllErrors()
         {
-            foreach (ParseItem item in _document.ParseItems.Where(i => i.Errors.Any()))
+            foreach (ParseItem item in _document.ParseItems)
             {
-                item.Errors.Clear();
+                if (item.Errors.Count > 0)
+                {
+                    item.Errors.Clear();
+                }
             }
         }
 

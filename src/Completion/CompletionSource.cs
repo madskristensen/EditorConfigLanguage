@@ -57,7 +57,9 @@ namespace EditorConfig
                 {
                     IEnumerable<Keyword> properties = EditorConfigPackage.CompletionOptions.ShowHiddenKeywords ? SchemaCatalog.AllKeywords : SchemaCatalog.VisibleKeywords;
                     IEnumerable<Keyword> items = properties.Where(i => i.Name != SchemaCatalog.Root);
-                    IEnumerable<string> usedKeywords = _document.GetAllIncludedRules();
+
+                    // Use HashSet for O(1) lookup instead of List.Contains which is O(n)
+                    HashSet<string> usedKeywords;
 
                     ParseItem parseItemSection = _document.ParseItems.LastOrDefault(p => p.ItemType == ItemType.Section && p.Span.Start < position);
                     if (parseItemSection != null)
@@ -65,8 +67,16 @@ namespace EditorConfig
                         Section section = _document.Sections.FirstOrDefault(x => x.Item.Text.Equals(parseItemSection.Text, StringComparison.OrdinalIgnoreCase));
                         if (section != null)
                         {
-                            usedKeywords = [.. section.Properties.Select(x => x.Keyword.Text)];
+                            usedKeywords = new HashSet<string>(section.Properties.Select(x => x.Keyword.Text), StringComparer.OrdinalIgnoreCase);
                         }
+                        else
+                        {
+                            usedKeywords = [.. _document.GetAllIncludedRules()];
+                        }
+                    }
+                    else
+                    {
+                        usedKeywords = [.. _document.GetAllIncludedRules()];
                     }
 
                     foreach (Keyword property in items)

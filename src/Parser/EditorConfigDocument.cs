@@ -80,20 +80,19 @@ namespace EditorConfig
         public List<string> GetAllIncludedRules()
         {
             EditorConfigDocument curDoc = this;
-            var rules = new List<string>();
+            var rulesSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             while (curDoc != null)
             {
                 foreach (ParseItem parseItem in curDoc.ParseItems)
                 {
-                    string parseItemStr = parseItem.Text;
-                    if (!rules.Contains(parseItemStr) && parseItem.ItemType == ItemType.Keyword)
+                    if (parseItem.ItemType == ItemType.Keyword)
                     {
-                        rules.Add(parseItemStr);
+                        rulesSet.Add(parseItem.Text);
                     }
                 }
                 curDoc = curDoc.Parent;
             }
-            return rules;
+            return [.. rulesSet];
         }
 
         public void Dispose()

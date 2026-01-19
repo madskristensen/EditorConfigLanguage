@@ -117,10 +117,21 @@ namespace EditorConfig
 
             if (File.Exists(file))
             {
-                var obj = JObject.Parse(File.ReadAllText(file));
+                JObject obj = JObject.Parse(File.ReadAllText(file));
 
                 Severities = JsonConvert.DeserializeObject<IEnumerable<Severity>>(obj["severities"].ToString());
-                AllKeywords = JsonConvert.DeserializeObject<IEnumerable<Keyword>>(obj["properties"].ToString());
+                List<Keyword> builtInKeywords = JsonConvert.DeserializeObject<List<Keyword>>(obj["properties"].ToString());
+
+                // Build set of built-in keyword names for precedence checking
+                var builtInKeywordNames = new HashSet<string>(
+                    builtInKeywords.Select(k => k.Name),
+                    StringComparer.OrdinalIgnoreCase);
+
+                // Load custom keywords from extensions registered in the VS registry
+                IEnumerable<Keyword> customKeywords = CustomSchemaProvider.LoadCustomKeywords(builtInKeywordNames);
+
+                // Merge: built-in keywords first, then custom keywords
+                AllKeywords = builtInKeywords.Concat(customKeywords).ToList();
                 VisibleKeywords = AllKeywords.Where(p => p.IsVisible);
 
                 // Build lookup dictionaries for O(1) access with case-insensitive comparison

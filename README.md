@@ -157,6 +157,65 @@ Change the behavior of the editor from **Tools -> Options** or simply by right-c
 
 ![Settings](art/settings.png)
 
+## Extensibility
+
+### Custom Schema Support for Extension Authors
+Other Visual Studio extensions can contribute their own EditorConfig properties that will be recognized by IntelliSense and validation. This is useful for extensions that introduce custom analyzer rules or tool-specific settings.
+
+To register a custom schema, add the following to your extension's `.pkgdef` file:
+
+```pkgdef
+[$RootKey$\Languages\Language Services\EditorConfig\Schemas]
+"MyExtensionName"="$PackageFolder$\my-editorconfig-schema.json"
+```
+
+The schema JSON file should follow the same format as the built-in schema, with a `"properties"` array:
+
+```json
+{
+  "properties": [
+    {
+      "name": "my_custom_property",
+      "description": "Description shown in tooltips and IntelliSense.",
+      "values": ["value1", "value2", "value3"],
+      "defaultValue": ["value1"],
+      "severity": false,
+      "documentationLink": "https://example.com/docs/my-property"
+    },
+    {
+      "name": "my_severity_property",
+      "description": "A property that supports severity suffixes.",
+      "values": [true, false],
+      "defaultValue": [true],
+      "severity": true,
+      "defaultSeverity": "warning"
+    }
+  ]
+}
+```
+
+#### Schema Property Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `name` | string | **Required.** The property name (e.g., `my_tool_option`). |
+| `description` | string | Description shown in tooltips and IntelliSense. |
+| `values` | array | List of valid values (strings, booleans, or numbers). |
+| `defaultValue` | array | The default value(s) for the property. |
+| `severity` | boolean | If `true`, the property supports severity suffixes (`:error`, `:warning`, etc.). |
+| `defaultSeverity` | string | Default severity when `severity` is `true`. One of: `none`, `silent`, `suggestion`, `warning`, `error`. |
+| `documentationLink` | string | URL to documentation for F1 help. |
+| `multiple` | boolean | If `true`, the value can be a comma-separated list. |
+| `hidden` | boolean | If `true`, the property won't appear in IntelliSense but will be recognized. |
+| `unsupported` | boolean | If `true`, the property is marked as not supported by Visual Studio. |
+| `example` | string | Code example showing the effect of this property. |
+
+#### Precedence Rules
+
+- **Built-in properties always take precedence** over custom properties with the same name.
+- If multiple extensions register properties with the same name, the first one loaded wins.
+- **Severities cannot be added or modified** by custom schemas; only the built-in severities are used.
+
 ### Contribute
 To build this project locally:
 

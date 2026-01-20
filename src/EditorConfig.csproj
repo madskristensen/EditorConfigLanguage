@@ -62,6 +62,7 @@
     <Compile Include="Completion\CompletionSource.cs" />
     <Compile Include="QuickInfo\QuickInfoBuilder.cs" />
     <Compile Include="Schema\Category.cs" />
+    <Compile Include="Schema\CustomSchemaInfo.cs" />
     <Compile Include="Schema\CustomSchemaProvider.cs" />
     <Compile Include="Shared\AnalyzerConfig_SectionNameMatching.cs" />
     <Compile Include="Shared\Extensions.cs" />

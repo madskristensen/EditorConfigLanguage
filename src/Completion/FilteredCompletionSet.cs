@@ -62,7 +62,7 @@ namespace EditorConfig
                 var activeFilters = currentActiveFilters.Where(f => f.IsChecked).Select(f => f.AutomationText).ToList();
 
                 if (activeFilters.Count == 0)
-                    activeFilters = currentActiveFilters.Select(f => f.AutomationText).ToList();
+                    activeFilters = [.. currentActiveFilters.Select(f => f.AutomationText)];
 
                 _activeFilters.Clear();
                 _activeFilters.AddRange(activeFilters);

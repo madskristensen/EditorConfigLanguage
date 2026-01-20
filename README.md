@@ -165,9 +165,14 @@ Other Visual Studio extensions can contribute their own EditorConfig properties 
 To register a custom schema, add the following to your extension's `.pkgdef` file:
 
 ```pkgdef
-[$RootKey$\Languages\Language Services\EditorConfig\Schemas]
-"MyExtensionName"="$PackageFolder$\my-editorconfig-schema.json"
+[$RootKey$\Languages\Language Services\EditorConfig\Schemas\MyExtensionName]
+"schema"="$PackageFolder$\my-editorconfig-schema.json"
+"moniker"="KnownMonikers.Settings"
 ```
+
+- The subkey name (`MyExtensionName`) is used as the display name in the IntelliSense filter
+- `schema` - Path to your JSON schema file
+- `moniker` - Icon for your properties in IntelliSense (see [Moniker Format](#moniker-format))
 
 The schema JSON file should follow the same format as the built-in schema, with a `"properties"` array:
 
@@ -209,6 +214,15 @@ The schema JSON file should follow the same format as the built-in schema, with 
 | `hidden` | boolean | If `true`, the property won't appear in IntelliSense but will be recognized. |
 | `unsupported` | boolean | If `true`, the property is marked as not supported by Visual Studio. |
 | `example` | string | Code example showing the effect of this property. |
+
+#### Moniker Format
+
+The `moniker` value in the pkgdef can be specified in two formats:
+
+1. **KnownMonikers name**: `KnownMonikers.Settings`, `KnownMonikers.JsonScript`, etc.
+   - See [KnownMonikers](https://learn.microsoft.com/en-us/dotnet/api/microsoft.visualstudio.imaging.knownmonikers) for available icons
+2. **GUID:ID format**: `{guid}:{id}` for custom image catalog entries
+   - Example: `{ae27a6b0-e345-4288-96df-5eaf394ee369}:1234`
 
 #### Precedence Rules
 

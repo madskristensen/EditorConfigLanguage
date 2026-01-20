@@ -8,6 +8,9 @@ using Microsoft.VisualStudio.Imaging.Interop;
 namespace EditorConfig
 {
     /// <summary>The keyword is the name-part of a property.</summary>
+    /// <remarks>
+    /// Creates a keyword from JSON deserialization.
+    /// </remarks>
     public class Keyword(string name, string description, IEnumerable<string> values, IEnumerable<string> defaultValue, bool unsupported, bool hidden, bool multiple, bool severity, string defaultSeverity, string documentationLink, string example) : ITooltip
     {
 
@@ -18,11 +21,10 @@ namespace EditorConfig
         public string Description { get; } = description;
 
         /// <summary>A list of values applicable to the property.</summary>
-        /// <remarks>Materialized to array to avoid creating new Value objects on every access.</remarks>
-        public IEnumerable<Value> Values { get; } = values.Select(v => new Value(v)).ToArray();
+        public IEnumerable<Value> Values { get; } = [.. values.Select(v => new Value(v))];
 
-        /// <remarks>Materialized to array to avoid creating new Value objects on every access.</remarks>
-        public IEnumerable<Value> DefaultValue { get; } = defaultValue.Select(v => new Value(v)).ToArray();
+        /// <summary>The default value(s) for the property.</summary>
+        public IEnumerable<Value> DefaultValue { get; } = [.. defaultValue.Select(v => new Value(v))];
 
         /// <summary>True if the property is supported by Visual Studio.</summary>
         public bool IsSupported { get; } = !unsupported;
@@ -30,7 +32,7 @@ namespace EditorConfig
         /// <summary>True if the property shows up in Intellisense.</summary>
         public bool IsVisible { get; } = !hidden;
 
-        /// <summary>True if the value can be a comman separated list.</summary>
+        /// <summary>True if the value can be a comma separated list.</summary>
         public bool SupportsMultipleValues { get; } = multiple;
 
         public bool RequiresSeverity { get; } = severity;
@@ -43,11 +45,27 @@ namespace EditorConfig
         /// <summary>A code example showing the effect of this property.</summary>
         public string Example { get; } = example;
 
+        /// <summary>
+        /// The name of the custom extension that provided this keyword, or null for built-in keywords.
+        /// </summary>
+        public string CustomExtensionName { get; internal set; }
+
+        /// <summary>
+        /// Custom moniker for this keyword when provided by an extension, or default if not set.
+        /// </summary>
+        public ImageMoniker CustomMoniker { get; internal set; }
+
         /// <summary>The category is used in the Intellisense filters.</summary>
         public Category Category
         {
             get
             {
+                // Custom extension keywords have their own category
+                if (!string.IsNullOrEmpty(CustomExtensionName))
+                {
+                    return Category.Custom;
+                }
+
                 if (!string.IsNullOrWhiteSpace(Name))
                 {
                     if (Name.StartsWith("csharp_", StringComparison.OrdinalIgnoreCase))
@@ -71,6 +89,12 @@ namespace EditorConfig
         {
             get
             {
+                // Use custom moniker if set
+                if (CustomMoniker.Guid != default)
+                {
+                    return CustomMoniker;
+                }
+
                 return Category switch
                 {
                     Category.CSharp => KnownMonikers.CSFileNode,

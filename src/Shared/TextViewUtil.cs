@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Editor;
@@ -57,7 +57,7 @@ namespace EditorConfig
 
                 if (hr == VSConstants.S_OK && framesEnum != null)
                 {
-                    IVsWindowFrame[] frames = new IVsWindowFrame[1];
+                    var frames = new IVsWindowFrame[1];
 
                     while (framesEnum.Next(1, frames, out uint fetched) == VSConstants.S_OK && fetched == 1)
                     {

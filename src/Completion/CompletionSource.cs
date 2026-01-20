@@ -343,15 +343,26 @@ namespace EditorConfig
             {
                 if (moniker == "keyword")
                 {
-                    IntellisenseFilter[] filters = [
-                        new IntellisenseFilter(KnownMonikers.Property, "Standard rules (Alt + S)", "s", Category.Standard.ToString()),
-                        new IntellisenseFilter(KnownMonikers.CPPFileNode, "C++ rules (Alt + P)", "p", Category.CPP.ToString()),
-                        new IntellisenseFilter(KnownMonikers.CSFileNode, "C# analysis rules (Alt + C)", "c", Category.CSharp.ToString()),
-                        new IntellisenseFilter(KnownMonikers.DotNET, ".NET analysis rules (Alt + D)", "d", Category.DotNet.ToString()),
-                        new IntellisenseFilter(KnownMonikers.VBFileNode, "VB.NET analysis rules (Alt + V)", "v", Category.VisualBasic.ToString()),
-                    ];
+                    var filters = new List<IntellisenseFilter>
+                    {
+                        new(KnownMonikers.Property, "Standard rules (Alt + S)", "s", Category.Standard.ToString()),
+                        new(KnownMonikers.CPPFileNode, "C++ rules (Alt + P)", "p", Category.CPP.ToString()),
+                        new(KnownMonikers.CSFileNode, "C# analysis rules (Alt + C)", "c", Category.CSharp.ToString()),
+                        new(KnownMonikers.DotNET, ".NET analysis rules (Alt + D)", "d", Category.DotNet.ToString()),
+                        new(KnownMonikers.VBFileNode, "VB.NET analysis rules (Alt + V)", "v", Category.VisualBasic.ToString()),
+                    };
 
-                    completionSets.Add(new FilteredCompletionSet(moniker, applicableTo, list, Enumerable.Empty<Completion4>(), filters));
+                    // Add dynamic filters for custom schemas
+                    // Use numeric keys starting from 1 for custom extensions
+                    int customIndex = 1;
+                    foreach (CustomSchemaInfo schema in SchemaCatalog.CustomSchemas)
+                    {
+                        string accessKey = customIndex.ToString();
+                        filters.Add(new IntellisenseFilter(schema.Moniker, $"{schema.ExtensionName} rules (Alt + {accessKey})", accessKey, schema.ExtensionName));
+                        customIndex++;
+                    }
+
+                    completionSets.Add(new FilteredCompletionSet(moniker, applicableTo, list, Enumerable.Empty<Completion4>(), [.. filters]));
                 }
                 else
                 {
@@ -368,6 +379,7 @@ namespace EditorConfig
             }
         }
 
+
         private Completion4 CreateCompletion(ITooltip item, Category category = Category.None, string iconAutomation = null)
         {
             IEnumerable<CompletionIcon2> icon = null;
@@ -383,7 +395,15 @@ namespace EditorConfig
 
             if (category != Category.None)
             {
-                automationText = category.ToString();
+                // For custom category, use the extension name for filtering
+                if (category == Category.Custom && item is Keyword keyword && !string.IsNullOrEmpty(keyword.CustomExtensionName))
+                {
+                    automationText = keyword.CustomExtensionName;
+                }
+                else
+                {
+                    automationText = category.ToString();
+                }
             }
 
             var completion = new Completion4(text, item.Name, item.Description, item.Moniker, automationText, icon);

@@ -1,10 +1,11 @@
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace EditorConfig
 {
@@ -31,6 +32,9 @@ namespace EditorConfig
 
         /// <summary>A list of all severities.</summary>
         public static IEnumerable<Severity> Severities { get; private set; }
+
+        /// <summary>A list of custom schema info from registered extensions.</summary>
+        internal static IReadOnlyList<CustomSchemaInfo> CustomSchemas { get; private set; }
 
         /// <summary>Tries to get a keyword by name.</summary>
         public static bool TryGetKeyword(string name, out Keyword keyword)
@@ -117,7 +121,7 @@ namespace EditorConfig
 
             if (File.Exists(file))
             {
-                JObject obj = JObject.Parse(File.ReadAllText(file));
+                var obj = JObject.Parse(File.ReadAllText(file));
 
                 Severities = JsonConvert.DeserializeObject<IEnumerable<Severity>>(obj["severities"].ToString());
                 List<Keyword> builtInKeywords = JsonConvert.DeserializeObject<List<Keyword>>(obj["properties"].ToString());
@@ -127,11 +131,14 @@ namespace EditorConfig
                     builtInKeywords.Select(k => k.Name),
                     StringComparer.OrdinalIgnoreCase);
 
-                // Load custom keywords from extensions registered in the VS registry
-                IEnumerable<Keyword> customKeywords = CustomSchemaProvider.LoadCustomKeywords(builtInKeywordNames);
+                // Load custom schemas from extensions registered in the VS registry
+                CustomSchemas = CustomSchemaProvider.LoadCustomSchemas(builtInKeywordNames);
+
+                // Collect all custom keywords from all schemas
+                IEnumerable<Keyword> customKeywords = CustomSchemas.SelectMany(s => s.Keywords);
 
                 // Merge: built-in keywords first, then custom keywords
-                AllKeywords = builtInKeywords.Concat(customKeywords).ToList();
+                AllKeywords = [.. builtInKeywords, .. customKeywords];
                 VisibleKeywords = AllKeywords.Where(p => p.IsVisible);
 
                 // Build lookup dictionaries for O(1) access with case-insensitive comparison

@@ -61,7 +61,7 @@ namespace EditorConfig
                                 actions.Add(action);
                         }
                     }
-                    list.AddRange(CreateActionSet(actions.ToArray()));
+                    list.AddRange(CreateActionSet([.. actions]));
                 }
 
                 // Missing rules

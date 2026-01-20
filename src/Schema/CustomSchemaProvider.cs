@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 
+using Microsoft.VisualStudio.Imaging;
+using Microsoft.VisualStudio.Imaging.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.Win32;
@@ -17,8 +20,9 @@ namespace EditorConfig
     /// <remarks>
     /// Extensions can register custom schemas via pkgdef:
     /// <code>
-    /// [$RootKey$\Languages\Language Services\EditorConfig\Schemas]
-    /// "MyExtension"="$PackageFolder$\schema.json"
+    /// [$RootKey$\Languages\Language Services\EditorConfig\Schemas\MyExtension]
+    /// "schema"="$PackageFolder$\schema.json"
+    /// "moniker"="KnownMonikers.JsonScript"
     /// </code>
     /// Custom schemas follow the same format as EditorConfig.json but only the "properties" array is used.
     /// Severities cannot be added or modified by custom schemas.
@@ -32,20 +36,21 @@ namespace EditorConfig
         internal const string SchemaRegistrySubKey = @"Languages\Language Services\EditorConfig\Schemas";
 
         /// <summary>
-        /// Loads all custom keywords from schemas registered in the VS registry.
+        /// Loads all custom schema info from schemas registered in the VS registry.
         /// </summary>
         /// <param name="builtInKeywordNames">Set of built-in keyword names to exclude from custom schemas (case-insensitive).</param>
-        /// <returns>List of keywords from custom schemas, excluding any that conflict with built-in keywords.</returns>
-        internal static IEnumerable<Keyword> LoadCustomKeywords(HashSet<string> builtInKeywordNames)
+        /// <returns>List of custom schema info objects with keywords, excluding any that conflict with built-in keywords.</returns>
+        internal static IReadOnlyList<CustomSchemaInfo> LoadCustomSchemas(HashSet<string> builtInKeywordNames)
         {
-            var customKeywords = new List<Keyword>();
+            var schemas = new List<CustomSchemaInfo>();
             var seenKeywordNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-            foreach (string schemaPath in GetRegisteredSchemaPaths())
+            foreach (CustomSchemaRegistration registration in GetRegisteredSchemas())
             {
                 try
                 {
-                    IEnumerable<Keyword> keywords = LoadKeywordsFromFile(schemaPath);
+                    List<Keyword> keywords = LoadKeywordsFromFile(registration.SchemaPath);
+                    var filteredKeywords = new List<Keyword>();
 
                     foreach (Keyword keyword in keywords)
                     {
@@ -61,8 +66,17 @@ namespace EditorConfig
                             continue;
                         }
 
+                        // Set the custom extension info on the keyword
+                        keyword.CustomExtensionName = registration.ExtensionName;
+                        keyword.CustomMoniker = registration.Moniker;
+
                         seenKeywordNames.Add(keyword.Name);
-                        customKeywords.Add(keyword);
+                        filteredKeywords.Add(keyword);
+                    }
+
+                    if (filteredKeywords.Count > 0)
+                    {
+                        schemas.Add(new CustomSchemaInfo(registration.ExtensionName, registration.Moniker, filteredKeywords));
                     }
                 }
                 catch (Exception ex)
@@ -72,21 +86,21 @@ namespace EditorConfig
                     _ = ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                     {
                         await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                        ShowSchemaLoadError(schemaPath, ex);
+                        ShowSchemaLoadError(registration.SchemaPath, ex);
                     });
 #pragma warning restore VSTHRD110 // Observe result of async calls
                 }
             }
 
-            return customKeywords;
+            return schemas;
         }
 
         /// <summary>
-        /// Reads all registered schema file paths from the VS registry.
+        /// Reads all registered schema registrations from the VS registry.
         /// </summary>
-        private static IEnumerable<string> GetRegisteredSchemaPaths()
+        private static IEnumerable<CustomSchemaRegistration> GetRegisteredSchemas()
         {
-            var paths = new List<string>();
+            var registrations = new List<CustomSchemaRegistration>();
 
             try
             {
@@ -95,27 +109,37 @@ namespace EditorConfig
                 {
                     if (configRoot == null)
                     {
-                        return paths;
+                        return registrations;
                     }
 
-                    using (RegistryKey schemaKey = configRoot.OpenSubKey(SchemaRegistrySubKey))
+                    using (RegistryKey schemasKey = configRoot.OpenSubKey(SchemaRegistrySubKey))
                     {
-                        if (schemaKey == null)
+                        if (schemasKey == null)
                         {
-                            return paths;
+                            return registrations;
                         }
 
-                        foreach (string valueName in schemaKey.GetValueNames())
+                        // Each extension has its own subkey
+                        foreach (string extensionName in schemasKey.GetSubKeyNames())
                         {
-                            object value = schemaKey.GetValue(valueName);
-                            if (value is string schemaPath && !string.IsNullOrWhiteSpace(schemaPath))
+                            using (RegistryKey extensionKey = schemasKey.OpenSubKey(extensionName))
                             {
-                                // VS resolves $PackageFolder$ during pkgdef processing,
-                                // so the registry value should already be an absolute path
-                                if (File.Exists(schemaPath))
+                                if (extensionKey == null)
                                 {
-                                    paths.Add(schemaPath);
+                                    continue;
                                 }
+
+                                string schemaPath = extensionKey.GetValue("schema") as string;
+                                string monikerString = extensionKey.GetValue("moniker") as string;
+
+                                if (string.IsNullOrWhiteSpace(schemaPath) || !File.Exists(schemaPath))
+                                {
+                                    continue;
+                                }
+
+                                ImageMoniker moniker = ParseMoniker(monikerString);
+
+                                registrations.Add(new CustomSchemaRegistration(extensionName, schemaPath, moniker));
                             }
                         }
                     }
@@ -126,24 +150,62 @@ namespace EditorConfig
                 // Silently ignore registry access errors
             }
 
-            return paths;
+            return registrations;
+        }
+
+        /// <summary>
+        /// Parses a moniker string into an ImageMoniker.
+        /// Supports "KnownMonikers.Name" format or "guid:id" format.
+        /// </summary>
+        private static ImageMoniker ParseMoniker(string monikerString)
+        {
+            if (string.IsNullOrWhiteSpace(monikerString))
+            {
+                return KnownMonikers.Property;
+            }
+
+            // Try KnownMonikers.Name format
+            if (monikerString.StartsWith("KnownMonikers.", StringComparison.OrdinalIgnoreCase))
+            {
+                string monikerName = monikerString.Substring("KnownMonikers.".Length);
+                PropertyInfo prop = typeof(KnownMonikers).GetProperty(monikerName, BindingFlags.Public | BindingFlags.Static);
+                if (prop != null && prop.PropertyType == typeof(ImageMoniker))
+                {
+                    return (ImageMoniker)prop.GetValue(null);
+                }
+            }
+
+            // Try guid:id format
+            int colonIndex = monikerString.IndexOf(':');
+            if (colonIndex > 0)
+            {
+                string guidPart = monikerString.Substring(0, colonIndex);
+                string idPart = monikerString.Substring(colonIndex + 1);
+
+                if (Guid.TryParse(guidPart, out Guid guid) && int.TryParse(idPart, out int id))
+                {
+                    return new ImageMoniker { Guid = guid, Id = id };
+                }
+            }
+
+            return KnownMonikers.Property;
         }
 
         /// <summary>
         /// Loads keywords from a schema JSON file.
         /// </summary>
-        private static IEnumerable<Keyword> LoadKeywordsFromFile(string filePath)
+        private static List<Keyword> LoadKeywordsFromFile(string filePath)
         {
             string json = File.ReadAllText(filePath);
-            JObject obj = JObject.Parse(json);
+            var obj = JObject.Parse(json);
 
             JToken propertiesToken = obj["properties"];
             if (propertiesToken == null)
             {
-                return Array.Empty<Keyword>();
+                return [];
             }
 
-            return JsonConvert.DeserializeObject<IEnumerable<Keyword>>(propertiesToken.ToString());
+            return JsonConvert.DeserializeObject<List<Keyword>>(propertiesToken.ToString());
         }
 
         /// <summary>
@@ -162,9 +224,19 @@ namespace EditorConfig
                 ServiceProvider.GlobalProvider,
                 message,
                 "EditorConfig Schema Error",
-                Microsoft.VisualStudio.Shell.Interop.OLEMSGICON.OLEMSGICON_WARNING,
-                Microsoft.VisualStudio.Shell.Interop.OLEMSGBUTTON.OLEMSGBUTTON_OK,
-                Microsoft.VisualStudio.Shell.Interop.OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+                OLEMSGICON.OLEMSGICON_WARNING,
+                OLEMSGBUTTON.OLEMSGBUTTON_OK,
+                OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
+        }
+
+        /// <summary>
+        /// Internal class to hold schema registration info from the registry.
+        /// </summary>
+        private sealed class CustomSchemaRegistration(string extensionName, string schemaPath, ImageMoniker moniker)
+        {
+            public string ExtensionName { get; } = extensionName;
+            public string SchemaPath { get; } = schemaPath;
+            public ImageMoniker Moniker { get; } = moniker;
         }
     }
 }

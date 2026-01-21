@@ -73,7 +73,7 @@ namespace EditorConfig.Commands
                 return true;
             }
 
-            return selection[0].Parent.QueryStatus(pguidCmdGroup, nCmdID, ref cmdf, ref customTitle);
+            return selection[0].Parent?.QueryStatus(pguidCmdGroup, nCmdID, ref cmdf, ref customTitle) ?? false;
         }
 
         private static bool IsSupportedCommand(Guid pguidCmdGroup, uint nCmdID)

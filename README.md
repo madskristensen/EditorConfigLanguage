@@ -160,7 +160,13 @@ Change the behavior of the editor from **Tools -> Options** or simply by right-c
 ## Extensibility
 
 ### Custom Schema Support for Extension Authors
+
 Other Visual Studio extensions can contribute their own EditorConfig properties that will be recognized by IntelliSense and validation. This is useful for extensions that introduce custom analyzer rules or tool-specific settings.
+
+Extensions that integrate with this feature include:
+
+- [SQL Formatter](https://marketplace.visualstudio.com/items?itemName=MadsKristensen.SqlFormatter)
+- [Markdown Lint](https://marketplace.visualstudio.com/items?itemName=MadsKristensen.MarkdownLintVS)
 
 To register a custom schema, add the following to your extension's `.pkgdef` file:
 

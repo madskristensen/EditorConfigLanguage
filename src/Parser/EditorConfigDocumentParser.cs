@@ -1,14 +1,14 @@
-using Microsoft.VisualStudio.Text;
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using System.Linq;
+
+using Microsoft.VisualStudio.Text;
 
 namespace EditorConfig
 {
     partial class EditorConfigDocument
     {
-        private static readonly Regex _property = new(@"^\s*(?<keyword>[^;\[#:\s=]+)\s*[=:]?\s*(?<value>[^;#:]+)?(\s*:\s*(?<severity>[^;#:\s]+))?", RegexOptions.Compiled);
+        private static readonly Regex _property = new(@"^\s*(?<keyword>[^;\[#:\s=]+)\s*[=:]?\s*(?<value>[^;#]*?)(?:\s*:\s*(?<severity>none|silent|suggestion|warning|error|default|refactoring))?\s*(?=[;#]|$)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private static readonly Regex _section = new(@"^\s*(?<section>\[.+)", RegexOptions.Compiled);
         private static readonly Regex _comment = new(@"^\s*[#;].*", RegexOptions.Compiled);
         private static readonly Regex _unknown = new(@"\s*(?<unknown>.+)", RegexOptions.Compiled);

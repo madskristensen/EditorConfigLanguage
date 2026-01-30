@@ -1,9 +1,7 @@
 # EditorConfig Language Service
 
 [![Build](https://github.com/madskristensen/EditorConfigLanguage/actions/workflows/build.yaml/badge.svg)](https://github.com/madskristensen/EditorConfigLanguage/actions/workflows/build.yaml)
-[![Visual Studio Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/MadsKristensen.EditorConfig)](https://marketplace.visualstudio.com/items?itemName=MadsKristensen.EditorConfig)
-[![Visual Studio Marketplace Downloads](https://img.shields.io/visual-studio-marketplace/d/MadsKristensen.EditorConfig)](https://marketplace.visualstudio.com/items?itemName=MadsKristensen.EditorConfig)
-[![Visual Studio Marketplace Rating](https://img.shields.io/visual-studio-marketplace/r/MadsKristensen.EditorConfig)](https://marketplace.visualstudio.com/items?itemName=MadsKristensen.EditorConfig)
+![GitHub Sponsors](https://img.shields.io/github/sponsors/madskristensen)
 
 Download this extension from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=MadsKristensen.EditorConfig)
 or get the [CI build](https://www.vsixgallery.com/extension/1209461d-57f8-46a4-814a-dbe5fecef941/).
@@ -43,17 +41,20 @@ Need help getting started? Check out [Microsoft's EditorConfig documentation](ht
 - Drag 'n drop file onto .editorconfig file
 
 ### Create .editorconfig Files
+
 To make it really easy to add a .editorconfig file, you can now right-click
 any folder, project, solution folder and hit **Add -> .editorconfig File**
 
 ![Classification](art/context-menu.png)
 
 ### Syntax Highlighting
+
 Full colorization of the full .editorconfig syntax.
 
 ![Classification](art/classification.png)
 
 ### C#, VB.NET, and C++ Style Analyzers
+
 Visual Studio lets you add C#, VB.NET, and C++ specific rules to the .editorconfig file. In addition to enabling various rules, a severity is also added to control how Visual Studio is going to handle these rules.
 
 ![C# and .NET style analyzers](art/csharp-analyzers.png)
@@ -61,9 +62,11 @@ Visual Studio lets you add C#, VB.NET, and C++ specific rules to the .editorconf
 Each severity is clearly marked by an icon to make it easy to identify.
 
 #### C++ Support
+
 The extension provides full IntelliSense and validation for [C++ EditorConfig properties](https://learn.microsoft.com/visualstudio/ide/cpp-editorconfig-properties), including indentation, formatting, and code style options.
 
 ### Intellisense
+
 The extension provides Intellisense for both keywords and values.
 
 ![Classification](art/keyword-intellisense.png)  
@@ -71,6 +74,7 @@ The extension provides Intellisense for both keywords and values.
 ![Classification](art/value-intellisense.png)
 
 ### Code Snippets
+
 Various code snippets have been added to make it easier to work with .editorconfig files.
 
 To insert a snippet, right-click inside the editor or hit *Ctrl+K,Ctrl+X*.
@@ -82,6 +86,7 @@ This will show a list of available snippets to insert.
 ![Snippets](art/snippets-expansion.png)
 
 ### Validation
+
 Error squiggles are shown for invalid values.
 
 ![Classification](art/validation.png)
@@ -109,6 +114,7 @@ Another way to suppress the error is by right-clicking the error in the Error Li
 ![Suppress from Error list](art/suppress-errorlist.png)
 
 #### Third-Party Property Support
+
 Many third-party tools like ReSharper, Rider, and Roslynator add their own properties to .editorconfig files. By default, the extension ignores properties with these common prefixes to avoid false validation errors:
 
 - `resharper_` - JetBrains ReSharper/Rider properties
@@ -119,26 +125,31 @@ Many third-party tools like ReSharper, Rider, and Roslynator add their own prope
 You can customize the ignored prefixes in **Tools → Options → Text Editor → EditorConfig → Validation → Ignored property prefixes**.
 
 ### Hover Tooltips
+
 Hover the mouse over any keyword to see a full description.
 
 ![Classification](art/quick-info.png)
 
 ### Light Bulbs
+
 Sorting properties, deleting sections, and adding missing rules is easy with the commands being shown as light bulbs in the editor margin.
 
 ![Light bulbs](art/light-bulb.png)
 
 ### Code Formatting
+
 Typing `Ctrl+K,D` will invoke Visual Studio's *Format Document* command. By default that will align all the equal (`=`) delimeters and add 1 space character around both equal- and colon characters. This behavior is configurable in the settings (see below).
 
 ![Code formatting](art/formatting.png)
 
 ### Navigational Drop Downs
+
 Dropdown menus at the top of the editor makes it easy to navigate the document.
 
 ![Navigational drop downs](art/navigation-dropdown.png)
 
 ### Inheritance Visualizer
+
 A project can have multiple .editorconfig files and the rules in each cascades
 from the top-most and down. It is based on folder structure.
 
@@ -151,6 +162,7 @@ You can navigate to the immediate parent document by hitting **F12**. You can ch
 Note, the inheritance visualizer is only visible when the current file isn't the root of the hierarchy or by specifying the `root = true` property.
 
 ### Settings
+
 Change the behavior of the editor from **Tools -> Options** or simply by right-clicking in the editor.
 
 ![Open EditorConfig settings](art/editor-context-menu.png)
@@ -237,6 +249,7 @@ The `moniker` value in the pkgdef can be specified in two formats:
 - **Severities cannot be added or modified** by custom schemas; only the built-in severities are used.
 
 ### Contribute
+
 To build this project locally:
 
 1. Clone the repository
@@ -244,10 +257,12 @@ To build this project locally:
 3. Build and run (F5) to test in the Experimental Instance
 
 References to available formatting/code options directly from Roslyn codebase:
+
 - [CSharp Formatting Options](https://github.com/dotnet/roslyn/blob/main/src/Workspaces/CSharp/Portable/Formatting/CSharpFormattingOptions.cs)
 - [CSharp Code Style Options](https://github.com/dotnet/roslyn/blob/main/src/Workspaces/CSharp/Portable/CodeStyle/CSharpCodeStyleOptions.cs)
 - [.NET Formatting Options](https://github.com/dotnet/roslyn/blob/main/src/Workspaces/Core/Portable/Formatting/FormattingOptions.cs)
 - [.NET Code Style Options](https://github.com/dotnet/roslyn/blob/main/src/Workspaces/Core/Portable/CodeStyle/CodeStyleOptions2.cs)
 
 ### License
+
 [Apache 2.0](LICENSE)

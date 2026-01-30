@@ -60,6 +60,12 @@ namespace EditorConfig
 
         public static bool TryGetErrorCode(string code, out Error errorCode)
         {
+            if (code == null)
+            {
+                errorCode = null;
+                return false;
+            }
+
             return _errorLookup.TryGetValue(code, out errorCode);
         }
 

@@ -49,6 +49,7 @@
     <Compile Include="CompletionTest.cs" />
     <Compile Include="ErrorCatalogTest.cs" />
     <Compile Include="ExtensionsTest.cs" />
+    <Compile Include="PropertyRegexTest.cs" />
     <Compile Include="SchemaCatalogTest.cs" />
     <Compile Include="SectionNameMatcherTest.cs" />
     <Compile Include="ValidationTest.cs" />

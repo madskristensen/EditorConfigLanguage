@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Tagging;
@@ -69,7 +69,7 @@ namespace EditorConfig
 
             SnapshotPoint lastChar = currentChar == 0 ? currentChar : currentChar - 1; //if currentChar is 0 (beginning of buffer), don't move it back
             char lastText = lastChar.GetChar();
-            var pairSpan = new SnapshotSpan();
+            SnapshotSpan pairSpan;
 
             if (_braceList.ContainsKey(currentText))   //the key is the open brace
             {

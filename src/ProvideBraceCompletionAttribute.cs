@@ -1,18 +1,13 @@
-using Microsoft.VisualStudio.Shell;
 using System;
 using System.Globalization;
+
+using Microsoft.VisualStudio.Shell;
 
 namespace EditorConfig
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
-    public class ProvideBraceCompletionAttribute : RegistrationAttribute
+    public class ProvideBraceCompletionAttribute(string languageName) : RegistrationAttribute
     {
-        private readonly string languageName;
-        public ProvideBraceCompletionAttribute(string languageName)
-        {
-            this.languageName = languageName;
-        }
-
         public override void Register(RegistrationContext context)
         {
             string keyName = string.Format(CultureInfo.InvariantCulture, "{0}\\{1}\\{2}", "Languages", "Language Services", languageName);

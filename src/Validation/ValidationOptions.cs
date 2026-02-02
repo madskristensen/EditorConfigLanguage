@@ -32,13 +32,13 @@ namespace EditorConfig
         [DefaultValue(true)]
         public bool EnableUnknownProperties { get; set; } = true;
 
-        private string _ignoredPrefixes = "resharper_, idea_, roslynator_, ij_";
+        private string _ignoredPrefixes = "resharper_, idea_, roslynator_, ij_, md_";
         private string[] _cachedPrefixes;
 
         [Category(_rules)]
         [DisplayName("Ignored property prefixes")]
         [Description("Comma-separated list of property prefixes to ignore during validation (e.g., resharper_, idea_, roslynator_).")]
-        [DefaultValue("resharper_, idea_, roslynator_, ij_")]
+        [DefaultValue("resharper_, idea_, roslynator_, ij_, md_")]
         public string IgnoredPrefixes
         {
             get => _ignoredPrefixes;

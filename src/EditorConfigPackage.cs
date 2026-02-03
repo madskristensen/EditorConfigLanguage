@@ -1,10 +1,12 @@
-using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.ComponentModel.Design;
 using System.Runtime.InteropServices;
 using System.Threading;
+
+using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
+
 using Task = System.Threading.Tasks.Task;
 
 namespace EditorConfig
@@ -55,11 +57,13 @@ namespace EditorConfig
 
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
-            Language = new EditorConfigLanguage(this);
             FormatterOptions = (FormatterOptions)GetDialogPage(typeof(FormatterOptions));
             ValidationOptions = (ValidationOptions)GetDialogPage(typeof(ValidationOptions));
             CompletionOptions = (CompletionOptions)GetDialogPage(typeof(CompletionOptions));
 
+            await JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+
+            Language = new EditorConfigLanguage(this);
             var serviceContainer = this as IServiceContainer;
             serviceContainer.AddService(typeof(EditorConfigLanguage), Language, true);
 

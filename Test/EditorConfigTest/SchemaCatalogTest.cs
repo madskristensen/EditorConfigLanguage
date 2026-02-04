@@ -186,5 +186,71 @@ namespace EditorConfigTest
             Assert.AreEqual("cpp_include_cleanup_add_missing_error_tag_type", keyword.Name);
             Assert.AreEqual(Category.CPP, keyword.Category);
         }
+
+        [TestMethod]
+        public void TryGetKeyword_CppIncludeCleanupEnabled_ReturnsTrue()
+        {
+            bool result = SchemaCatalog.TryGetKeyword("cpp_include_cleanup_enabled", out Keyword keyword);
+
+            Assert.IsTrue(result);
+            Assert.IsNotNull(keyword);
+            Assert.AreEqual("cpp_include_cleanup_enabled", keyword.Name);
+            Assert.AreEqual(Category.CPP, keyword.Category);
+        }
+
+        [TestMethod]
+        public void TryGetKeyword_CppIncludeCleanupExcludedFiles_ReturnsTrue()
+        {
+            bool result = SchemaCatalog.TryGetKeyword("cpp_include_cleanup_excluded_files", out Keyword keyword);
+
+            Assert.IsTrue(result);
+            Assert.IsNotNull(keyword);
+            Assert.AreEqual("cpp_include_cleanup_excluded_files", keyword.Name);
+            Assert.AreEqual(Category.CPP, keyword.Category);
+        }
+
+        [TestMethod]
+        public void TryGetKeyword_CppIncludeCleanupRequiredFiles_ReturnsTrue()
+        {
+            bool result = SchemaCatalog.TryGetKeyword("cpp_include_cleanup_required_files", out Keyword keyword);
+
+            Assert.IsTrue(result);
+            Assert.IsNotNull(keyword);
+            Assert.AreEqual("cpp_include_cleanup_required_files", keyword.Name);
+            Assert.AreEqual(Category.CPP, keyword.Category);
+        }
+
+        [TestMethod]
+        public void TryGetKeyword_CppIncludeCleanupHeaderRemappings_ReturnsTrue()
+        {
+            bool result = SchemaCatalog.TryGetKeyword("cpp_include_cleanup_header_remappings", out Keyword keyword);
+
+            Assert.IsTrue(result);
+            Assert.IsNotNull(keyword);
+            Assert.AreEqual("cpp_include_cleanup_header_remappings", keyword.Name);
+            Assert.AreEqual(Category.CPP, keyword.Category);
+        }
+
+        [TestMethod]
+        public void TryGetKeyword_CppIncludeCleanupAlternateFiles_ReturnsTrue()
+        {
+            bool result = SchemaCatalog.TryGetKeyword("cpp_include_cleanup_alternate_files", out Keyword keyword);
+
+            Assert.IsTrue(result);
+            Assert.IsNotNull(keyword);
+            Assert.AreEqual("cpp_include_cleanup_alternate_files", keyword.Name);
+            Assert.AreEqual(Category.CPP, keyword.Category);
+        }
+
+        [TestMethod]
+        public void TryGetKeyword_SpellingExclusionPath_ReturnsTrue()
+        {
+            bool result = SchemaCatalog.TryGetKeyword("spelling_exclusion_path", out Keyword keyword);
+
+            Assert.IsTrue(result);
+            Assert.IsNotNull(keyword);
+            Assert.AreEqual("spelling_exclusion_path", keyword.Name);
+            Assert.AreEqual(Category.VisualStudio, keyword.Category);
+        }
     }
 }

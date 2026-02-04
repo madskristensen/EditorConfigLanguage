@@ -1794,7 +1794,7 @@
           "values": [ "en-us", "fr-fr", "de-de", "es-es", "it-it", "pt-br", "ja-jp", "zh-cn", "zh-tw", "ko-kr" ],
           "defaultValue": [ "en-us" ],
           "multiple": true,
-          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/text-spell-checker?view=visualstudio"
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/text-spell-checker?view=vs-2022"
         },
         {
           "name": "spelling_checkable_types",
@@ -1802,7 +1802,7 @@
           "values": [ "identifiers", "comments", "strings", "plainText" ],
           "defaultValue": [ "comments", "strings" ],
           "multiple": true,
-          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/text-spell-checker?view=visualstudio"
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/text-spell-checker?view=vs-2022"
         }
       ]
     }

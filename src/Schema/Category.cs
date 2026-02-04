@@ -8,6 +8,7 @@ namespace EditorConfig
         DotNet,
         VisualBasic,
         CPP,
+        VisualStudio,
         Custom,
     }
 }

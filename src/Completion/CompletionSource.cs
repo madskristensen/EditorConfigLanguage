@@ -350,6 +350,7 @@ namespace EditorConfig
                         new(KnownMonikers.CSFileNode, "C# analysis rules (Alt + C)", "c", Category.CSharp.ToString()),
                         new(KnownMonikers.DotNET, ".NET analysis rules (Alt + D)", "d", Category.DotNet.ToString()),
                         new(KnownMonikers.VBFileNode, "VB.NET analysis rules (Alt + V)", "v", Category.VisualBasic.ToString()),
+                        new(KnownMonikers.VisualStudio, "Visual Studio rules (Alt + U)", "u", Category.VisualStudio.ToString()),
                     };
 
                     // Add dynamic filters for custom schemas

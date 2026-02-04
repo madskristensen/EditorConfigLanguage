@@ -1764,6 +1764,45 @@
           "values": [ "one_liners", "all_one_line_scopes", "never" ],
           "defaultValue": [ "one_liners" ],
           "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_include_cleanup_add_missing",
+          "description": "Add missing direct includes. Determines the suggestion level for adding missing direct includes (content is used but only available transitively).",
+          "values": [ "refactoring_only", "suggestion", "warning", "error" ],
+          "defaultValue": [ "suggestion" ],
+          "documentationLink": "https://learn.microsoft.com/en-us/cpp/ide/include-cleanup-config?view=msvc-170"
+        },
+        {
+          "name": "cpp_include_cleanup_remove_unused",
+          "description": "Remove unused includes. Determines the suggestion level for removing unused includes (include is not used in the file).",
+          "values": [ "refactoring_only", "suggestion", "warning", "error" ],
+          "defaultValue": [ "suggestion" ],
+          "documentationLink": "https://learn.microsoft.com/en-us/cpp/ide/include-cleanup-config?view=msvc-170"
+        },
+        {
+          "name": "cpp_include_cleanup_add_missing_error_tag_type",
+          "description": "Error tag type for missing direct includes. Sets the diagnostic level for VCIC001 messages about missing direct includes.",
+          "values": [ "refactoring_only", "suggestion", "warning", "error" ],
+          "defaultValue": [ "suggestion" ],
+          "documentationLink": "https://learn.microsoft.com/en-us/cpp/ide/include-cleanup-config?view=msvc-170"
+        },
+
+        // Visual Studio specific properties
+        {
+          "name": "spelling_languages",
+          "description": "Specifies which language dictionaries to use for spell checking. Comma-separated culture codes (e.g., 'en-us,fr-fr,de-de'). Requires Windows language packs.",
+          "values": [ "en-us", "fr-fr", "de-de", "es-es", "it-it", "pt-br", "ja-jp", "zh-cn", "zh-tw", "ko-kr" ],
+          "defaultValue": [ "en-us" ],
+          "multiple": true,
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/text-spell-checker?view=visualstudio"
+        },
+        {
+          "name": "spelling_checkable_types",
+          "description": "Specifies which code elements to include in spell checking. Comma-separated list of types: identifiers, comments, strings, plainText.",
+          "values": [ "identifiers", "comments", "strings", "plainText" ],
+          "defaultValue": [ "comments", "strings" ],
+          "multiple": true,
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/text-spell-checker?view=visualstudio"
         }
       ]
     }

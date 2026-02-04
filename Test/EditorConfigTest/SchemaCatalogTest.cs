@@ -131,5 +131,60 @@ namespace EditorConfigTest
                 Assert.IsTrue(exists, $"Severity '{severityName}' should exist");
             }
         }
+
+        [TestMethod]
+        public void TryGetKeyword_SpellingLanguages_ReturnsTrue()
+        {
+            bool result = SchemaCatalog.TryGetKeyword("spelling_languages", out Keyword keyword);
+
+            Assert.IsTrue(result);
+            Assert.IsNotNull(keyword);
+            Assert.AreEqual("spelling_languages", keyword.Name);
+            Assert.AreEqual(Category.VisualStudio, keyword.Category);
+        }
+
+        [TestMethod]
+        public void TryGetKeyword_SpellingCheckableTypes_ReturnsTrue()
+        {
+            bool result = SchemaCatalog.TryGetKeyword("spelling_checkable_types", out Keyword keyword);
+
+            Assert.IsTrue(result);
+            Assert.IsNotNull(keyword);
+            Assert.AreEqual("spelling_checkable_types", keyword.Name);
+            Assert.AreEqual(Category.VisualStudio, keyword.Category);
+        }
+
+        [TestMethod]
+        public void TryGetKeyword_CppIncludeCleanupAddMissing_ReturnsTrue()
+        {
+            bool result = SchemaCatalog.TryGetKeyword("cpp_include_cleanup_add_missing", out Keyword keyword);
+
+            Assert.IsTrue(result);
+            Assert.IsNotNull(keyword);
+            Assert.AreEqual("cpp_include_cleanup_add_missing", keyword.Name);
+            Assert.AreEqual(Category.CPP, keyword.Category);
+        }
+
+        [TestMethod]
+        public void TryGetKeyword_CppIncludeCleanupRemoveUnused_ReturnsTrue()
+        {
+            bool result = SchemaCatalog.TryGetKeyword("cpp_include_cleanup_remove_unused", out Keyword keyword);
+
+            Assert.IsTrue(result);
+            Assert.IsNotNull(keyword);
+            Assert.AreEqual("cpp_include_cleanup_remove_unused", keyword.Name);
+            Assert.AreEqual(Category.CPP, keyword.Category);
+        }
+
+        [TestMethod]
+        public void TryGetKeyword_CppIncludeCleanupAddMissingErrorTagType_ReturnsTrue()
+        {
+            bool result = SchemaCatalog.TryGetKeyword("cpp_include_cleanup_add_missing_error_tag_type", out Keyword keyword);
+
+            Assert.IsTrue(result);
+            Assert.IsNotNull(keyword);
+            Assert.AreEqual("cpp_include_cleanup_add_missing_error_tag_type", keyword.Name);
+            Assert.AreEqual(Category.CPP, keyword.Category);
+        }
     }
 }

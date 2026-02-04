@@ -1849,6 +1849,20 @@
           "values": [ "<path_to_file>" ],
           "defaultValue": [ "" ],
           "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/text-spell-checker?view=vs-2022"
+        },
+        {
+          "name": "spelling_use_default_exclusion_dictionary",
+          "description": "Determines whether Visual Studio uses its built-in exclusion dictionary of common programming terms and identifiers. Set to false to use only custom exclusion files.",
+          "values": [ true, false ],
+          "defaultValue": [ true ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/text-spell-checker?view=vs-2022"
+        },
+        {
+          "name": "spelling_error_severity",
+          "description": "Sets the severity level for detected spelling errors in the editor.",
+          "values": [ "none", "information", "warning", "error" ],
+          "defaultValue": [ "information" ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/text-spell-checker?view=vs-2022"
         }
       ]
     }

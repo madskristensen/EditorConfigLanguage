@@ -252,5 +252,27 @@ namespace EditorConfigTest
             Assert.AreEqual("spelling_exclusion_path", keyword.Name);
             Assert.AreEqual(Category.VisualStudio, keyword.Category);
         }
+
+        [TestMethod]
+        public void TryGetKeyword_SpellingUseDefaultExclusionDictionary_ReturnsTrue()
+        {
+            bool result = SchemaCatalog.TryGetKeyword("spelling_use_default_exclusion_dictionary", out Keyword keyword);
+
+            Assert.IsTrue(result);
+            Assert.IsNotNull(keyword);
+            Assert.AreEqual("spelling_use_default_exclusion_dictionary", keyword.Name);
+            Assert.AreEqual(Category.VisualStudio, keyword.Category);
+        }
+
+        [TestMethod]
+        public void TryGetKeyword_SpellingErrorSeverity_ReturnsTrue()
+        {
+            bool result = SchemaCatalog.TryGetKeyword("spelling_error_severity", out Keyword keyword);
+
+            Assert.IsTrue(result);
+            Assert.IsNotNull(keyword);
+            Assert.AreEqual("spelling_error_severity", keyword.Name);
+            Assert.AreEqual(Category.VisualStudio, keyword.Category);
+        }
     }
 }

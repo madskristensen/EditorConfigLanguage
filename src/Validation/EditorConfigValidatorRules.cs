@@ -385,14 +385,6 @@ namespace EditorConfig
                 e.Register();
             });
 
-            ErrorCatalog.MissingSeverity.Run(property.Value, hasKeyword, (e) =>
-            {
-                if (property.Severity == null && keyword.RequiresSeverity)
-                {
-                    e.Register();
-                }
-            });
-
             ErrorCatalog.UnknownValue.Run(property.Value, hasKeyword, (e) =>
             {
                 if (!(int.TryParse(property.Value.Text, out int intValue) && intValue > 0))

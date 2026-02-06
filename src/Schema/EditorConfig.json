@@ -1764,6 +1764,105 @@
           "values": [ "one_liners", "all_one_line_scopes", "never" ],
           "defaultValue": [ "one_liners" ],
           "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
+        },
+        {
+          "name": "cpp_include_cleanup_enabled",
+          "description": "Controls whether include cleanup is enabled. Set to true to enable automatic detection of unused and missing includes.",
+          "values": [ true, false ],
+          "defaultValue": [ true ],
+          "documentationLink": "https://learn.microsoft.com/en-us/cpp/ide/include-cleanup-config?view=msvc-170"
+        },
+        {
+          "name": "cpp_include_cleanup_add_missing",
+          "description": "Add missing direct includes. Determines the suggestion level for adding missing direct includes (content is used but only available transitively).",
+          "values": [ "refactoring_only", "suggestion", "warning", "error" ],
+          "defaultValue": [ "suggestion" ],
+          "documentationLink": "https://learn.microsoft.com/en-us/cpp/ide/include-cleanup-config?view=msvc-170"
+        },
+        {
+          "name": "cpp_include_cleanup_remove_unused",
+          "description": "Remove unused includes. Determines the suggestion level for removing unused includes (include is not used in the file).",
+          "values": [ "refactoring_only", "suggestion", "warning", "error" ],
+          "defaultValue": [ "suggestion" ],
+          "documentationLink": "https://learn.microsoft.com/en-us/cpp/ide/include-cleanup-config?view=msvc-170"
+        },
+        {
+          "name": "cpp_include_cleanup_add_missing_error_tag_type",
+          "description": "Error tag type for missing direct includes. Sets the diagnostic level for VCIC001 messages about missing direct includes.",
+          "values": [ "refactoring_only", "suggestion", "warning", "error" ],
+          "defaultValue": [ "suggestion" ],
+          "documentationLink": "https://learn.microsoft.com/en-us/cpp/ide/include-cleanup-config?view=msvc-170"
+        },
+        {
+          "name": "cpp_include_cleanup_excluded_files",
+          "description": "Comma-separated list of header files to exclude from being marked as unused (e.g., 'io.h, windows.h'). Wildcards are not supported.",
+          "values": [ "<header_file>" ],
+          "defaultValue": [ "" ],
+          "multiple": true,
+          "documentationLink": "https://learn.microsoft.com/en-us/cpp/ide/include-cleanup-config?view=msvc-170"
+        },
+        {
+          "name": "cpp_include_cleanup_required_files",
+          "description": "Comma-separated list of header files which are always considered required, preventing them from being flagged as unused (e.g., 'mycompany/musthave.h').",
+          "values": [ "<header_file>" ],
+          "defaultValue": [ "" ],
+          "multiple": true,
+          "documentationLink": "https://learn.microsoft.com/en-us/cpp/ide/include-cleanup-config?view=msvc-170"
+        },
+        {
+          "name": "cpp_include_cleanup_header_remappings",
+          "description": "Defines header file remappings for suggesting alternative includes (e.g., 'corecrt_io.h=io.h').",
+          "values": [ "<source_header>=<target_header>" ],
+          "defaultValue": [ "" ],
+          "multiple": true,
+          "documentationLink": "https://learn.microsoft.com/en-us/cpp/ide/include-cleanup-config?view=msvc-170"
+        },
+        {
+          "name": "cpp_include_cleanup_alternate_files",
+          "description": "Specifies alternative header files that should be suggested instead of the transitive include (e.g., '<corecrt_io.h>; <io.h>').",
+          "values": [ "<header_file>" ],
+          "defaultValue": [ "" ],
+          "multiple": true,
+          "documentationLink": "https://learn.microsoft.com/en-us/cpp/ide/include-cleanup-config?view=msvc-170"
+        },
+
+        // Visual Studio specific properties
+        {
+          "name": "spelling_languages",
+          "description": "Specifies which language dictionaries to use for spell checking. Comma-separated culture codes (e.g., 'en-us,fr-fr,de-de'). Requires Windows language packs.",
+          "values": [ "en-us", "fr-fr", "de-de", "es-es", "it-it", "pt-br", "ja-jp", "zh-cn", "zh-tw", "ko-kr" ],
+          "defaultValue": [ "en-us" ],
+          "multiple": true,
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/text-spell-checker?view=vs-2022"
+        },
+        {
+          "name": "spelling_checkable_types",
+          "description": "Specifies which code elements to include in spell checking. Comma-separated list of types: identifiers, comments, strings, plainText.",
+          "values": [ "identifiers", "comments", "strings", "plainText" ],
+          "defaultValue": [ "comments", "strings" ],
+          "multiple": true,
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/text-spell-checker?view=vs-2022"
+        },
+        {
+          "name": "spelling_exclusion_path",
+          "description": "Specifies a path to a custom dictionary file where ignored words are stored. When using 'Ignore', Visual Studio adds words to this file.",
+          "values": [ "<path_to_file>" ],
+          "defaultValue": [ "" ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/text-spell-checker?view=vs-2022"
+        },
+        {
+          "name": "spelling_use_default_exclusion_dictionary",
+          "description": "Determines whether Visual Studio uses its built-in exclusion dictionary of common programming terms and identifiers. Set to false to use only custom exclusion files.",
+          "values": [ true, false ],
+          "defaultValue": [ true ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/text-spell-checker?view=vs-2022"
+        },
+        {
+          "name": "spelling_error_severity",
+          "description": "Sets the severity level for detected spelling errors in the editor.",
+          "values": [ "none", "information", "warning", "error" ],
+          "defaultValue": [ "information" ],
+          "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/text-spell-checker?view=vs-2022"
         }
       ]
     }

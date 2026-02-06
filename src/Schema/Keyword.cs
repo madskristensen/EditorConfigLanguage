@@ -76,6 +76,8 @@ namespace EditorConfig
                         return Category.VisualBasic;
                     else if (Name.StartsWith("cpp_", StringComparison.OrdinalIgnoreCase))
                         return Category.CPP;
+                    else if (Name.StartsWith("spelling_", StringComparison.OrdinalIgnoreCase))
+                        return Category.VisualStudio;
                     else
                         return Category.Standard;
                 }
@@ -101,6 +103,7 @@ namespace EditorConfig
                     Category.DotNet => KnownMonikers.DotNET,
                     Category.VisualBasic => KnownMonikers.VBFileNode,
                     Category.CPP => KnownMonikers.CPPFileNode,
+                    Category.VisualStudio => KnownMonikers.VisualStudio,
                     _ => KnownMonikers.Property,
                 };
             }

@@ -259,9 +259,9 @@ To build this project locally:
 References to available formatting/code options directly from Roslyn codebase:
 
 - [CSharp Formatting Options](https://github.com/dotnet/roslyn/blob/main/src/Workspaces/CSharp/Portable/Formatting/CSharpFormattingOptions.cs)
-- [CSharp Code Style Options](https://github.com/dotnet/roslyn/blob/main/src/Workspaces/CSharp/Portable/CodeStyle/CSharpCodeStyleOptions.cs)
+- [CSharp Code Style Options](https://github.com/dotnet/roslyn/blob/main/src/Workspaces/SharedUtilitiesAndExtensions/Compiler/CSharp/CodeStyle/CSharpCodeStyleOptions.cs)
 - [.NET Formatting Options](https://github.com/dotnet/roslyn/blob/main/src/Workspaces/Core/Portable/Formatting/FormattingOptions.cs)
-- [.NET Code Style Options](https://github.com/dotnet/roslyn/blob/main/src/Workspaces/Core/Portable/CodeStyle/CodeStyleOptions2.cs)
+- [.NET Code Style Options](https://github.com/dotnet/roslyn/blob/main/src/Workspaces/SharedUtilitiesAndExtensions/Compiler/Core/CodeStyle/CodeStyleOptions2.cs)
 
 ### License
 

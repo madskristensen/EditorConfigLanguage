@@ -11,7 +11,6 @@ using Microsoft.VisualStudio.TextManager.Interop;
 using Microsoft.VisualStudio.Utilities;
 using System;
 using System.ComponentModel.Composition;
-using System.Windows.Threading;
 
 namespace EditorConfig
 {
@@ -44,22 +43,33 @@ namespace EditorConfig
         [Import]
         internal ITextStructureNavigatorSelectorService NavigatorService { get; set; }
 
-        private ITextBuffer _buffer;
+        private sealed class ViewState
+        {
+            public ViewState(ITextDocument document, EventHandler<TextDocumentFileActionEventArgs> documentSavedHandler)
+            {
+                Document = document;
+                DocumentSavedHandler = documentSavedHandler;
+            }
+
+            public ITextDocument Document { get; }
+
+            public EventHandler<TextDocumentFileActionEventArgs> DocumentSavedHandler { get; }
+        }
 
         public void VsTextViewCreated(IVsTextView textViewAdapter)
         {
             Telemetry.TrackOperation("FileOpened");
             IWpfTextView view = AdaptersFactory.GetWpfTextView(textViewAdapter);
-            _buffer = view.TextBuffer;
+            ITextBuffer buffer = view.TextBuffer;
 
-            _buffer.Properties.GetOrCreateSingletonProperty(() => view);
+            buffer.Properties.GetOrCreateSingletonProperty(() => view);
 
             ITextBufferUndoManager undoManager = UndoProvider.GetTextBufferUndoManager(view.TextBuffer);
 
             AddCommandFilter(textViewAdapter, new FormatterCommand(view, undoManager));
             AddCommandFilter(textViewAdapter, new CompletionController(view, CompletionBroker, QuickInfoBroker));
             AddCommandFilter(textViewAdapter, new F1Help(textViewAdapter, view));
-            AddCommandFilter(textViewAdapter, new NavigateToParent(_buffer));
+            AddCommandFilter(textViewAdapter, new NavigateToParent(buffer));
             AddCommandFilter(textViewAdapter, new SignatureHelpCommand(view, SignatureHelpBroker, QuickInfoBroker));
             AddCommandFilter(textViewAdapter, new HideDefaultCommands());
             AddCommandFilter(textViewAdapter, new EnableSnippetsCommand(textViewAdapter, view, NavigatorService));
@@ -67,39 +77,44 @@ namespace EditorConfig
             if (textViewAdapter is IVsTextViewEx viewEx)
                 ErrorHandler.ThrowOnFailure(viewEx.PersistOutliningState());
 
-            if (DocumentService.TryGetTextDocument(_buffer, out ITextDocument document))
+            if (DocumentService.TryGetTextDocument(buffer, out ITextDocument document))
             {
-                document.FileActionOccurred += DocumentSaved;
+                EventHandler<TextDocumentFileActionEventArgs> documentSavedHandler = (sender, e) => DocumentSaved(buffer, e);
+                document.FileActionOccurred += documentSavedHandler;
+                view.Properties.AddProperty(typeof(ViewState), new ViewState(document, documentSavedHandler));
             }
 
             view.Closed += OnViewClosed;
         }
 
-                        private void DocumentSaved(object sender, TextDocumentFileActionEventArgs e)
-                        {
-                            if (e.FileActionType != FileActionTypes.ContentSavedToDisk)
-                                return;
+        private void DocumentSaved(ITextBuffer buffer, TextDocumentFileActionEventArgs e)
+        {
+            if (e.FileActionType != FileActionTypes.ContentSavedToDisk)
+                return;
 
-                #pragma warning disable VSSDK007 // Await/join tasks created from ThreadHelper.JoinableTaskFactory.RunAsync
-                            _ = ThreadHelper.JoinableTaskFactory.RunAsync(async delegate
-                            {
-                                if (_buffer != null && _buffer.Properties.TryGetProperty(typeof(EditorConfigValidator), out EditorConfigValidator val))
-                                {
-                                    await val.RequestValidationAsync(true);
-                                }
+            #pragma warning disable VSSDK007 // Await/join tasks created from ThreadHelper.JoinableTaskFactory.RunAsync
+            _ = ThreadHelper.JoinableTaskFactory.RunAsync(async delegate
+            {
+                if (buffer != null && buffer.Properties.TryGetProperty(typeof(EditorConfigValidator), out EditorConfigValidator val))
+                {
+                    await val.RequestValidationAsync(true);
+                }
 
-                                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
 
-                                var statusBar = Package.GetGlobalService(typeof(SVsStatusbar)) as IVsStatusbar;
-                                statusBar.IsFrozen(out int frozen);
+                var statusBar = Package.GetGlobalService(typeof(SVsStatusbar)) as IVsStatusbar;
+                if (statusBar == null)
+                    return;
 
-                                if (frozen == 0)
-                                {
-                                    statusBar.SetText("Saved. Open documents must be reopened for .editorconfig changes to take effect");
-                                }
-                            });
-                #pragma warning restore VSSDK007 // Await/join tasks created from ThreadHelper.JoinableTaskFactory.RunAsync
-                        }
+                statusBar.IsFrozen(out int frozen);
+
+                if (frozen == 0)
+                {
+                    statusBar.SetText("Saved. Open documents must be reopened for .editorconfig changes to take effect");
+                }
+            });
+            #pragma warning restore VSSDK007 // Await/join tasks created from ThreadHelper.JoinableTaskFactory.RunAsync
+        }
 
         private void AddCommandFilter(IVsTextView textViewAdapter, BaseCommand command)
         {
@@ -111,6 +126,11 @@ namespace EditorConfig
         {
             var view = (IWpfTextView)sender;
             view.Closed -= OnViewClosed;
+
+            if (view.Properties.TryGetProperty(typeof(ViewState), out ViewState viewState))
+            {
+                viewState.Document.FileActionOccurred -= viewState.DocumentSavedHandler;
+            }
 
             if (view.TextBuffer.Properties.TryGetProperty(typeof(EditorConfigDocument), out EditorConfigDocument doc))
             {

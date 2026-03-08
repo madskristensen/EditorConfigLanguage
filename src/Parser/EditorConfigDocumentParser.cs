@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 using Microsoft.VisualStudio.Text;
 
@@ -14,13 +15,14 @@ namespace EditorConfig
         private static readonly Regex _unknown = new(@"\s*(?<unknown>.+)", RegexOptions.Compiled);
         private static readonly Regex _suppress = new(@"^(?<comment>#\s*suppress\s*):?\s*(?<errors>[\w\s]*)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         private static readonly Regex _suppressionCode = new(@"\w+", RegexOptions.Compiled);
+        private int _latestParseRequestId;
 
         /// <summary>Returns true if the document is currently being parsed.</summary>
         public bool IsParsing { get; private set; }
 
         private void InitializeParser()
         {
-            System.Threading.Tasks.Task task = ParseAsync();
+            _ = ParseAsync();
             TextBuffer.Changed += BufferChanged;
         }
 
@@ -31,112 +33,125 @@ namespace EditorConfig
 
         private System.Threading.Tasks.Task ParseAsync()
         {
+            int parseRequestId = Interlocked.Increment(ref _latestParseRequestId);
             IsParsing = true;
 
             return System.Threading.Tasks.Task.Run(() =>
             {
-                var items = new List<ParseItem>();
-                var sections = new List<Section>();
-                var properties = new List<Property>();
-
-                Suppressions = new(StringComparer.OrdinalIgnoreCase);
-                Section parentSection = null;
-
-                foreach (ITextSnapshotLine line in TextBuffer.CurrentSnapshot.Lines)
+                try
                 {
-                    string text = line.GetText();
+                    var items = new List<ParseItem>();
+                    var sections = new List<Section>();
+                    var properties = new List<Property>();
+                    var suppressions = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-                    if (string.IsNullOrWhiteSpace(text))
-                        continue;
+                    Section parentSection = null;
 
-                    // Suppression
-                    if (IsMatch(_suppress, text, out Match match))
+                    foreach (ITextSnapshotLine line in TextBuffer.CurrentSnapshot.Lines)
                     {
-                        ParseItem comment = CreateParseItem(ItemType.Comment, line, match.Groups["comment"]);
-                        AddToList(items, comment);
+                        string text = line.GetText();
 
-                        Group errorsGroup = match.Groups["errors"];
-                        string value = errorsGroup.Value;
+                        if (string.IsNullOrWhiteSpace(text))
+                            continue;
 
-                        foreach (Match code in _suppressionCode.Matches(match.Value, errorsGroup.Index))
+                        // Suppression
+                        if (IsMatch(_suppress, text, out Match match))
                         {
-                            ParseItem errors = CreateParseItem(ItemType.Suppression, line, code);
-                            AddToList(items, errors);
+                            ParseItem comment = CreateParseItem(ItemType.Comment, line, match.Groups["comment"]);
+                            AddToList(items, comment);
 
-                            // HashSet.Add returns false if already exists - O(1) lookup
-                            // Also use TryGetErrorCode for O(1) lookup instead of Any()
-                            if (ErrorCatalog.TryGetErrorCode(code.Value, out _))
-                                Suppressions.Add(code.Value);
-                        }
-                    }
-                    // Comment
-                    else if (IsMatch(_comment, text, out match))
-                    {
-                        ParseItem comment = CreateParseItem(ItemType.Comment, line, match);
-                        AddToList(items, comment);
-                    }
-                    // Section
-                    else if (IsMatch(_section, text, out match))
-                    {
-                        ParseItem section = CreateParseItem(ItemType.Section, line, match.Groups["section"]);
-                        AddToList(items, section);
+                            Group errorsGroup = match.Groups["errors"];
+                            string value = errorsGroup.Value;
 
-                        var s = new Section(section);
-                        sections.Add(s);
-                        parentSection = s;
-                    }
-                    // Property
-                    else if (IsMatch(_property, text, out match))
-                    {
-                        ParseItem keyword = CreateParseItem(ItemType.Keyword, line, match.Groups["keyword"]);
-                        AddToList(items, keyword);
-
-                        var property = new Property(keyword);
-
-                        if (parentSection == null)
-                            properties.Add(property);
-                        else
-                            parentSection.Properties.Add(property);
-
-                        if (match.Groups["value"].Success)
-                        {
-                            ParseItem value = CreateParseItem(ItemType.Value, line, match.Groups["value"]);
-                            AddToList(items, value);
-                            property.Value = value;
-                        }
-
-                        if (match.Groups["severity"].Success)
-                        {
-                            ParseItem severity = CreateParseItem(ItemType.Severity, line, match.Groups["severity"]);
-                            AddToList(items, severity);
-                            property.Severity = severity;
-                        }
-                    }
-
-                    if (match.Success && match.Length < text.Length)
-                    {
-                        string remaining = text.Substring(match.Length);
-
-                        if (!string.IsNullOrEmpty(remaining) && IsMatch(_unknown, remaining, out Match unknownMatch))
-                        {
-                            Group group = unknownMatch.Groups["unknown"];
-                            if (!string.IsNullOrWhiteSpace(group.Value))
+                            foreach (Match code in _suppressionCode.Matches(match.Value, errorsGroup.Index))
                             {
-                                var span = new Span(line.Start + match.Length + group.Index, group.Length);
-                                var unknown = new ParseItem(this, ItemType.Unknown, span, remaining);
-                                AddToList(items, unknown);
+                                ParseItem errors = CreateParseItem(ItemType.Suppression, line, code);
+                                AddToList(items, errors);
+
+                                // HashSet.Add returns false if already exists - O(1) lookup
+                                // Also use TryGetErrorCode for O(1) lookup instead of Any()
+                                if (ErrorCatalog.TryGetErrorCode(code.Value, out _))
+                                    suppressions.Add(code.Value);
+                            }
+                        }
+                        // Comment
+                        else if (IsMatch(_comment, text, out match))
+                        {
+                            ParseItem comment = CreateParseItem(ItemType.Comment, line, match);
+                            AddToList(items, comment);
+                        }
+                        // Section
+                        else if (IsMatch(_section, text, out match))
+                        {
+                            ParseItem section = CreateParseItem(ItemType.Section, line, match.Groups["section"]);
+                            AddToList(items, section);
+
+                            var s = new Section(section);
+                            sections.Add(s);
+                            parentSection = s;
+                        }
+                        // Property
+                        else if (IsMatch(_property, text, out match))
+                        {
+                            ParseItem keyword = CreateParseItem(ItemType.Keyword, line, match.Groups["keyword"]);
+                            AddToList(items, keyword);
+
+                            var property = new Property(keyword);
+
+                            if (parentSection == null)
+                                properties.Add(property);
+                            else
+                                parentSection.Properties.Add(property);
+
+                            if (match.Groups["value"].Success)
+                            {
+                                ParseItem value = CreateParseItem(ItemType.Value, line, match.Groups["value"]);
+                                AddToList(items, value);
+                                property.Value = value;
+                            }
+
+                            if (match.Groups["severity"].Success)
+                            {
+                                ParseItem severity = CreateParseItem(ItemType.Severity, line, match.Groups["severity"]);
+                                AddToList(items, severity);
+                                property.Severity = severity;
+                            }
+                        }
+
+                        if (match.Success && match.Length < text.Length)
+                        {
+                            string remaining = text.Substring(match.Length);
+
+                            if (!string.IsNullOrEmpty(remaining) && IsMatch(_unknown, remaining, out Match unknownMatch))
+                            {
+                                Group group = unknownMatch.Groups["unknown"];
+                                if (!string.IsNullOrWhiteSpace(group.Value))
+                                {
+                                    var span = new Span(line.Start + match.Length + group.Index, group.Length);
+                                    var unknown = new ParseItem(this, ItemType.Unknown, span, remaining);
+                                    AddToList(items, unknown);
+                                }
                             }
                         }
                     }
+
+                    if (parseRequestId != Volatile.Read(ref _latestParseRequestId))
+                        return;
+
+                    Suppressions = suppressions;
+                    ParseItems = items;
+                    Sections = sections;
+                    Properties = properties;
+
+                    Parsed?.Invoke(this, EventArgs.Empty);
                 }
-
-                ParseItems = items;
-                Sections = sections;
-                Properties = properties;
-
-                IsParsing = false;
-
-                Parsed?.Invoke(this, EventArgs.Empty);
+                finally
+                {
+                    if (parseRequestId == Volatile.Read(ref _latestParseRequestId))
+                    {
+                        IsParsing = false;
+                    }
+                }
             });
         }
 

@@ -1,6 +1,9 @@
 using EditorConfig;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.IO;
+using System.Reflection;
 
 namespace EditorConfigTest
 {
@@ -168,6 +171,143 @@ namespace EditorConfigTest
             Assert.IsTrue(matcher.Value.IsMatch("/config/app.xml"));
             Assert.IsTrue(matcher.Value.IsMatch("/project/web.xml"));
             Assert.IsFalse(matcher.Value.IsMatch("/project/file.json"));
+        }
+
+        [TestMethod]
+        public void EscapedBraces_MatchLiteralBraces()
+        {
+            AnalyzerConfig.SectionNameMatcher? matcher = AnalyzerConfig.TryCreateSectionNameMatcher(@"file\{name\}.cs");
+
+            Assert.IsNotNull(matcher);
+            Assert.IsTrue(matcher.Value.IsMatch("/project/file{name}.cs"));
+            Assert.IsFalse(matcher.Value.IsMatch("/project/fileA.cs"));
+        }
+
+        [TestMethod]
+        public void DescendingNumberRange_MatchesNormalizedRange()
+        {
+            AnalyzerConfig.SectionNameMatcher? matcher = AnalyzerConfig.TryCreateSectionNameMatcher("file{5..1}.cs");
+
+            Assert.IsNotNull(matcher);
+            Assert.IsTrue(matcher.Value.IsMatch("/project/file1.cs"));
+            Assert.IsTrue(matcher.Value.IsMatch("/project/file3.cs"));
+            Assert.IsTrue(matcher.Value.IsMatch("/project/file5.cs"));
+            Assert.IsFalse(matcher.Value.IsMatch("/project/file6.cs"));
+        }
+
+        [TestMethod]
+        public void UnclosedCharacterClass_ReturnsNullMatcher()
+        {
+            AnalyzerConfig.SectionNameMatcher? matcher = AnalyzerConfig.TryCreateSectionNameMatcher("file[abc.cs");
+
+            Assert.IsNull(matcher);
+        }
+
+        [TestMethod]
+        public void TrailingEscape_ReturnsNullMatcher()
+        {
+            AnalyzerConfig.SectionNameMatcher? matcher = AnalyzerConfig.TryCreateSectionNameMatcher("file\\");
+
+            Assert.IsNull(matcher);
+        }
+    }
+
+    [TestClass]
+    public class ValidatorGlobbingTest
+    {
+        [TestMethod]
+        public void DoesFilesMatch_FindsFileAtMaxDepth()
+        {
+            string root = CreateTempRoot();
+
+            try
+            {
+                string deepestAllowed = CreateNestedDirectory(root, 5);
+                File.WriteAllText(Path.Combine(deepestAllowed, "target.cs"), "// test");
+
+                bool result = InvokeDoesFilesMatch(root, "[**/*.cs]");
+
+                Assert.IsTrue(result);
+            }
+            finally
+            {
+                Directory.Delete(root, true);
+            }
+        }
+
+        [TestMethod]
+        public void DoesFilesMatch_DoesNotTraversePastMaxDepth()
+        {
+            string root = CreateTempRoot();
+
+            try
+            {
+                string beyondDepthLimit = CreateNestedDirectory(root, 6);
+                File.WriteAllText(Path.Combine(beyondDepthLimit, "target.cs"), "// test");
+
+                bool result = InvokeDoesFilesMatch(root, "[**/*.cs]");
+
+                Assert.IsFalse(result);
+            }
+            finally
+            {
+                Directory.Delete(root, true);
+            }
+        }
+
+        [TestMethod]
+        public void DoesFilesMatch_IgnoresConfiguredPaths()
+        {
+            string root = CreateTempRoot();
+
+            try
+            {
+                string ignored = Directory.CreateDirectory(Path.Combine(root, "node_modules")).FullName;
+                File.WriteAllText(Path.Combine(ignored, "found.cs"), "// test");
+
+                bool result = InvokeDoesFilesMatch(root, "[*.cs]");
+
+                Assert.IsFalse(result);
+            }
+            finally
+            {
+                Directory.Delete(root, true);
+            }
+        }
+
+        private static bool InvokeDoesFilesMatch(string folder, string pattern)
+        {
+            Type validatorType = typeof(EditorConfigDocument).Assembly.GetType("EditorConfig.EditorConfigValidator", true);
+            MethodInfo method = validatorType.GetMethod(
+                "DoesFilesMatch",
+                BindingFlags.Static | BindingFlags.NonPublic,
+                null,
+                [typeof(string), typeof(string), typeof(string)],
+                null);
+
+            Assert.IsNotNull(method);
+
+            object result = method.Invoke(null, [folder, pattern, null]);
+            return (bool)result;
+        }
+
+        private static string CreateTempRoot()
+        {
+            string root = Path.Combine(Path.GetTempPath(), "EditorConfigLanguageTests", Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(root);
+            return root;
+        }
+
+        private static string CreateNestedDirectory(string root, int depth)
+        {
+            string current = root;
+
+            for (int i = 0; i < depth; i++)
+            {
+                current = Directory.CreateDirectory(Path.Combine(current, $"d{i}")).FullName;
+            }
+
+            return current;
         }
     }
 }

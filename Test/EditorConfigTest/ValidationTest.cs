@@ -91,5 +91,38 @@ namespace EditorConfigTest
             Assert.IsTrue(ValidationOptions.HasIgnoredPrefix("prefix1_setting", prefixesWithWhitespace));
             Assert.IsTrue(ValidationOptions.HasIgnoredPrefix("prefix2_setting", prefixesWithWhitespace));
         }
+
+        [TestMethod]
+        public void GlobalConfig_DoesNotReportOnlyRootAllowedForTopLevelProperties()
+        {
+            bool result = EditorConfigValidator.ShouldReportOnlyRootAllowed(isGlobalConfig: true, isRootProperty: false);
+
+            Assert.IsFalse(result);
+        }
+
+        [TestMethod]
+        public void EditorConfig_StillReportsOnlyRootAllowedForNonRootTopLevelProperties()
+        {
+            bool result = EditorConfigValidator.ShouldReportOnlyRootAllowed(isGlobalConfig: false, isRootProperty: false);
+
+            Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public void GlobalConfig_MetadataProperties_AreRecognized()
+        {
+            Assert.IsTrue(EditorConfigValidator.IsGlobalConfigMetadataProperty(Constants.GlobalConfigIsGlobalPropertyName));
+            Assert.IsTrue(EditorConfigValidator.IsGlobalConfigMetadataProperty(Constants.GlobalConfigLevelPropertyName));
+            Assert.IsFalse(EditorConfigValidator.IsGlobalConfigMetadataProperty(SchemaCatalog.Root));
+        }
+
+        [TestMethod]
+        public void GlobalConfig_MetadataValues_AreValidated()
+        {
+            Assert.IsTrue(EditorConfigValidator.IsValidGlobalConfigMetadataValue(Constants.GlobalConfigIsGlobalPropertyName, "true"));
+            Assert.IsFalse(EditorConfigValidator.IsValidGlobalConfigMetadataValue(Constants.GlobalConfigIsGlobalPropertyName, "false"));
+            Assert.IsTrue(EditorConfigValidator.IsValidGlobalConfigMetadataValue(Constants.GlobalConfigLevelPropertyName, "100"));
+            Assert.IsFalse(EditorConfigValidator.IsValidGlobalConfigMetadataValue(Constants.GlobalConfigLevelPropertyName, "high"));
+        }
     }
 }

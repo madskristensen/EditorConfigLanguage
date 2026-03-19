@@ -355,9 +355,15 @@ namespace EditorConfig
         {
             foreach (Property property in _document.Properties)
             {
+                if (_document.IsGlobalConfig)
+                {
+                    ValidateProperty(property);
+                    continue;
+                }
+
                 ErrorCatalog.OnlyRootAllowed.Run(property.Keyword, (e) =>
                 {
-                    if (property != _document.Root)
+                    if (ShouldReportOnlyRootAllowed(_document.IsGlobalConfig, property == _document.Root))
                     {
                         e.Register();
                     }
@@ -365,8 +371,14 @@ namespace EditorConfig
             }
         }
 
+        internal static bool ShouldReportOnlyRootAllowed(bool isGlobalConfig, bool isRootProperty)
+            => !isGlobalConfig && !isRootProperty;
+
         private void ValidateProperty(Property property)
         {
+            if (TryValidateGlobalConfigMetadata(property))
+                return;
+
             bool hasKeyword = SchemaCatalog.TryGetKeyword(property.Keyword.Text, out Keyword keyword);
 
             // Unknown keyword - skip if the keyword has an ignored prefix
@@ -424,6 +436,57 @@ namespace EditorConfig
                     e.Register(property.Severity.Text);
                 }
             });
+        }
+
+        private bool TryValidateGlobalConfigMetadata(Property property)
+        {
+            if (!_document.IsGlobalConfig || !IsGlobalConfigMetadataProperty(property.Keyword.Text))
+                return false;
+
+            ErrorCatalog.MissingValue.Run(property.Keyword, property.Value == null, (e) =>
+            {
+                e.Register();
+            });
+
+            ErrorCatalog.UnknownValue.Run(property.Value, true, (e) =>
+            {
+                if (!IsValidGlobalConfigMetadataValue(property.Keyword.Text, property.Value.Text))
+                {
+                    e.Register(property.Value.Text, property.Keyword.Text);
+                }
+            });
+
+            ErrorCatalog.SeverityNotApplicable.Run(property.Severity, property.Severity != null, (e) =>
+            {
+                e.Register(property.Keyword.Text);
+            });
+
+            ErrorCatalog.UnknownSeverity.Run(property.Severity, property.Severity != null, (e) =>
+            {
+                if (!SchemaCatalog.TryGetSeverity(property.Severity.Text, out Severity severity))
+                {
+                    e.Register(property.Severity.Text);
+                }
+            });
+
+            return true;
+        }
+
+        internal static bool IsGlobalConfigMetadataProperty(string keywordText)
+            => keywordText.Is(Constants.GlobalConfigIsGlobalPropertyName) || keywordText.Is(Constants.GlobalConfigLevelPropertyName);
+
+        internal static bool IsValidGlobalConfigMetadataValue(string keywordText, string valueText)
+        {
+            if (string.IsNullOrWhiteSpace(valueText))
+                return false;
+
+            if (keywordText.Is(Constants.GlobalConfigIsGlobalPropertyName))
+                return valueText.Is("true");
+
+            if (keywordText.Is(Constants.GlobalConfigLevelPropertyName))
+                return int.TryParse(valueText, out _);
+
+            return false;
         }
 
         private static bool DoesFilesMatch(string folder, string pattern, string root = null)

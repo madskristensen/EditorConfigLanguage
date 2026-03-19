@@ -5,6 +5,8 @@ namespace EditorConfig
         public const string LanguageName = "EditorConfig";
         public const string FileName = ".editorconfig";
         public const string GlobalConfigFileName = ".globalconfig";
+        public const string GlobalConfigIsGlobalPropertyName = "is_global";
+        public const string GlobalConfigLevelPropertyName = "global_level";
         public const string Homepage = "http://editorconfig.org";
         public const string DefaultFileContent = "[*]\r\nend_of_line = crlf\r\n\r\n[*.xml]\r\nindent_style = space";
         public const string HelpLink = "https://github.com/madskristensen/EditorConfigLanguage/wiki/Error-codes#{0}";

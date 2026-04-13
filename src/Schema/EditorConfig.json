@@ -1766,36 +1766,22 @@
           "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/cpp-editorconfig-properties"
         },
         {
-          "name": "cpp_include_cleanup_enabled",
-          "description": "Controls whether include cleanup is enabled. Set to true to enable automatic detection of unused and missing includes.",
-          "values": [ true, false ],
-          "defaultValue": [ true ],
-          "documentationLink": "https://learn.microsoft.com/en-us/cpp/ide/include-cleanup-config?view=msvc-170"
-        },
-        {
-          "name": "cpp_include_cleanup_add_missing",
-          "description": "Add missing direct includes. Determines the suggestion level for adding missing direct includes (content is used but only available transitively).",
-          "values": [ "refactoring_only", "suggestion", "warning", "error" ],
-          "defaultValue": [ "suggestion" ],
-          "documentationLink": "https://learn.microsoft.com/en-us/cpp/ide/include-cleanup-config?view=msvc-170"
-        },
-        {
-          "name": "cpp_include_cleanup_remove_unused",
-          "description": "Remove unused includes. Determines the suggestion level for removing unused includes (include is not used in the file).",
-          "values": [ "refactoring_only", "suggestion", "warning", "error" ],
-          "defaultValue": [ "suggestion" ],
-          "documentationLink": "https://learn.microsoft.com/en-us/cpp/ide/include-cleanup-config?view=msvc-170"
-        },
-        {
           "name": "cpp_include_cleanup_add_missing_error_tag_type",
-          "description": "Error tag type for missing direct includes. Sets the diagnostic level for VCIC001 messages about missing direct includes.",
-          "values": [ "refactoring_only", "suggestion", "warning", "error" ],
+          "description": "Sets the error level for add missing include messages.",
+          "values": [ "none", "suggestion", "warning", "error" ],
           "defaultValue": [ "suggestion" ],
+          "documentationLink": "https://learn.microsoft.com/en-us/cpp/ide/include-cleanup-config?view=msvc-170"
+        },
+        {
+          "name": "cpp_include_cleanup_remove_unused_error_tag_type",
+          "description": "Sets the error level for remove unused include messages.",
+          "values": [ "none", "suggestion", "warning", "error", "dimmed" ],
+          "defaultValue": [ "dimmed" ],
           "documentationLink": "https://learn.microsoft.com/en-us/cpp/ide/include-cleanup-config?view=msvc-170"
         },
         {
           "name": "cpp_include_cleanup_excluded_files",
-          "description": "Comma-separated list of header files to exclude from being marked as unused (e.g., 'io.h, windows.h'). Wildcards are not supported.",
+          "description": "Excludes the specified files from include cleanup messages.",
           "values": [ "<header_file>" ],
           "defaultValue": [ "" ],
           "multiple": true,
@@ -1803,24 +1789,24 @@
         },
         {
           "name": "cpp_include_cleanup_required_files",
-          "description": "Comma-separated list of header files which are always considered required, preventing them from being flagged as unused (e.g., 'mycompany/musthave.h').",
-          "values": [ "<header_file>" ],
+          "description": "Specifies that usage of one file requires another file using the format file1:file2.",
+          "values": [ "<source_header>:<required_header>" ],
           "defaultValue": [ "" ],
           "multiple": true,
           "documentationLink": "https://learn.microsoft.com/en-us/cpp/ide/include-cleanup-config?view=msvc-170"
         },
         {
-          "name": "cpp_include_cleanup_header_remappings",
-          "description": "Defines header file remappings for suggesting alternative includes (e.g., 'corecrt_io.h=io.h').",
-          "values": [ "<source_header>=<target_header>" ],
+          "name": "cpp_include_cleanup_replacement_files",
+          "description": "Replaces one file with another during include cleanup processing using the format file1:file2.",
+          "values": [ "<source_header>:<replacement_header>" ],
           "defaultValue": [ "" ],
           "multiple": true,
           "documentationLink": "https://learn.microsoft.com/en-us/cpp/ide/include-cleanup-config?view=msvc-170"
         },
         {
           "name": "cpp_include_cleanup_alternate_files",
-          "description": "Specifies alternative header files that should be suggested instead of the transitive include (e.g., '<corecrt_io.h>; <io.h>').",
-          "values": [ "<header_file>" ],
+          "description": "Suppresses messages for indirect includes using file mapping format file1:file2[:file3...].",
+          "values": [ "<base_header>:<alternate_header>" ],
           "defaultValue": [ "" ],
           "multiple": true,
           "documentationLink": "https://learn.microsoft.com/en-us/cpp/ide/include-cleanup-config?view=msvc-170"

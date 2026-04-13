@@ -155,28 +155,6 @@ namespace EditorConfigTest
         }
 
         [TestMethod]
-        public void TryGetKeyword_CppIncludeCleanupAddMissing_ReturnsTrue()
-        {
-            bool result = SchemaCatalog.TryGetKeyword("cpp_include_cleanup_add_missing", out Keyword keyword);
-
-            Assert.IsTrue(result);
-            Assert.IsNotNull(keyword);
-            Assert.AreEqual("cpp_include_cleanup_add_missing", keyword.Name);
-            Assert.AreEqual(Category.CPP, keyword.Category);
-        }
-
-        [TestMethod]
-        public void TryGetKeyword_CppIncludeCleanupRemoveUnused_ReturnsTrue()
-        {
-            bool result = SchemaCatalog.TryGetKeyword("cpp_include_cleanup_remove_unused", out Keyword keyword);
-
-            Assert.IsTrue(result);
-            Assert.IsNotNull(keyword);
-            Assert.AreEqual("cpp_include_cleanup_remove_unused", keyword.Name);
-            Assert.AreEqual(Category.CPP, keyword.Category);
-        }
-
-        [TestMethod]
         public void TryGetKeyword_CppIncludeCleanupAddMissingErrorTagType_ReturnsTrue()
         {
             bool result = SchemaCatalog.TryGetKeyword("cpp_include_cleanup_add_missing_error_tag_type", out Keyword keyword);
@@ -188,14 +166,34 @@ namespace EditorConfigTest
         }
 
         [TestMethod]
-        public void TryGetKeyword_CppIncludeCleanupEnabled_ReturnsTrue()
+        public void TryGetKeyword_CppIncludeCleanupAddMissingErrorTagType_ContainsNoneValue()
         {
-            bool result = SchemaCatalog.TryGetKeyword("cpp_include_cleanup_enabled", out Keyword keyword);
+            bool result = SchemaCatalog.TryGetKeyword("cpp_include_cleanup_add_missing_error_tag_type", out Keyword keyword);
 
             Assert.IsTrue(result);
             Assert.IsNotNull(keyword);
-            Assert.AreEqual("cpp_include_cleanup_enabled", keyword.Name);
+            Assert.IsTrue(keyword.Values.Any(v => v.Name == "none"));
+        }
+
+        [TestMethod]
+        public void TryGetKeyword_CppIncludeCleanupRemoveUnusedErrorTagType_ReturnsTrue()
+        {
+            bool result = SchemaCatalog.TryGetKeyword("cpp_include_cleanup_remove_unused_error_tag_type", out Keyword keyword);
+
+            Assert.IsTrue(result);
+            Assert.IsNotNull(keyword);
+            Assert.AreEqual("cpp_include_cleanup_remove_unused_error_tag_type", keyword.Name);
             Assert.AreEqual(Category.CPP, keyword.Category);
+        }
+
+        [TestMethod]
+        public void TryGetKeyword_CppIncludeCleanupRemoveUnusedErrorTagType_ContainsDimmedValue()
+        {
+            bool result = SchemaCatalog.TryGetKeyword("cpp_include_cleanup_remove_unused_error_tag_type", out Keyword keyword);
+
+            Assert.IsTrue(result);
+            Assert.IsNotNull(keyword);
+            Assert.IsTrue(keyword.Values.Any(v => v.Name == "dimmed"));
         }
 
         [TestMethod]
@@ -221,14 +219,23 @@ namespace EditorConfigTest
         }
 
         [TestMethod]
-        public void TryGetKeyword_CppIncludeCleanupHeaderRemappings_ReturnsTrue()
+        public void TryGetKeyword_CppIncludeCleanupReplacementFiles_ReturnsTrue()
         {
-            bool result = SchemaCatalog.TryGetKeyword("cpp_include_cleanup_header_remappings", out Keyword keyword);
+            bool result = SchemaCatalog.TryGetKeyword("cpp_include_cleanup_replacement_files", out Keyword keyword);
 
             Assert.IsTrue(result);
             Assert.IsNotNull(keyword);
-            Assert.AreEqual("cpp_include_cleanup_header_remappings", keyword.Name);
+            Assert.AreEqual("cpp_include_cleanup_replacement_files", keyword.Name);
             Assert.AreEqual(Category.CPP, keyword.Category);
+        }
+
+        [TestMethod]
+        public void TryGetKeyword_CppIncludeCleanupHeaderRemappings_ReturnsFalse()
+        {
+            bool result = SchemaCatalog.TryGetKeyword("cpp_include_cleanup_header_remappings", out Keyword keyword);
+
+            Assert.IsFalse(result);
+            Assert.IsNull(keyword);
         }
 
         [TestMethod]

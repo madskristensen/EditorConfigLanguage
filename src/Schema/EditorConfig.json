@@ -1269,6 +1269,7 @@
       "description": "This rule concerns with flagging unused parameters. The option value determines if unused parameters should be flagged only for non-public methods or for both public and non-public methods.",
       "values": [ "all", "non_public" ],
       "defaultValue": [ "all" ],
+      "severity": true,
       "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0060"
     },
 

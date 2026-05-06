@@ -515,7 +515,7 @@
     {
       "name": "csharp_preferred_modifier_order",
       "description": "Prefer the specified ordering of modifiers.",
-      "values": [ "public", "private", "protected", "internal", "file", "static", "extern", "new", "virtual", "abstract", "sealed", "override", "readonly", "unsafe", "required", "volatile", "async" ],
+      "values": [ "public", "private", "protected", "internal", "file", "const", "static", "extern", "new", "virtual", "abstract", "sealed", "override", "readonly", "unsafe", "required", "volatile", "async" ],
       "defaultValue": [ "public", "private", "protected", "internal", "file", "static", "extern", "new", "virtual", "abstract", "sealed", "override", "readonly", "unsafe", "required", "volatile", "async" ],
       "multiple": true,
       "severity": true,

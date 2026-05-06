@@ -100,6 +100,15 @@
     },
     // .NET properties
     {
+      "name": "dotnet_prefer_system_hash_code",
+      "description": "Prefer using System.HashCode.Combine to compute a hash code instead of using custom hash code computation logic.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "suggestion",
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0070"
+    },
+    {
       "name": "dotnet_separate_import_directive_groups",
       "description": "Separate using directive groups.",
       "values": [ true, false ],
@@ -294,6 +303,15 @@
       "example": "if (value is null) { }"
     },
     {
+      "name": "dotnet_style_prefer_non_hidden_explicit_cast_in_source",
+      "description": "Prefer to make all intermediate explicit casts visible in source code, rather than relying on the compiler to insert hidden intermediate casts.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "suggestion",
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0221"
+    },
+    {
       "name": "dotnet_style_prefer_simplified_boolean_expressions",
       "description": "This style rule concerns with simplification of conditional expressions that return constant value true or false versus retaining conditional expressions with explicit true or false return values.",
       "values": [ true, false ],
@@ -393,8 +411,8 @@
     {
       "name": "dotnet_style_prefer_collection_expression",
       "description": "Prefer collection expressions for array, span, list, and other collection initializations.",
-      "values": [ "true", "when_types_loosely_match", "when_types_exactly_match", "false" ],
-      "defaultValue": [ "true" ],
+      "values": [ "true", "when_types_loosely_match", "when_types_exactly_match", "false", "never" ],
+      "defaultValue": [ "when_types_loosely_match" ],
       "severity": true,
       "defaultSeverity": "suggestion",
       "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0300"

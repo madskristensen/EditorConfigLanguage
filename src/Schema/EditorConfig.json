@@ -1333,6 +1333,15 @@
       "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0200"
     },
     {
+      "name": "csharp_style_prefer_simple_property_accessors",
+      "description": "Prefer simple '{ get; }' / '{ get; set; }' property accessors over expression-bodied or block-bodied accessors when possible.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "severity": true,
+      "defaultSeverity": "suggestion",
+      "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0360"
+    },
+    {
       "name": "csharp_style_prefer_top_level_statements",
       "description": "Prefer top-level statements over an explicit Main method entry point.",
       "values": [ true, false ],

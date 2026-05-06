@@ -127,9 +127,17 @@ namespace EditorConfig
                                 Group group = unknownMatch.Groups["unknown"];
                                 if (!string.IsNullOrWhiteSpace(group.Value))
                                 {
-                                    var span = new Span(line.Start + match.Length + group.Index, group.Length);
-                                    var unknown = new ParseItem(this, ItemType.Unknown, span, remaining);
-                                    AddToList(items, unknown);
+                                    int trimmedLength = group.Value.TrimEnd().Length;
+                                    var span = new Span(line.Start + match.Length + group.Index, trimmedLength);
+                                    string trimmedValue = group.Value.Substring(0, trimmedLength);
+
+                                    // Trailing comments (starting with # or ;) after a property are valid.
+                                    ItemType itemType = (trimmedValue.Length > 0 && (trimmedValue[0] == '#' || trimmedValue[0] == ';'))
+                                        ? ItemType.Comment
+                                        : ItemType.Unknown;
+
+                                    var item = new ParseItem(this, itemType, span, trimmedValue);
+                                    AddToList(items, item);
                                 }
                             }
                         }

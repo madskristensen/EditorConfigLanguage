@@ -403,11 +403,14 @@ namespace EditorConfig
                 {
                     if (keyword.SupportsMultipleValues)
                     {
-                        foreach (string value in property.Value.Text?.Split([','], StringSplitOptions.RemoveEmptyEntries))
+                        if (!keyword.Values.Any(v => Regex.IsMatch(v.Name, "<.+>")))
                         {
-                            if (!keyword.Values.Any(v => v.Name.Is(value.Trim())))
+                            foreach (string value in property.Value.Text?.Split([','], StringSplitOptions.RemoveEmptyEntries))
                             {
-                                e.Register(value, keyword.Name);
+                                if (!keyword.Values.Any(v => v.Name.Is(value.Trim())))
+                                {
+                                    e.Register(value, keyword.Name);
+                                }
                             }
                         }
                     }

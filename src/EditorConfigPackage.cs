@@ -57,11 +57,11 @@ namespace EditorConfig
 
         protected override async Task InitializeAsync(CancellationToken cancellationToken, IProgress<ServiceProgressData> progress)
         {
+            await JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+
             FormatterOptions = (FormatterOptions)GetDialogPage(typeof(FormatterOptions));
             ValidationOptions = (ValidationOptions)GetDialogPage(typeof(ValidationOptions));
             CompletionOptions = (CompletionOptions)GetDialogPage(typeof(CompletionOptions));
-
-            await JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
 
             Language = new EditorConfigLanguage(this);
             var serviceContainer = this as IServiceContainer;

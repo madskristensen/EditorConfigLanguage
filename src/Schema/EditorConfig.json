@@ -98,6 +98,14 @@
       "documentationLink": "https://github.com/editorconfig/editorconfig/wiki/EditorConfig-Properties#max_line_length",
       "unsupported": true
     },
+    {
+      "name": "rulers",
+      "description": "A comma-separated list of column positions at which to display vertical ruler guides in the editor.",
+      "values": [ 80, "<column>", "unset" ],
+      "defaultValue": [ "unset" ],
+      "multiple": true,
+      "documentationLink": "https://github.com/editorconfig/editorconfig/issues/89"
+    },
     // .NET properties
     {
       "name": "dotnet_prefer_system_hash_code",

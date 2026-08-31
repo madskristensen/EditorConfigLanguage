@@ -38,6 +38,18 @@ namespace EditorConfigTest
         }
 
         [TestMethod]
+        public void TryGetKeyword_Rulers_ReturnsTrue()
+        {
+            bool result = SchemaCatalog.TryGetKeyword("rulers", out Keyword keyword);
+
+            Assert.IsTrue(result);
+            Assert.IsNotNull(keyword);
+            Assert.AreEqual("rulers", keyword.Name);
+            Assert.AreEqual(Category.Standard, keyword.Category);
+            Assert.IsTrue(keyword.SupportsMultipleValues);
+        }
+
+        [TestMethod]
         public void TryGetKeyword_UnknownKeyword_ReturnsFalse()
         {
             bool result = SchemaCatalog.TryGetKeyword("unknown_keyword_xyz", out Keyword keyword);

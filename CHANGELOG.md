@@ -13,6 +13,10 @@ download in the
 These are the changes to each version that has been released
 on the official Visual Studio extension gallery.
 
+## 1.18
+
+- [x] Added the `rulers` standard property
+
 ## 1.17
 
 - [x] .NET naming rules basic Intellisense and validation

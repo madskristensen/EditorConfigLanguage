@@ -53,6 +53,20 @@ namespace EditorConfigTest
         }
 
         [TestMethod]
+        public async Task TryGetDefinition_ReturnsFirstDeclaration()
+        {
+            using EditorConfigDocument document = await CreateDocumentAsync();
+            int referencePosition = _source.LastIndexOf("underscored");
+            NamingSymbolService.TryGetSymbolAtPosition(document, referencePosition, out NamingSymbol reference);
+
+            bool found = NamingSymbolService.TryGetDefinition(document, reference, out NamingSymbol definition);
+
+            Assert.IsTrue(found);
+            Assert.IsTrue(definition.IsDeclaration);
+            Assert.AreEqual(_source.IndexOf("underscored.capitalization"), definition.Span.Start);
+        }
+
+        [TestMethod]
         public async Task NamingEntityTooltip_SummarizesMembersAndReferences()
         {
             using EditorConfigDocument document = await CreateDocumentAsync();

@@ -102,5 +102,12 @@ namespace EditorConfig
                 .OrderBy(occurrence => occurrence.Span.Start)
                 .ToArray();
         }
+
+        internal static bool TryGetDefinition(EditorConfigDocument document, NamingSymbol symbol, out NamingSymbol definition)
+        {
+            definition = FindOccurrences(document, symbol.Kind, symbol.Name)
+                .FirstOrDefault(occurrence => occurrence.IsDeclaration);
+            return definition != null;
+        }
     }
 }

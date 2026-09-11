@@ -70,6 +70,7 @@ namespace EditorConfig
             AddCommandFilter(textViewAdapter, new CompletionController(view, CompletionBroker, QuickInfoBroker));
             AddCommandFilter(textViewAdapter, new F1Help(textViewAdapter, view));
             AddCommandFilter(textViewAdapter, new GoToNamingDefinition(view));
+            AddCommandFilter(textViewAdapter, new FindNamingReferences(view));
             AddCommandFilter(textViewAdapter, new NavigateToParent(buffer));
             AddCommandFilter(textViewAdapter, new SignatureHelpCommand(view, SignatureHelpBroker, QuickInfoBroker));
             AddCommandFilter(textViewAdapter, new HideDefaultCommands());

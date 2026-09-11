@@ -28,6 +28,25 @@ namespace EditorConfig
         internal bool IsDeclaration { get; }
     }
 
+    internal sealed class NamingReferenceResult
+    {
+        internal NamingReferenceResult(NamingSymbol symbol, int line, int column, string lineText)
+        {
+            Symbol = symbol;
+            Line = line;
+            Column = column;
+            LineText = lineText;
+        }
+
+        internal NamingSymbol Symbol { get; }
+
+        internal int Line { get; }
+
+        internal int Column { get; }
+
+        internal string LineText { get; }
+    }
+
     internal static class NamingSymbolService
     {
         internal static bool TryGetSymbolAtPosition(EditorConfigDocument document, int position, out NamingSymbol symbol)
@@ -108,6 +127,25 @@ namespace EditorConfig
             definition = FindOccurrences(document, symbol.Kind, symbol.Name)
                 .FirstOrDefault(occurrence => occurrence.IsDeclaration);
             return definition != null;
+        }
+
+        internal static IReadOnlyList<NamingReferenceResult> FindReferenceResults(
+            EditorConfigDocument document,
+            ITextSnapshot snapshot,
+            NamingEntityKind kind,
+            string name)
+        {
+            return FindOccurrences(document, kind, name)
+                .Select(symbol =>
+                {
+                    ITextSnapshotLine line = snapshot.GetLineFromPosition(symbol.Span.Start);
+                    return new NamingReferenceResult(
+                        symbol,
+                        line.LineNumber,
+                        symbol.Span.Start - line.Start.Position,
+                        line.GetText());
+                })
+                .ToArray();
         }
     }
 }

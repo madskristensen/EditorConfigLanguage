@@ -67,6 +67,25 @@ namespace EditorConfigTest
         }
 
         [TestMethod]
+        public async Task FindReferenceResults_ReturnsNavigableLocations()
+        {
+            using EditorConfigDocument document = await CreateDocumentAsync();
+
+            var references = NamingSymbolService.FindReferenceResults(
+                document,
+                document.TextBuffer.CurrentSnapshot,
+                NamingEntityKind.Style,
+                "underscored");
+
+            Assert.HasCount(3, references);
+            Assert.AreEqual(1, references[0].Line);
+            Assert.AreEqual("dotnet_naming_style.".Length, references[0].Column);
+            StringAssert.Contains(references[0].LineText, "underscored.capitalization");
+            Assert.IsTrue(references[0].Symbol.IsDeclaration);
+            Assert.IsFalse(references[2].Symbol.IsDeclaration);
+        }
+
+        [TestMethod]
         public async Task NamingEntityTooltip_SummarizesMembersAndReferences()
         {
             using EditorConfigDocument document = await CreateDocumentAsync();

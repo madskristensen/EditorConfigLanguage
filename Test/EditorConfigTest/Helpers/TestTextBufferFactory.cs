@@ -16,6 +16,7 @@ namespace EditorConfigTest
             snapshot.SetupGet(value => value.Length).Returns(text.Length);
 
             var lines = new List<ITextSnapshotLine>();
+            var lineStarts = new List<int>();
             int start = 0;
 
             while (start <= text.Length)
@@ -29,6 +30,8 @@ namespace EditorConfigTest
                 line.Setup(value => value.GetText()).Returns(lineText);
                 line.SetupGet(value => value.Snapshot).Returns(snapshot.Object);
                 line.SetupGet(value => value.Start).Returns(() => new SnapshotPoint(snapshot.Object, lineStart));
+                line.SetupGet(value => value.LineNumber).Returns(lines.Count);
+                lineStarts.Add(lineStart);
                 lines.Add(line.Object);
 
                 if (end == text.Length)
@@ -38,6 +41,8 @@ namespace EditorConfigTest
             }
 
             snapshot.SetupGet(value => value.Lines).Returns(lines);
+            snapshot.Setup(value => value.GetLineFromPosition(It.IsAny<int>()))
+                .Returns((int position) => lines[lineStarts.FindLastIndex(lineStart => lineStart <= position)]);
 
             var buffer = new Mock<ITextBuffer>();
             buffer.SetupGet(value => value.CurrentSnapshot).Returns(snapshot.Object);

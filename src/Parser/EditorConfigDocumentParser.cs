@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -68,6 +69,7 @@ namespace EditorConfig
                 ParseItems = result.Items;
                 Sections = result.Sections;
                 Properties = result.Properties;
+                NamingEntities = result.NamingEntities;
 
                 Parsed?.Invoke(this, EventArgs.Empty);
             }
@@ -171,7 +173,8 @@ namespace EditorConfig
                 }
             }
 
-            return new ParseResult(items, sections, properties, suppressions);
+            NamingEntityIndex namingEntities = NamingEntityIndex.Create(sections.SelectMany(section => section.Properties));
+            return new ParseResult(items, sections, properties, suppressions, namingEntities);
         }
 
         private void AddToList(List<ParseItem> items, ParseItem item)
@@ -216,12 +219,18 @@ namespace EditorConfig
 
         internal Task ParsingTask => _parsingTask;
 
-        private sealed class ParseResult(List<ParseItem> items, List<Section> sections, List<Property> properties, HashSet<string> suppressions)
+        private sealed class ParseResult(
+            List<ParseItem> items,
+            List<Section> sections,
+            List<Property> properties,
+            HashSet<string> suppressions,
+            NamingEntityIndex namingEntities)
         {
             public List<ParseItem> Items { get; } = items;
             public List<Section> Sections { get; } = sections;
             public List<Property> Properties { get; } = properties;
             public HashSet<string> Suppressions { get; } = suppressions;
+            public NamingEntityIndex NamingEntities { get; } = namingEntities;
         }
 
         /// <summary>The event is fired when the document has been parsed.</summary>

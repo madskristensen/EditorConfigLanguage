@@ -51,6 +51,7 @@
     <Compile Include="ErrorCatalogTest.cs" />
     <Compile Include="ExtensionsTest.cs" />
     <Compile Include="Helpers\TestTextBufferFactory.cs" />
+    <Compile Include="NamingEntityIndexTest.cs" />
     <Compile Include="PropertyRegexTest.cs" />
     <Compile Include="SchemaCatalogTest.cs" />
     <Compile Include="SectionNameMatcherTest.cs" />

@@ -33,6 +33,8 @@ namespace EditorConfig
         /// <summary>A set of all the error suppressions in the document (case-insensitive for O(1) lookups).</summary>
         public HashSet<string> Suppressions { get; private set; } = new(StringComparer.OrdinalIgnoreCase);
 
+        internal NamingEntityIndex NamingEntities { get; private set; } = NamingEntityIndex.Empty;
+
         /// <summary>The root property of the document if one is specified</summary>
         public Property Root
         {

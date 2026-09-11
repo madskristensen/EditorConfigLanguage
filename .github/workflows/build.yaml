@@ -145,13 +145,13 @@ jobs:
       - name: Upload to Open VSIX
         uses: madskristensen/publish-vsixgallery@v1
         with:
-          vsix-file: ${{ github.event.repository.name }}.vsix
+          vsix-file: EditorConfig.vsix
 
       - name: Publish extension to Marketplace
         if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[release]') }}
         uses: madskristensen/publish-marketplace@v2
         with:
-          extension-file: '${{ github.event.repository.name }}.vsix'
+          extension-file: 'EditorConfig.vsix'
           publish-manifest-file: 'vs-publish.json'
           personal-access-code: ${{ secrets.VS_PUBLISHER_ACCESS_TOKEN }}
 

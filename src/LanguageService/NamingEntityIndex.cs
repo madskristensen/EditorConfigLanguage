@@ -177,7 +177,7 @@ namespace EditorConfig
             return NamingEntityKind.None;
         }
 
-        private static bool TryGetReferenceKind(string referenceKind, out NamingEntityKind kind)
+        internal static bool TryGetReferenceKind(string referenceKind, out NamingEntityKind kind)
         {
             if (referenceKind.Is("naming_symbols"))
             {

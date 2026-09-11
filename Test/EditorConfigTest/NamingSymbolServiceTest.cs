@@ -1,0 +1,77 @@
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+
+using EditorConfig;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace EditorConfigTest
+{
+    [TestClass]
+    [DoNotParallelize]
+    public class NamingSymbolServiceTest
+    {
+        private const string _source = """
+            [*.cs]
+            dotnet_naming_style.underscored.capitalization = pascal_case
+            dotnet_naming_style.underscored.required_prefix = _
+            dotnet_naming_rule.private_fields.style = underscored
+            """;
+
+        [ClassInitialize]
+        public static void Initialize(TestContext context)
+        {
+            string testDir = Path.GetDirectoryName(typeof(NamingSymbolServiceTest).Assembly.Location);
+            SchemaCatalog.ParseJson(Path.Combine(testDir, "schema", "EditorConfig.json"));
+        }
+
+        [TestMethod]
+        public async Task TryGetSymbolAtPosition_ResolvesDeclarationsAndReferences()
+        {
+            using EditorConfigDocument document = await CreateDocumentAsync();
+            int declarationPosition = _source.IndexOf("underscored.capitalization");
+            int referencePosition = _source.LastIndexOf("underscored");
+
+            Assert.IsTrue(NamingSymbolService.TryGetSymbolAtPosition(document, declarationPosition, out NamingSymbol declaration));
+            Assert.AreEqual(NamingEntityKind.Style, declaration.Kind);
+            Assert.IsTrue(declaration.IsDeclaration);
+            Assert.IsTrue(NamingSymbolService.TryGetSymbolAtPosition(document, referencePosition, out NamingSymbol reference));
+            Assert.AreEqual(NamingEntityKind.Style, reference.Kind);
+            Assert.IsFalse(reference.IsDeclaration);
+        }
+
+        [TestMethod]
+        public async Task FindOccurrences_ReturnsEveryDeclarationAndReference()
+        {
+            using EditorConfigDocument document = await CreateDocumentAsync();
+            var occurrences = NamingSymbolService.FindOccurrences(document, NamingEntityKind.Style, "underscored");
+
+            Assert.HasCount(3, occurrences);
+            Assert.HasCount(2, occurrences.Where(occurrence => occurrence.IsDeclaration));
+            Assert.HasCount(1, occurrences.Where(occurrence => !occurrence.IsDeclaration));
+        }
+
+        [TestMethod]
+        public async Task NamingEntityTooltip_SummarizesMembersAndReferences()
+        {
+            using EditorConfigDocument document = await CreateDocumentAsync();
+            document.NamingEntities.TryGetEntity(NamingEntityKind.Style, "underscored", out NamingEntity entity);
+
+            var tooltip = new NamingEntityTooltip(entity, referenceCount: 1);
+
+            Assert.AreEqual("Naming style underscored", tooltip.Name);
+            StringAssert.Contains(tooltip.Description, "capitalization = pascal_case");
+            StringAssert.Contains(tooltip.Description, "required_prefix = _");
+            StringAssert.Contains(tooltip.Description, "Referenced once.");
+        }
+
+        private static async Task<EditorConfigDocument> CreateDocumentAsync()
+        {
+            var buffer = TestTextBufferFactory.CreateTextBuffer(_source);
+            EditorConfigDocument document = EditorConfigDocument.CreateForTest(buffer, @"C:\repo\.editorconfig");
+            await document.WaitForParsingCompleteAsync();
+            return document;
+        }
+    }
+}

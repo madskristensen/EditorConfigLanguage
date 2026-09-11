@@ -37,6 +37,15 @@ namespace EditorConfig
             Property property = _document.PropertyAtPosition(point.Value);
             SchemaCatalog.TryGetKeyword(property?.Keyword?.Text, out Keyword keyword);
 
+            if (NamingSymbolService.TryGetSymbolAtPosition(_document, point.Value.Position, out NamingSymbol symbol) &&
+                _document.NamingEntities.TryGetEntity(symbol.Kind, symbol.Name, out NamingEntity entity))
+            {
+                var symbolSpan = point.Value.Snapshot.CreateTrackingSpan(symbol.Span, SpanTrackingMode.EdgeNegative);
+                int referenceCount = _document.NamingEntities.GetReferences(symbol.Kind, symbol.Name).Count();
+                ContainerElement element = QuickInfoBuilder.BuildTooltip(new NamingEntityTooltip(entity, referenceCount));
+                return Task.FromResult(new QuickInfoItem(symbolSpan, element));
+            }
+
             // Keyword
             if (keyword != null && item.ItemType == ItemType.Keyword)
             {

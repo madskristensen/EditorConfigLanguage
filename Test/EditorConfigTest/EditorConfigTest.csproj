@@ -53,6 +53,7 @@
     <Compile Include="Helpers\TestTextBufferFactory.cs" />
     <Compile Include="NamingCompletionServiceTest.cs" />
     <Compile Include="NamingEntityIndexTest.cs" />
+    <Compile Include="NamingSymbolServiceTest.cs" />
     <Compile Include="PropertyRegexTest.cs" />
     <Compile Include="SchemaCatalogTest.cs" />
     <Compile Include="SectionNameMatcherTest.cs" />

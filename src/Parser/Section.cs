@@ -18,6 +18,8 @@ namespace EditorConfig
         /// <summary>A list of properties under the Section.</summary>
         public IList<Property> Properties { get; }
 
+        internal NamingEntityIndex NamingEntities { get; set; } = NamingEntityIndex.Empty;
+
         /// <summary>The full span of the section including the properties.</summary>
         public Span Span
         {

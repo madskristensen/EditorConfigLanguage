@@ -173,6 +173,9 @@ namespace EditorConfig
                 }
             }
 
+            foreach (Section section in sections)
+                section.NamingEntities = NamingEntityIndex.Create(section.Properties);
+
             NamingEntityIndex namingEntities = NamingEntityIndex.Create(sections.SelectMany(section => section.Properties));
             return new ParseResult(items, sections, properties, suppressions, namingEntities);
         }

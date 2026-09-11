@@ -42,9 +42,27 @@ namespace EditorConfig
                                       !lineText.TrimStart().StartsWith(";");
 
             bool isInSeverityPosition = IsInSeverityPosition(lineText, position - line.Start.Position);
+            NamingCompletionContext namingContext = NamingCompletionService.GetContext(
+                lineText,
+                position - line.Start.Position,
+                GetApplicableNamingIndexes(position));
 
+            if (namingContext.Kind != NamingCompletionKind.None)
+            {
+                foreach (NamingCompletionItem item in namingContext.Items)
+                    list.Add(CreateCompletion(item, iconAutomation: "value"));
+
+                int start = line.Start.Position + namingContext.SpanStart;
+                applicableTo = snapshot.CreateTrackingSpan(start, position - start, SpanTrackingMode.EdgeInclusive);
+                moniker = namingContext.Kind switch
+                {
+                    NamingCompletionKind.Member => "keyword",
+                    NamingCompletionKind.ReferenceValue => "value",
+                    _ => "naming",
+                };
+            }
             // Property/Keyword completion
-            if (string.IsNullOrWhiteSpace(lineText) || parseItem?.ItemType == ItemType.Keyword || isTypingNewKeyword)
+            else if (string.IsNullOrWhiteSpace(lineText) || parseItem?.ItemType == ItemType.Keyword || isTypingNewKeyword)
             {
                 bool isInRoot = !_document.ParseItems.Exists(p => p.ItemType == ItemType.Section && p.Span.Start < position);
 
@@ -146,7 +164,7 @@ namespace EditorConfig
             }
 
             // Calculate the applicable span for completion
-            if (list.Count > 0)
+            if (list.Count > 0 && namingContext.Kind == NamingCompletionKind.None)
             {
                 applicableTo = GetApplicableSpan(snapshot, line, position);
             }
@@ -377,6 +395,24 @@ namespace EditorConfig
             foreach (Severity severity in SchemaCatalog.Severities)
             {
                 list.Add(CreateCompletion(severity));
+            }
+        }
+
+        private IEnumerable<NamingEntityIndex> GetApplicableNamingIndexes(int position)
+        {
+            Section section = _document.Sections.LastOrDefault(candidate => candidate.Item.Span.Start < position);
+            if (section == null)
+                yield break;
+
+            string sectionName = section.Item.Text;
+            EditorConfigDocument document = _document;
+
+            while (document != null)
+            {
+                foreach (Section candidate in document.Sections.Where(candidate => candidate.Item.Text.Equals(sectionName, StringComparison.OrdinalIgnoreCase)))
+                    yield return candidate.NamingEntities;
+
+                document = document.Parent;
             }
         }
 

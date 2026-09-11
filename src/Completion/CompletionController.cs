@@ -97,7 +97,7 @@ namespace EditorConfig
                     StartSession();
                     handled = true;
                 }
-                else if ((ch == ':' || ch == '=' || ch == ' ' || ch == ',') && EditorConfigPackage.Language.Preferences.AutoListMembers)
+                else if ((ch == ':' || ch == '=' || ch == ' ' || ch == ',' || ch == '.') && EditorConfigPackage.Language.Preferences.AutoListMembers)
                 {
                     Dismiss();
                     StartSession();

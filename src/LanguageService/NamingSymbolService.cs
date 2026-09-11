@@ -147,5 +147,62 @@ namespace EditorConfig
                 })
                 .ToArray();
         }
+
+        internal static bool TryGetRenameSpans(
+            EditorConfigDocument document,
+            NamingSymbol symbol,
+            string newName,
+            out IReadOnlyList<Span> spans,
+            out string error)
+        {
+            spans = [];
+            error = null;
+
+            if (string.IsNullOrWhiteSpace(newName))
+            {
+                error = "The name cannot be empty.";
+                return false;
+            }
+
+            if (newName.Any(character => !char.IsLetterOrDigit(character) && character != '_' && character != '-'))
+            {
+                error = "The name can contain only letters, digits, underscores, and hyphens.";
+                return false;
+            }
+
+            if (!TryGetDefinition(document, symbol, out NamingSymbol definition))
+            {
+                error = "The declaration could not be found.";
+                return false;
+            }
+
+            int relativeStart = definition.Span.Start - definition.Property.Keyword.Span.Start;
+            string candidate = definition.Property.Keyword.Text
+                .Remove(relativeStart, definition.Span.Length)
+                .Insert(relativeStart, newName);
+
+            if (!SchemaCatalog.TryGetKeyword(candidate, out Keyword keyword) ||
+                NamingEntityIndex.GetKind(keyword.Name) != symbol.Kind ||
+                !keyword.TryGetPlaceholderValue(candidate, out string parsedName) ||
+                !parsedName.Equals(newName, StringComparison.Ordinal))
+            {
+                error = "The name is not valid in an EditorConfig property.";
+                return false;
+            }
+
+            if (!symbol.Name.Equals(newName, StringComparison.OrdinalIgnoreCase) &&
+                document.NamingEntities.TryGetEntity(symbol.Kind, newName, out _))
+            {
+                error = $"A {symbol.Kind.ToString().ToLowerInvariant()} named \"{newName}\" already exists.";
+                return false;
+            }
+
+            spans = FindOccurrences(document, symbol.Kind, symbol.Name)
+                .Select(occurrence => occurrence.Span)
+                .Distinct()
+                .OrderByDescending(span => span.Start)
+                .ToArray();
+            return spans.Count > 0;
+        }
     }
 }

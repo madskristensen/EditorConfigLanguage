@@ -86,6 +86,42 @@ namespace EditorConfigTest
         }
 
         [TestMethod]
+        public async Task TryGetRenameSpans_ReturnsAllOccurrencesInDescendingOrder()
+        {
+            using EditorConfigDocument document = await CreateDocumentAsync();
+            int referencePosition = _source.LastIndexOf("underscored");
+            NamingSymbolService.TryGetSymbolAtPosition(document, referencePosition, out NamingSymbol symbol);
+
+            bool valid = NamingSymbolService.TryGetRenameSpans(
+                document,
+                symbol,
+                "under_scored",
+                out var spans,
+                out string error);
+
+            Assert.IsTrue(valid, error);
+            Assert.HasCount(3, spans);
+            Assert.IsGreaterThan(spans[1].Start, spans[0].Start);
+            Assert.IsGreaterThan(spans[2].Start, spans[1].Start);
+        }
+
+        [TestMethod]
+        [DataRow("")]
+        [DataRow("not.valid")]
+        [DataRow("has spaces")]
+        public async Task TryGetRenameSpans_RejectsInvalidNames(string newName)
+        {
+            using EditorConfigDocument document = await CreateDocumentAsync();
+            int referencePosition = _source.LastIndexOf("underscored");
+            NamingSymbolService.TryGetSymbolAtPosition(document, referencePosition, out NamingSymbol symbol);
+
+            bool valid = NamingSymbolService.TryGetRenameSpans(document, symbol, newName, out _, out string error);
+
+            Assert.IsFalse(valid);
+            Assert.IsFalse(string.IsNullOrWhiteSpace(error));
+        }
+
+        [TestMethod]
         public async Task NamingEntityTooltip_SummarizesMembersAndReferences()
         {
             using EditorConfigDocument document = await CreateDocumentAsync();

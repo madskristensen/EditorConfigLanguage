@@ -15,7 +15,7 @@ namespace EditorConfig
 
             Name = name;
             Description = GetDescription();
-            IsSupported = !_isUnset;
+            IsSupported = true;
             Moniker = KnownMonikers.EnumerationItemPublic;
         }
 

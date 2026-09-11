@@ -68,7 +68,9 @@ namespace EditorConfig
 
                 if (!string.IsNullOrWhiteSpace(Name))
                 {
-                    if (Name.StartsWith("csharp_", StringComparison.OrdinalIgnoreCase))
+                    if (Name.Equals("spelling_language", StringComparison.OrdinalIgnoreCase))
+                        return Category.Standard;
+                    else if (Name.StartsWith("csharp_", StringComparison.OrdinalIgnoreCase))
                         return Category.CSharp;
                     else if (Name.StartsWith("dotnet_", StringComparison.OrdinalIgnoreCase))
                         return Category.DotNet;

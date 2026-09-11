@@ -99,6 +99,13 @@
       "unsupported": true
     },
     {
+      "name": "spelling_language",
+      "description": "Specifies the natural language used for spell checking as a language tag.",
+      "values": [ "<language_tag>", "unset" ],
+      "defaultValue": [ "unset" ],
+      "documentationLink": "https://spec.editorconfig.org/#supported-pairs"
+    },
+    {
       "name": "rulers",
       "description": "A comma-separated list of column positions at which to display vertical ruler guides in the editor.",
       "values": [ 80, "<column>", "unset" ],

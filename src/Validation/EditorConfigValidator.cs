@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 
 using Microsoft.VisualStudio.Text;
+
+using Timer = System.Timers.Timer;
 
 namespace EditorConfig
 {
@@ -21,11 +24,13 @@ namespace EditorConfig
         };
 
         private readonly EditorConfigDocument _document;
-        private DateTime _lastRequestForValidation;
         private Timer _timer;
-        private bool _hasChanged;
         private bool _prevEnabled = EditorConfigPackage.ValidationOptions == null || EditorConfigPackage.ValidationOptions.EnableValidation;
         private readonly Dictionary<string, bool> _globbingCache = [];
+        private readonly SemaphoreSlim _validationGate = new(1, 1);
+        private int _latestValidationRequestId;
+        private int _validatedRequestId;
+        private int _isValidating;
 
         private EditorConfigValidator(EditorConfigDocument document)
         {
@@ -33,12 +38,15 @@ namespace EditorConfig
             _document.Parsed += DocumentParsed;
 
             if (_prevEnabled)
+            {
+                Interlocked.Increment(ref _latestValidationRequestId);
                 _ = ValidateAsync();
+            }
 
             ValidationOptions.Saved += DocumentParsed;
         }
 
-        public bool IsValidating { get; private set; }
+        public bool IsValidating => Volatile.Read(ref _isValidating) != 0;
 
         /// <summary>Gets or creates an instace of the validator and stores it in the text buffer properties.</summary>
         public static EditorConfigValidator FromDocument(EditorConfigDocument document)
@@ -68,12 +76,11 @@ namespace EditorConfig
         /// <summary>Schedules an async validation run.</summary>
         public async Task RequestValidationAsync(bool force)
         {
-            _lastRequestForValidation = DateTime.Now;
+            Interlocked.Increment(ref _latestValidationRequestId);
 
             if (force)
             {
                 _globbingCache.Clear();
-                ClearAllErrors();
                 await ValidateAsync();
             }
             else
@@ -81,21 +88,18 @@ namespace EditorConfig
                 if (_timer == null)
                 {
                     _timer = new Timer(_validationDelay);
+                    _timer.AutoReset = false;
                     _timer.Elapsed += TimerElapsed;
                 }
 
-                _hasChanged = true;
-                _timer.Enabled = true;
+                _timer.Stop();
+                _timer.Start();
             }
         }
 
         private void TimerElapsed(object sender, ElapsedEventArgs e)
         {
-            if (DateTime.Now.AddMilliseconds(-_validationDelay) > _lastRequestForValidation && _hasChanged && !_document.IsParsing)
-            {
-                _timer.Stop();
-                _ = ValidateAsync();
-            }
+            _ = ValidateAsync();
         }
 
         private void ClearAllErrors()
@@ -111,30 +115,41 @@ namespace EditorConfig
 
         private async Task ValidateAsync()
         {
-            if (IsValidating || _document.IsParsing) return;
-
-            IsValidating = true;
-
-            await Task.Run(() =>
+            await _validationGate.WaitAsync();
+            try
             {
-                try
+                while (_validatedRequestId < Volatile.Read(ref _latestValidationRequestId))
                 {
-                    ValidateUnknown();
-                    ValidateRootProperties();
-                    ValidateSections();
-                }
-                catch (Exception ex)
-                {
-                    Telemetry.TrackException("Validate", ex);
-                }
-                finally
-                {
-                    _hasChanged = false;
-                    IsValidating = false;
-                }
-            });
+                    while (_document.IsParsing)
+                        await _document.ParsingTask;
 
-            Validated?.Invoke(this, EventArgs.Empty);
+                    int validationRequestId = Volatile.Read(ref _latestValidationRequestId);
+                    Interlocked.Exchange(ref _isValidating, 1);
+
+                    await Task.Run(() =>
+                    {
+                        try
+                        {
+                            ClearAllErrors();
+                            ValidateUnknown();
+                            ValidateRootProperties();
+                            ValidateSections();
+                        }
+                        catch (Exception ex)
+                        {
+                            Telemetry.TrackException("Validate", ex);
+                        }
+                    });
+
+                    _validatedRequestId = validationRequestId;
+                    Validated?.Invoke(this, EventArgs.Empty);
+                }
+            }
+            finally
+            {
+                Interlocked.Exchange(ref _isValidating, 0);
+                _validationGate.Release();
+            }
         }
 
         public void SuppressError(string errorCode)

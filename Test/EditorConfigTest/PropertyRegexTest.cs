@@ -1,5 +1,4 @@
-using System.Text.RegularExpressions;
-
+using EditorConfig;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace EditorConfigTest
@@ -7,15 +6,11 @@ namespace EditorConfigTest
     [TestClass]
     public class PropertyRegexTest
     {
-        // Mirror the regex from EditorConfigDocumentParser
-        private static readonly Regex _property = new(@"^\s*(?<keyword>[^;\[#:\s=]+)\s*[=:]?\s*(?<value>[^;#]*?)(?:\s*:\s*(?<severity>none|silent|suggestion|warning|error|default|refactoring))?\s*(?=[;#]|$)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
         [TestMethod]
         public void SimpleProperty()
         {
-            Match match = _property.Match("indent_style = space");
+            Assert.IsTrue(EditorConfigDocument.TryMatchProperty("indent_style = space", out var match));
 
-            Assert.IsTrue(match.Success);
             Assert.AreEqual("indent_style", match.Groups["keyword"].Value);
             Assert.AreEqual("space", match.Groups["value"].Value.Trim());
             Assert.IsFalse(match.Groups["severity"].Success);
@@ -24,9 +19,8 @@ namespace EditorConfigTest
         [TestMethod]
         public void PropertyWithSeverity()
         {
-            Match match = _property.Match("dotnet_style_qualification_for_field = false:suggestion");
+            Assert.IsTrue(EditorConfigDocument.TryMatchProperty("dotnet_style_qualification_for_field = false:suggestion", out var match));
 
-            Assert.IsTrue(match.Success);
             Assert.AreEqual("dotnet_style_qualification_for_field", match.Groups["keyword"].Value);
             Assert.AreEqual("false", match.Groups["value"].Value.Trim());
             Assert.AreEqual("suggestion", match.Groups["severity"].Value);
@@ -35,9 +29,8 @@ namespace EditorConfigTest
         [TestMethod]
         public void PropertyWithSeverityUpperCase()
         {
-            Match match = _property.Match("dotnet_style_x = true:WARNING");
+            Assert.IsTrue(EditorConfigDocument.TryMatchProperty("dotnet_style_x = true:WARNING", out var match));
 
-            Assert.IsTrue(match.Success);
             Assert.AreEqual("true", match.Groups["value"].Value.Trim());
             Assert.AreEqual("WARNING", match.Groups["severity"].Value);
         }
@@ -45,9 +38,8 @@ namespace EditorConfigTest
         [TestMethod]
         public void ValueWithColonFilePath()
         {
-            Match match = _property.Match(@"generated_code = C:\Users\test\file.cs");
+            Assert.IsTrue(EditorConfigDocument.TryMatchProperty(@"generated_code = C:\Users\test\file.cs", out var match));
 
-            Assert.IsTrue(match.Success);
             Assert.AreEqual("generated_code", match.Groups["keyword"].Value);
             Assert.AreEqual(@"C:\Users\test\file.cs", match.Groups["value"].Value.Trim());
             Assert.IsFalse(match.Groups["severity"].Success);
@@ -56,9 +48,8 @@ namespace EditorConfigTest
         [TestMethod]
         public void ValueWithMultipleColons()
         {
-            Match match = _property.Match(@"some_path = D:\Projects\My:Special:Folder\file.txt");
+            Assert.IsTrue(EditorConfigDocument.TryMatchProperty(@"some_path = D:\Projects\My:Special:Folder\file.txt", out var match));
 
-            Assert.IsTrue(match.Success);
             Assert.AreEqual("some_path", match.Groups["keyword"].Value);
             Assert.AreEqual(@"D:\Projects\My:Special:Folder\file.txt", match.Groups["value"].Value.Trim());
             Assert.IsFalse(match.Groups["severity"].Success);
@@ -67,9 +58,8 @@ namespace EditorConfigTest
         [TestMethod]
         public void ValueWithColonButNotValidSeverity()
         {
-            Match match = _property.Match("some_rule = value:notaseverity");
+            Assert.IsTrue(EditorConfigDocument.TryMatchProperty("some_rule = value:notaseverity", out var match));
 
-            Assert.IsTrue(match.Success);
             Assert.AreEqual("some_rule", match.Groups["keyword"].Value);
             Assert.AreEqual("value:notaseverity", match.Groups["value"].Value.Trim());
             Assert.IsFalse(match.Groups["severity"].Success);
@@ -78,22 +68,20 @@ namespace EditorConfigTest
         [TestMethod]
         public void FilePathWithSeverity()
         {
-            Match match = _property.Match(@"some_rule = C:\path\file.cs:warning");
+            Assert.IsTrue(EditorConfigDocument.TryMatchProperty(@"some_rule = C:\path\file.cs:warning", out var match));
 
-            Assert.IsTrue(match.Success);
             Assert.AreEqual("some_rule", match.Groups["keyword"].Value);
             Assert.AreEqual(@"C:\path\file.cs", match.Groups["value"].Value.Trim());
             Assert.AreEqual("warning", match.Groups["severity"].Value);
         }
 
         [TestMethod]
-        public void PropertyWithTrailingComment()
+        public void InlineHashIsValueData()
         {
-            Match match = _property.Match("indent_size = 4 # comment");
+            Assert.IsTrue(EditorConfigDocument.TryMatchProperty("indent_size = 4 # comment", out var match));
 
-            Assert.IsTrue(match.Success);
             Assert.AreEqual("indent_size", match.Groups["keyword"].Value);
-            Assert.AreEqual("4", match.Groups["value"].Value.Trim());
+            Assert.AreEqual("4 # comment", match.Groups["value"].Value.Trim());
         }
 
         [TestMethod]
@@ -103,9 +91,8 @@ namespace EditorConfigTest
 
             foreach (string severity in severities)
             {
-                Match match = _property.Match($"rule = value:{severity}");
+                Assert.IsTrue(EditorConfigDocument.TryMatchProperty($"rule = value:{severity}", out var match), $"Failed for severity: {severity}");
 
-                Assert.IsTrue(match.Success, $"Failed for severity: {severity}");
                 Assert.AreEqual(severity, match.Groups["severity"].Value, $"Severity mismatch for: {severity}");
             }
         }
@@ -113,9 +100,8 @@ namespace EditorConfigTest
         [TestMethod]
         public void RootProperty()
         {
-            Match match = _property.Match("root = true");
+            Assert.IsTrue(EditorConfigDocument.TryMatchProperty("root = true", out var match));
 
-            Assert.IsTrue(match.Success);
             Assert.AreEqual("root", match.Groups["keyword"].Value);
             Assert.AreEqual("true", match.Groups["value"].Value.Trim());
         }
@@ -123,11 +109,29 @@ namespace EditorConfigTest
         [TestMethod]
         public void PropertyWithLeadingWhitespace()
         {
-            Match match = _property.Match("    indent_style = tabs");
+            Assert.IsTrue(EditorConfigDocument.TryMatchProperty("    indent_style = tabs", out var match));
 
-            Assert.IsTrue(match.Success);
             Assert.AreEqual("indent_style", match.Groups["keyword"].Value);
             Assert.AreEqual("tabs", match.Groups["value"].Value.Trim());
+        }
+
+        [TestMethod]
+        public void ColonIsNotAPropertyDelimiter()
+        {
+            Assert.IsFalse(EditorConfigDocument.TryMatchProperty("indent_style: space", out _));
+        }
+
+        [TestMethod]
+        public void MissingDelimiterIsNotAProperty()
+        {
+            Assert.IsFalse(EditorConfigDocument.TryMatchProperty("indent_style space", out _));
+        }
+
+        [TestMethod]
+        public void SemicolonInsideValueIsNotAComment()
+        {
+            Assert.IsTrue(EditorConfigDocument.TryMatchProperty("custom_value = first;second", out var match));
+            Assert.AreEqual("first;second", match.Groups["value"].Value);
         }
     }
 }

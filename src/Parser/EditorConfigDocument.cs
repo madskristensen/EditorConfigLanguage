@@ -36,7 +36,7 @@ namespace EditorConfig
         {
             get
             {
-                return Properties.FirstOrDefault(p => p.Keyword.Text.Equals(SchemaCatalog.Root));
+                return Properties.FirstOrDefault(p => p.Keyword.Text.Equals(SchemaCatalog.Root, StringComparison.OrdinalIgnoreCase));
             }
         }
 

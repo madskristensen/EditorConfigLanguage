@@ -15,7 +15,7 @@ namespace EditorConfig
 
         public void AugmentCompletionSession(ICompletionSession session, IList<CompletionSet> completionSets)
         {
-            if (_disposed || _document.IsParsing)
+            if (_disposed)
                 return;
 
             ITextSnapshot snapshot = buffer.CurrentSnapshot;

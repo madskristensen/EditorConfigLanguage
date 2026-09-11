@@ -7,10 +7,7 @@ namespace EditorConfigTest
     {
         public static async Task WaitForParsingCompleteAsync(this EditorConfigDocument document)
         {
-            while (document.IsParsing)
-            {
-                await Task.Delay(2);
-            }
+            await document.ParsingTask;
         }
     }
 }

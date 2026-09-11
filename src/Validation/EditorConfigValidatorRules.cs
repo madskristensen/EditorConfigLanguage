@@ -34,7 +34,7 @@ namespace EditorConfig
                 // Materialize parentSections to avoid multiple enumerations in the inner loop
                 List<Section> parentSections = [.. parents
                     .SelectMany(d => d.Sections)
-                    .Where(s => s.Item.Text == section.Item.Text)];
+                    .Where(s => s.Item.Text.Equals(section.Item.Text, StringComparison.OrdinalIgnoreCase))];
 
                 foreach (Property property in section.Properties)
                 {
@@ -134,7 +134,7 @@ namespace EditorConfig
 
                 ErrorCatalog.DuplicateSection.Run(section.Item, (e) =>
                 {
-                    if (_document.Sections.First(s => s.Item.Text == section.Item.Text) != section)
+                    if (_document.Sections.First(s => s.Item.Text.Equals(section.Item.Text, StringComparison.OrdinalIgnoreCase)) != section)
                     {
                         e.Register(section.Item.Text);
                     }

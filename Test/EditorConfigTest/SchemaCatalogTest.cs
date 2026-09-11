@@ -156,6 +156,17 @@ namespace EditorConfigTest
         }
 
         [TestMethod]
+        public void TryGetKeyword_StandardSpellingLanguage_ReturnsTrue()
+        {
+            bool result = SchemaCatalog.TryGetKeyword("spelling_language", out Keyword keyword);
+
+            Assert.IsTrue(result);
+            Assert.IsNotNull(keyword);
+            Assert.AreEqual("spelling_language", keyword.Name);
+            Assert.AreEqual(Category.Standard, keyword.Category);
+        }
+
+        [TestMethod]
         public void TryGetKeyword_SpellingCheckableTypes_ReturnsTrue()
         {
             bool result = SchemaCatalog.TryGetKeyword("spelling_checkable_types", out Keyword keyword);

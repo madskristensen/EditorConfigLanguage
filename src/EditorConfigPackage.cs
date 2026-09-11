@@ -62,6 +62,7 @@ namespace EditorConfig
             FormatterOptions = (FormatterOptions)GetDialogPage(typeof(FormatterOptions));
             ValidationOptions = (ValidationOptions)GetDialogPage(typeof(ValidationOptions));
             CompletionOptions = (CompletionOptions)GetDialogPage(typeof(CompletionOptions));
+            SchemaCatalog.LoadCustomSchemas();
 
             Language = new EditorConfigLanguage(this);
             var serviceContainer = this as IServiceContainer;

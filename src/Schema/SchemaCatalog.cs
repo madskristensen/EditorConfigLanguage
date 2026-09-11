@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
+using Microsoft.VisualStudio.Shell;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -19,6 +21,7 @@ namespace EditorConfig
         private static Dictionary<string, Keyword> _keywordLookup;
         private static Dictionary<string, Severity> _severityLookup;
         private static IReadOnlyList<Keyword> _compoundKeywords;
+        private static IReadOnlyList<Keyword> _builtInKeywords;
 
         static SchemaCatalog()
         {
@@ -82,38 +85,46 @@ namespace EditorConfig
 
                 Severities = JsonConvert.DeserializeObject<IEnumerable<Severity>>(obj["severities"].ToString());
                 List<Keyword> builtInKeywords = JsonConvert.DeserializeObject<List<Keyword>>(obj["properties"].ToString());
-
-                // Build set of built-in keyword names for precedence checking
-                var builtInKeywordNames = new HashSet<string>(
-                    builtInKeywords.Select(k => k.Name),
-                    StringComparer.OrdinalIgnoreCase);
-
-                // Load custom schemas from extensions registered in the VS registry
-                CustomSchemas = CustomSchemaProvider.LoadCustomSchemas(builtInKeywordNames);
-
-                // Collect all custom keywords from all schemas
-                IEnumerable<Keyword> customKeywords = CustomSchemas.SelectMany(s => s.Keywords);
-
-                // Merge: built-in keywords first, then custom keywords
-                AllKeywords = [.. builtInKeywords, .. customKeywords];
-                VisibleKeywords = AllKeywords.Where(p => p.IsVisible);
-
-                // Build lookup dictionaries for O(1) access with case-insensitive comparison
-                _keywordLookup = new Dictionary<string, Keyword>(StringComparer.OrdinalIgnoreCase);
-                foreach (Keyword keyword in AllKeywords)
-                {
-                    _keywordLookup[keyword.Name] = keyword;
-
-                    foreach (string alias in keyword.Aliases)
-                    {
-                        if (!_keywordLookup.ContainsKey(alias))
-                            _keywordLookup.Add(alias, keyword);
-                    }
-                }
-
-                _compoundKeywords = [.. AllKeywords.Where(keyword => keyword.Name.IndexOf('<') >= 0)];
-                _severityLookup = Severities.ToDictionary(s => s.Name, s => s, StringComparer.OrdinalIgnoreCase);
+                _builtInKeywords = builtInKeywords;
+                ApplySchemas(builtInKeywords, CustomSchemas ?? []);
             }
+        }
+
+        internal static void LoadCustomSchemas()
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
+            var builtInKeywordNames = new HashSet<string>(
+                _builtInKeywords.Select(keyword => keyword.Name),
+                StringComparer.OrdinalIgnoreCase);
+
+            CustomSchemas = CustomSchemaProvider.LoadCustomSchemas(builtInKeywordNames);
+            ApplySchemas(_builtInKeywords, CustomSchemas);
+        }
+
+        private static void ApplySchemas(
+            IReadOnlyList<Keyword> builtInKeywords,
+            IReadOnlyList<CustomSchemaInfo> customSchemas)
+        {
+            IEnumerable<Keyword> customKeywords = customSchemas.SelectMany(schema => schema.Keywords);
+
+            AllKeywords = [.. builtInKeywords, .. customKeywords];
+            VisibleKeywords = AllKeywords.Where(keyword => keyword.IsVisible);
+
+            _keywordLookup = new Dictionary<string, Keyword>(StringComparer.OrdinalIgnoreCase);
+            foreach (Keyword keyword in AllKeywords)
+            {
+                _keywordLookup[keyword.Name] = keyword;
+
+                foreach (string alias in keyword.Aliases)
+                {
+                    if (!_keywordLookup.ContainsKey(alias))
+                        _keywordLookup.Add(alias, keyword);
+                }
+            }
+
+            _compoundKeywords = [.. AllKeywords.Where(keyword => keyword.Name.IndexOf('<') >= 0)];
+            _severityLookup = Severities.ToDictionary(severity => severity.Name, severity => severity, StringComparer.OrdinalIgnoreCase);
         }
     }
 }

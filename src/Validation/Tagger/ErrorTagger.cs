@@ -13,13 +13,10 @@ namespace EditorConfig
     class ErrorTagger : ITagger<IErrorTag>, IDisposable
     {
         private readonly EditorConfigDocument _document;
-        private readonly IWpfTextView _view;
         private readonly EditorConfigValidator _validator;
 
         public ErrorTagger(IWpfTextView view)
         {
-            _view = view;
-
             _document = EditorConfigDocument.FromTextBuffer(view.TextBuffer);
             _validator = EditorConfigValidator.FromDocument(_document);
             _validator.Validated += DocumentValidated;
@@ -27,12 +24,9 @@ namespace EditorConfig
 
         private void DocumentValidated(object sender, EventArgs e)
         {
-            _ = ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-            {
-                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                var span = new SnapshotSpan(_view.TextBuffer.CurrentSnapshot, 0, _view.TextBuffer.CurrentSnapshot.Length);
-                TagsChanged?.Invoke(this, new SnapshotSpanEventArgs(span));
-            });
+            ITextSnapshot snapshot = _document.TextBuffer.CurrentSnapshot;
+            var span = new SnapshotSpan(snapshot, 0, snapshot.Length);
+            TagsChanged?.Invoke(this, new SnapshotSpanEventArgs(span));
         }
 
         public IEnumerable<ITagSpan<IErrorTag>> GetTags(NormalizedSnapshotSpanCollection spans)
@@ -65,7 +59,7 @@ namespace EditorConfig
         {
             foreach (DisplayError error in item.Errors)
             {
-                var span = new SnapshotSpan(_view.TextBuffer.CurrentSnapshot, item.Span);
+                var span = new SnapshotSpan(_document.TextBuffer.CurrentSnapshot, item.Span);
                 string errorType = GetErrorType(error.Category);
 
                 yield return new TagSpan<ErrorTag>(span, new ErrorTag(errorType, error.Name));

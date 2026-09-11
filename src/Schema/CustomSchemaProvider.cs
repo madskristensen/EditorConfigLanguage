@@ -42,6 +42,8 @@ namespace EditorConfig
         /// <returns>List of custom schema info objects with keywords, excluding any that conflict with built-in keywords.</returns>
         internal static IReadOnlyList<CustomSchemaInfo> LoadCustomSchemas(HashSet<string> builtInKeywordNames)
         {
+            ThreadHelper.ThrowIfNotOnUIThread();
+
             var schemas = new List<CustomSchemaInfo>();
             var seenKeywordNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
@@ -81,14 +83,7 @@ namespace EditorConfig
                 }
                 catch (Exception ex)
                 {
-                    // Queue the error message to show on the UI thread
-#pragma warning disable VSTHRD110 // Observe result of async calls
-                    _ = ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-                    {
-                        await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                        ShowSchemaLoadError(registration.SchemaPath, ex);
-                    });
-#pragma warning restore VSTHRD110 // Observe result of async calls
+                    ShowSchemaLoadError(registration.SchemaPath, ex);
                 }
             }
 

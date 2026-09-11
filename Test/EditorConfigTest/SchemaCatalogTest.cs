@@ -153,6 +153,8 @@ namespace EditorConfigTest
             Assert.IsNotNull(keyword);
             Assert.AreEqual("spelling_languages", keyword.Name);
             Assert.AreEqual(Category.VisualStudio, keyword.Category);
+            Assert.IsTrue(keyword.SupportsMultipleValues);
+            Assert.IsTrue(keyword.Values.Any(v => v.Name == "<language_tag>"));
         }
 
         [TestMethod]
@@ -270,6 +272,74 @@ namespace EditorConfigTest
             Assert.IsNotNull(keyword);
             Assert.AreEqual("cpp_include_cleanup_alternate_files", keyword.Name);
             Assert.AreEqual(Category.CPP, keyword.Category);
+        }
+
+        [TestMethod]
+        public void CurrentCppProperties_ReturnTrue()
+        {
+            string[] properties =
+            [
+                "cpp_sort_includes_error_tag_type",
+                "cpp_sort_includes_priority_case_sensitive",
+                "cpp_sort_includes_priority_style",
+                "cpp_include_cleanup_format_after_edits",
+                "cpp_include_cleanup_sort_after_edits",
+                "cpp_includes_style",
+                "cpp_includes_use_forward_slash"
+            ];
+
+            foreach (string property in properties)
+            {
+                Assert.IsTrue(SchemaCatalog.TryGetKeyword(property, out Keyword keyword), property);
+                Assert.AreEqual(Category.CPP, keyword.Category, property);
+            }
+        }
+
+        [TestMethod]
+        public void CurrentCSharpProperties_ReturnTrue()
+        {
+            bool result = SchemaCatalog.TryGetKeyword("csharp_style_prefer_labeled_jump_statements", out Keyword keyword);
+
+            Assert.IsTrue(result);
+            Assert.IsNotNull(keyword);
+            Assert.AreEqual(Category.CSharp, keyword.Category);
+            Assert.IsTrue(keyword.RequiresSeverity);
+        }
+
+        [TestMethod]
+        public void DiagnosticSeverityValues_MatchDocumentation()
+        {
+            string[] properties =
+            [
+                "dotnet_diagnostic.<rule_id>.severity",
+                "dotnet_analyzer_diagnostic.severity",
+                "dotnet_analyzer_diagnostic.category-<category>.severity"
+            ];
+
+            foreach (string property in properties)
+            {
+                Assert.IsTrue(SchemaCatalog.TryGetKeyword(property, out Keyword keyword), property);
+                Assert.IsTrue(keyword.Values.Any(v => v.Name == "default"), property);
+                Assert.IsFalse(keyword.Values.Any(v => v.Name == "refactoring"), property);
+            }
+        }
+
+        [TestMethod]
+        public void CorrectedSchemaValues_MatchDocumentation()
+        {
+            Assert.IsTrue(SchemaCatalog.TryGetKeyword("csharp_new_line_before_open_brace", out Keyword braces));
+            Assert.IsTrue(braces.Values.Any(v => v.Name == "object_collection_array_initializers"));
+            Assert.IsFalse(braces.Values.Any(v => v.Name == "object_collection"));
+            Assert.IsFalse(braces.Values.Any(v => v.Name == "events"));
+            Assert.IsFalse(braces.Values.Any(v => v.Name == "indexers"));
+            Assert.IsFalse(braces.Values.Any(v => v.Name == "local_functions"));
+
+            Assert.IsTrue(SchemaCatalog.TryGetKeyword("visual_basic_preferred_modifier_order", out Keyword modifiers));
+            Assert.AreEqual("Async", modifiers.DefaultValue.Last().Name);
+
+            Assert.IsTrue(SchemaCatalog.TryGetKeyword("spelling_error_severity", out Keyword spellingSeverity));
+            Assert.IsTrue(spellingSeverity.Values.Any(v => v.Name == "hint"));
+            Assert.IsFalse(spellingSeverity.Values.Any(v => v.Name == "none"));
         }
 
         [TestMethod]

@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using Microsoft.VisualStudio.Text;
@@ -31,6 +33,31 @@ namespace EditorConfigLanguage.Benchmarks.Support
 
         private static readonly PropertyInfo SectionsProperty =
             DocumentType.GetProperty("Sections", BindingFlags.Public | BindingFlags.Instance);
+
+        private static readonly Type NamingEntityIndexType =
+            EditorConfigAssembly.GetType("EditorConfig.NamingEntityIndex", throwOnError: true);
+
+        private static readonly MethodInfo CreateNamingEntityIndexMethod =
+            NamingEntityIndexType.GetMethod("Create", BindingFlags.NonPublic | BindingFlags.Static)
+            ?? throw new MissingMethodException("EditorConfig.NamingEntityIndex", "Create");
+
+        private static readonly PropertyInfo NamingEntitiesProperty =
+            DocumentType.GetProperty("NamingEntities", BindingFlags.NonPublic | BindingFlags.Instance)
+            ?? throw new MissingMemberException("EditorConfig.EditorConfigDocument", "NamingEntities");
+
+        private static readonly Type NamingCompletionServiceType =
+            EditorConfigAssembly.GetType("EditorConfig.NamingCompletionService", throwOnError: true);
+
+        private static readonly MethodInfo GetNamingCompletionContextMethod =
+            NamingCompletionServiceType.GetMethod("GetContext", BindingFlags.NonPublic | BindingFlags.Static)
+            ?? throw new MissingMethodException("EditorConfig.NamingCompletionService", "GetContext");
+
+        private static readonly Type SchemaCatalogType =
+            EditorConfigAssembly.GetType("EditorConfig.SchemaCatalog", throwOnError: true);
+
+        private static readonly MethodInfo ParseSchemaMethod =
+            SchemaCatalogType.GetMethod("ParseJson", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static)
+            ?? throw new MissingMethodException("EditorConfig.SchemaCatalog", "ParseJson");
 
         private static readonly Type AnalyzerConfigType =
             EditorConfigAssembly.GetType("EditorConfig.AnalyzerConfig", throwOnError: true);
@@ -72,6 +99,25 @@ namespace EditorConfigLanguage.Benchmarks.Support
         public static int GetParseItemCount(object document) => ((ICollection)ParseItemsProperty.GetValue(document)).Count;
 
         public static int GetSectionCount(object document) => ((ICollection)SectionsProperty.GetValue(document)).Count;
+
+        public static void LoadSchema()
+            => ParseSchemaMethod.Invoke(null, [Path.Combine(AppContext.BaseDirectory, "Schema", "EditorConfig.json")]);
+
+        public static object CreateNamingIndex(object document)
+        {
+            var properties = ((EditorConfig.EditorConfigDocument)document).Sections
+                .SelectMany(section => section.Properties)
+                .ToArray();
+            return CreateNamingEntityIndexMethod.Invoke(null, [properties]);
+        }
+
+        public static object CompleteNamingEntityName(object document, string lineText)
+        {
+            object index = NamingEntitiesProperty.GetValue(document);
+            Array indexes = Array.CreateInstance(NamingEntityIndexType, 1);
+            indexes.SetValue(index, 0);
+            return GetNamingCompletionContextMethod.Invoke(null, [lineText, lineText.Length, indexes]);
+        }
 
         public static void Dispose(object document) => ((IDisposable)document).Dispose();
 

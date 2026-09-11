@@ -1,6 +1,7 @@
 using EditorConfig;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
 
 namespace EditorConfigTest
 {
@@ -154,6 +155,35 @@ namespace EditorConfigTest
             await document.WaitForParsingCompleteAsync();
 
             Assert.IsFalse(document.IsGlobalConfig);
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task NamingDeclarations_ReportMissingRequiredMembers()
+        {
+            const string source = """
+                [*.cs]
+                dotnet_naming_symbols.private_fields.applicable_kinds = field
+                dotnet_naming_style.underscored.required_prefix = _
+                dotnet_naming_rule.private_fields_underscored.symbols = private_fields
+                """;
+            var buffer = TestTextBufferFactory.CreateTextBuffer(source);
+            using var document = EditorConfigDocument.CreateForTest(buffer, @"C:\repo\.editorconfig");
+            await document.WaitForParsingCompleteAsync();
+            NamingEntityIndex index = document.Sections[0].NamingEntities;
+
+            index.TryGetEntity(NamingEntityKind.Symbols, "private_fields", out NamingEntity symbols);
+            index.TryGetEntity(NamingEntityKind.Style, "underscored", out NamingEntity style);
+            index.TryGetEntity(NamingEntityKind.Rule, "private_fields_underscored", out NamingEntity rule);
+
+            CollectionAssert.AreEquivalent(
+                new[] { "applicable_accessibilities" },
+                EditorConfigValidator.GetMissingNamingMembers(symbols).ToArray());
+            CollectionAssert.AreEquivalent(
+                new[] { "capitalization" },
+                EditorConfigValidator.GetMissingNamingMembers(style).ToArray());
+            CollectionAssert.AreEquivalent(
+                new[] { "style", "severity" },
+                EditorConfigValidator.GetMissingNamingMembers(rule).ToArray());
         }
     }
 }

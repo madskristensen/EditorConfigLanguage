@@ -61,6 +61,8 @@ namespace EditorConfig
             Create("EC121", ErrorCategory.Warning, Resources.Text.ValidationDeprecatedProperty);
         public static Error UnknownReference { get; } =
             Create("EC122", ErrorCategory.Error, Resources.Text.ValidationUnknownReference);
+        public static Error IncompleteNamingDeclaration { get; } =
+            Create("EC123", ErrorCategory.Error, Resources.Text.ValidationIncompleteNamingDeclaration);
 
         public static bool TryGetErrorCode(string code, out Error errorCode)
         {

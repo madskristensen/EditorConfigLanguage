@@ -42,7 +42,7 @@ namespace EditorConfigTest
             [
                 "EC101", "EC102", "EC103", "EC104", "EC105", "EC106", "EC107", "EC108", "EC109", "EC110",
                 "EC111", "EC112", "EC113", "EC114", "EC115", "EC116", "EC117", "EC118", "EC119", "EC120",
-                "EC121", "EC122"
+                "EC121", "EC122", "EC123"
             ];
 
             foreach (string code in expectedCodes)

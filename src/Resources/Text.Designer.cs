@@ -142,6 +142,15 @@ namespace EditorConfig.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to The {0} &quot;{1}&quot; is missing required properties: {2}..
+        /// </summary>
+        internal static string ValidationIncompleteNamingDeclaration {
+            get {
+                return ResourceManager.GetString("ValidationIncompleteNamingDeclaration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The property &quot;{0}&quot; is deprecated..
         /// </summary>
         internal static string ValidationDeprecatedProperty {

@@ -190,6 +190,9 @@
   <data name="ValidationUnknownReference" xml:space="preserve">
     <value>The {0} "{1}" is not declared.</value>
   </data>
+  <data name="ValidationIncompleteNamingDeclaration" xml:space="preserve">
+    <value>The {0} "{1}" is missing required properties: {2}.</value>
+  </data>
   <data name="ValidationUnknownStyle" xml:space="preserve">
     <value>The style "{0}" is unknown. A capitalization style must always be specified.</value>
   </data>

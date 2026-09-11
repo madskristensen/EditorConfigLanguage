@@ -108,6 +108,7 @@ namespace EditorConfig
                 }
 
                 ValidateReferences(section.Properties);
+                ValidateNamingDeclarations(section);
 
                 ErrorCatalog.SectionSyntaxError.Run(section.Item, (e) =>
                 {
@@ -148,6 +149,48 @@ namespace EditorConfig
 
                 ValidateNamingStyles(section);
             }
+        }
+
+        private static void ValidateNamingDeclarations(Section section)
+        {
+            foreach (NamingEntityKind kind in new[] { NamingEntityKind.Rule, NamingEntityKind.Symbols, NamingEntityKind.Style })
+            {
+                foreach (string name in section.NamingEntities.GetNames(kind))
+                {
+                    if (!section.NamingEntities.TryGetEntity(kind, name, out NamingEntity entity))
+                        continue;
+
+                    string[] missingMembers = GetMissingNamingMembers(entity).ToArray();
+                    ErrorCatalog.IncompleteNamingDeclaration.Run(entity.Properties[0].Keyword, missingMembers.Length > 0, error =>
+                    {
+                        error.Register(GetNamingKindDisplayName(kind), name, string.Join(", ", missingMembers));
+                    });
+                }
+            }
+        }
+
+        internal static IEnumerable<string> GetMissingNamingMembers(NamingEntity entity)
+        {
+            IEnumerable<string> requiredMembers = entity.Kind switch
+            {
+                NamingEntityKind.Rule => new[] { "symbols", "style", "severity" },
+                NamingEntityKind.Symbols => new[] { "applicable_kinds", "applicable_accessibilities" },
+                NamingEntityKind.Style => new[] { "capitalization" },
+                _ => [],
+            };
+
+            return requiredMembers.Where(member => !entity.Members.ContainsKey(member));
+        }
+
+        private static string GetNamingKindDisplayName(NamingEntityKind kind)
+        {
+            return kind switch
+            {
+                NamingEntityKind.Rule => "naming rule",
+                NamingEntityKind.Symbols => "symbol group",
+                NamingEntityKind.Style => "naming style",
+                _ => "naming declaration",
+            };
         }
 
         private void ValidateNamingStyles(Section section)

@@ -48,16 +48,20 @@
   <ItemGroup>
     <Compile Include="AddMissingRulesActionTest.cs" />
     <Compile Include="CompletionTest.cs" />
+    <Compile Include="CustomSchemaProviderTest.cs" />
     <Compile Include="ErrorCatalogTest.cs" />
     <Compile Include="ExtensionsTest.cs" />
+    <Compile Include="FormattingBehaviorTest.cs" />
     <Compile Include="Helpers\TestTextBufferFactory.cs" />
     <Compile Include="NamingCompletionServiceTest.cs" />
     <Compile Include="NamingEntityIndexTest.cs" />
+    <Compile Include="NamingStyleParserTest.cs" />
     <Compile Include="NamingSymbolServiceTest.cs" />
     <Compile Include="PropertyRegexTest.cs" />
     <Compile Include="SchemaCatalogTest.cs" />
     <Compile Include="SectionNameMatcherTest.cs" />
     <Compile Include="ValidationTest.cs" />
+    <Compile Include="ValidatorIntegrationTest.cs" />
     <Compile Include="DocumentTest.cs" />
     <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Helpers\Samples.cs" />

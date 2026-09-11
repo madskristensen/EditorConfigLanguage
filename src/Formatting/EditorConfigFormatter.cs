@@ -76,7 +76,7 @@ namespace EditorConfig
                 case FormattingType.Section:
                     return int.MinValue;
                 case FormattingType.Document:
-                    return _document.Sections.SelectMany(s => s.Properties).Max(p => p.Keyword.Text.Length);
+                    return _document.Sections.SelectMany(s => s.Properties).Select(p => p.Keyword.Text.Length).DefaultIfEmpty().Max();
                 default:
                     return 0;
             }
@@ -106,21 +106,35 @@ namespace EditorConfig
         private void FormatProperty(Property property, int keywordLength, ITextEdit edit)
         {
             string originalText = edit.Snapshot.GetText(property.Span);
-            string newText = property.Keyword.Text.PadRight(keywordLength);
-
-            string spaceBeforeEquals = string.Empty.PadRight(_spaceBeforeEquals);
-            string spaceAfterEquals = string.Empty.PadRight(_spaceAfterEquals);
-            string spaceBeforeColon = string.Empty.PadRight(_spaceBeforeColon);
-            string spaceAfterColon = string.Empty.PadRight(_spaceAfterColon);
-
-            if (property.Value != null)
-                newText += $"{spaceBeforeEquals}={spaceAfterEquals}{property.Value.Text}";
-
-            if (property.Severity != null)
-                newText += $"{spaceBeforeColon}:{spaceAfterColon}{property.Severity.Text}";
+            string newText = FormatPropertyText(
+                property,
+                keywordLength,
+                _spaceBeforeEquals,
+                _spaceAfterEquals,
+                _spaceBeforeColon,
+                _spaceAfterColon);
 
             if (originalText != newText)
                 edit.Replace(property.Span, newText);
+        }
+
+        internal static string FormatPropertyText(
+            Property property,
+            int keywordLength,
+            int spaceBeforeEquals,
+            int spaceAfterEquals,
+            int spaceBeforeColon,
+            int spaceAfterColon)
+        {
+            string newText = property.Keyword.Text.PadRight(keywordLength);
+
+            if (property.Value != null)
+                newText += $"{new string(' ', spaceBeforeEquals)}={new string(' ', spaceAfterEquals)}{property.Value.Text}";
+
+            if (property.Severity != null)
+                newText += $"{new string(' ', spaceBeforeColon)}:{new string(' ', spaceAfterColon)}{property.Severity.Text}";
+
+            return newText;
         }
     }
 }

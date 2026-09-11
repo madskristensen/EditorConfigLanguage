@@ -32,7 +32,8 @@ namespace EditorConfig
         [DefaultValue(true)]
         public bool EnableUnknownProperties { get; set; } = true;
 
-        private string _ignoredPrefixes = "resharper_, idea_, roslynator_, ij_, md_";
+        internal const string DefaultIgnoredPrefixes = "resharper_, idea_, roslynator_, ij_, md_";
+        private string _ignoredPrefixes = DefaultIgnoredPrefixes;
         private string[] _cachedPrefixes;
 
         [Category(_rules)]

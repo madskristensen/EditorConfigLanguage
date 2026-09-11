@@ -25,7 +25,7 @@ namespace EditorConfig
 
         private readonly EditorConfigDocument _document;
         private Timer _timer;
-        private bool _prevEnabled = EditorConfigPackage.ValidationOptions == null || EditorConfigPackage.ValidationOptions.EnableValidation;
+        private bool _prevEnabled = EnableValidation;
         private readonly Dictionary<string, bool> _globbingCache = [];
         private readonly SemaphoreSlim _validationGate = new(1, 1);
         private int _latestValidationRequestId;
@@ -48,6 +48,26 @@ namespace EditorConfig
 
         public bool IsValidating => Volatile.Read(ref _isValidating) != 0;
 
+        internal static bool EnableValidation => EditorConfigPackage.ValidationOptions?.EnableValidation ?? true;
+
+        internal static bool EnableUnknownProperties => EditorConfigPackage.ValidationOptions?.EnableUnknownProperties ?? true;
+
+        internal static bool EnableUnknownValues => EditorConfigPackage.ValidationOptions?.EnableUnknownValues ?? true;
+
+        internal static bool EnableDuplicateSections => EditorConfigPackage.ValidationOptions?.EnableDuplicateSections ?? true;
+
+        internal static bool EnableDuplicateProperties => EditorConfigPackage.ValidationOptions?.EnableDuplicateProperties ?? true;
+
+        internal static bool EnableDuplicateFoundInParent => EditorConfigPackage.ValidationOptions?.EnableDuplicateFoundInParent ?? true;
+
+        internal static bool EnableGlobbingMatcher => EditorConfigPackage.ValidationOptions?.EnableGlobbingMatcher ?? true;
+
+        internal static bool AllowSpacesInSections => EditorConfigPackage.ValidationOptions?.AllowSpacesInSections ?? false;
+
+        internal static bool HasIgnoredPrefix(string keyword)
+            => EditorConfigPackage.ValidationOptions?.HasIgnoredPrefix(keyword)
+               ?? ValidationOptions.HasIgnoredPrefix(keyword, ValidationOptions.DefaultIgnoredPrefixes);
+
         /// <summary>Gets or creates an instace of the validator and stores it in the text buffer properties.</summary>
         public static EditorConfigValidator FromDocument(EditorConfigDocument document)
         {
@@ -56,10 +76,10 @@ namespace EditorConfig
 
         private void DocumentParsed(object sender, EventArgs e)
         {
-            if (!EditorConfigPackage.ValidationOptions.EnableValidation)
+            if (!EnableValidation)
             {
                 // Don't run the logic unless the user changed the settings since last run
-                if (_prevEnabled != EditorConfigPackage.ValidationOptions.EnableValidation)
+                if (_prevEnabled != EnableValidation)
                 {
                     ClearAllErrors();
                     Validated?.Invoke(this, EventArgs.Empty);
@@ -70,7 +90,7 @@ namespace EditorConfig
                 _ = RequestValidationAsync(false);
             }
 
-            _prevEnabled = EditorConfigPackage.ValidationOptions.EnableValidation;
+            _prevEnabled = EnableValidation;
         }
 
         /// <summary>Schedules an async validation run.</summary>

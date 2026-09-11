@@ -9,7 +9,9 @@ namespace EditorConfig.Validation.NamingStyles
     {
         public static NamingStylePreferences GetNamingStyles(IEnumerable<Property> properties)
         {
-            var propertyLookup = properties.ToDictionary(property => property.Keyword.Text.Trim());
+            Dictionary<string, Property> propertyLookup = properties
+                .GroupBy(property => property.Keyword.Text.Trim(), StringComparer.OrdinalIgnoreCase)
+                .ToDictionary(group => group.Key, group => group.Last(), StringComparer.OrdinalIgnoreCase);
 
             ImmutableArray<SymbolSpecification>.Builder symbolSpecifications = ImmutableArray.CreateBuilder<SymbolSpecification>();
             ImmutableArray<NamingStyle>.Builder namingStyles = ImmutableArray.CreateBuilder<NamingStyle>();

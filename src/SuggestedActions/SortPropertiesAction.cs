@@ -48,7 +48,13 @@ namespace EditorConfig
             // Get lines starting AFTER the section header to include any comments before the first property
             int sectionHeaderEnd = section.Item.Span.End;
             IEnumerable<ITextSnapshotLine> bufferLines = edit.Snapshot.Lines.Where(l => l.Start > sectionHeaderEnd && l.End <= last.Span.End);
-            List<string> lines = [.. bufferLines.Select(b => b.GetText())];
+            string sortedText = SortSectionText(section.Item.Text, bufferLines.Select(line => line.GetText()));
+            edit.Replace(section.Span, sortedText);
+        }
+
+        internal static string SortSectionText(string sectionHeader, IEnumerable<string> lines)
+        {
+            List<string> lineList = [.. lines];
 
             // Parse into blocks (separated by empty lines)
             // Each block contains sub-groups (a comment starts a new sub-group)
@@ -58,7 +64,7 @@ namespace EditorConfig
             var currentBlock = new Block();
             var currentSubGroup = new SubGroup();
 
-            foreach (string line in lines)
+            foreach (string line in lineList)
             {
                 if (string.IsNullOrWhiteSpace(line))
                 {
@@ -100,7 +106,7 @@ namespace EditorConfig
 
             // Build output
             var sb = new StringBuilder();
-            sb.AppendLine(section.Item.Text);
+            sb.AppendLine(sectionHeader);
 
             for (int i = 0; i < blocks.Count; i++)
             {
@@ -113,7 +119,7 @@ namespace EditorConfig
                 }
             }
 
-            edit.Replace(section.Span, sb.ToString().TrimEnd());
+            return sb.ToString().TrimEnd();
         }
 
         /// <summary>A block is a group of lines separated by empty lines.</summary>

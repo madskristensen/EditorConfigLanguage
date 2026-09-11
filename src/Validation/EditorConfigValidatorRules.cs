@@ -375,7 +375,7 @@ namespace EditorConfig
 
         private IEnumerable<EditorConfigDocument> GetAllParentDocuments()
         {
-            if (EditorConfigPackage.ValidationOptions.EnableDuplicateFoundInParent)
+            if (EnableDuplicateFoundInParent)
             {
                 EditorConfigDocument parent = _document.Parent;
 
@@ -421,7 +421,7 @@ namespace EditorConfig
             bool hasKeyword = SchemaCatalog.TryGetKeyword(property.Keyword.Text, out Keyword keyword);
 
             // Unknown keyword - skip if the keyword has an ignored prefix
-            bool hasIgnoredPrefix = EditorConfigPackage.ValidationOptions.HasIgnoredPrefix(property.Keyword.Text);
+            bool hasIgnoredPrefix = HasIgnoredPrefix(property.Keyword.Text);
             ErrorCatalog.UnknownKeyword.Run(property.Keyword, !hasKeyword && !hasIgnoredPrefix, (e) =>
             {
                 e.Register(property.Keyword.Text);

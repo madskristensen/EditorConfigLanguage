@@ -52,29 +52,12 @@ namespace EditorConfig
                 try
                 {
                     List<Keyword> keywords = LoadKeywordsFromFile(registration.SchemaPath);
-                    var filteredKeywords = new List<Keyword>();
-
-                    foreach (Keyword keyword in keywords)
-                    {
-                        // Skip if this keyword exists in built-in schema
-                        if (builtInKeywordNames.Contains(keyword.Name))
-                        {
-                            continue;
-                        }
-
-                        // Skip if we've already seen this keyword from another custom schema
-                        if (seenKeywordNames.Contains(keyword.Name))
-                        {
-                            continue;
-                        }
-
-                        // Set the custom extension info on the keyword
-                        keyword.CustomExtensionName = registration.ExtensionName;
-                        keyword.CustomMoniker = registration.Moniker;
-
-                        seenKeywordNames.Add(keyword.Name);
-                        filteredKeywords.Add(keyword);
-                    }
+                    IReadOnlyList<Keyword> filteredKeywords = FilterKeywords(
+                        registration.ExtensionName,
+                        registration.Moniker,
+                        keywords,
+                        builtInKeywordNames,
+                        seenKeywordNames);
 
                     if (filteredKeywords.Count > 0)
                     {
@@ -152,7 +135,7 @@ namespace EditorConfig
         /// Parses a moniker string into an ImageMoniker.
         /// Supports "KnownMonikers.Name" format or "guid:id" format.
         /// </summary>
-        private static ImageMoniker ParseMoniker(string monikerString)
+        internal static ImageMoniker ParseMoniker(string monikerString)
         {
             if (string.IsNullOrWhiteSpace(monikerString))
             {
@@ -163,10 +146,17 @@ namespace EditorConfig
             if (monikerString.StartsWith("KnownMonikers.", StringComparison.OrdinalIgnoreCase))
             {
                 string monikerName = monikerString.Substring("KnownMonikers.".Length);
-                PropertyInfo prop = typeof(KnownMonikers).GetProperty(monikerName, BindingFlags.Public | BindingFlags.Static);
-                if (prop != null && prop.PropertyType == typeof(ImageMoniker))
+                const BindingFlags flags = BindingFlags.Public | BindingFlags.Static | BindingFlags.IgnoreCase;
+                PropertyInfo prop = typeof(KnownMonikers).GetProperty(monikerName, flags);
+                if (prop != null)
                 {
                     return (ImageMoniker)prop.GetValue(null);
+                }
+
+                FieldInfo field = typeof(KnownMonikers).GetField(monikerName, flags);
+                if (field != null)
+                {
+                    return (ImageMoniker)field.GetValue(null);
                 }
             }
 
@@ -189,7 +179,7 @@ namespace EditorConfig
         /// <summary>
         /// Loads keywords from a schema JSON file.
         /// </summary>
-        private static List<Keyword> LoadKeywordsFromFile(string filePath)
+        internal static List<Keyword> LoadKeywordsFromFile(string filePath)
         {
             string json = File.ReadAllText(filePath);
             var obj = JObject.Parse(json);
@@ -201,6 +191,28 @@ namespace EditorConfig
             }
 
             return JsonConvert.DeserializeObject<List<Keyword>>(propertiesToken.ToString());
+        }
+
+        internal static IReadOnlyList<Keyword> FilterKeywords(
+            string extensionName,
+            ImageMoniker moniker,
+            IEnumerable<Keyword> keywords,
+            ISet<string> builtInKeywordNames,
+            ISet<string> seenKeywordNames)
+        {
+            var filteredKeywords = new List<Keyword>();
+
+            foreach (Keyword keyword in keywords)
+            {
+                if (builtInKeywordNames.Contains(keyword.Name) || !seenKeywordNames.Add(keyword.Name))
+                    continue;
+
+                keyword.CustomExtensionName = extensionName;
+                keyword.CustomMoniker = moniker;
+                filteredKeywords.Add(keyword);
+            }
+
+            return filteredKeywords;
         }
 
         /// <summary>

@@ -5,7 +5,6 @@ namespace EditorConfig
 {
     public static class ErrorCatalog
     {
-        private static readonly ValidationOptions _o = EditorConfigPackage.ValidationOptions;
         private static readonly List<Error> _errors = [];
         private static readonly Dictionary<string, Error> _errorLookup = new(StringComparer.OrdinalIgnoreCase);
 
@@ -18,11 +17,11 @@ namespace EditorConfig
         }
 
         public static Error DuplicateProperty { get; } =
-            Create("EC101", ErrorCategory.Warning, Resources.Text.ValidationDuplicateProperty, () => _o.EnableDuplicateProperties);
+            Create("EC101", ErrorCategory.Warning, Resources.Text.ValidationDuplicateProperty, () => EditorConfigValidator.EnableDuplicateProperties);
         public static Error DuplicateSection { get; } =
-            Create("EC102", ErrorCategory.Warning, Resources.Text.ValidationDuplicateSection, () => _o.EnableDuplicateSections);
+            Create("EC102", ErrorCategory.Warning, Resources.Text.ValidationDuplicateSection, () => EditorConfigValidator.EnableDuplicateSections);
         public static Error GlobbingNoMatch { get; } =
-            Create("EC103", ErrorCategory.Suggestion, Resources.Text.ValidationNoMatch, () => _o.EnableGlobbingMatcher);
+            Create("EC103", ErrorCategory.Suggestion, Resources.Text.ValidationNoMatch, () => EditorConfigValidator.EnableGlobbingMatcher);
         public static Error MissingSeverity { get; } =
             Create("EC104", ErrorCategory.Error, Resources.Text.ValidationMissingSeverity);
         public static Error MissingValue { get; } =
@@ -30,7 +29,7 @@ namespace EditorConfig
         public static Error OnlyRootAllowed { get; } =
             Create("EC106", ErrorCategory.Error, Resources.Text.ValidateOnlyRootAllowed);
         public static Error ParentDuplicateProperty { get; } =
-            Create("EC107", ErrorCategory.Suggestion, Resources.Text.ValidationParentPropertyDuplicate, () => _o.EnableDuplicateFoundInParent);
+            Create("EC107", ErrorCategory.Suggestion, Resources.Text.ValidationParentPropertyDuplicate, () => EditorConfigValidator.EnableDuplicateFoundInParent);
         public static Error RootInSection { get; } =
             Create("EC108", ErrorCategory.Warning, Resources.Text.ValidationRootInSection);
         public static Error SectionSyntaxError { get; } =
@@ -40,17 +39,17 @@ namespace EditorConfig
         public static Error UnknownElement { get; } =
             Create("EC111", ErrorCategory.Error, Resources.Text.ValidationUnknownElement);
         public static Error UnknownKeyword { get; } =
-            Create("EC112", ErrorCategory.Warning, Resources.Text.ValidateUnknownKeyword, () => _o.EnableUnknownProperties);
+            Create("EC112", ErrorCategory.Warning, Resources.Text.ValidateUnknownKeyword, () => EditorConfigValidator.EnableUnknownProperties);
         public static Error UnknownSeverity { get; } =
             Create("EC113", ErrorCategory.Warning, Resources.Text.ValidationInvalidSeverity);
         public static Error UnknownValue { get; } =
-            Create("EC114", ErrorCategory.Warning, Resources.Text.InvalidValue, () => _o.EnableUnknownValues);
+            Create("EC114", ErrorCategory.Warning, Resources.Text.InvalidValue, () => EditorConfigValidator.EnableUnknownValues);
         public static Error TabWidthUnneeded { get; } =
             Create("EC115", ErrorCategory.Suggestion, Resources.Text.ValidationTabWidthUnneeded);
         public static Error IndentSizeUnneeded { get; } =
             Create("EC116", ErrorCategory.Suggestion, Resources.Text.ValidationIndentSizeUnneeded);
         public static Error SpaceInSection { get; } =
-            Create("EC117", ErrorCategory.Suggestion, Resources.Text.ValidationSpaceInSection, () => !_o.AllowSpacesInSections);
+            Create("EC117", ErrorCategory.Suggestion, Resources.Text.ValidationSpaceInSection, () => !EditorConfigValidator.AllowSpacesInSections);
         public static Error UnknownStyle { get; } =
             Create("EC118", ErrorCategory.Error, Resources.Text.ValidationUnknownStyle);
         public static Error UnusedStyle { get; } =

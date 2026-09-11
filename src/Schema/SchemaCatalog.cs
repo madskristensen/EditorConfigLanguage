@@ -95,7 +95,7 @@ namespace EditorConfig
             ThreadHelper.ThrowIfNotOnUIThread();
 
             var builtInKeywordNames = new HashSet<string>(
-                _builtInKeywords.Select(keyword => keyword.Name),
+                _builtInKeywords.SelectMany(keyword => new[] { keyword.Name }.Concat(keyword.Aliases)),
                 StringComparer.OrdinalIgnoreCase);
 
             CustomSchemas = CustomSchemaProvider.LoadCustomSchemas(builtInKeywordNames);

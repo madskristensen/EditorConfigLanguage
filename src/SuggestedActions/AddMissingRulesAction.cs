@@ -81,11 +81,11 @@ namespace EditorConfig
             foreach (Keyword keyword in SchemaCatalog.VisibleKeywords)
             {
                 string curRule = keyword.Name;
-                if (!currentRulesSet.Contains(curRule) && 
-                    missingRuleNames.Add(curRule) && 
-                    !curRule.StartsWith("dotnet_naming", StringComparison.OrdinalIgnoreCase) && 
-                    !curRule.Equals("root", StringComparison.OrdinalIgnoreCase) && 
-                    !curRule.Equals("max_line_length", StringComparison.OrdinalIgnoreCase))
+                if (!currentRulesSet.Contains(curRule) &&
+                    missingRuleNames.Add(curRule) &&
+                    keyword.IsSupported &&
+                    curRule.IndexOf('<') < 0 &&
+                    !curRule.Equals(SchemaCatalog.Root, StringComparison.OrdinalIgnoreCase))
                 {
                     missingRules.Add(keyword);
                 }

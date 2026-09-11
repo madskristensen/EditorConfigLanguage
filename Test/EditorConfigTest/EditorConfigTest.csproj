@@ -46,6 +46,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddMissingRulesActionTest.cs" />
     <Compile Include="CompletionTest.cs" />
     <Compile Include="ErrorCatalogTest.cs" />
     <Compile Include="ExtensionsTest.cs" />

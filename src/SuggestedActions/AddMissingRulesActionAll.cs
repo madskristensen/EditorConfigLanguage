@@ -20,7 +20,7 @@ namespace EditorConfig
         }
         public override string DisplayText
         {
-            get { return "All"; }
+            get { return "All known properties"; }
         }
 
         public override void Execute(CancellationToken cancellationToken)

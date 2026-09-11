@@ -1,18 +1,28 @@
 # yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
 name: "Build"
-permissions:
-  actions: write
-  contents: write
 
 on:
   push:
     branches: [master]
-  pull_request_target:
+  pull_request:
     branches: [master]
   workflow_dispatch:
+    inputs:
+      run_benchmarks:
+        description: Run the BenchmarkDotNet suite
+        required: false
+        type: boolean
+        default: false
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
+    permissions:
+      contents: read
+      checks: write
     outputs:
       version: ${{ steps.vsix_version.outputs.version-number }}
     name: Build
@@ -20,17 +30,23 @@ jobs:
     env:
       Configuration: Release
       DeployExtension: False
+      Solution: EditorConfig.slnx
+      TestProject: Test\EditorConfigTest\EditorConfigTest.csproj
+      BenchmarkProject: Benchmark\EditorConfigLanguage.Benchmarks\EditorConfigLanguage.Benchmarks.csproj
+      TestResultsDirectory: ${{ github.workspace }}\TestResults
       VsixManifestPath: src\source.extension.vsixmanifest
       VsixManifestSourcePath: src\source.extension.cs
 
     steps:
     - uses: actions/checkout@v6
-      with:
-        ref: ${{ github.event_name == 'pull_request_target' && github.event.pull_request.head.sha || github.sha }}
-        persist-credentials: false
 
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v5
+      with:
+        dotnet-version: 9.0.x
 
     - name: Cache NuGet packages
       uses: actions/cache@v5
@@ -42,48 +58,100 @@ jobs:
 
     - name: Increment VSIX version
       id: vsix_version
-      uses: timheuer/vsix-version-stamp@v2
+      uses: madskristensen/vsix-version-stamp@v2
       with:
         manifest-file: ${{ env.VsixManifestPath }}
         vsix-token-source-file: ${{ env.VsixManifestSourcePath }}
 
-    - name: Build
-      run: msbuild EditorConfig.slnx /v:m -restore /p:OutDir=\_built
+    - name: Restore NuGet packages
+      run: msbuild ${{ env.Solution }} /v:m /t:Restore /p:Configuration=${{ env.Configuration }}
 
-    # - name: Run tests
-    #   run: dotnet vstest /_built/EditorConfigTest.dll # re-enable when tests can be run locally in VS
+    - name: Build
+      run: msbuild ${{ env.Solution }} /v:m /m /p:Configuration=${{ env.Configuration }} /p:DeployExtension=${{ env.DeployExtension }}
+
+    - name: Run tests
+      run: >
+        dotnet test ${{ env.TestProject }}
+        --configuration ${{ env.Configuration }}
+        --no-build
+        --no-restore
+        --verbosity normal
+        --results-directory "${{ env.TestResultsDirectory }}"
+        --logger "trx;LogFileName=test-results.trx"
+        --collect "Code Coverage;Format=Cobertura"
+
+    - name: Report test results
+      uses: dorny/test-reporter@v3
+      if: ${{ !cancelled() && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) }}
+      with:
+        name: Test Results
+        path: TestResults/**/*.trx
+        reporter: dotnet-trx
+        fail-on-error: true
+
+    - name: Add coverage summary
+      if: ${{ !cancelled() }}
+      shell: pwsh
+      run: |
+        $coverageFile = Get-ChildItem "${{ env.TestResultsDirectory }}" -Filter "*.cobertura.xml" -Recurse |
+          Select-Object -First 1
+        if (-not $coverageFile) {
+          throw "Cobertura coverage report was not produced."
+        }
+
+        [xml]$coverage = Get-Content $coverageFile.FullName
+        $lineCoverage = [double]$coverage.coverage.'line-rate'
+        "Code coverage: **$($lineCoverage.ToString('P2'))**" >> $env:GITHUB_STEP_SUMMARY
+
+    - name: Verify benchmark discovery
+      run: dotnet run --project ${{ env.BenchmarkProject }} --configuration ${{ env.Configuration }} --no-build -- --list flat
+
+    - name: Run benchmarks
+      if: ${{ github.event_name == 'workflow_dispatch' && inputs.run_benchmarks }}
+      run: dotnet run --project ${{ env.BenchmarkProject }} --configuration ${{ env.Configuration }} --no-build -- --job Short --exporters json
+
+    - name: Upload benchmark results
+      if: ${{ github.event_name == 'workflow_dispatch' && inputs.run_benchmarks }}
+      uses: actions/upload-artifact@v7
+      with:
+        name: BenchmarkDotNet-results
+        path: BenchmarkDotNet.Artifacts/**
+        if-no-files-found: error
 
     - name: Upload artifact
       uses: actions/upload-artifact@v7
       with:
-        name: EditorConfig.vsix
-        path: /_built/**/*.vsix
+        name: ${{ github.event.repository.name }}.vsix
+        path: src\bin\${{ env.Configuration }}\net48\EditorConfig.vsix
+        if-no-files-found: error
 
   publish:
     if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
     needs: build
     runs-on: windows-latest
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    permissions:
+      contents: write
 
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
 
       - name: Download Package artifact
         uses: actions/download-artifact@v8
         with:
-          name: EditorConfig.vsix
+          name: ${{ github.event.repository.name }}.vsix
 
       - name: Upload to Open VSIX
-        uses: timheuer/openvsixpublish@v1
+        uses: madskristensen/publish-vsixgallery@v1
         with:
-          vsix-file: EditorConfig.vsix
+          vsix-file: ${{ github.event.repository.name }}.vsix
 
       - name: Publish extension to Marketplace
         if: ${{ github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[release]') }}
-        uses: cezarypiatek/VsixPublisherAction@1.2
+        uses: madskristensen/publish-marketplace@v2
         with:
-          extension-file: 'EditorConfig.vsix'
+          extension-file: '${{ github.event.repository.name }}.vsix'
           publish-manifest-file: 'vs-publish.json'
           personal-access-code: ${{ secrets.VS_PUBLISHER_ACCESS_TOKEN }}
 

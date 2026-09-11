@@ -57,6 +57,10 @@ namespace EditorConfig
             Create("EC119", ErrorCategory.Suggestion, Resources.Text.ValidationUnusedStyle);
         public static Error NamingRuleReordered { get; } =
             Create("EC120", ErrorCategory.Warning, Resources.Text.NamingRuleReordered);
+        public static Error DeprecatedProperty { get; } =
+            Create("EC121", ErrorCategory.Warning, Resources.Text.ValidationDeprecatedProperty);
+        public static Error UnknownReference { get; } =
+            Create("EC122", ErrorCategory.Error, Resources.Text.ValidationUnknownReference);
 
         public static bool TryGetErrorCode(string code, out Error errorCode)
         {

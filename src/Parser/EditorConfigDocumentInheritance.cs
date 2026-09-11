@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.Utilities;
 using System;
 using System.ComponentModel.Composition;
 using System.IO;
+using System.Linq;
 
 namespace EditorConfig
 {
@@ -38,9 +39,15 @@ namespace EditorConfig
             }
         }
 
-        /// <summary>Returns true if this is a .globalconfig file.</summary>
+        /// <summary>Returns true if this is a global analyzer configuration file.</summary>
         public bool IsGlobalConfig =>
-            FileName != null && FileName.EndsWith(Constants.GlobalConfigFileName, StringComparison.OrdinalIgnoreCase);
+            FileName != null && FileName.EndsWith(Constants.GlobalConfigFileName, StringComparison.OrdinalIgnoreCase) ||
+            Properties.Any(IsGlobalConfigMarker);
+
+        internal static bool IsGlobalConfigMarker(Property property)
+            => property.Keyword.Text.Is(Constants.GlobalConfigIsGlobalPropertyName) &&
+               property.Value?.Text.Is("true") == true &&
+               property.Severity == null;
 
         private void InitializeInheritance()
         {

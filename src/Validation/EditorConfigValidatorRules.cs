@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 using EditorConfig.Validation.NamingStyles;
 
@@ -98,14 +97,6 @@ namespace EditorConfig
                         }
                     });
 
-                    ErrorCatalog.UnknownStyle.Run(property.Keyword, IsDotNetNamingRuleStyle(property), (e) =>
-                    {
-                        if (!section.Properties.Any(p => p.Keyword.Text.Is($"dotnet_naming_style.{property.Value.Text}.capitalization")))
-                        {
-                            e.Register(property.Value, property.Value.Text);
-                        }
-                    });
-
                     ErrorCatalog.UnusedStyle.Run(property.Keyword, IsDotNetNamingStyle(property), (e) =>
                     {
                         string namingStyleText = GetDotNetNamingStyleText(property);
@@ -115,6 +106,8 @@ namespace EditorConfig
                         }
                     });
                 }
+
+                ValidateReferences(section.Properties);
 
                 ErrorCatalog.SectionSyntaxError.Run(section.Item, (e) =>
                 {
@@ -369,6 +362,9 @@ namespace EditorConfig
                     }
                 });
             }
+
+            if (_document.IsGlobalConfig)
+                ValidateReferences(_document.Properties);
         }
 
         internal static bool ShouldReportOnlyRootAllowed(bool isGlobalConfig, bool isRootProperty)
@@ -399,29 +395,15 @@ namespace EditorConfig
 
             ErrorCatalog.UnknownValue.Run(property.Value, hasKeyword, (e) =>
             {
-                if (!(int.TryParse(property.Value.Text, out int intValue) && intValue > 0))
+                if (!SchemaValueValidator.IsValid(keyword, property.Value.Text))
                 {
-                    if (keyword.SupportsMultipleValues)
-                    {
-                        if (!keyword.Values.Any(v => Regex.IsMatch(v.Name, "<.+>")))
-                        {
-                            foreach (string value in property.Value.Text?.Split([','], StringSplitOptions.RemoveEmptyEntries))
-                            {
-                                if (!keyword.Values.Any(v => v.Name.Is(value.Trim())))
-                                {
-                                    e.Register(value, keyword.Name);
-                                }
-                            }
-                        }
-                    }
-                    else if (!keyword.Values.Any(v => Regex.IsMatch(v.Name, "<.+>")))
-                    {
-                        if (keyword.Values.Count() > 0 && !keyword.Values.Any(v => v.Name.Is(property.Value.Text)))
-                        {
-                            e.Register(property.Value.Text, keyword.Name);
-                        }
-                    }
+                    e.Register(property.Value.Text, keyword.Name);
                 }
+            });
+
+            ErrorCatalog.DeprecatedProperty.Run(property.Keyword, hasKeyword && keyword.IsDeprecated, (e) =>
+            {
+                e.Register(property.Keyword.Text);
             });
 
             ErrorCatalog.SeverityNotApplicable.Run(property.Severity, hasKeyword, (e) =>
@@ -439,6 +421,39 @@ namespace EditorConfig
                     e.Register(property.Severity.Text);
                 }
             });
+        }
+
+        private static void ValidateReferences(IEnumerable<Property> properties)
+        {
+            List<Property> allProperties = [.. properties];
+
+            foreach (Property property in allProperties)
+            {
+                if (property.Value == null ||
+                    !SchemaCatalog.TryGetKeyword(property.Keyword.Text, out Keyword referenceKeyword) ||
+                    string.IsNullOrEmpty(referenceKeyword.ReferenceKind))
+                {
+                    continue;
+                }
+
+                bool declarationExists = allProperties.Any(candidate =>
+                    SchemaCatalog.TryGetKeyword(candidate.Keyword.Text, out Keyword declarationKeyword) &&
+                    referenceKeyword.ReferenceKind.Is(declarationKeyword.DeclarationKind) &&
+                    declarationKeyword.TryGetPlaceholderValue(candidate.Keyword.Text, out string declarationName) &&
+                    declarationName.Is(property.Value.Text));
+
+                Error error = referenceKeyword.ReferenceKind.Is("naming_style")
+                    ? ErrorCatalog.UnknownStyle
+                    : ErrorCatalog.UnknownReference;
+
+                error.Run(property.Keyword, !declarationExists, e =>
+                {
+                    if (error == ErrorCatalog.UnknownStyle)
+                        e.Register(property.Value, property.Value.Text);
+                    else
+                        e.Register(property.Value, referenceKeyword.ReferenceKind, property.Value.Text);
+                });
+            }
         }
 
         private bool TryValidateGlobalConfigMetadata(Property property)

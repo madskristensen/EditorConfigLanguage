@@ -49,6 +49,7 @@
       "description": "Preferred file header template. Use 'unset' to remove any existing file header.",
       "values": [ "unset", "<file_header>" ],
       "defaultValue": [ "unset" ],
+      "valueKind": "free_form",
       "severity": true,
       "defaultSeverity": "silent",
       "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0073"
@@ -66,6 +67,8 @@
       "description": "A whole number defining the number of columns used for each indentation level and the width of soft tabs (when supported). When set to tab, the value of tab_width (if specified) will be used.",
       "values": [ 2, "tab", "unset" ],
       "defaultValue": [ "unset" ],
+      "valueKind": "integer",
+      "minimum": 1,
       "documentationLink": "https://github.com/editorconfig/editorconfig/wiki/EditorConfig-Properties#indent_size",
       "example": "  int x = 5;"
     },
@@ -81,6 +84,8 @@
       "description": "A whole number defining the number of columns used to represent a tab character. This defaults to the value of indent_size and doesn't usually need to be specified.",
       "values": [ 2, 4, "unset" ],
       "defaultValue": [ "unset" ],
+      "valueKind": "integer",
+      "minimum": 1,
       "documentationLink": "https://github.com/editorconfig/editorconfig/wiki/EditorConfig-Properties#tab_width"
     },
     {
@@ -95,6 +100,8 @@
       "description": "Forces hard line wrapping after the amount of characters specified.",
       "values": [ 80, "off", "unset" ],
       "defaultValue": [ "off" ],
+      "valueKind": "integer",
+      "minimum": 1,
       "documentationLink": "https://github.com/editorconfig/editorconfig/wiki/EditorConfig-Properties#max_line_length",
       "unsupported": true
     },
@@ -103,6 +110,7 @@
       "description": "Specifies the natural language used for spell checking as a language tag.",
       "values": [ "<language_tag>", "unset" ],
       "defaultValue": [ "unset" ],
+      "valueKind": "language_tag",
       "documentationLink": "https://spec.editorconfig.org/#supported-pairs"
     },
     {
@@ -111,6 +119,8 @@
       "values": [ 80, "<column>", "unset" ],
       "defaultValue": [ "unset" ],
       "multiple": true,
+      "valueKind": "integer",
+      "minimum": 1,
       "documentationLink": "https://github.com/editorconfig/editorconfig/issues/89"
     },
     // .NET properties
@@ -1200,6 +1210,7 @@
       "description": "Naming rule symbols.",
       "values": [ "<identifier>" ],
       "defaultValue": [ "<identifier>" ],
+      "referenceKind": "naming_symbols",
       "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-naming-conventions"
     },
     {
@@ -1207,6 +1218,7 @@
       "description": "Naming rule style.",
       "values": [ "<identifier>" ],
       "defaultValue": [ "<identifier>" ],
+      "referenceKind": "naming_style",
       "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-naming-conventions"
     },
     {
@@ -1215,6 +1227,7 @@
       "values": [ "*", "namespace", "class", "struct", "interface", "enum", "property", "method", "field", "event", "delegate", "parameter", "type_parameter", "local", "local_function" ],
       "defaultValue": [ "*" ],
       "multiple": true,
+      "declarationKind": "naming_symbols",
       "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-naming-conventions"
     },
     {
@@ -1238,6 +1251,7 @@
       "description": "Required prefix.",
       "values": [ "<prefix>" ],
       "defaultValue": [ "<prefix>" ],
+      "valueKind": "free_form",
       "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-naming-conventions"
     },
     {
@@ -1245,6 +1259,7 @@
       "description": "Required suffix.",
       "values": [ "<suffix>" ],
       "defaultValue": [ "<suffix>" ],
+      "valueKind": "free_form",
       "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-naming-conventions"
     },
     {
@@ -1252,6 +1267,7 @@
       "description": "Word separator.",
       "values": [ "<word-separator>" ],
       "defaultValue": [ "<word-separator>" ],
+      "valueKind": "free_form",
       "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-naming-conventions"
     },
     {
@@ -1259,6 +1275,7 @@
       "description": "Capitalization.",
       "values": [ "pascal_case", "camel_case", "first_word_upper", "all_upper", "all_lower" ],
       "defaultValue": [ "pascal_case" ],
+      "declarationKind": "naming_style",
       "documentationLink": "https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-naming-conventions"
     },
     // Diagnostics properties
@@ -1920,6 +1937,7 @@
           "values": [ "en-us", "fr-fr", "de-de", "es-es", "it-it", "pt-br", "ja-jp", "zh-cn", "zh-tw", "ko-kr", "<language_tag>", "unset" ],
           "defaultValue": [ "en-us" ],
           "multiple": true,
+          "valueKind": "language_tag",
           "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/text-spell-checker?view=vs-2022"
         },
         {
@@ -1935,6 +1953,7 @@
           "description": "Specifies a path to a custom dictionary file where ignored words are stored. When using 'Ignore', Visual Studio adds words to this file.",
           "values": [ "<path_to_file>" ],
           "defaultValue": [ "" ],
+          "valueKind": "free_form",
           "documentationLink": "https://learn.microsoft.com/en-us/visualstudio/ide/text-spell-checker?view=vs-2022"
         },
         {

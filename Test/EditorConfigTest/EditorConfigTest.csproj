@@ -49,13 +49,13 @@
     <Compile Include="CompletionTest.cs" />
     <Compile Include="ErrorCatalogTest.cs" />
     <Compile Include="ExtensionsTest.cs" />
+    <Compile Include="Helpers\TestTextBufferFactory.cs" />
     <Compile Include="PropertyRegexTest.cs" />
     <Compile Include="SchemaCatalogTest.cs" />
     <Compile Include="SectionNameMatcherTest.cs" />
     <Compile Include="ValidationTest.cs" />
     <Compile Include="DocumentTest.cs" />
     <Compile Include="Helpers\Extensions.cs" />
-    <Compile Include="Helpers\Mef.cs" />
     <Compile Include="Helpers\Samples.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -77,6 +77,9 @@
     </PackageReference>
     <PackageReference Include="MSTest.TestFramework">
       <Version>4.0.2</Version>
+    </PackageReference>
+    <PackageReference Include="Moq">
+      <Version>4.20.72</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <IsPackable>false</IsPackable>
+    <AssemblyName>EditorConfigLanguage.Benchmarks</AssemblyName>
+    <RootNamespace>EditorConfigLanguage.Benchmarks</RootNamespace>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <StartupObject>EditorConfigLanguage.Benchmarks.Program</StartupObject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.15.8" />
+
+    <PackageReference Include="Microsoft.VisualStudio.Text.Data" Version="17.0.491" />
+    <PackageReference Include="Microsoft.VisualStudio.CoreUtility" Version="17.0.491" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\EditorConfig.csproj" />
+  </ItemGroup>
+
+</Project>

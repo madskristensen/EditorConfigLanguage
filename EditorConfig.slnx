@@ -3,6 +3,7 @@
     <Deploy Solution="Debug|Any CPU" />
   </Project>
   <Project Path="Test/EditorConfigTest/EditorConfigTest.csproj" Id="d4005889-6273-4725-af75-8a2ee92fa639" />
+  <Project Path="Benchmark/EditorConfigLanguage.Benchmarks/EditorConfigLanguage.Benchmarks.csproj" Id="76d70cb5-c9dc-4d96-90ed-100cd7e6a92e" />
   <Properties Name="Performance">
     <Property Name="HasPerformanceSessions" Value="true" />
   </Properties>

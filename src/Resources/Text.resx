@@ -144,6 +144,9 @@
   <data name="ValidationDuplicateSection" xml:space="preserve">
     <value>A section with the value "{0}" has already been defined.</value>
   </data>
+  <data name="ValidationDeprecatedProperty" xml:space="preserve">
+    <value>The property "{0}" is deprecated.</value>
+  </data>
   <data name="ValidationIndentSizeUnneeded" xml:space="preserve">
     <value>When "indent_style" is set to tab, it may be desirable to leave indent_size unspecified so readers may view the file using their preferred indentation width.</value>
   </data>
@@ -183,6 +186,9 @@
   </data>
   <data name="ValidationUnknownElement" xml:space="preserve">
     <value>Syntax error. Element not valid at current location.</value>
+  </data>
+  <data name="ValidationUnknownReference" xml:space="preserve">
+    <value>The {0} "{1}" is not declared.</value>
   </data>
   <data name="ValidationUnknownStyle" xml:space="preserve">
     <value>The style "{0}" is unknown. A capitalization style must always be specified.</value>

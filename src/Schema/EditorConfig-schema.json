@@ -42,6 +42,36 @@
         "example": {
             "type": "string",
             "description": "A code example showing the effect of this property"
+        },
+        "valueKind": {
+          "enum": [ "free_form", "integer", "language_tag" ],
+          "description": "Optional validation behavior for values not enumerated in values"
+        },
+        "minimum": {
+          "type": "integer"
+        },
+        "maximum": {
+          "type": "integer"
+        },
+        "deprecated": {
+          "type": "boolean"
+        },
+        "replacement": {
+          "type": "string"
+        },
+        "aliases": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "valueAliases": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "declarationKind": {
+          "type": "string"
+        },
+        "referenceKind": {
+          "type": "string"
         }
       }
     },

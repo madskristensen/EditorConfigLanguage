@@ -18,6 +18,7 @@ namespace EditorConfig
         // Lookup dictionaries for O(1) access
         private static Dictionary<string, Keyword> _keywordLookup;
         private static Dictionary<string, Severity> _severityLookup;
+        private static IReadOnlyList<Keyword> _compoundKeywords;
 
         static SchemaCatalog()
         {
@@ -49,51 +50,7 @@ namespace EditorConfig
             if (_keywordLookup.TryGetValue(name, out keyword))
                 return true;
 
-            // Slow path: pattern matching for dynamic naming rules
-            if (name.StartsWith("dotnet_naming_", StringComparison.OrdinalIgnoreCase) && name.IndexOf('.') > 0)
-            {
-                string[] parts = name.Split('.');
-
-                if (parts.Length >= 3)
-                {
-                    string first = $"{parts[0]}.";
-                    string last = $".{parts[parts.Length - 1]}";
-                    keyword = AllKeywords.FirstOrDefault(c => c.Name.StartsWith(first, StringComparison.OrdinalIgnoreCase) && c.Name.EndsWith(last, StringComparison.OrdinalIgnoreCase));
-                }
-            }
-            else if (name.StartsWith("dotnet_diagnostic.", StringComparison.OrdinalIgnoreCase))
-            {
-                string[] parts = name.Split('.');
-                if (parts.Length == 3
-                    && parts[0].Equals("dotnet_diagnostic", StringComparison.OrdinalIgnoreCase)
-                    && parts[2].Equals("severity", StringComparison.OrdinalIgnoreCase))
-                {
-                    _keywordLookup.TryGetValue("dotnet_diagnostic.<rule_id>.severity", out keyword);
-                }
-            }
-            else if (name.StartsWith("dotnet_analyzer_diagnostic.", StringComparison.OrdinalIgnoreCase))
-            {
-                string[] parts = name.Split('.');
-                if (parts.Length == 3
-                    && parts[0].Equals("dotnet_analyzer_diagnostic", StringComparison.OrdinalIgnoreCase)
-                    && parts[1].StartsWith("category-", StringComparison.OrdinalIgnoreCase)
-                    && parts[2].Equals("severity", StringComparison.OrdinalIgnoreCase))
-                {
-                    _keywordLookup.TryGetValue("dotnet_analyzer_diagnostic.category-<category>.severity", out keyword);
-                }
-            }
-            // Support for dotnet_code_quality.<rule_id>.<option> patterns used by .NET analyzers
-            else if (name.StartsWith("dotnet_code_quality.", StringComparison.OrdinalIgnoreCase))
-            {
-                string[] parts = name.Split('.');
-                // Matches patterns like: dotnet_code_quality.CA5391.exclude_aspnet_core_mvc_controllerbase
-                if (parts.Length >= 3
-                    && parts[0].Equals("dotnet_code_quality", StringComparison.OrdinalIgnoreCase))
-                {
-                    // These are valid .NET analyzer configuration options, accept them as known
-                    _keywordLookup.TryGetValue("dotnet_code_quality.<rule_id>.<option>", out keyword);
-                }
-            }
+            keyword = _compoundKeywords.FirstOrDefault(candidate => candidate.MatchesName(name));
 
             return keyword != null;
         }
@@ -142,7 +99,19 @@ namespace EditorConfig
                 VisibleKeywords = AllKeywords.Where(p => p.IsVisible);
 
                 // Build lookup dictionaries for O(1) access with case-insensitive comparison
-                _keywordLookup = AllKeywords.ToDictionary(k => k.Name, k => k, StringComparer.OrdinalIgnoreCase);
+                _keywordLookup = new Dictionary<string, Keyword>(StringComparer.OrdinalIgnoreCase);
+                foreach (Keyword keyword in AllKeywords)
+                {
+                    _keywordLookup[keyword.Name] = keyword;
+
+                    foreach (string alias in keyword.Aliases)
+                    {
+                        if (!_keywordLookup.ContainsKey(alias))
+                            _keywordLookup.Add(alias, keyword);
+                    }
+                }
+
+                _compoundKeywords = [.. AllKeywords.Where(keyword => keyword.Name.IndexOf('<') >= 0)];
                 _severityLookup = Severities.ToDictionary(s => s.Name, s => s, StringComparer.OrdinalIgnoreCase);
             }
         }

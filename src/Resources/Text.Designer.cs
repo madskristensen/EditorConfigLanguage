@@ -140,6 +140,15 @@ namespace EditorConfig.Resources {
                 return ResourceManager.GetString("ValidationDuplicateSection", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The property &quot;{0}&quot; is deprecated..
+        /// </summary>
+        internal static string ValidationDeprecatedProperty {
+            get {
+                return ResourceManager.GetString("ValidationDeprecatedProperty", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to When &quot;indent_style&quot; is set to tab, it may be desirable to leave indent_size unspecified so readers may view the file using their preferred indentation width..
@@ -256,6 +265,15 @@ namespace EditorConfig.Resources {
         internal static string ValidationUnknownElement {
             get {
                 return ResourceManager.GetString("ValidationUnknownElement", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to The {0} &quot;{1}&quot; is not declared..
+        /// </summary>
+        internal static string ValidationUnknownReference {
+            get {
+                return ResourceManager.GetString("ValidationUnknownReference", resourceCulture);
             }
         }
         

@@ -1,0 +1,4 @@
+# BenchmarkDotNet writes results/logs here on every run; keep the repo clean.
+BenchmarkDotNet.Artifacts/
+bin/
+obj/

@@ -8,12 +8,14 @@ namespace EditorConfig
     /// <summary>A representation of the .editorconfig document.</summary>
     sealed partial class EditorConfigDocument : IDisposable
     {
-        private EditorConfigDocument(ITextBuffer buffer)
+        private EditorConfigDocument(ITextBuffer buffer, bool initializeInheritance = true)
         {
             TextBuffer = buffer;
 
             InitializeParser();
-            InitializeInheritance();
+
+            if (initializeInheritance)
+                InitializeInheritance();
         }
 
         /// <summary>The ITextBuffer associated with the document.</summary>
@@ -45,6 +47,9 @@ namespace EditorConfig
         {
             return buffer.Properties.GetOrCreateSingletonProperty(() => new EditorConfigDocument(buffer));
         }
+
+        internal static EditorConfigDocument CreateForTest(ITextBuffer buffer, string fileName)
+            => new(buffer, initializeInheritance: false) { FileName = fileName };
 
         /// <summary>Returns all the parse items contained within the specified span.</summary>
         public IEnumerable<ParseItem> ItemsInSpan(Span span)

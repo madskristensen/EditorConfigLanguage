@@ -124,5 +124,36 @@ namespace EditorConfigTest
             Assert.IsTrue(EditorConfigValidator.IsValidGlobalConfigMetadataValue(Constants.GlobalConfigLevelPropertyName, "100"));
             Assert.IsFalse(EditorConfigValidator.IsValidGlobalConfigMetadataValue(Constants.GlobalConfigLevelPropertyName, "high"));
         }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task GlobalConfig_ArbitraryFileWithMarker_DoesNotReportOnlyRootAllowed()
+        {
+            var buffer = TestTextBufferFactory.CreateTextBuffer("is_global = true\r\ndotnet_diagnostic.CA1000.severity = warning");
+            using var document = EditorConfigDocument.CreateForTest(buffer, @"C:\repo\analyzers.props");
+            await document.WaitForParsingCompleteAsync();
+
+            Assert.IsTrue(document.IsGlobalConfig);
+            Assert.IsFalse(EditorConfigValidator.ShouldReportOnlyRootAllowed(document.IsGlobalConfig, isRootProperty: false));
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task GlobalConfig_ProjectNamedFile_IsImplicitlyGlobal()
+        {
+            var buffer = TestTextBufferFactory.CreateTextBuffer("dotnet_diagnostic.CA1000.severity = warning");
+            using var document = EditorConfigDocument.CreateForTest(buffer, @"C:\repo\ProjectName.globalconfig");
+            await document.WaitForParsingCompleteAsync();
+
+            Assert.IsTrue(document.IsGlobalConfig);
+        }
+
+        [TestMethod]
+        public async System.Threading.Tasks.Task GlobalConfig_MarkerMustBeRootLevelTrueWithoutSeverity()
+        {
+            var buffer = TestTextBufferFactory.CreateTextBuffer("[*.cs]\r\nis_global = true");
+            using var document = EditorConfigDocument.CreateForTest(buffer, @"C:\repo\analyzers.props");
+            await document.WaitForParsingCompleteAsync();
+
+            Assert.IsFalse(document.IsGlobalConfig);
+        }
     }
 }

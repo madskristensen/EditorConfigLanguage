@@ -9,14 +9,14 @@ using Microsoft.VisualStudio.Text;
 
 namespace EditorConfigTest
 {
-    [TestClass, Ignore]
+    [TestClass]
     public class DocumentTest
     {
-        [TestMethod, TestCategory("MEF")]
+        [TestMethod, TestCategory("Parser")]
         public async Task Parse()
         {
-            ITextBuffer buffer = Mef.CreateTextBuffer(Samples.OneSectionStandard);
-            var doc = EditorConfigDocument.FromTextBuffer(buffer);
+            ITextBuffer buffer = TestTextBufferFactory.CreateTextBuffer(Samples.OneSectionStandard);
+            using var doc = EditorConfigDocument.CreateForTest(buffer, @"C:\repo\.editorconfig");
 
             await doc.WaitForParsingCompleteAsync();
 
@@ -35,11 +35,11 @@ namespace EditorConfigTest
             Assert.IsTrue(section.Properties.All(p => p.IsValid));
         }
 
-        [TestMethod, TestCategory("MEF")]
+        [TestMethod, TestCategory("Parser")]
         public async Task MultipleValues()
         {
-            ITextBuffer buffer = Mef.CreateTextBuffer(Samples.MultipleValuesSection);
-            var doc = EditorConfigDocument.FromTextBuffer(buffer);
+            ITextBuffer buffer = TestTextBufferFactory.CreateTextBuffer(Samples.MultipleValuesSection);
+            using var doc = EditorConfigDocument.CreateForTest(buffer, @"C:\repo\.editorconfig");
 
             await doc.WaitForParsingCompleteAsync();
 
@@ -47,11 +47,11 @@ namespace EditorConfigTest
             Assert.AreEqual("accessors, indexers", doc.ParseItems.Last().Text);
         }
 
-        [TestMethod, TestCategory("MEF")]
+        [TestMethod, TestCategory("Parser")]
         public async Task Suppressions()
         {
-            ITextBuffer buffer = Mef.CreateTextBuffer(Samples.Suppression);
-            var doc = EditorConfigDocument.FromTextBuffer(buffer);
+            ITextBuffer buffer = TestTextBufferFactory.CreateTextBuffer(Samples.Suppression);
+            using var doc = EditorConfigDocument.CreateForTest(buffer, @"C:\repo\.editorconfig");
 
             await doc.WaitForParsingCompleteAsync();
 
@@ -61,16 +61,16 @@ namespace EditorConfigTest
             Assert.AreEqual(5, doc.ParseItems[1].Span.Length);
         }
 
-                [TestMethod]
-                public void NamingRules()
-                {
-                    string testDir = Path.GetDirectoryName(typeof(DocumentTest).Assembly.Location);
-                    string file = Path.Combine(testDir, "schema", "EditorConfig.json");
-                    SchemaCatalog.ParseJson(file);
+        [TestMethod]
+        public void NamingRules()
+        {
+            string testDir = Path.GetDirectoryName(typeof(DocumentTest).Assembly.Location);
+            string file = Path.Combine(testDir, "schema", "EditorConfig.json");
+            SchemaCatalog.ParseJson(file);
 
-                    bool exist = SchemaCatalog.TryGetKeyword("dotnet_naming_rule.foo.symbols", out _);
+            bool exist = SchemaCatalog.TryGetKeyword("dotnet_naming_rule.foo.symbols", out _);
 
-                    Assert.IsTrue(exist);
-                }
-            }
+            Assert.IsTrue(exist);
         }
+    }
+}

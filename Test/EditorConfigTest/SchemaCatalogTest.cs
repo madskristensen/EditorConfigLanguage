@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -373,6 +374,89 @@ namespace EditorConfigTest
             Assert.IsNotNull(keyword);
             Assert.AreEqual("spelling_error_severity", keyword.Name);
             Assert.AreEqual(Category.VisualStudio, keyword.Category);
+        }
+
+        [TestMethod]
+        public void ValueConstraints_ValidateOpenAndBoundedValues()
+        {
+            Assert.IsTrue(SchemaCatalog.TryGetKeyword("spelling_languages", out Keyword languages));
+            Assert.IsTrue(SchemaValueValidator.IsValid(languages, "en-us,da-dk"));
+            Assert.IsTrue(SchemaValueValidator.IsValid(languages, "zh-Hant-TW"));
+            Assert.IsTrue(SchemaValueValidator.IsValid(languages, "zh-cmn-Hans-CN"));
+            Assert.IsFalse(SchemaValueValidator.IsValid(languages, "en_US"));
+
+            Assert.IsTrue(SchemaCatalog.TryGetKeyword("indent_size", out Keyword indentSize));
+            Assert.IsTrue(SchemaValueValidator.IsValid(indentSize, "tab"));
+            Assert.IsTrue(SchemaValueValidator.IsValid(indentSize, "8"));
+            Assert.IsFalse(SchemaValueValidator.IsValid(indentSize, "0"));
+
+            Assert.IsTrue(SchemaCatalog.TryGetKeyword("file_header_template", out Keyword header));
+            Assert.IsTrue(SchemaValueValidator.IsValid(header, "Copyright (c) Example"));
+
+            var bounded = new Keyword(
+                "bounded",
+                "",
+                [],
+                [],
+                false,
+                false,
+                false,
+                false,
+                null,
+                null,
+                null,
+                valueKind: SchemaValueValidator.Integer,
+                minimum: 1,
+                maximum: 10);
+            Assert.IsTrue(SchemaValueValidator.IsValid(bounded, "10"));
+            Assert.IsFalse(SchemaValueValidator.IsValid(bounded, "11"));
+        }
+
+        [TestMethod]
+        public void OptionalSchemaMetadata_PreservesLegacyConstructionAndSupportsAliases()
+        {
+            var legacy = new Keyword("legacy", "", [], [], false, false, false, false, null, null, null);
+            Assert.IsTrue(legacy.MatchesName("legacy"));
+
+            var extended = new Keyword(
+                "canonical",
+                "",
+                ["canonical_value"],
+                [],
+                false,
+                false,
+                false,
+                false,
+                null,
+                null,
+                null,
+                aliases: ["old_name"],
+                valueAliases: new Dictionary<string, string>
+                {
+                    ["old_value"] = "canonical_value"
+                },
+                deprecated: true,
+                replacement: "preferred");
+
+            Assert.IsTrue(extended.MatchesName("old_name"));
+            Assert.IsTrue(SchemaValueValidator.IsValid(extended, "old_value"));
+            Assert.IsTrue(extended.IsDeprecated);
+            Assert.AreEqual("preferred", extended.Replacement);
+        }
+
+        [TestMethod]
+        public void CompoundKeys_UseGenericPlaceholderMatching()
+        {
+            Assert.IsTrue(SchemaCatalog.TryGetKeyword("dotnet_code_quality.CA1000.some_option", out Keyword compound));
+            Assert.AreEqual("dotnet_code_quality.<rule_id>.<option>", compound.Name);
+
+            Assert.IsTrue(SchemaCatalog.TryGetKeyword("dotnet_naming_symbols.private_fields.applicable_kinds", out Keyword declaration));
+            Assert.AreEqual("naming_symbols", declaration.DeclarationKind);
+            Assert.IsTrue(declaration.TryGetPlaceholderValue("dotnet_naming_symbols.private_fields.applicable_kinds", out string declarationName));
+            Assert.AreEqual("private_fields", declarationName);
+
+            Assert.IsTrue(SchemaCatalog.TryGetKeyword("dotnet_naming_rule.private_fields.symbols", out Keyword reference));
+            Assert.AreEqual("naming_symbols", reference.ReferenceKind);
         }
     }
 }

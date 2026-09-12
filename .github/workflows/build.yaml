@@ -7,12 +7,6 @@ on:
   pull_request:
     branches: [master]
   workflow_dispatch:
-    inputs:
-      run_benchmarks:
-        description: Run the BenchmarkDotNet suite
-        required: false
-        type: boolean
-        default: false
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -32,7 +26,6 @@ jobs:
       DeployExtension: False
       Solution: EditorConfig.slnx
       TestProject: Test\EditorConfigTest\EditorConfigTest.csproj
-      BenchmarkProject: Benchmark\EditorConfigLanguage.Benchmarks\EditorConfigLanguage.Benchmarks.csproj
       TestResultsDirectory: ${{ github.workspace }}\TestResults
       VsixManifestPath: src\source.extension.vsixmanifest
       VsixManifestSourcePath: src\source.extension.cs
@@ -102,21 +95,6 @@ jobs:
         [xml]$coverage = Get-Content $coverageFile.FullName
         $lineCoverage = [double]$coverage.coverage.'line-rate'
         "Code coverage: **$($lineCoverage.ToString('P2'))**" >> $env:GITHUB_STEP_SUMMARY
-
-    - name: Verify benchmark discovery
-      run: dotnet run --project ${{ env.BenchmarkProject }} --configuration ${{ env.Configuration }} --no-build -- --list flat
-
-    - name: Run benchmarks
-      if: ${{ github.event_name == 'workflow_dispatch' && inputs.run_benchmarks }}
-      run: dotnet run --project ${{ env.BenchmarkProject }} --configuration ${{ env.Configuration }} --no-build -- --job Short --exporters json
-
-    - name: Upload benchmark results
-      if: ${{ github.event_name == 'workflow_dispatch' && inputs.run_benchmarks }}
-      uses: actions/upload-artifact@v7
-      with:
-        name: BenchmarkDotNet-results
-        path: BenchmarkDotNet.Artifacts/**
-        if-no-files-found: error
 
     - name: Upload artifact
       uses: actions/upload-artifact@v7

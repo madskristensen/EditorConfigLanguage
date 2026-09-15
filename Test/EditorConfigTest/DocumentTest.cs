@@ -48,6 +48,22 @@ namespace EditorConfigTest
         }
 
         [TestMethod, TestCategory("Parser")]
+        public async Task TrailingComment()
+        {
+            const string source = "indent_size = 4 # comment";
+            ITextBuffer buffer = TestTextBufferFactory.CreateTextBuffer(source);
+            using var doc = EditorConfigDocument.CreateForTest(buffer, @"C:\repo\.editorconfig");
+
+            await doc.WaitForParsingCompleteAsync();
+
+            Assert.HasCount(3, doc.ParseItems);
+            Assert.AreEqual("4", doc.Properties[0].Value.Text);
+            Assert.AreEqual(ItemType.Comment, doc.ParseItems[2].ItemType);
+            Assert.AreEqual("# comment", doc.ParseItems[2].Text);
+            Assert.AreEqual(source.IndexOf('#'), doc.ParseItems[2].Span.Start);
+        }
+
+        [TestMethod, TestCategory("Parser")]
         public async Task Suppressions()
         {
             ITextBuffer buffer = TestTextBufferFactory.CreateTextBuffer(Samples.Suppression);

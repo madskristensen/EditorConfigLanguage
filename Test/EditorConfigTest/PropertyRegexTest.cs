@@ -76,12 +76,13 @@ namespace EditorConfigTest
         }
 
         [TestMethod]
-        public void InlineHashIsValueData()
+        public void PropertyWithTrailingHashComment()
         {
             Assert.IsTrue(EditorConfigDocument.TryMatchProperty("indent_size = 4 # comment", out var match));
 
             Assert.AreEqual("indent_size", match.Groups["keyword"].Value);
-            Assert.AreEqual("4 # comment", match.Groups["value"].Value.Trim());
+            Assert.AreEqual("4", match.Groups["value"].Value.Trim());
+            Assert.AreEqual("# comment", match.Groups["comment"].Value);
         }
 
         [TestMethod]
@@ -128,10 +129,11 @@ namespace EditorConfigTest
         }
 
         [TestMethod]
-        public void SemicolonInsideValueIsNotAComment()
+        public void PropertyWithTrailingSemicolonComment()
         {
             Assert.IsTrue(EditorConfigDocument.TryMatchProperty("custom_value = first;second", out var match));
-            Assert.AreEqual("first;second", match.Groups["value"].Value);
+            Assert.AreEqual("first", match.Groups["value"].Value);
+            Assert.AreEqual(";second", match.Groups["comment"].Value);
         }
     }
 }

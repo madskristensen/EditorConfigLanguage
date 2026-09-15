@@ -12,7 +12,7 @@ namespace EditorConfig
     partial class EditorConfigDocument
     {
         private const int _parseDelay = 150;
-        private static readonly Regex _property = new(@"^\s*(?<keyword>[^;\[#:\s=]+)\s*=\s*(?<value>.*?)(?:\s*:\s*(?<severity>none|silent|suggestion|warning|error|default|refactoring))?\s*$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex _property = new(@"^\s*(?<keyword>[^;\[#:\s=]+)\s*=\s*(?<value>.*?)(?:\s*:\s*(?<severity>none|silent|suggestion|warning|error|default|refactoring))?\s*(?<comment>[#;].*)?\s*$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private static readonly Regex _section = new(@"^\s*(?<section>\[.+)", RegexOptions.Compiled);
         private static readonly Regex _comment = new(@"^\s*[#;].*", RegexOptions.Compiled);
         private static readonly Regex _unknown = new(@"\s*(?<unknown>.+)", RegexOptions.Compiled);
@@ -164,6 +164,12 @@ namespace EditorConfig
                         ParseItem severity = CreateParseItem(ItemType.Severity, line, match.Groups["severity"]);
                         AddToList(items, severity);
                         property.Severity = severity;
+                    }
+
+                    if (match.Groups["comment"].Success)
+                    {
+                        ParseItem comment = CreateParseItem(ItemType.Comment, line, match.Groups["comment"]);
+                        AddToList(items, comment);
                     }
                 }
                 else

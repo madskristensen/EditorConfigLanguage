@@ -55,6 +55,19 @@ namespace EditorConfigTest
         }
 
         [TestMethod]
+        public async Task ValidateDocument_AcceptsTrailingCommentAfterValue()
+        {
+            const string source = """
+                [*.cs]
+                dotnet_style_prefer_foreach_explicit_cast_in_source = when_strongly_typed # IDE0220
+                """;
+
+            IReadOnlyList<string> codes = await ValidateAsync(source);
+
+            CollectionAssert.DoesNotContain(codes.ToArray(), "EC114");
+        }
+
+        [TestMethod]
         public async Task ValidateDocument_HonorsErrorSuppressions()
         {
             const string source = """

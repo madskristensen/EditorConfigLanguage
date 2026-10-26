@@ -14,44 +14,75 @@ using System.Windows.Threading;
 
 namespace EditorConfig
 {
-    class InheritanceAdornment : StackPanel
+    class InheritanceAdornment : StackPanel, IDisposable
     {
         private readonly IAdornmentLayer _adornmentLayer;
         private readonly EditorConfigDocument _document;
+        private readonly IWpfTextView _view;
+        private readonly ITextDocument _textDocument;
+        private bool _subscribed;
+        private bool _disposed;
 
         public InheritanceAdornment(IWpfTextView view, ITextDocument doc)
         {
             _adornmentLayer = view.GetAdornmentLayer(InheritanceAdornmentLayer.LayerName);
             _document = EditorConfigDocument.FromTextBuffer(view.TextBuffer);
+            _view = view;
+            _textDocument = doc;
 
             Visibility = System.Windows.Visibility.Hidden;
 
-            Loaded += (s, e) =>
-            {
-                Dispatcher.VerifyAccess();
-
-                CreateImage();
-                doc.FileActionOccurred += FileActionOccurred;
-                Updated += InheritanceUpdated;
-
-                view.ViewportHeightChanged += SetAdornmentLocation;
-                view.ViewportWidthChanged += SetAdornmentLocation;
-            };
+            Loaded += OnLoaded;
+            view.Closed += ViewClosed;
 
             if (_adornmentLayer.IsEmpty)
                 _adornmentLayer.AddAdornment(AdornmentPositioningBehavior.ViewportRelative, null, null, this, null);
         }
 
-                private void InheritanceUpdated(object sender, EventArgs e)
-                {
-        #pragma warning disable VSSDK007 // Await/join tasks created from ThreadHelper.JoinableTaskFactory.RunAsync
-                    _ = ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
-                    {
-                        await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                        CreateImage();
-                    });
-        #pragma warning restore VSSDK007 // Await/join tasks created from ThreadHelper.JoinableTaskFactory.RunAsync
-                }
+        private void OnLoaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            Dispatcher.VerifyAccess();
+            if (_disposed || _subscribed)
+                return;
+
+            _subscribed = true;
+            _textDocument.FileActionOccurred += FileActionOccurred;
+            Updated += InheritanceUpdated;
+            _view.ViewportHeightChanged += SetAdornmentLocation;
+            _view.ViewportWidthChanged += SetAdornmentLocation;
+            CreateImage();
+        }
+
+        private void InheritanceUpdated(object sender, EventArgs e)
+        {
+            ThreadHelper.JoinableTaskFactory.StartOnIdle(async () =>
+            {
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                if (!_disposed)
+                    CreateImage();
+            }, VsTaskRunContext.UIThreadIdlePriority).FileAndForget("EditorConfig/UpdateInheritanceAdornment");
+        }
+
+        private void ViewClosed(object sender, EventArgs e)
+        {
+            ThreadHelper.ThrowIfNotOnUIThread();
+            Dispose();
+        }
+
+        public void Dispose()
+        {
+            Dispatcher.VerifyAccess();
+            if (_disposed)
+                return;
+
+            _disposed = true;
+            Loaded -= OnLoaded;
+            _view.Closed -= ViewClosed;
+            _textDocument.FileActionOccurred -= FileActionOccurred;
+            Updated -= InheritanceUpdated;
+            _view.ViewportHeightChanged -= SetAdornmentLocation;
+            _view.ViewportWidthChanged -= SetAdornmentLocation;
+        }
 
         private void FileActionOccurred(object sender, TextDocumentFileActionEventArgs e)
         {
@@ -94,7 +125,8 @@ namespace EditorConfig
             ThreadHelper.Generic.BeginInvoke(DispatcherPriority.ApplicationIdle, () =>
 #pragma warning restore VSTHRD001 // Avoid legacy thread switching APIs
             {
-                SetAdornmentLocation(_adornmentLayer.TextView, EventArgs.Empty);
+                if (!_disposed)
+                    SetAdornmentLocation(_adornmentLayer.TextView, EventArgs.Empty);
             });
         }
 

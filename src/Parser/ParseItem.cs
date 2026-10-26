@@ -8,12 +8,15 @@ namespace EditorConfig
     /// <summary>A building block of the document.</summary>
     public class ParseItem(EditorConfigDocument document, ItemType type, Span span, string text)
     {
+        private readonly List<DisplayError> _errors = [];
 
         /// <summary>The document this item belongs to.</summary>
         public EditorConfigDocument Document { get; set; } = document;
 
         /// <summary>The span of this item in the text buffer.</summary>
         public Span Span { get; set; } = span;
+
+        internal ITextSnapshot Snapshot { get; set; }
 
         /// <summary>The type of item.</summary>
         public ItemType ItemType { get; set; } = type;
@@ -22,19 +25,39 @@ namespace EditorConfig
         public string Text { get; set; } = text;
 
         /// <summary>A list of validation errors.</summary>
-        public List<DisplayError> Errors { get; } = [];
+        public IReadOnlyList<DisplayError> Errors
+        {
+            get
+            {
+                lock (_errors)
+                    return _errors.ToArray();
+            }
+        }
 
         /// <summary>True if the item contains errors; otherwise false.</summary>
         public bool HasErrors
         {
-            get { return Errors.Count > 0; }
+            get
+            {
+                lock (_errors)
+                    return _errors.Count > 0;
+            }
         }
 
         /// <summary>Adds an error to the Errors list if it doesn't already contain it.</summary>
         public void AddError(DisplayError error)
         {
-            if (!Errors.Any(e => e.Name == error.Name))
-                Errors.Add(error);
+            lock (_errors)
+            {
+                if (!_errors.Any(e => e.Name == error.Name))
+                    _errors.Add(error);
+            }
+        }
+
+        internal void ClearErrors()
+        {
+            lock (_errors)
+                _errors.Clear();
         }
 
         public override string ToString()

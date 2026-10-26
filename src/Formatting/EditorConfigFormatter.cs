@@ -1,15 +1,14 @@
 using Microsoft.VisualStudio.Text;
 using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Threading;
 
 namespace EditorConfig
 {
     class EditorConfigFormatter
     {
         private readonly EditorConfigDocument _document;
-        private int _spaceBeforeEquals, _spaceAfterEquals;
-        private int _spaceBeforeColon, _spaceAfterColon;
 
         public EditorConfigFormatter(ITextBuffer buffer)
         {
@@ -18,104 +17,61 @@ namespace EditorConfig
 
         public bool Format()
         {
-            _spaceBeforeEquals = EditorConfigPackage.FormatterOptions.SpacesBeforeEquals;
-            _spaceAfterEquals = EditorConfigPackage.FormatterOptions.SpacesAfterEquals;
-            _spaceBeforeColon = EditorConfigPackage.FormatterOptions.SpacesBeforeColon;
-            _spaceAfterColon = EditorConfigPackage.FormatterOptions.SpacesAfterColon;
-
-            // Trim lines
-            bool changed = TrimLines();
-
-            // Format properties
-            using (ITextEdit edit = _document.TextBuffer.CreateEdit())
-            {
-                int keywordLength = GetKeywordLength();
-
-                FormatSection(edit, keywordLength);
-                FormatRoot(edit, keywordLength);
-
-                if (edit.HasEffectiveChanges)
-                {
-                    changed = true;
-                    edit.Apply();
-                }
-            }
-
-            return changed;
+            FormatterOptions options = EditorConfigPackage.FormatterOptions;
+            return Format(options.FormattingType, options.SpacesBeforeEquals, options.SpacesAfterEquals, options.SpacesBeforeColon, options.SpacesAfterColon);
         }
 
-        private bool TrimLines()
+        internal bool Format(FormattingType formattingType, int spaceBeforeEquals, int spaceAfterEquals, int spaceBeforeColon, int spaceAfterColon)
         {
-            bool changed = false;
+            using ITextEdit edit = _document.TextBuffer.CreateEdit();
+            EditorConfigDocument.ParseResult result = _document.ParseSnapshot(edit.Snapshot, CancellationToken.None);
+            Dictionary<int, string> replacements = GetFormattedLines(result, formattingType,
+                spaceBeforeEquals, spaceAfterEquals, spaceBeforeColon, spaceAfterColon);
 
-            using (ITextEdit edit = _document.TextBuffer.CreateEdit())
+            foreach (ITextSnapshotLine line in edit.Snapshot.Lines)
             {
-                foreach (ITextSnapshotLine line in _document.TextBuffer.CurrentSnapshot.Lines)
-                {
-                    string originalText = line.GetText();
-                    string newText = line.Extent.IsEmpty ? string.Empty : originalText.Trim();
-
-                    if (originalText != newText)
-                        edit.Replace(line.Start, line.Length, newText);
-                }
-
-                if (edit.HasEffectiveChanges)
-                {
-                    changed = true;
-                    edit.Apply();
-                }
+                string originalText = line.GetText();
+                string newText = replacements.TryGetValue(line.Start.Position, out string formatted) ? formatted : originalText.Trim();
+                if (originalText != newText)
+                    edit.Replace(line.Start, line.Length, newText);
             }
 
-            return changed;
+            if (!edit.HasEffectiveChanges)
+                return false;
+
+            edit.Apply();
+            return true;
         }
 
-        private int GetKeywordLength()
+        internal static Dictionary<int, string> GetFormattedLines(EditorConfigDocument.ParseResult result, FormattingType formattingType,
+            int spaceBeforeEquals, int spaceAfterEquals, int spaceBeforeColon, int spaceAfterColon)
         {
-            switch (EditorConfigPackage.FormatterOptions.FormattingType)
+            var replacements = new Dictionary<int, string>();
+            int documentWidth = formattingType == FormattingType.Document
+                ? result.Sections.SelectMany(section => section.Properties).Select(property => property.Keyword.Text.Length).DefaultIfEmpty().Max()
+                : 0;
+
+            foreach (Section section in result.Sections)
             {
-                case FormattingType.Section:
-                    return int.MinValue;
-                case FormattingType.Document:
-                    return _document.Sections.SelectMany(s => s.Properties).Select(p => p.Keyword.Text.Length).DefaultIfEmpty().Max();
-                default:
-                    return 0;
+                int width = formattingType == FormattingType.Section
+                    ? section.Properties.Select(property => property.Keyword.Text.Length).DefaultIfEmpty().Max()
+                    : documentWidth;
+                foreach (Property property in section.Properties.Where(property => property.IsValid))
+                    AddProperty(property, width);
             }
-        }
 
-        private void FormatRoot(ITextEdit edit, int keywordLength)
-        {
-            if (_document.Root != null)
+            Property root = result.Properties.FirstOrDefault(property => property.Keyword.Text.Is(SchemaCatalog.Root));
+            if (root != null)
+                AddProperty(root, documentWidth);
+
+            return replacements;
+
+            void AddProperty(Property property, int width)
             {
-                FormatProperty(_document.Root, Math.Max(keywordLength, 0), edit);
+                ITextSnapshotLine line = result.Snapshot.GetLineFromPosition(property.Keyword.Span.Start);
+                string suffix = line.GetText().Substring(property.Span.End - line.Start.Position).TrimEnd();
+                replacements[line.Start.Position] = FormatPropertyText(property, width, spaceBeforeEquals, spaceAfterEquals, spaceBeforeColon, spaceAfterColon) + suffix;
             }
-        }
-
-        private void FormatSection(ITextEdit edit, int keywordLength)
-        {
-            foreach (Section section in _document.Sections.Where(s => s.Properties.Any()).Reverse())
-            {
-                int length = keywordLength == int.MinValue ? section.Properties.Max(p => p.Keyword.Text.Length) : keywordLength;
-
-                foreach (Property property in section.Properties.Where(p => p.IsValid).Reverse())
-                {
-                    FormatProperty(property, length, edit);
-                }
-            }
-        }
-
-        private void FormatProperty(Property property, int keywordLength, ITextEdit edit)
-        {
-            string originalText = edit.Snapshot.GetText(property.Span);
-            string newText = FormatPropertyText(
-                property,
-                keywordLength,
-                _spaceBeforeEquals,
-                _spaceAfterEquals,
-                _spaceBeforeColon,
-                _spaceAfterColon);
-
-            if (originalText != newText)
-                edit.Replace(property.Span, newText);
         }
 
         internal static string FormatPropertyText(

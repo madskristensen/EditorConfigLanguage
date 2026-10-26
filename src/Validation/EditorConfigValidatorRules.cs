@@ -14,7 +14,7 @@ namespace EditorConfig
     {
         private void ValidateUnknown()
         {
-            foreach (ParseItem item in _document.ParseItems.Where(i => i.ItemType == ItemType.Unknown))
+            foreach (ParseItem item in _validationResult.Items.Where(i => i.ItemType == ItemType.Unknown))
             {
                 ErrorCatalog.UnknownElement.Run(item, (e) =>
                 {
@@ -28,7 +28,7 @@ namespace EditorConfig
             // Materialize parent documents once to avoid re-enumeration
             List<EditorConfigDocument> parents = [.. GetAllParentDocuments()];
 
-            foreach (Section section in _document.Sections)
+            foreach (Section section in _validationResult.Sections)
             {
                 // Materialize parentSections to avoid multiple enumerations in the inner loop
                 List<Section> parentSections = [.. parents
@@ -128,7 +128,7 @@ namespace EditorConfig
 
                 ErrorCatalog.DuplicateSection.Run(section.Item, (e) =>
                 {
-                    if (_document.Sections.First(s => s.Item.Text.Equals(section.Item.Text, StringComparison.OrdinalIgnoreCase)) != section)
+                    if (_validationResult.Sections.First(s => s.Item.Text.Equals(section.Item.Text, StringComparison.OrdinalIgnoreCase)) != section)
                     {
                         e.Register(section.Item.Text);
                     }
@@ -141,7 +141,7 @@ namespace EditorConfig
                         _globbingCache[section.Item.Text] = DoesFilesMatch(Path.GetDirectoryName(_document.FileName), section.Item.Text);
                     }
 
-                    if (!_globbingCache[section.Item.Text])
+                    if (_globbingCache[section.Item.Text] == MatchResult.NoMatch)
                     {
                         e.Register(section.Item.Text);
                     }
@@ -389,7 +389,7 @@ namespace EditorConfig
 
         private void ValidateRootProperties()
         {
-            foreach (Property property in _document.Properties)
+            foreach (Property property in _validationResult.Properties)
             {
                 if (_document.IsGlobalConfig)
                 {
@@ -407,7 +407,7 @@ namespace EditorConfig
             }
 
             if (_document.IsGlobalConfig)
-                ValidateReferences(_document.Properties);
+                ValidateReferences(_validationResult.Properties);
         }
 
         internal static bool ShouldReportOnlyRootAllowed(bool isGlobalConfig, bool isRootProperty)
@@ -550,67 +550,74 @@ namespace EditorConfig
             return false;
         }
 
-        private static bool DoesFilesMatch(string folder, string pattern, string root = null)
+        internal enum MatchResult
+        {
+            NoMatch,
+            Match,
+            Incomplete,
+        }
+
+        internal static MatchResult DoesFilesMatch(string folder, string pattern, string root = null)
         {
             root ??= folder;
             pattern = pattern.Trim('[', ']');
 
             // No reason to check file system since this will match at least the .editorconfig file itself
             if (pattern.Equals("*"))
-                return true;
+                return MatchResult.Match;
 
             AnalyzerConfig.SectionNameMatcher? matcher = AnalyzerConfig.TryCreateSectionNameMatcher(pattern);
             if (matcher is null)
-                return false;
+                return MatchResult.NoMatch;
 
             return DoesFilesMatch(folder, matcher.Value, root, 0);
         }
 
-        private static bool DoesFilesMatch(string folder, AnalyzerConfig.SectionNameMatcher matcher, string root, int depth)
+        private static MatchResult DoesFilesMatch(string folder, AnalyzerConfig.SectionNameMatcher matcher, string root, int depth)
         {
             // Limit recursion depth to prevent traversing huge directory trees
             if (depth > _maxRecursionDepth)
-                return false;
+                return MatchResult.Incomplete;
 
             // Early exit if this folder is in the ignore list
             if (ShouldIgnorePath(folder))
-                return false;
+                return MatchResult.NoMatch;
 
+            bool incomplete = false;
             try
             {
                 foreach (string file in Directory.EnumerateFiles(folder))
                 {
-                    string relative = file.Replace(root, string.Empty);
+                    string relative = file.Substring(root.Length);
 
                     if (CheckGlobbing(relative.Replace('\\', '/'), matcher))
-                        return true;
+                        return MatchResult.Match;
                 }
 
                 foreach (string directory in Directory.EnumerateDirectories(folder))
                 {
-                    if (!ShouldIgnorePath(directory) && DoesFilesMatch(directory, matcher, root, depth + 1))
-                    {
-                        return true;
-                    }
+                    if (ShouldIgnorePath(directory))
+                        continue;
+
+                    MatchResult result = DoesFilesMatch(directory, matcher, root, depth + 1);
+                    if (result == MatchResult.Match)
+                        return MatchResult.Match;
+
+                    incomplete |= result == MatchResult.Incomplete;
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException || ex is System.Security.SecurityException)
             {
                 Telemetry.TrackException("GlobbingValidator", ex);
-                return true;
+                return MatchResult.Incomplete;
             }
 
-            return false;
+            return incomplete ? MatchResult.Incomplete : MatchResult.NoMatch;
         }
 
         private static bool ShouldIgnorePath(string path)
         {
-            foreach (string ignorePath in _ignorePaths)
-            {
-                if (path.IndexOf(ignorePath, StringComparison.OrdinalIgnoreCase) >= 0)
-                    return true;
-            }
-            return false;
+            return path.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar).Any(_ignorePaths.Contains);
         }
 
         private static bool CheckGlobbing(string path, AnalyzerConfig.SectionNameMatcher matcher)

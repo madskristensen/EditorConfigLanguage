@@ -33,11 +33,13 @@ namespace EditorConfig
         {
             var tags = new List<ITagSpan<IErrorTag>>();
 
-            if (_document.IsParsing || _validator.IsValidating || spans.Count == 0 || spans[0].IsEmpty)
+            if (_validator.IsValidating || spans.Count == 0 || spans[0].IsEmpty ||
+                !_validator.HasValidatedSnapshot(spans[0].Snapshot) ||
+                !_document.TryGetParseResult(spans[0].Snapshot, out EditorConfigDocument.ParseResult result))
                 return tags;
 
             // Get all items that have errors, regardless of span
-            IEnumerable<ParseItem> itemsWithErrors = _document.ParseItems?.Where(p => p.HasErrors) ?? [];
+            IEnumerable<ParseItem> itemsWithErrors = result.Items.Where(p => p.HasErrors);
 
             foreach (ParseItem item in itemsWithErrors)
             {
@@ -46,7 +48,7 @@ namespace EditorConfig
                 {
                     if (requestedSpan.IntersectsWith(new Span(item.Span.Start, item.Span.Length)))
                     {
-                        tags.AddRange(CreateError(item));
+                        tags.AddRange(CreateError(item, result.Snapshot));
                         break; // Don't add same item multiple times
                     }
                 }
@@ -55,11 +57,11 @@ namespace EditorConfig
             return tags;
         }
 
-        private IEnumerable<TagSpan<ErrorTag>> CreateError(ParseItem item)
+        private IEnumerable<TagSpan<ErrorTag>> CreateError(ParseItem item, ITextSnapshot snapshot)
         {
             foreach (DisplayError error in item.Errors)
             {
-                var span = new SnapshotSpan(_document.TextBuffer.CurrentSnapshot, item.Span);
+                var span = new SnapshotSpan(snapshot, item.Span);
                 string errorType = GetErrorType(error.Category);
 
                 yield return new TagSpan<ErrorTag>(span, new ErrorTag(errorType, error.Name));

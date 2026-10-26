@@ -19,15 +19,20 @@ namespace EditorConfig
         // Use HashSet for O(1) lookup instead of array with LINQ Any()
         private static readonly HashSet<string> _ignorePaths = new(StringComparer.OrdinalIgnoreCase)
         {
-            "\\node_modules", "\\.git", "\\packages", "\\bower_components",
-            "\\jspm_packages", "\\testresults", "\\.vs", "\\bin", "\\obj"
+            "node_modules", ".git", "packages", "bower_components",
+            "jspm_packages", "testresults", ".vs", "bin", "obj"
         };
 
         private readonly EditorConfigDocument _document;
         private Timer _timer;
         private bool _prevEnabled = EnableValidation;
-        private readonly Dictionary<string, bool> _globbingCache = [];
+        private readonly Dictionary<string, MatchResult> _globbingCache = [];
         private readonly SemaphoreSlim _validationGate = new(1, 1);
+        private readonly object _timerGate = new();
+        private EditorConfigDocument.ParseResult _validationResult;
+        private ITextSnapshot _validatedSnapshot;
+        private int _clearGlobbingCache;
+        private volatile bool _disposed;
         private int _latestValidationRequestId;
         private int _validatedRequestId;
         private int _isValidating;
@@ -47,6 +52,8 @@ namespace EditorConfig
         }
 
         public bool IsValidating => Volatile.Read(ref _isValidating) != 0;
+
+        internal bool HasValidatedSnapshot(ITextSnapshot snapshot) => Volatile.Read(ref _validatedSnapshot) == snapshot;
 
         internal static bool EnableValidation => EditorConfigPackage.ValidationOptions?.EnableValidation ?? true;
 
@@ -76,12 +83,16 @@ namespace EditorConfig
 
         private void DocumentParsed(object sender, EventArgs e)
         {
+            if (_disposed)
+                return;
+
             if (!EnableValidation)
             {
                 // Don't run the logic unless the user changed the settings since last run
                 if (_prevEnabled != EnableValidation)
                 {
-                    ClearAllErrors();
+                    ClearAllErrors(_document.ParseItems);
+                    Volatile.Write(ref _validatedSnapshot, _document.TextBuffer.CurrentSnapshot);
                     Validated?.Invoke(this, EventArgs.Empty);
                 }
             }
@@ -96,24 +107,33 @@ namespace EditorConfig
         /// <summary>Schedules an async validation run.</summary>
         public async Task RequestValidationAsync(bool force)
         {
+            if (_disposed)
+                return;
+
             Interlocked.Increment(ref _latestValidationRequestId);
 
             if (force)
             {
-                _globbingCache.Clear();
+                Interlocked.Exchange(ref _clearGlobbingCache, 1);
                 await ValidateAsync();
             }
             else
             {
-                if (_timer == null)
+                lock (_timerGate)
                 {
-                    _timer = new Timer(_validationDelay);
-                    _timer.AutoReset = false;
-                    _timer.Elapsed += TimerElapsed;
-                }
+                    if (_disposed)
+                        return;
 
-                _timer.Stop();
-                _timer.Start();
+                    if (_timer == null)
+                    {
+                        _timer = new Timer(_validationDelay);
+                        _timer.AutoReset = false;
+                        _timer.Elapsed += TimerElapsed;
+                    }
+
+                    _timer.Stop();
+                    _timer.Start();
+                }
             }
         }
 
@@ -122,14 +142,11 @@ namespace EditorConfig
             _ = ValidateAsync();
         }
 
-        private void ClearAllErrors()
+        private static void ClearAllErrors(IEnumerable<ParseItem> items)
         {
-            foreach (ParseItem item in _document.ParseItems)
+            foreach (ParseItem item in items)
             {
-                if (item.Errors.Count > 0)
-                {
-                    item.Errors.Clear();
-                }
+                item.ClearErrors();
             }
         }
 
@@ -138,22 +155,37 @@ namespace EditorConfig
             await _validationGate.WaitAsync();
             try
             {
-                while (_validatedRequestId < Volatile.Read(ref _latestValidationRequestId))
+                while (!_disposed && _validatedRequestId < Volatile.Read(ref _latestValidationRequestId))
                 {
                     while (_document.IsParsing)
                         await _document.ParsingTask;
 
+                    if (_disposed)
+                        return;
+
                     int validationRequestId = Volatile.Read(ref _latestValidationRequestId);
+                    ITextSnapshot snapshot = _document.TextBuffer.CurrentSnapshot;
+                    if (!_document.TryGetParseResult(snapshot, out _validationResult))
+                        return;
+
+                    if (Interlocked.Exchange(ref _clearGlobbingCache, 0) != 0)
+                        _globbingCache.Clear();
+
                     Interlocked.Exchange(ref _isValidating, 1);
 
+                    bool succeeded = false;
                     await Task.Run(() =>
                     {
                         try
                         {
-                            ClearAllErrors();
-                            ValidateUnknown();
-                            ValidateRootProperties();
-                            ValidateSections();
+                            ClearAllErrors(_validationResult.Items);
+                            if (EnableValidation)
+                            {
+                                ValidateUnknown();
+                                ValidateRootProperties();
+                                ValidateSections();
+                            }
+                            succeeded = true;
                         }
                         catch (Exception ex)
                         {
@@ -162,7 +194,13 @@ namespace EditorConfig
                     });
 
                     _validatedRequestId = validationRequestId;
-                    Validated?.Invoke(this, EventArgs.Empty);
+                    Interlocked.Exchange(ref _isValidating, 0);
+                    if (!_disposed && succeeded && snapshot == _document.TextBuffer.CurrentSnapshot &&
+                        _document.TryGetParseResult(snapshot, out EditorConfigDocument.ParseResult current) && current == _validationResult)
+                    {
+                        Volatile.Write(ref _validatedSnapshot, snapshot);
+                        Validated?.Invoke(this, EventArgs.Empty);
+                    }
                 }
             }
             finally
@@ -199,8 +237,16 @@ namespace EditorConfig
 
         public void Dispose()
         {
-            _timer?.Dispose();
-            _timer = null;
+            lock (_timerGate)
+            {
+                _disposed = true;
+                if (_timer != null)
+                {
+                    _timer.Elapsed -= TimerElapsed;
+                    _timer.Dispose();
+                    _timer = null;
+                }
+            }
 
             Validated = null;
 

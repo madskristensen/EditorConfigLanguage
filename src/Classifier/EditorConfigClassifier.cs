@@ -32,14 +32,12 @@ namespace EditorConfig
         {
             var list = new List<ClassificationSpan>();
 
-            if (_document.IsParsing)
+            if (!_document.TryGetParseResult(span.Snapshot, out EditorConfigDocument.ParseResult result))
                 return list;
 
-            IEnumerable<ParseItem> parseItems = _document.ItemsInSpan(span);
-
-            foreach (ParseItem item in parseItems)
+            foreach (ParseItem item in result.Items)
             {
-                if (_map.TryGetValue(item.ItemType, out IClassificationType classificationType))
+                if (span.IntersectsWith(item.Span) && _map.TryGetValue(item.ItemType, out IClassificationType classificationType))
                 {
                     var snapshotSpan = new SnapshotSpan(span.Snapshot, item.Span);
                     list.Add(new ClassificationSpan(snapshotSpan, classificationType));

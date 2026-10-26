@@ -10,7 +10,9 @@ using Microsoft.VisualStudio.Text.Operations;
 using Microsoft.VisualStudio.TextManager.Interop;
 using Microsoft.VisualStudio.Utilities;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Linq;
 
 namespace EditorConfig
 {
@@ -56,13 +58,25 @@ namespace EditorConfig
             public EventHandler<TextDocumentFileActionEventArgs> DocumentSavedHandler { get; }
         }
 
+        private sealed class BufferViews
+        {
+            internal HashSet<IWpfTextView> Views { get; } = [];
+        }
+
+        internal static void RegisterView(IWpfTextView view)
+        {
+            view.TextBuffer.Properties.GetOrCreateSingletonProperty(() => new BufferViews()).Views.Add(view);
+            view.TextBuffer.Properties.RemoveProperty(typeof(IWpfTextView));
+            view.TextBuffer.Properties.AddProperty(typeof(IWpfTextView), view);
+        }
+
         public void VsTextViewCreated(IVsTextView textViewAdapter)
         {
             Telemetry.TrackOperation("FileOpened");
             IWpfTextView view = AdaptersFactory.GetWpfTextView(textViewAdapter);
             ITextBuffer buffer = view.TextBuffer;
 
-            buffer.Properties.GetOrCreateSingletonProperty(() => view);
+            RegisterView(view);
 
             ITextBufferUndoManager undoManager = UndoProvider.GetTextBufferUndoManager(view.TextBuffer);
 
@@ -135,15 +149,42 @@ namespace EditorConfig
                 viewState.Document.FileActionOccurred -= viewState.DocumentSavedHandler;
             }
 
+            CloseView(view);
+        }
+
+        internal static void CloseView(IWpfTextView view)
+        {
+            ITextBuffer buffer = view.TextBuffer;
+            if (buffer.Properties.TryGetProperty(typeof(BufferViews), out BufferViews state))
+            {
+                state.Views.Remove(view);
+                buffer.Properties.RemoveProperty(typeof(IWpfTextView));
+                if (state.Views.Count > 0)
+                {
+                    buffer.Properties.AddProperty(typeof(IWpfTextView), state.Views.First());
+                    return;
+                }
+
+                buffer.Properties.RemoveProperty(typeof(BufferViews));
+            }
+
             if (view.TextBuffer.Properties.TryGetProperty(typeof(EditorConfigDocument), out EditorConfigDocument doc))
             {
                 doc.Dispose();
+                buffer.Properties.RemoveProperty(typeof(EditorConfigDocument));
             }
 
             if (view.TextBuffer.Properties.TryGetProperty(typeof(EditorConfigValidator), out EditorConfigValidator val))
             {
                 val.Dispose();
+                buffer.Properties.RemoveProperty(typeof(EditorConfigValidator));
             }
+
+            if (buffer.Properties.TryGetProperty(typeof(ErrorTagger), out ErrorTagger tagger))
+                tagger.Dispose();
+
+            buffer.Properties.RemoveProperty(typeof(ErrorTagger));
+            buffer.Properties.RemoveProperty(typeof(EditorConfigClassifier));
         }
     }
 }

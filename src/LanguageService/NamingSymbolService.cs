@@ -52,7 +52,15 @@ namespace EditorConfig
         internal static bool TryGetSymbolAtPosition(EditorConfigDocument document, int position, out NamingSymbol symbol)
         {
             symbol = null;
-            Property property = document.PropertyAtPosition(position + 1);
+            return document.TryGetParseResult(document.TextBuffer.CurrentSnapshot, out EditorConfigDocument.ParseResult result) &&
+                TryGetSymbolAtPosition(result, position, out symbol);
+        }
+
+        internal static bool TryGetSymbolAtPosition(EditorConfigDocument.ParseResult result, int position, out NamingSymbol symbol)
+        {
+            symbol = null;
+            Property property = result.Properties.Concat(result.Sections.SelectMany(section => section.Properties))
+                .FirstOrDefault(candidate => candidate.Span.Contains(position));
             if (property == null)
                 return false;
 

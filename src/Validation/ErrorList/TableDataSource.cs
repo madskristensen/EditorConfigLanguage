@@ -14,7 +14,7 @@ namespace EditorConfig
     {
         private static TableDataSource _instance;
         private readonly List<SinkManager> _managers = [];
-        private static readonly Dictionary<string, TableEntriesSnapshot> _snapshots = [];
+        private readonly Dictionary<string, TableEntriesSnapshot> _snapshots = new(StringComparer.OrdinalIgnoreCase);
 
         [Import]
         private ITableManagerProvider TableManagerProvider { get; set; } = null;
@@ -49,7 +49,11 @@ namespace EditorConfig
 
         public bool HasErrors
         {
-            get { return _snapshots.Count > 0; }
+            get
+            {
+                lock (_managers)
+                    return _snapshots.Values.Any(snapshot => snapshot.Count > 0);
+            }
         }
 
         #region ITableDataSource members
@@ -81,6 +85,7 @@ namespace EditorConfig
             lock (_managers)
             {
                 _managers.Add(manager);
+                manager.UpdateSink(_snapshots.Values.ToArray());
             }
         }
 
@@ -98,9 +103,9 @@ namespace EditorConfig
         {
             lock (_managers)
             {
-                foreach (SinkManager manager in _managers)
+                foreach (SinkManager manager in _managers.ToArray())
                 {
-                    manager.UpdateSink(_snapshots.Values);
+                    manager.UpdateSink(_snapshots.Values.ToArray());
                 }
             }
         }
@@ -108,55 +113,50 @@ namespace EditorConfig
         public void AddErrors(IEnumerable<ParseItem> result, string projectName, string fileName)
         {
             var snapshot = new TableEntriesSnapshot(result, projectName, fileName);
-            _snapshots[fileName] = snapshot;
-
-            UpdateAllSinks();
+            lock (_managers)
+            {
+                _snapshots.TryGetValue(fileName, out TableEntriesSnapshot previous);
+                _snapshots[fileName] = snapshot;
+                UpdateAllSinks();
+                previous?.Dispose();
+            }
         }
 
         public void CleanErrors(params string[] urls)
         {
-            foreach (string url in urls)
-            {
-                if (_snapshots.ContainsKey(url))
-                {
-                    _snapshots[url].Dispose();
-                    _snapshots.Remove(url);
-                }
-            }
-
             lock (_managers)
             {
-                foreach (SinkManager manager in _managers)
+                foreach (string url in urls)
+                {
+                    if (_snapshots.TryGetValue(url, out TableEntriesSnapshot snapshot))
+                    {
+                        _snapshots.Remove(url);
+                        snapshot.Dispose();
+                    }
+                }
+
+                foreach (SinkManager manager in _managers.ToArray())
                 {
                     manager.RemoveSnapshots(urls);
                 }
+                UpdateAllSinks();
             }
-
-            UpdateAllSinks();
         }
 
         public void CleanAllErrors()
         {
-            foreach (string url in _snapshots.Keys)
-            {
-                TableEntriesSnapshot snapshot = _snapshots[url];
-                if (snapshot != null)
-                {
-                    snapshot.Dispose();
-                }
-            }
-
-            _snapshots.Clear();
-
             lock (_managers)
             {
-                foreach (SinkManager manager in _managers)
+                foreach (TableEntriesSnapshot snapshot in _snapshots.Values)
+                    snapshot.Dispose();
+
+                _snapshots.Clear();
+                foreach (SinkManager manager in _managers.ToArray())
                 {
                     manager.Clear();
                 }
+                UpdateAllSinks();
             }
-
-            UpdateAllSinks();
         }
     }
 }

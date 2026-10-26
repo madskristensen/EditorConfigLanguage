@@ -64,7 +64,7 @@ namespace EditorConfig
             // Property/Keyword completion
             else if (string.IsNullOrWhiteSpace(lineText) || parseItem?.ItemType == ItemType.Keyword || isTypingNewKeyword)
             {
-                bool isInRoot = !_document.ParseItems.Exists(p => p.ItemType == ItemType.Section && p.Span.Start < position);
+                bool isInRoot = !_document.ParseItems.Any(p => p.ItemType == ItemType.Section && p.Span.Start < position);
 
                 if (isInRoot)
                 {

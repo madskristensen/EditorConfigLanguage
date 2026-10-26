@@ -21,6 +21,7 @@ namespace EditorConfig
 
         internal void Clear()
         {
+            _snapshots.Clear();
             _sink.RemoveAllSnapshots();
         }
 
@@ -28,7 +29,7 @@ namespace EditorConfig
         {
             foreach (TableEntriesSnapshot snapshot in snapshots)
             {
-                TableEntriesSnapshot existing = _snapshots.FirstOrDefault(s => s.Url == snapshot.Url);
+                TableEntriesSnapshot existing = _snapshots.FirstOrDefault(s => string.Equals(s.Url, snapshot.Url, StringComparison.OrdinalIgnoreCase));
 
                 if (existing != null)
                 {
@@ -48,7 +49,7 @@ namespace EditorConfig
         {
             foreach (string url in urls)
             {
-                TableEntriesSnapshot existing = _snapshots.FirstOrDefault(s => s.Url == url);
+                TableEntriesSnapshot existing = _snapshots.FirstOrDefault(s => string.Equals(s.Url, url, StringComparison.OrdinalIgnoreCase));
 
                 if (existing != null)
                 {

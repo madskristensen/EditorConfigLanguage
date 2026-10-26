@@ -3,7 +3,6 @@ using EditorConfig;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
-using System.Reflection;
 
 namespace EditorConfigTest
 {
@@ -225,9 +224,9 @@ namespace EditorConfigTest
                 string deepestAllowed = CreateNestedDirectory(root, 5);
                 File.WriteAllText(Path.Combine(deepestAllowed, "target.cs"), "// test");
 
-                bool result = InvokeDoesFilesMatch(root, "[**/*.cs]");
+                EditorConfigValidator.MatchResult result = EditorConfigValidator.DoesFilesMatch(root, "[**/*.cs]");
 
-                Assert.IsTrue(result);
+                Assert.AreEqual(EditorConfigValidator.MatchResult.Match, result);
             }
             finally
             {
@@ -245,9 +244,9 @@ namespace EditorConfigTest
                 string beyondDepthLimit = CreateNestedDirectory(root, 6);
                 File.WriteAllText(Path.Combine(beyondDepthLimit, "target.cs"), "// test");
 
-                bool result = InvokeDoesFilesMatch(root, "[**/*.cs]");
+                EditorConfigValidator.MatchResult result = EditorConfigValidator.DoesFilesMatch(root, "[**/*.cs]");
 
-                Assert.IsFalse(result);
+                Assert.AreEqual(EditorConfigValidator.MatchResult.Incomplete, result);
             }
             finally
             {
@@ -265,30 +264,14 @@ namespace EditorConfigTest
                 string ignored = Directory.CreateDirectory(Path.Combine(root, "node_modules")).FullName;
                 File.WriteAllText(Path.Combine(ignored, "found.cs"), "// test");
 
-                bool result = InvokeDoesFilesMatch(root, "[*.cs]");
+                EditorConfigValidator.MatchResult result = EditorConfigValidator.DoesFilesMatch(root, "[*.cs]");
 
-                Assert.IsFalse(result);
+                Assert.AreEqual(EditorConfigValidator.MatchResult.NoMatch, result);
             }
             finally
             {
                 Directory.Delete(root, true);
             }
-        }
-
-        private static bool InvokeDoesFilesMatch(string folder, string pattern)
-        {
-            Type validatorType = typeof(EditorConfigDocument).Assembly.GetType("EditorConfig.EditorConfigValidator", true);
-            MethodInfo method = validatorType.GetMethod(
-                "DoesFilesMatch",
-                BindingFlags.Static | BindingFlags.NonPublic,
-                null,
-                [typeof(string), typeof(string), typeof(string)],
-                null);
-
-            Assert.IsNotNull(method);
-
-            object result = method.Invoke(null, [folder, pattern, null]);
-            return (bool)result;
         }
 
         private static string CreateTempRoot()

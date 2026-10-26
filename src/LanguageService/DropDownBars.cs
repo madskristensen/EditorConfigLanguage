@@ -42,7 +42,11 @@ namespace EditorConfig
 
         private void DocumentParsed(object sender, EventArgs e)
         {
-            UpdateElements();
+            _ = ThreadHelper.JoinableTaskFactory.StartOnIdle(() =>
+            {
+                UpdateElements();
+                return Task.CompletedTask;
+            }, VsTaskRunContext.UIThreadIdlePriority);
         }
 
         private void CaretPositionChanged(object sender, CaretPositionChangedEventArgs e)
@@ -101,11 +105,18 @@ namespace EditorConfig
 
         private void UpdateElements()
         {
+            ITextSnapshot snapshot = _buffer.CurrentSnapshot;
+            if (!_document.TryGetParseResult(snapshot, out EditorConfigDocument.ParseResult result))
+            {
+                _members ??= [];
+                return;
+            }
+
             var list = new List<DropDownItem>();
 
-            foreach (Section section in _document.Sections)
+            foreach (Section section in result.Sections)
             {
-                int lineNumber = _buffer.CurrentSnapshot.GetLineNumberFromPosition(section.Span.Start);
+                int lineNumber = snapshot.GetLineNumberFromPosition(section.Span.Start);
 
                 if (lineNumber > 0 && !list.Any())
                     list.Add(new DropDownItem("<Root>", 1));

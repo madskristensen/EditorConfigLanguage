@@ -15,6 +15,12 @@ on the official Visual Studio extension gallery.
 
 ## Unreleased
 
+- [x] Made formatting snapshot-safe and preserved trailing comments
+- [x] Isolated Error List state by document and fixed split-view service lifetime
+- [x] Published snapshot-owned parse results and refreshed diagnostics only after validation completed
+- [x] Released inheritance adornment subscriptions when views close
+- [x] Avoided false glob warnings for incomplete searches and similarly named directories
+- [x] Updated CI actions, retained test and coverage results, and gated production coverage at 35% lines and 34% branches
 - [x] Fixed syntax highlighting disappearing after editing properties or section glob patterns
 
 ## 1.18

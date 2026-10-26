@@ -1,16 +1,51 @@
 using System;
 using System.Linq;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using EditorConfig;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.VisualStudio.Text;
+using Moq;
 
 namespace EditorConfigTest
 {
     [TestClass]
     public class FormattingBehaviorTest
     {
+        [TestMethod]
+        public async Task Format_UsesOneSnapshotAndPreservesComments()
+        {
+            const string source = "  root=true   # root\r\n  [*]  \r\n    indent_style=space   # keep\r\n  indent_size  =  4 \r\n";
+            var buffer = TestTextBufferFactory.CreateTextBuffer(source);
+            using var document = EditorConfigDocument.CreateForTest(buffer, @"C:\repo\.editorconfig");
+            buffer.Properties.AddProperty(typeof(EditorConfigDocument), document);
+            await document.WaitForParsingCompleteAsync();
+            var replacements = new List<(int Start, int Length, string Text)>();
+            var edit = new Mock<ITextEdit>();
+            edit.SetupGet(value => value.Snapshot).Returns(buffer.CurrentSnapshot);
+            edit.SetupGet(value => value.HasEffectiveChanges).Returns(true);
+            edit.Setup(value => value.Replace(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>()))
+                .Callback((int start, int length, string text) => replacements.Add((start, length, text)))
+                .Returns(true);
+            edit.Setup(value => value.Apply()).Returns(() =>
+            {
+                string text = source;
+                foreach (var replacement in replacements.OrderByDescending(value => value.Start))
+                    text = text.Remove(replacement.Start, replacement.Length).Insert(replacement.Start, replacement.Text);
+                return TestTextBufferFactory.SetText(buffer, text);
+            });
+            Mock.Get(buffer).Setup(value => value.CreateEdit()).Returns(edit.Object);
+
+            bool changed = new EditorConfigFormatter(buffer).Format(FormattingType.None, 1, 1, 0, 0);
+
+            Assert.IsTrue(changed);
+            Assert.AreEqual("root = true   # root\r\n[*]\r\nindent_style = space   # keep\r\nindent_size = 4\r\n", buffer.CurrentSnapshot.GetText());
+            Mock.Get(buffer).Verify(value => value.CreateEdit(), Times.Once);
+            edit.Verify(value => value.Apply(), Times.Once);
+        }
+
         [TestMethod]
         public void FormatPropertyText_AppliesAlignmentAndSeveritySpacing()
         {

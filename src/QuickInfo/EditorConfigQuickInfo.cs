@@ -16,10 +16,11 @@ namespace EditorConfig
         {
             SnapshotPoint? point = session.GetTriggerPoint(buffer.CurrentSnapshot);
 
-            if (!point.HasValue || point.Value.Position >= point.Value.Snapshot.Length)
+            if (!point.HasValue || point.Value.Position >= point.Value.Snapshot.Length || cancellationToken.IsCancellationRequested ||
+                !_document.TryGetParseResult(point.Value.Snapshot, out EditorConfigDocument.ParseResult result))
                 return Task.FromResult<QuickInfoItem>(null);
 
-            ParseItem item = _document.ItemAtPosition(point.Value);
+            ParseItem item = result.Items.FirstOrDefault(candidate => candidate.Span.Contains(point.Value.Position - 1));
 
             if (item == null)
                 return Task.FromResult<QuickInfoItem>(null);
@@ -27,21 +28,22 @@ namespace EditorConfig
             ITrackingSpan applicableToSpan = point.Value.Snapshot.CreateTrackingSpan(item.Span, SpanTrackingMode.EdgeNegative);
 
             // Handle errors first
-            if (item.Errors.Any())
+            DisplayError error = item.Errors.FirstOrDefault();
+            if (error != null)
             {
-                DisplayError error = item.Errors.First();
                 ContainerElement element = QuickInfoBuilder.BuildTooltip(error);
                 return Task.FromResult(new QuickInfoItem(applicableToSpan, element));
             }
 
-            Property property = _document.PropertyAtPosition(point.Value);
+            Property property = result.Properties.Concat(result.Sections.SelectMany(section => section.Properties))
+                .FirstOrDefault(candidate => candidate.Span.Contains(point.Value.Position - 1));
             SchemaCatalog.TryGetKeyword(property?.Keyword?.Text, out Keyword keyword);
 
-            if (NamingSymbolService.TryGetSymbolAtPosition(_document, point.Value.Position, out NamingSymbol symbol) &&
-                _document.NamingEntities.TryGetEntity(symbol.Kind, symbol.Name, out NamingEntity entity))
+            if (NamingSymbolService.TryGetSymbolAtPosition(result, point.Value.Position, out NamingSymbol symbol) &&
+                result.NamingEntities.TryGetEntity(symbol.Kind, symbol.Name, out NamingEntity entity))
             {
                 var symbolSpan = point.Value.Snapshot.CreateTrackingSpan(symbol.Span, SpanTrackingMode.EdgeNegative);
-                int referenceCount = _document.NamingEntities.GetReferences(symbol.Kind, symbol.Name).Count();
+                int referenceCount = result.NamingEntities.GetReferences(symbol.Kind, symbol.Name).Count();
                 ContainerElement element = QuickInfoBuilder.BuildTooltip(new NamingEntityTooltip(entity, referenceCount));
                 return Task.FromResult(new QuickInfoItem(symbolSpan, element));
             }

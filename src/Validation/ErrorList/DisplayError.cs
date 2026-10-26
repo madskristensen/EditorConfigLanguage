@@ -47,7 +47,8 @@ namespace EditorConfig
         /// <summary>Register the error on the specified ParseItem.</summary>
         public void Register(ParseItem item, params string[] tokens)
         {
-            var span = new SnapshotSpan(item.Document.TextBuffer.CurrentSnapshot, item.Span);
+            ITextSnapshot snapshot = item.Snapshot ?? item.Document.TextBuffer.CurrentSnapshot;
+            var span = new SnapshotSpan(snapshot, item.Span);
             ITextSnapshotLine line = span.Snapshot.GetLineFromPosition(span.Start);
 
             Line = line.LineNumber;

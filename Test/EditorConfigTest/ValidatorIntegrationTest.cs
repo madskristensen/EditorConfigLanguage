@@ -2,10 +2,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System;
 
 using EditorConfig;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text.Editor;
+using Microsoft.VisualStudio.Text.Tagging;
+using Microsoft.VisualStudio.Text.Adornments;
+using Moq;
 
 namespace EditorConfigTest
 {
@@ -18,6 +24,66 @@ namespace EditorConfigTest
         {
             string testDir = Path.GetDirectoryName(typeof(ValidatorIntegrationTest).Assembly.Location);
             SchemaCatalog.ParseJson(Path.Combine(testDir, "schema", "EditorConfig.json"));
+        }
+
+        [TestMethod]
+        public async Task ValidationNotificationExposesReadableSquiggles()
+        {
+            var buffer = TestTextBufferFactory.CreateTextBuffer("root=true\r\n[*]\r\nunknown_property=true");
+            using var document = EditorConfigDocument.CreateForTest(buffer, @"C:\repo\.editorconfig");
+            buffer.Properties.AddProperty(typeof(EditorConfigDocument), document);
+            await document.WaitForParsingCompleteAsync();
+            using EditorConfigValidator validator = EditorConfigValidator.FromDocument(document);
+            var view = new Mock<IWpfTextView>();
+            view.SetupGet(value => value.TextBuffer).Returns(buffer);
+            using var tagger = new ErrorTagger(view.Object);
+            bool busy = true;
+            bool snapshotReady = false;
+            ITagSpan<IErrorTag>[] tags = null;
+            validator.Validated += (sender, args) =>
+            {
+                busy = validator.IsValidating;
+                snapshotReady = validator.HasValidatedSnapshot(buffer.CurrentSnapshot);
+                tags = tagger.GetTags(new NormalizedSnapshotSpanCollection(new SnapshotSpan(buffer.CurrentSnapshot, 0, buffer.CurrentSnapshot.Length))).ToArray();
+            };
+
+            await validator.RequestValidationAsync(force: true);
+
+            Assert.IsFalse(busy);
+            Assert.IsTrue(snapshotReady);
+            Assert.IsNotNull(tags);
+            Assert.HasCount(1, tags);
+            Assert.AreEqual("unknown_property", tags[0].Span.GetText());
+            Assert.AreEqual("EC112", tags[0].Tag.ToolTipContent);
+        }
+
+        [TestMethod]
+        public void GlobbingChecksFullDirectoryNamesAndIncompleteSearches()
+        {
+            string folder = Path.Combine(Path.GetTempPath(), "EditorConfigGlobbingTests_" + Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(folder);
+            try
+            {
+                string binary = Directory.CreateDirectory(Path.Combine(folder, "binary")).FullName;
+                File.WriteAllText(Path.Combine(binary, "match.cs"), "");
+                string excluded = Directory.CreateDirectory(Path.Combine(folder, "bin")).FullName;
+                File.WriteAllText(Path.Combine(excluded, "excluded.vb"), "");
+                Assert.AreEqual(EditorConfigValidator.MatchResult.Match, EditorConfigValidator.DoesFilesMatch(folder, "[*.cs]"));
+                Assert.AreEqual(EditorConfigValidator.MatchResult.NoMatch, EditorConfigValidator.DoesFilesMatch(folder, "[*.vb]"));
+                Assert.AreEqual(EditorConfigValidator.MatchResult.NoMatch, EditorConfigValidator.DoesFilesMatch(folder, "[*.missing]"));
+
+                string deep = folder;
+                for (int i = 0; i < 6; i++)
+                    deep = Directory.CreateDirectory(Path.Combine(deep, "nested")).FullName;
+                File.WriteAllText(Path.Combine(deep, "deep.txt"), "");
+                Assert.AreEqual(EditorConfigValidator.MatchResult.Incomplete, EditorConfigValidator.DoesFilesMatch(folder, "[*.txt]"));
+                Assert.AreEqual(EditorConfigValidator.MatchResult.Incomplete, EditorConfigValidator.DoesFilesMatch(folder, "[*.missing]"));
+                Assert.AreEqual(EditorConfigValidator.MatchResult.Match, EditorConfigValidator.DoesFilesMatch(folder, "[*.cs]"));
+            }
+            finally
+            {
+                Directory.Delete(folder, recursive: true);
+            }
         }
 
         [TestMethod]

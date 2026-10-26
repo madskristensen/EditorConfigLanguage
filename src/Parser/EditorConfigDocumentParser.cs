@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -19,12 +20,15 @@ namespace EditorConfig
         private static readonly Regex _suppress = new(@"^(?<comment>#\s*suppress\s*):?\s*(?<errors>[\w\s]*)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         private static readonly Regex _suppressionCode = new(@"\w+", RegexOptions.Compiled);
         private int _latestParseRequestId;
+        private readonly object _parseGate = new();
+        private ParseResult _parseResult = new(null, [], [], [], new(StringComparer.OrdinalIgnoreCase), NamingEntityIndex.Empty);
         private CancellationTokenSource _parseCancellation;
         private Task _parsingTask = Task.CompletedTask;
         private bool _parserDisposed;
+        private bool _isParsing;
 
         /// <summary>Returns true if the document is currently being parsed.</summary>
-        public bool IsParsing { get; private set; }
+        public bool IsParsing => Volatile.Read(ref _isParsing);
 
         private void InitializeParser()
         {
@@ -39,17 +43,21 @@ namespace EditorConfig
 
         private void RequestParse(ITextSnapshot snapshot, TimeSpan delay)
         {
-            if (_parserDisposed)
-                return;
+            lock (_parseGate)
+            {
+                if (_parserDisposed)
+                    return;
 
-            int parseRequestId = Interlocked.Increment(ref _latestParseRequestId);
-            var cancellation = new CancellationTokenSource();
-            CancellationTokenSource previous = Interlocked.Exchange(ref _parseCancellation, cancellation);
-            previous?.Cancel();
-            previous?.Dispose();
+                int parseRequestId = ++_latestParseRequestId;
+                var cancellation = new CancellationTokenSource();
+                CancellationTokenSource previous = _parseCancellation;
+                _parseCancellation = cancellation;
+                previous?.Cancel();
+                previous?.Dispose();
 
-            IsParsing = true;
-            _parsingTask = ParseAsync(snapshot, parseRequestId, delay, cancellation.Token);
+                Volatile.Write(ref _isParsing, true);
+                _parsingTask = ParseAsync(snapshot, parseRequestId, delay, cancellation.Token);
+            }
         }
 
         private async Task ParseAsync(ITextSnapshot snapshot, int parseRequestId, TimeSpan delay, CancellationToken cancellationToken)
@@ -62,16 +70,15 @@ namespace EditorConfig
                 ParseResult result = await Task.Run(() => ParseSnapshot(snapshot, cancellationToken), cancellationToken).ConfigureAwait(false);
                 cancellationToken.ThrowIfCancellationRequested();
 
-                if (parseRequestId != Volatile.Read(ref _latestParseRequestId))
-                    return;
+                lock (_parseGate)
+                {
+                    if (_parserDisposed || parseRequestId != _latestParseRequestId || snapshot != TextBuffer.CurrentSnapshot)
+                        return;
 
-                Suppressions = result.Suppressions;
-                ParseItems = result.Items;
-                Sections = result.Sections;
-                Properties = result.Properties;
-                NamingEntities = result.NamingEntities;
+                    Volatile.Write(ref _parseResult, result);
+                    Volatile.Write(ref _isParsing, false);
+                }
 
-                IsParsing = false;
                 Parsed?.Invoke(this, EventArgs.Empty);
             }
             catch (OperationCanceledException)
@@ -83,14 +90,15 @@ namespace EditorConfig
             }
             finally
             {
-                if (parseRequestId == Volatile.Read(ref _latestParseRequestId))
+                lock (_parseGate)
                 {
-                    IsParsing = false;
+                    if (parseRequestId == _latestParseRequestId)
+                        Volatile.Write(ref _isParsing, false);
                 }
             }
         }
 
-        private ParseResult ParseSnapshot(ITextSnapshot snapshot, CancellationToken cancellationToken)
+        internal ParseResult ParseSnapshot(ITextSnapshot snapshot, CancellationToken cancellationToken)
         {
             var items = new List<ParseItem>();
             var sections = new List<Section>();
@@ -184,7 +192,7 @@ namespace EditorConfig
                 section.NamingEntities = NamingEntityIndex.Create(section.Properties);
 
             NamingEntityIndex namingEntities = NamingEntityIndex.Create(sections.SelectMany(section => section.Properties));
-            return new ParseResult(items, sections, properties, suppressions, namingEntities);
+            return new ParseResult(snapshot, items, sections, properties, suppressions, namingEntities);
         }
 
         private void AddToList(List<ParseItem> items, ParseItem item)
@@ -211,35 +219,41 @@ namespace EditorConfig
             string trimmed = match.Value.TrimEnd();
             var matchSpan = new SnapshotSpan(line.Snapshot, line.Start.Position + match.Index, trimmed.Length);
 
-            var item = new ParseItem(this, type, matchSpan, trimmed);
+            var item = new ParseItem(this, type, matchSpan, trimmed) { Snapshot = line.Snapshot };
 
             return item;
         }
 
         private void DisposeParser()
         {
-            _parserDisposed = true;
-            TextBuffer.Changed -= BufferChanged;
-            Interlocked.Increment(ref _latestParseRequestId);
-            CancellationTokenSource cancellation = Interlocked.Exchange(ref _parseCancellation, null);
-            cancellation?.Cancel();
-            cancellation?.Dispose();
-            Parsed = null;
+            lock (_parseGate)
+            {
+                _parserDisposed = true;
+                TextBuffer.Changed -= BufferChanged;
+                ++_latestParseRequestId;
+                _parseCancellation?.Cancel();
+                _parseCancellation?.Dispose();
+                _parseCancellation = null;
+                Volatile.Write(ref _isParsing, false);
+                Parsed = null;
+            }
         }
 
-        internal Task ParsingTask => _parsingTask;
+        internal Task ParsingTask => Volatile.Read(ref _parsingTask);
 
-        private sealed class ParseResult(
+        internal sealed class ParseResult(
+            ITextSnapshot snapshot,
             List<ParseItem> items,
             List<Section> sections,
             List<Property> properties,
             HashSet<string> suppressions,
             NamingEntityIndex namingEntities)
         {
-            public List<ParseItem> Items { get; } = items;
-            public List<Section> Sections { get; } = sections;
-            public List<Property> Properties { get; } = properties;
-            public HashSet<string> Suppressions { get; } = suppressions;
+            public ITextSnapshot Snapshot { get; } = snapshot;
+            public IReadOnlyList<ParseItem> Items { get; } = items.AsReadOnly();
+            public IReadOnlyList<Section> Sections { get; } = sections.AsReadOnly();
+            public IReadOnlyList<Property> Properties { get; } = properties.AsReadOnly();
+            public ImmutableHashSet<string> Suppressions { get; } = suppressions.ToImmutableHashSet(StringComparer.OrdinalIgnoreCase);
             public NamingEntityIndex NamingEntities { get; } = namingEntities;
         }
 

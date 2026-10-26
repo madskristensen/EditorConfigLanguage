@@ -27,22 +27,24 @@ jobs:
       Solution: EditorConfig.slnx
       TestProject: Test\EditorConfigTest\EditorConfigTest.csproj
       TestResultsDirectory: ${{ github.workspace }}\TestResults
+      MinimumLineCoverage: 0.35
+      MinimumBranchCoverage: 0.34
       VsixManifestPath: src\source.extension.vsixmanifest
       VsixManifestSourcePath: src\source.extension.cs
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
 
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v3
 
     - name: Setup .NET
-      uses: actions/setup-dotnet@v5
+      uses: actions/setup-dotnet@v6
       with:
         dotnet-version: 9.0.x
 
     - name: Cache NuGet packages
-      uses: actions/cache@v5
+      uses: actions/cache@v6
       with:
         path: ~/.nuget/packages
         key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.slnx', '**/*.sln', '**/*.csproj', '**/packages.config', '**/packages.lock.json', '**/nuget.config') }}
@@ -72,6 +74,7 @@ jobs:
         --results-directory "${{ env.TestResultsDirectory }}"
         --logger "trx;LogFileName=test-results.trx"
         --collect "Code Coverage;Format=Cobertura"
+        -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.CodeCoverage.ModulePaths.Include.ModulePath=.*EditorConfig[.]dll$
 
     - name: Report test results
       uses: dorny/test-reporter@v3
@@ -94,7 +97,28 @@ jobs:
 
         [xml]$coverage = Get-Content $coverageFile.FullName
         $lineCoverage = [double]$coverage.coverage.'line-rate'
+        $branchCoverage = [double]$coverage.coverage.'branch-rate'
         "Code coverage: **$($lineCoverage.ToString('P2'))**" >> $env:GITHUB_STEP_SUMMARY
+        "Branch coverage: **$($branchCoverage.ToString('P2'))**" >> $env:GITHUB_STEP_SUMMARY
+
+        if ($lineCoverage -lt [double]"${{ env.MinimumLineCoverage }}") {
+          throw "Line coverage $lineCoverage is below the required ${{ env.MinimumLineCoverage }}."
+        }
+
+        if ($branchCoverage -lt [double]"${{ env.MinimumBranchCoverage }}") {
+          throw "Branch coverage $branchCoverage is below the required ${{ env.MinimumBranchCoverage }}."
+        }
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v7
+      if: ${{ !cancelled() }}
+      with:
+        name: test-results
+        path: |
+          TestResults/**/*.trx
+          TestResults/**/*.cobertura.xml
+        if-no-files-found: error
+        retention-days: 14
 
     - name: Upload artifact
       uses: actions/upload-artifact@v7
@@ -111,7 +135,7 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 1
 

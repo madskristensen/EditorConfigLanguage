@@ -16,11 +16,6 @@ namespace EditorConfig
     [TextViewRole(PredefinedTextViewRoles.PrimaryDocument)]
     public class ErrorList : IWpfTextViewCreationListener
     {
-        private EditorConfigValidator _validator;
-        private EditorConfigDocument _document;
-        private Project _project;
-        private string _file;
-
         [Import]
         private readonly ITextDocumentFactoryService _documentService = null;
 
@@ -28,49 +23,80 @@ namespace EditorConfig
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
-            if (_documentService.TryGetTextDocument(view.TextBuffer, out ITextDocument doc))
-            {
-                _file = doc.FilePath;
-                view.Properties.AddProperty("file", doc.FilePath);
-            }
-
-            _document = EditorConfigDocument.FromTextBuffer(view.TextBuffer);
-            _validator = EditorConfigValidator.FromDocument(_document);
-            _project = VsHelpers.DTE.Solution?.FindProjectItem(_file)?.ContainingProject;
-
-            view.Closed += ViewClosed;
-            _validator.Validated += Validated;
-        }
-
-        private void Validated(object sender, EventArgs e)
-        {
-            UpdateErrorList();
-        }
-
-        private void UpdateErrorList()
-        {
-            if (_document.IsParsing)
+            if (!_documentService.TryGetTextDocument(view.TextBuffer, out ITextDocument doc))
                 return;
 
-            ParseItem[] items = [.. _document.ParseItems.Where(p => p.HasErrors)];
-
-            TableDataSource.Instance.CleanErrors(_file);
-            TableDataSource.Instance.AddErrors(items, _project?.Name, _file);
+            DocumentController controller = view.TextBuffer.Properties.GetOrCreateSingletonProperty(() => new DocumentController(view.TextBuffer, doc.FilePath));
+            controller.Attach(view);
         }
 
-        private void ViewClosed(object sender, EventArgs e)
+        private sealed class DocumentController : IDisposable
         {
-            var view = (IWpfTextView)sender;
-            view.Closed -= ViewClosed;
+            private readonly EditorConfigValidator _validator;
+            private readonly EditorConfigDocument _document;
+            private readonly TableDataSource _table;
+            private readonly string _file;
+            private readonly string _projectName;
+            private int _views;
+            private volatile bool _disposed;
 
-            if (_validator != null)
+            internal DocumentController(ITextBuffer buffer, string file)
             {
-                _validator.Validated -= Validated;
+                ThreadHelper.ThrowIfNotOnUIThread();
+                _file = file;
+                _document = EditorConfigDocument.FromTextBuffer(buffer);
+                _validator = EditorConfigValidator.FromDocument(_document);
+                _projectName = VsHelpers.DTE.Solution?.FindProjectItem(file)?.ContainingProject?.Name;
+                _table = TableDataSource.Instance;
+                _validator.Validated += Validated;
             }
 
-            if (view.Properties.TryGetProperty("file", out string file))
+            internal void Attach(IWpfTextView view)
             {
-                TableDataSource.Instance.CleanErrors(file);
+                ThreadHelper.ThrowIfNotOnUIThread();
+                _views++;
+                view.Closed += ViewClosed;
+                UpdateErrorList();
+            }
+
+            private void Validated(object sender, EventArgs e)
+            {
+                ThreadHelper.JoinableTaskFactory.StartOnIdle(async () =>
+                {
+                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                    UpdateErrorList();
+                }, VsTaskRunContext.UIThreadIdlePriority).FileAndForget("EditorConfig/UpdateErrorList");
+            }
+
+            private void UpdateErrorList()
+            {
+                ThreadHelper.ThrowIfNotOnUIThread();
+                ITextSnapshot snapshot = _document.TextBuffer.CurrentSnapshot;
+                if (_disposed || _validator.IsValidating || !_validator.HasValidatedSnapshot(snapshot) ||
+                    !_document.TryGetParseResult(snapshot, out EditorConfigDocument.ParseResult result))
+                    return;
+
+                _table.AddErrors(result.Items.Where(item => item.HasErrors), _projectName, _file);
+            }
+
+            private void ViewClosed(object sender, EventArgs e)
+            {
+                ThreadHelper.ThrowIfNotOnUIThread();
+                var view = (IWpfTextView)sender;
+                view.Closed -= ViewClosed;
+                if (--_views == 0)
+                {
+                    Dispose();
+                    view.TextBuffer.Properties.RemoveProperty(typeof(DocumentController));
+                }
+            }
+
+            public void Dispose()
+            {
+                ThreadHelper.ThrowIfNotOnUIThread();
+                _disposed = true;
+                _validator.Validated -= Validated;
+                _table.CleanErrors(_file);
             }
         }
     }

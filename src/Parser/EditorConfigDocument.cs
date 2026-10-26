@@ -1,7 +1,9 @@
 using Microsoft.VisualStudio.Text;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
+using System.Threading;
 
 namespace EditorConfig
 {
@@ -22,18 +24,24 @@ namespace EditorConfig
         public ITextBuffer TextBuffer { get; }
 
         /// <summary>A list of all the parse items in the document.</summary>
-        public List<ParseItem> ParseItems { get; private set; } = [];
+        public IReadOnlyList<ParseItem> ParseItems => Volatile.Read(ref _parseResult).Items;
 
         /// <summary>A list of all the sections in the document.</summary>
-        public List<Section> Sections { get; private set; } = [];
+        public IReadOnlyList<Section> Sections => Volatile.Read(ref _parseResult).Sections;
 
         /// <summary>A list of all the properties in the root of the document.</summary>
-        public List<Property> Properties { get; private set; } = [];
+        public IReadOnlyList<Property> Properties => Volatile.Read(ref _parseResult).Properties;
 
         /// <summary>A set of all the error suppressions in the document (case-insensitive for O(1) lookups).</summary>
-        public HashSet<string> Suppressions { get; private set; } = new(StringComparer.OrdinalIgnoreCase);
+        public ImmutableHashSet<string> Suppressions => Volatile.Read(ref _parseResult).Suppressions;
 
-        internal NamingEntityIndex NamingEntities { get; private set; } = NamingEntityIndex.Empty;
+        internal NamingEntityIndex NamingEntities => Volatile.Read(ref _parseResult).NamingEntities;
+
+        internal bool TryGetParseResult(ITextSnapshot snapshot, out ParseResult result)
+        {
+            result = Volatile.Read(ref _parseResult);
+            return result.Snapshot == snapshot;
+        }
 
         /// <summary>The root property of the document if one is specified</summary>
         public Property Root

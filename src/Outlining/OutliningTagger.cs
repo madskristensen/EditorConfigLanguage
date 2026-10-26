@@ -70,7 +70,7 @@ namespace EditorConfig
             _ = ThreadHelper.JoinableTaskFactory.StartOnIdle(
                 () =>
                 {
-                    if (TagsChanged == null || _document.IsParsing)
+                    if (_isDisposed || TagsChanged == null || !_document.TryGetParseResult(_buffer.CurrentSnapshot, out _))
                         return Task.CompletedTask;
 
                     Regions.Clear();
@@ -84,9 +84,12 @@ namespace EditorConfig
         void ReParse()
         {
             ITextSnapshot newSnapshot = _buffer.CurrentSnapshot;
+            if (!_document.TryGetParseResult(newSnapshot, out EditorConfigDocument.ParseResult result))
+                return;
+
             var newRegions = new List<Region>();
 
-            foreach (Section section in _document.Sections)
+            foreach (Section section in result.Sections)
             {
                 ITextSnapshotLine startLine = newSnapshot.GetLineFromPosition(section.Span.Start);
                 ITextSnapshotLine endLine = newSnapshot.GetLineFromPosition(section.Span.End);

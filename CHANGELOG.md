@@ -15,6 +15,7 @@ on the official Visual Studio extension gallery.
 
 ## Unreleased
 
+- [x] Kept syntax highlighting visible while typing during background parsing
 - [x] Made formatting snapshot-safe and preserved trailing comments
 - [x] Isolated Error List state by document and fixed split-view service lifetime
 - [x] Published snapshot-owned parse results and refreshed diagnostics only after validation completed

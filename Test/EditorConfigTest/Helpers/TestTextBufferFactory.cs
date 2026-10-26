@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Utilities;
@@ -61,6 +62,10 @@ namespace EditorConfigTest
             buffer.SetupGet(value => value.CurrentSnapshot).Returns(snapshot.Object);
             buffer.SetupGet(value => value.Properties).Returns(new PropertyCollection());
             snapshot.SetupGet(value => value.TextBuffer).Returns(buffer.Object);
+            var version = new Mock<ITextVersion>();
+            version.SetupGet(value => value.TextBuffer).Returns(buffer.Object);
+            version.SetupGet(value => value.Length).Returns(text.Length);
+            snapshot.SetupGet(value => value.Version).Returns(version.Object);
             return buffer.Object;
         }
 
@@ -69,6 +74,41 @@ namespace EditorConfigTest
             ITextSnapshot before = buffer.CurrentSnapshot;
             ITextSnapshot after = CreateTextBuffer(text).CurrentSnapshot;
             Mock.Get(after).SetupGet(snapshot => snapshot.TextBuffer).Returns(buffer);
+            Mock<ITextVersion> version = Mock.Get(after.Version);
+            version.SetupGet(value => value.TextBuffer).Returns(buffer);
+            version.SetupGet(value => value.VersionNumber).Returns(before.Version.VersionNumber + 1);
+
+            string oldText = before.GetText();
+            int start = 0;
+            while (start < oldText.Length && start < text.Length && oldText[start] == text[start])
+                start++;
+
+            int oldEnd = oldText.Length;
+            int newEnd = text.Length;
+            while (oldEnd > start && newEnd > start && oldText[oldEnd - 1] == text[newEnd - 1])
+            {
+                oldEnd--;
+                newEnd--;
+            }
+
+            var change = new Mock<ITextChange>();
+            change.SetupGet(value => value.OldPosition).Returns(start);
+            change.SetupGet(value => value.NewPosition).Returns(start);
+            change.SetupGet(value => value.OldLength).Returns(oldEnd - start);
+            change.SetupGet(value => value.NewLength).Returns(newEnd - start);
+            change.SetupGet(value => value.OldEnd).Returns(oldEnd);
+            change.SetupGet(value => value.NewEnd).Returns(newEnd);
+            change.SetupGet(value => value.OldSpan).Returns(Span.FromBounds(start, oldEnd));
+            change.SetupGet(value => value.NewSpan).Returns(Span.FromBounds(start, newEnd));
+            change.SetupGet(value => value.Delta).Returns(newEnd - oldEnd);
+            ITextChange[] changes = [change.Object];
+            var collection = new Mock<INormalizedTextChangeCollection>();
+            collection.SetupGet(value => value.Count).Returns(changes.Length);
+            collection.Setup(value => value[It.IsAny<int>()]).Returns((int index) => changes[index]);
+            collection.Setup(value => value.GetEnumerator()).Returns(() => changes.AsEnumerable().GetEnumerator());
+            Mock<ITextVersion> previous = Mock.Get(before.Version);
+            previous.SetupGet(value => value.Next).Returns(after.Version);
+            previous.SetupGet(value => value.Changes).Returns(collection.Object);
             Mock<ITextBuffer> mock = Mock.Get(buffer);
             mock.SetupGet(value => value.CurrentSnapshot).Returns(after);
             mock.Raise(value => value.Changed += null, new TextContentChangedEventArgs(before, after, EditOptions.None, null));

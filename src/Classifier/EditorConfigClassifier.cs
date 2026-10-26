@@ -32,16 +32,22 @@ namespace EditorConfig
         {
             var list = new List<ClassificationSpan>();
 
-            if (!_document.TryGetParseResult(span.Snapshot, out EditorConfigDocument.ParseResult result))
+            bool matchesSnapshot = _document.TryGetParseResult(span.Snapshot, out EditorConfigDocument.ParseResult result);
+            if (result.Snapshot == null || (!matchesSnapshot && span.Snapshot != _buffer.CurrentSnapshot))
                 return list;
 
             foreach (ParseItem item in result.Items)
             {
-                if (span.IntersectsWith(item.Span) && _map.TryGetValue(item.ItemType, out IClassificationType classificationType))
-                {
-                    var snapshotSpan = new SnapshotSpan(span.Snapshot, item.Span);
+                if (!_map.TryGetValue(item.ItemType, out IClassificationType classificationType))
+                    continue;
+
+                var snapshotSpan = new SnapshotSpan(result.Snapshot, item.Span);
+                // Preserve colors during the parse debounce, including characters typed at token edges.
+                if (!matchesSnapshot)
+                    snapshotSpan = snapshotSpan.TranslateTo(span.Snapshot, SpanTrackingMode.EdgeInclusive);
+
+                if (!snapshotSpan.IsEmpty && span.IntersectsWith(snapshotSpan))
                     list.Add(new ClassificationSpan(snapshotSpan, classificationType));
-                }
             }
 
             return list;

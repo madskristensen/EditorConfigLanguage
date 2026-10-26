@@ -71,6 +71,7 @@ namespace EditorConfig
                 Properties = result.Properties;
                 NamingEntities = result.NamingEntities;
 
+                IsParsing = false;
                 Parsed?.Invoke(this, EventArgs.Empty);
             }
             catch (OperationCanceledException)

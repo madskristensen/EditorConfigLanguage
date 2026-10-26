@@ -13,6 +13,10 @@ download in the
 These are the changes to each version that has been released
 on the official Visual Studio extension gallery.
 
+## Unreleased
+
+- [x] Fixed syntax highlighting disappearing after editing properties or section glob patterns
+
 ## 1.18
 
 - [x] Added the `rulers` standard property

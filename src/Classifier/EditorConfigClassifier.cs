@@ -25,6 +25,7 @@ namespace EditorConfig
 
             _buffer = buffer;
             _document = EditorConfigDocument.FromTextBuffer(buffer);
+            _document.Parsed += DocumentParsed;
         }
 
         public IList<ClassificationSpan> GetClassificationSpans(SnapshotSpan span)
@@ -48,10 +49,12 @@ namespace EditorConfig
             return list;
         }
 
-        public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged
+        private void DocumentParsed(object sender, EventArgs e)
         {
-            add { }
-            remove { }
+            ITextSnapshot snapshot = _buffer.CurrentSnapshot;
+            ClassificationChanged?.Invoke(this, new ClassificationChangedEventArgs(new SnapshotSpan(snapshot, 0, snapshot.Length)));
         }
+
+        public event EventHandler<ClassificationChangedEventArgs> ClassificationChanged;
     }
 }

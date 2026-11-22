@@ -41,7 +41,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v6
       with:
-        dotnet-version: 9.0.x
+        dotnet-version: 10.0.x
 
     - name: Cache NuGet packages
       uses: actions/cache@v6
@@ -65,6 +65,7 @@ jobs:
       run: msbuild ${{ env.Solution }} /v:m /m /p:Configuration=${{ env.Configuration }} /p:DeployExtension=${{ env.DeployExtension }}
 
     - name: Run tests
+      timeout-minutes: 10
       run: >
         dotnet test ${{ env.TestProject }}
         --configuration ${{ env.Configuration }}
@@ -73,6 +74,7 @@ jobs:
         --verbosity normal
         --results-directory "${{ env.TestResultsDirectory }}"
         --logger "trx;LogFileName=test-results.trx"
+        --blame-hang --blame-hang-timeout 2m --blame-hang-dump-type none
         --collect "Code Coverage;Format=Cobertura"
         -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.CodeCoverage.ModulePaths.Include.ModulePath=.*EditorConfig[.]dll$
 
@@ -117,6 +119,7 @@ jobs:
         path: |
           TestResults/**/*.trx
           TestResults/**/*.cobertura.xml
+          TestResults/**/Sequence_*.xml
         if-no-files-found: error
         retention-days: 14
 

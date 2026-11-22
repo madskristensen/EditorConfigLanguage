@@ -15,6 +15,7 @@ on the official Visual Studio extension gallery.
 
 ## Unreleased
 
+- [x] Updated CI to .NET 10 LTS and added test timeouts and hang diagnostics
 - [x] Added IntelliSense, defaults, documentation links, and validation for the three Razor formatting properties
 - [x] Kept syntax highlighting visible while typing during background parsing
 - [x] Made formatting snapshot-safe and preserved trailing comments

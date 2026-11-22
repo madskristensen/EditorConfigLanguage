@@ -15,6 +15,7 @@ on the official Visual Studio extension gallery.
 
 ## Unreleased
 
+- [x] Added IntelliSense, defaults, documentation links, and validation for the three Razor formatting properties
 - [x] Kept syntax highlighting visible while typing during background parsing
 - [x] Made formatting snapshot-safe and preserved trailing comments
 - [x] Isolated Error List state by document and fixed split-view service lifetime
@@ -59,12 +60,12 @@ on the official Visual Studio extension gallery.
 ## 1.13
 
 - [x] Fixed issue with auto-list members
-- [x] Add *Navigate To Parent* to context menu
+- [x] Add _Navigate To Parent_ to context menu
 - [x] Enable async completion
-- [x] Remove *Code Navigation* group from context menu
+- [x] Remove _Code Navigation_ group from context menu
 - [x] Only show completion for `root` at top of document
-- [x] Support *Complete Word* command properly
-- [x] Support *Show Member List* command properly
+- [x] Support _Complete Word_ command properly
+- [x] Support _Show Member List_ command properly
 - [x] Stop auto-injecting `=` and `:` if they exist
 
 ## 1.12
@@ -190,7 +191,7 @@ on the official Visual Studio extension gallery.
 - [x] Better Intellisense triggers
 - [x] Gesture to create .editorconfig file
 - [x] Description of what .editorconfig is in readme.md
-- [x] F1 opens http://editorconfig.org
+- [x] F1 opens <http://editorconfig.org>
 - [x] Mark unsupported keywords
 
 ## 1.1

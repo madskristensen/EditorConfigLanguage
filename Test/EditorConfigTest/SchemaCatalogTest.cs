@@ -60,6 +60,22 @@ namespace EditorConfigTest
         }
 
         [TestMethod]
+        [DataRow("razor_code_block_brace_on_next_line", "false", "true,false")]
+        [DataRow("razor_attribute_indent_style", "align_with_first", "align_with_first,indent_by_one,indent_by_two")]
+        [DataRow("razor_ignore_indentation_in_script_or_style_blocks_with_complex_razor", "true", "true,false")]
+        public void TryGetKeyword_RazorFormatting_ExposesCompletionAndDefaults(string name, string defaultValue, string values)
+        {
+            Assert.IsTrue(SchemaCatalog.TryGetKeyword(name, out Keyword keyword));
+            Assert.IsTrue(SchemaCatalog.VisibleKeywords.Contains(keyword));
+            Assert.IsTrue(keyword.IsSupported);
+            Assert.IsFalse(keyword.RequiresSeverity);
+            CollectionAssert.AreEqual(values.Split(','), keyword.Values.Select(value => value.Name).ToArray());
+            CollectionAssert.AreEqual(new[] { defaultValue }, keyword.DefaultValue.Select(value => value.Name).ToArray());
+            Assert.IsFalse(string.IsNullOrWhiteSpace(keyword.Description));
+            Assert.IsFalse(string.IsNullOrWhiteSpace(keyword.DocumentationLink));
+        }
+
+        [TestMethod]
         public void TryGetKeyword_NullKeyword_ReturnsFalse()
         {
             bool result = SchemaCatalog.TryGetKeyword(null, out Keyword keyword);

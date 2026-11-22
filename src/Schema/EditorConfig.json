@@ -1165,6 +1165,28 @@
       "defaultSeverity": "silent",
       "documentationLink": "https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide2006"
     },
+    // Razor formatting properties
+    {
+      "name": "razor_code_block_brace_on_next_line",
+      "description": "Place the opening brace of Razor code blocks on the next line instead of the same line.",
+      "values": [ true, false ],
+      "defaultValue": [ false ],
+      "documentationLink": "https://github.com/dotnet/roslyn/blob/main/docs/razor/Formatting.md#configure-razor-formatting-with-editorconfig"
+    },
+    {
+      "name": "razor_attribute_indent_style",
+      "description": "Indent continuation attributes by aligning with the first attribute (align_with_first), or by one (indent_by_one) or two (indent_by_two) levels relative to the tag.",
+      "values": [ "align_with_first", "indent_by_one", "indent_by_two" ],
+      "defaultValue": [ "align_with_first" ],
+      "documentationLink": "https://github.com/dotnet/roslyn/blob/main/docs/razor/Formatting.md#configure-razor-formatting-with-editorconfig"
+    },
+    {
+      "name": "razor_ignore_indentation_in_script_or_style_blocks_with_complex_razor",
+      "description": "Leave indentation unchanged in script and style blocks containing complex Razor.",
+      "values": [ true, false ],
+      "defaultValue": [ true ],
+      "documentationLink": "https://github.com/dotnet/roslyn/blob/main/docs/razor/Formatting.md#configure-razor-formatting-with-editorconfig"
+    },
     // VB properties
     {
       "name": "visual_basic_preferred_modifier_order",

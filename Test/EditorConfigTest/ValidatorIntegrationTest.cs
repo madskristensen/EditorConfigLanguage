@@ -121,6 +121,32 @@ namespace EditorConfigTest
         }
 
         [TestMethod]
+        [DataRow("align_with_first", "false", "true")]
+        [DataRow("indent_by_one", "true", "false")]
+        [DataRow("indent_by_two", "false", "true")]
+        public async Task ValidateDocument_AcceptsRazorFormattingOptions(string attributeStyle, string braceOnNextLine, string ignoreIndentation)
+        {
+            string source = $"[*.{{razor,cshtml}}]\r\nrazor_code_block_brace_on_next_line = {braceOnNextLine}\r\nrazor_attribute_indent_style = {attributeStyle}\r\nrazor_ignore_indentation_in_script_or_style_blocks_with_complex_razor = {ignoreIndentation}";
+
+            IReadOnlyList<string> codes = await ValidateAsync(source);
+
+            CollectionAssert.DoesNotContain(codes.ToArray(), "EC112");
+            CollectionAssert.DoesNotContain(codes.ToArray(), "EC114");
+        }
+
+        [TestMethod]
+        [DataRow("razor_code_block_brace_on_next_line", "next_line")]
+        [DataRow("razor_attribute_indent_style", "indent_by_three")]
+        [DataRow("razor_ignore_indentation_in_script_or_style_blocks_with_complex_razor", "yes")]
+        public async Task ValidateDocument_RejectsInvalidRazorFormattingValues(string name, string value)
+        {
+            IReadOnlyList<string> codes = await ValidateAsync($"[*.{{razor,cshtml}}]\r\n{name} = {value}");
+
+            CollectionAssert.DoesNotContain(codes.ToArray(), "EC112");
+            CollectionAssert.Contains(codes.ToArray(), "EC114");
+        }
+
+        [TestMethod]
         public async Task ValidateDocument_AcceptsTrailingCommentAfterValue()
         {
             const string source = """
